@@ -5,25 +5,26 @@ import { images } from '../../../../../public/images'
 import Image from "next/image";
 import { useFormik } from 'formik';
 import { register } from '@/api/auth';
+// import { toast } from 'react-toastify';
 import { toast } from 'react-toastify';
-// import { getToken } from '@/config/firebase-config';
-import { getToken } from 'firebase/messaging';
-import { messaging } from '@/config/firebase-config';
+import 'react-toastify/dist/ReactToastify.css';
+
+// import { useMutation } from '@tanstack/react-query';
 
 const Sign_up = () => {
-  // main.js
 
-const vapidKey = "YOUR_VAPID_KEY"; // Được lấy từ Firebase console
+  // const { mutate } = useMutation({
+  //   mutationFn: (data) => {
+  //     return register(data)
+  //   },
+  //   onSuccess: () => {
+  //     toast.success('thành công rồi nè')
+  //   },
+  //   onError: () => {
+  //     toast.success('xịt r')
+  //   }
 
-// getToken(messaging, { vapidKey }).then((currentToken) => {
-//   if (currentToken) {
-//     console.log('FCM Token:', currentToken);
-//   } else {
-//     console.log('No registration token available. Request permission to generate one.');
-//   }
-// }).catch((err) => {
-//   console.log('An error occurred while retrieving token. ', err);
-// });
+  // })
   const {
     values,
     handleBlur,
@@ -70,12 +71,26 @@ const vapidKey = "YOUR_VAPID_KEY"; // Được lấy từ Firebase console
       return errors
     },
     onSubmit: (values) => {
-      if (values){
+      register(values)
+        .then(response => {
+          if (response.data.code === 0){
+            console.log(response.data)
+            toast.success('thành công rồi nè =)))')
+          }else if(response.data.code ===2){
+            toast.warning('gửi thiếu dữ liệu =)))')
+          }else if(response.data.code ===3){
+            toast.warning('Số điện thoại này đãn tồn tại')
 
-        toast.success('thành công rồi nè')
-      }
-      console.log(values)
-      // register(values)
+          }else if(response.data.code ===4){
+            alert('pass nhập lại sai')
+            toast.error('pass nhập lại sai')
+
+          }
+        })
+        .catch(error => {
+          console.error('Đã xảy ra lỗi khi đăng ký:', error);
+        });
+
     }
 
   })
@@ -137,7 +152,7 @@ const vapidKey = "YOUR_VAPID_KEY"; // Được lấy từ Firebase console
             <div class="group-input-pasword">
               <div class="group-input">
                 <p for="">Mật khẩu</p>
-                <input type="text" placeholder="Mật khẩu" name='password'
+                <input type="password" placeholder="Mật khẩu" name='password'
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
@@ -150,7 +165,7 @@ const vapidKey = "YOUR_VAPID_KEY"; // Được lấy từ Firebase console
               </div>
               <div class="group-input">
                 <p for="">Nhập lại mật khẩu</p>
-                <input type="text" placeholder="Nhập lại mật khẩu" name='password_again'
+                <input type="password" placeholder="Nhập lại mật khẩu" name='password_again'
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
