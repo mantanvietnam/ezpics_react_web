@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icon-container {
+  @apply relative flex items-center;
+
+  .desc {
+    @apply absolute opacity-0 transition duration-0 mt-16 left-0 top-0 p-2 bg-neutral-600 rounded text-white text-xs;
+  }
+
+  .icon-primary:hover + .desc {
+    @apply opacity-100 mt-14 w-max;
+  }
+}
+
+.icon-primary {
+  @apply hover:bg-slate-100 rounded-full mx-1;
+}
+
+.button-red {
+  @apply bg-red-600 text-white rounded px-5 py-2 ml-4;
+}

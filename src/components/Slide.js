@@ -60,6 +60,7 @@ const listNewProducts = async () => {
               <Image
                 key={product.id}
                 src={product.image}
+                alt=""
                 width={150}
                 height={100}
                 className="slide-img rounded-lg cursor-pointer"

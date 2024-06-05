@@ -1,9 +1,9 @@
-import styles from '@/styles/Nav.module.scss'
+import styles from '@/styles/nav.module.scss'
 
 const Nav = () => {
   return (
     <aside className={styles.nav}>
-      Nav
+      <div>Gia hạn bản Pro</div>
     </aside>
   );
 };
