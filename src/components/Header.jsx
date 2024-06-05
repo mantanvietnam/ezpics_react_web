@@ -27,7 +27,6 @@ const Header = () => {
         <div className="p-3 mr-4 icon-primary">
           <BarsOutlined style={{ fontSize: '20px' }} /> 
         </div>
-
         <div className="logo flex items-center justify-center">
           <Link href="/" className="flex flex-center">
             <Image

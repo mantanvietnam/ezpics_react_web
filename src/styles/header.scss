@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --header-height: 64px;
-}
-
-body {
-  @apply font-poppins font-thin;
-}
-
 .icon-container {
   @apply relative flex items-center;
 
