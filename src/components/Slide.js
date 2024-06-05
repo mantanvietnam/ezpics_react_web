@@ -74,27 +74,61 @@ function SamplePrevArrow(props) {
 const listNewProducts = async () => {
   const products = await getNewProducts();
   const listNewProducts = products.listData;
-  console.log(listNewProducts[1].id);
+
+  const VND = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 
   const settings = {
     infinite: true,
     speed: 500,
     slidesToShow: 5,
-    slidesToScroll: 1,
+    slidesToScroll: 2,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 1028,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 530,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
-    <div className="container mx-auto px-5">
+    <div className="container mx-auto px-4">
       <h1 className="text-2xl font-bold mb-4">New Products</h1>
       <div>
         <StyledSlider>
-          <Slider {...settings} className="w-full cursor-pointer">
+          <Slider {...settings} className="w-full">
             {listNewProducts.map((product) => (
-              <div>
+              <div className="slide-content">
                 <div
-                  className="card bg-white rounded-lg shadow-md overflow-hidden w-60"
+                  className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-60"
                   key={product.id}>
                   <div className="bg-orange-100">
                     <Image
@@ -110,10 +144,10 @@ const listNewProducts = async () => {
                     <p className="text-gray-500 mt-2">Đã bán {product.sold}</p>
                     <div className="mt-2">
                       <span className="text-red-500 font-bold mr-2">
-                        {product.sale_price} ₫
+                        {VND.format(product.sale_price)}
                       </span>
                       <span className="text-gray-500 line-through">
-                        {product.price} ₫
+                        {VND.format(product.price)}
                       </span>
                     </div>
                   </div>
