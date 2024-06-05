@@ -2,7 +2,8 @@
 import { getNewProducts } from "@/lib/actions/actions";
 import Image from "next/image";
 import styled from "styled-components";
-import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
+
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -51,13 +52,17 @@ const Arrow = styled.div`
     background: #000;
     color: #fff;
   }
+
+  .anticon {
+    font-size: 20px;
+  }
 `;
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
     <Arrow className={`${className} next`} style={style} onClick={onClick}>
-      <FaArrowRight size={20} />
+      <RightOutlined />
     </Arrow>
   );
 }
@@ -66,7 +71,7 @@ function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
     <Arrow className={`${className} prev`} style={style} onClick={onClick}>
-      <FaArrowLeft size={20} />
+      <LeftOutlined />
     </Arrow>
   );
 }
@@ -120,16 +125,14 @@ const listNewProducts = async () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className=" w-5/6 mx px-4">
       <h1 className="text-2xl font-bold mb-4">New Products</h1>
       <div>
         <StyledSlider>
           <Slider {...settings} className="w-full">
             {listNewProducts.map((product) => (
-              <div className="slide-content">
-                <div
-                  className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-60"
-                  key={product.id}>
+              <div className="slide-content pr-3" key={product.id}>
+                <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-60">
                   <div className="bg-orange-100">
                     <Image
                       src={product.image}
