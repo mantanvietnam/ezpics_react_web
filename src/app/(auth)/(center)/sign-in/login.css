@@ -2,7 +2,7 @@ body{
     margin: 0;
 }
 .login-bg{
-    background:url(../../../public/images/background2.jpg) ;
+    /* background:url(../../../public/images/background.jpg) ; */
     background-size: contain;
    
     min-height: 100vh;
