@@ -2,21 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --header-height: 64px;
-}
-
-body {
-  @apply font-poppins font-thin;
-}
-
-.nav {
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-  background-color: white;
-  height: 100vh;
-  width: 250px;
-}
-
 .icon-container {
   @apply relative flex items-center;
 

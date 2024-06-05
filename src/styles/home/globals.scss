@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --header-height: 64px;
+}
+
+body {
+  @apply font-poppins font-thin;
+}
+
+.content {
+  @apply relative;
+}

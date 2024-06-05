@@ -4,6 +4,7 @@ import { BarsOutlined, BellOutlined, DesktopOutlined, SettingOutlined, UserOutli
 import Image from "next/image";
 import Link from "next/link";
 import { images } from "../../public/images";
+import "@/styles/home/header.scss";
 
 const Header = () => {
   const menuItems = [
@@ -21,7 +22,7 @@ const Header = () => {
   ];
 
   return (
-    <div className="fixed w-full flex justify-between h-[--header-height] px-6 shadow-xl">
+    <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
       <div className="flex justify-center items-center">
         <div className="p-3 mr-4 icon-primary">
           <BarsOutlined style={{ fontSize: '20px' }} /> 
