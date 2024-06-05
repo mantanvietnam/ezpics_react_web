@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
 import "@/styles/globals.scss";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Create Next App",
@@ -18,8 +19,10 @@ export default function RootLayout({ children }) {
         <main className="flex pt-[--header-height]">
           <Nav />
           {children}
+      <ToastContainer/>
         </main>
       </body>
+
     </html>
   );
 }
