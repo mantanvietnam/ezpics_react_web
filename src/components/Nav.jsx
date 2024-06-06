@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import classes from "../styles/Nav.module.scss";
+import classes from "@/styles/home/nav.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import images from "../../public/images/index2";
@@ -14,6 +14,14 @@ const Nav = () => {
     { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
     { href: "/project/recommend", label: "Danh mục", icon: images.category },
   ];
+
+  const [open, setOpen] = useState(false);
+  const handleOk = () => {
+    setOpen(false);
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
 
   return (
     <div className={classes.navbar}>
