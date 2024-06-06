@@ -48,7 +48,8 @@ export default function HomeBanner() {
         ></path>
       </svg>,
       des: 'Cho bạn',
-      selected: '2%'
+      selected: '2%',
+      path: ''
     },
     {
       icon: <svg
@@ -78,7 +79,8 @@ export default function HomeBanner() {
         ></path>
       </svg>,
       des: 'Logo',
-      selected: '11.5%'
+      selected: '11.5%',
+      path: 'logo'
     },
     {
       icon: <svg
@@ -108,7 +110,8 @@ export default function HomeBanner() {
         ></path>
       </svg>,
       des: 'Mạng xã hội',
-      selected: '22%'
+      selected: '22%',
+      path: 'social-media'
     },
     {
       icon: <svg
@@ -136,7 +139,7 @@ export default function HomeBanner() {
             fill: `${isHovered.action4 ? 'white' : 'rgb(210, 105, 230)'}`
           }}
         ></path>
-      </svg>, des: 'LiveStream', selected: '34%'
+      </svg>, des: 'LiveStream', selected: '34%', path: 'live-stream'
     },
     {
       icon: <svg
@@ -164,7 +167,7 @@ export default function HomeBanner() {
             fill: `${isHovered.action5 ? 'white' : 'rgb(165, 72, 255)'}`
           }}
         ></path>
-      </svg>, des: 'Thẻ quà tặng', selected: '46%'
+      </svg>, des: 'Thẻ quà tặng', selected: '46%', path: 'gift'
     },
     {
       icon: <svg
@@ -192,7 +195,7 @@ export default function HomeBanner() {
             fill: `${isHovered.action6 ? 'white' : 'rgb(255, 81, 84)'}`
           }}
         ></path>
-      </svg>, des: 'Ưu đãi', selected: '57%'
+      </svg>, des: 'Ưu đãi', selected: '57%', path: 'endow'
     },
     {
       icon: <svg
@@ -220,7 +223,7 @@ export default function HomeBanner() {
             fill: `${isHovered.action7 ? 'white' : 'rgb(87, 94, 253)'}`
           }}
         ></path>
-      </svg>, des: 'Thiệp chúc mừng', selected: '69%'
+      </svg>, des: 'Thiệp chúc mừng', selected: '69%', path: 'congratulation'
     },
     {
       icon: <svg
@@ -248,7 +251,7 @@ export default function HomeBanner() {
             fill: `${isHovered.action8 ? 'white' : 'rgb(255, 153, 0)'}`
           }}
         ></path>
-      </svg>, des: 'Sự kiện', selected: '81%'
+      </svg>, des: 'Sự kiện', selected: '81%', path: 'event'
     },
     {
       icon: <svg
@@ -279,9 +282,13 @@ export default function HomeBanner() {
           }}
         ></path>
       </svg>
-      , des: 'Xem thêm', selected: '91.5%'
+      , des: 'Xem thêm', selected: '91.5%', path: ''
     },
   ]
+
+  const handleAction = (action) => {
+    setArrowPosition(action.selected)
+  }
 
   return (
     <div
@@ -303,8 +310,8 @@ export default function HomeBanner() {
           actions.map((action, index) => (
             <div key={index} className='flex flex-col items-center justify-center gap-2'>
               <Link
-                href=''
-                onClick={() => setArrowPosition(action.selected)}
+                href={action.path}
+                onClick={() => handleAction(action)}
               >
                 {action.icon}
               </Link>
