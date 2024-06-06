@@ -68,13 +68,13 @@ const DefaultSlide = ({ apiAction, title }) => {
   };
 
   return (
-    <div className="w-full mx-auto px-4 pt-4">
+    <div className="w-5/6 mx-auto px-4 pt-4">
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
       <div>
         <StyledSlider>
           <Slider {...settings} className="w-full relative">
             {products.map((product) => (
-              <div className="slide-content pr-3" key={product.id}>
+              <div className="slide-content pr-8" key={product.id}>
                 <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                   <div className="bg-orange-100">
                     <Image

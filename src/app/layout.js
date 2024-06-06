@@ -13,11 +13,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <Header />
-        <main className="flex pt-[--header-height]">
-          <Nav />
-          {children}
-        </main>
+        {children}
+        <ToastContainer />
       </body>
     </html>
   );
