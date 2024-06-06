@@ -5,12 +5,12 @@ import Slide from "@/components/Slide";
 export default function Home() {
   return (
     <>
-      <div>
+      {/* <div>
         <Link href={"/sign-in"}>sign_in</Link>
       </div>
       <div>
         <Link href={"/sign-up"}>sign_up</Link>
-      </div>
+      </div> */}
       <Slide />
     </>
   );
