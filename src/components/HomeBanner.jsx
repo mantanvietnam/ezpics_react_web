@@ -295,7 +295,7 @@ export default function HomeBanner() {
       style={{
         background: 'linear-gradient(63deg, rgb(253, 208, 46) 40%, rgb(250, 226, 139) 100%)'
       }}
-      className='flex flex-col items-center justify-center gap-8 p-[50px] rounded-[20px] relative overflow-hidden'>
+      className='flex flex-col items-center justify-center gap-8 p-[50px] rounded-[20px] relative overflow-hidden w-full h-[300px]'>
       <div>
         <h2 className='text-white text-[2.2rem] font-bold'>Bạn muốn thiết kế gì ?</h2>
       </div>
