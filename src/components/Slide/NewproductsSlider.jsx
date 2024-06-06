@@ -9,7 +9,7 @@ const NewProductsSlider = () => {
         const products = await getNewProducts(); // Call the function with ()
         return products; // Return the fetched products
       }}
-      title="Sản phẩm mới"
+      title="Mẫu thiết kế mới nhất"
     />
   );
 };
