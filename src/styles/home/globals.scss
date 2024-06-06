@@ -13,3 +13,7 @@ body {
 .content {
   @apply relative;
 }
+
+.button-red {
+  @apply bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit;
+}

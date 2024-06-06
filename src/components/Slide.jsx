@@ -1,4 +1,3 @@
-"use client";
 import { getNewProducts } from "@/lib/actions/actions";
 import Image from "next/image";
 import styled from "styled-components";

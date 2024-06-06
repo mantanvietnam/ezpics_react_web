@@ -25,7 +25,3 @@ body {
 .icon-primary {
   @apply hover:bg-slate-100 rounded-full mx-1;
 }
-
-.button-red {
-  @apply bg-red-600 text-white rounded px-5 py-2 ml-4;
-}

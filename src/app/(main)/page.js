@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
 import Slide from "@/components/Slide";
 import { ToastContainer } from "react-toastify";
