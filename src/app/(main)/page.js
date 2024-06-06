@@ -1,9 +1,17 @@
-import NewProductsSlider from "@/components/Slide/NewproductsSlider";
+import {
+  NewProductsSlider,
+  TrySlider,
+  TrendingSlider,
+} from "@/components/Slide/ListSlider";
 
 export default function Home() {
   return (
     <>
-      <NewProductsSlider />
+      <div className="slider w-5/6">
+        <NewProductsSlider />
+        <TrySlider />
+        <TrendingSlider />
+      </div>
     </>
   );
 }

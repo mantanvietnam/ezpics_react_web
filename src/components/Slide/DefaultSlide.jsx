@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 import { StyledSlider, SampleNextArrow, SamplePrevArrow } from "./CustomSlide";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -19,13 +19,12 @@ const DefaultSlide = ({ apiAction, title }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       const response = await apiAction();
       setProducts(response.listData);
-      console.log(response);
     };
 
-    fetchProducts();
+    fetchData();
   }, [apiAction]);
 
   const settings = {
@@ -68,7 +67,7 @@ const DefaultSlide = ({ apiAction, title }) => {
   };
 
   return (
-    <div className="w-5/6 mx-auto px-4 pt-4">
+    <div className="w-full mx-auto px-4 pt-4">
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
       <div>
         <StyledSlider>
@@ -76,12 +75,12 @@ const DefaultSlide = ({ apiAction, title }) => {
             {products.map((product) => (
               <div className="slide-content pr-8" key={product.id}>
                 <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                  <div className="bg-orange-100">
+                  <div className="bg-orange-100 overflow-hidden group">
                     <Image
                       src={product.image}
                       width={300}
                       height={200}
-                      className="object-contain h-48 w-96"
+                      className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
                       alt={product.name}
                     />
                   </div>
