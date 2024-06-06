@@ -49,7 +49,7 @@ export default function HomeBanner() {
       </svg>,
       des: 'Cho bạn',
       selected: '2%',
-      path: ''
+      path: '/'
     },
     {
       icon: <svg
@@ -282,7 +282,7 @@ export default function HomeBanner() {
           }}
         ></path>
       </svg>
-      , des: 'Xem thêm', selected: '91.5%', path: ''
+      , des: 'Xem thêm', selected: '91.5%', path: '/'
     },
   ]
 
