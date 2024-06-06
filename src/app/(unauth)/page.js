@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import NewProductsSlider from "@/components/Slide/NewproductsSlider";
+import Slide from "@/components/Slide";
+import { ToastContainer } from "react-toastify";
 
 export default function Home() {
   return (
@@ -11,7 +12,8 @@ export default function Home() {
       <div>
         <Link href={"/sign-up"}>sign_up</Link>
       </div> */}
-      <NewProductsSlider />
+      <Slide />
+      <ToastContainer />
     </>
   );
 }

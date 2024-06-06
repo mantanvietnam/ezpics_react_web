@@ -1,6 +1,5 @@
-import Header from "@/components/Header";
-import Nav from "@/components/Nav";
 import "@/styles/globals.scss";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Create Next App",
@@ -15,9 +14,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <Header />
-        <main className="flex pt-[--header-height] z-1">
+        <main className="flex pt-[--header-height]">
           <Nav />
-          <div className="content w-5/6 ">{children}</div>
+          {children}
         </main>
       </body>
     </html>

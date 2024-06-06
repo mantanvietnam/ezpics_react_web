@@ -7,8 +7,6 @@
     padding: 50px;
     background: url('../image/background.jpg') 0% 0% / contain;
     background-attachment: fixed;
-    /* background-position: center; */
-    /* background-attachment: local; */
     z-index: 0;
 }
 
@@ -26,8 +24,9 @@
 .box-left{
     /* background: url('./image/img4.jpg'); */
     width: 50%;
-    display: flex ;
-    justify-content: center;
+        display: flex ;
+        justify-content: center;
+        align-items: center;
 
 }
 .box-right{
@@ -48,8 +47,6 @@
     display: flex;
 }
 .group-input-pasword .group-input{
-    /* display: flex;
-     */
      width: 50%;
      margin-right: 10px;
 }
@@ -78,9 +75,6 @@
     text-align: center;
 }
 .group-input p{
-    /* font-family: "Canva Sans", "Noto Sans Variable", "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; */
-    /* font-size: 15px; */
-    /* font-weight: 500; */
     display: block;
     font-family: "Canva Sans", "Noto Sans Variable", "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     font-size: 15px;
@@ -101,7 +95,6 @@
     border: none;
     border-radius: 4px;
     box-sizing: border-box;
-    /* background-color: gray; */
     background: rgb(248, 248, 248);
 }
 .group-input input:active{
@@ -110,5 +103,4 @@
 .title-sign{
     font-size: 18px;
     padding: 15px 0;
-    /* margin-top: 10px; */
 }
