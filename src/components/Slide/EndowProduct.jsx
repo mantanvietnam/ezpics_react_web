@@ -11,6 +11,7 @@ export default function EndowProduct() {
         return products; // Return the fetched products
       }}
       title="Banner Ưu đãi"
+      pathString="/"
     />
   )
 }
