@@ -11,6 +11,7 @@ export default function EventProductSlider() {
         return products; // Return the fetched products
       }}
       title="Banner event"
+      pathString="/"
     />
   )
 }
