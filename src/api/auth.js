@@ -1,11 +1,11 @@
 // 'use server'
-// import axios from "axios";
+import axiosInstance from "./axiosInstance";
 // import instance from "./config";
 
-// export const register = async (user ) => {
-//     const result = await instance.post('/saveRegisterMemberAPI', user)
-//     return result
-//  }
+export const register = async (user) => {
+   const result = await instance.post('/saveRegisterMemberAPI', user)
+   return result
+}
 //  export const loginByPhone =async (user) => {
 //     const result = await instance.post('/checkLoginMemberAPI', user)
 //     return result
@@ -22,10 +22,12 @@
 //     const result = await instance.post('/checkLoginAppleAPI', user)
 //     return result
 //  }
-import axios from "axios";
-import axiosInstance from "./axiosInstance";
 
 export const loginByPhone = async (data) => {
    const response = await axiosInstance.post(`/checkLoginMemberAPI`, data);
    return response;
 };
+export const logoutService = async (data) => {
+   const response = await axiosInstance.post(`/logoutMemberAPI`, data);
+   return response;
+}

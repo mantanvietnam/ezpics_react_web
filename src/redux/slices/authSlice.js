@@ -13,7 +13,7 @@ const authSlice = createSlice({
             state.token = actions.payload;
         },
         CHANGE_STATUS_AUTH: (state, actions) => {
-            state.authentication = actions.payload;
+            state.isAuthenticated = actions.payload;
         },
     },
 });
