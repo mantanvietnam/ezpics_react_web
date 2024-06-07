@@ -9,7 +9,7 @@ export default function HomeRoot(props) {
         <HomeBanner />
       </div>
         {props.children}
-        {/* <SerisProductSlider /> */}
+        <SerisProductSlider />
         <NewProductsSlider />
         <NewProductsSlider />
         <NewProductsSlider />
