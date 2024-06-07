@@ -50,13 +50,12 @@ export default function Login() {
                     phone: phone,
                     password: password,
                 });
-
                 if (repon.code === 0) {
                     dispatch(CHANGE_STATUS_AUTH(true));
                     dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
                     setCookie("token", repon?.info_member?.token_web, expirationHours);
                     setCookie("user_login", repon?.info_member, expirationHours);
-                    router.push('/dashboard');
+                    router.push('/test');
                 } else {
                     setLoginError(repon?.messages[0]?.text);
                 }
@@ -138,6 +137,7 @@ export default function Login() {
                                         {errors.password && <p className={styles.error}>{errors.password}</p>}
                                         {loginError && <p className={styles.error}>{loginError}</p>}
                                         <button
+                                            type='submit'
                                             className={styles.login}
                                             onClick={handleSubmit}
                                             disabled={isLoading}
