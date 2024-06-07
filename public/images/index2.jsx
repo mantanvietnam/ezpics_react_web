@@ -1,5 +1,6 @@
 const images = {
   home: require('./home.png').default,
+  logo: require('./logo.png'),
   collection: require('./paint-palette.png'),
   remove: require('./magic-wand1.png'),
   category: require('./folder.png'),
@@ -15,13 +16,25 @@ const images = {
   collection2: require('./paint-roller (1).png'),
   transaction: require('./history.png'),
   renew: require('./repeater.png'),
-};
+  };
   
 export const proImages = [
   require('./pro1.jpg'),
   require('./pro2.jpg'),
   require('./pro3.jpg'),
   require('./img4.jpg'),
-];
+  ];
+    
+export const designIcon = {
+  paperRolls: require('./paper-rolls.png').default,
+  presentation: require('./presentation.svg'),
+  picture: require('./picture.png'),
+  poster: require('./poster.svg'),
+  instagram: require('./instagram.svg'),
+  facebook: require('./facebook.svg'),
+  docs: require('./docs.svg'),
+  youtube: require('./youtube.svg'),
+};
+
 
 export default images;
