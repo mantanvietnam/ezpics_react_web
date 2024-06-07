@@ -9,10 +9,10 @@ export default function SerisProductSlider() {
         "use server";
         const products = await getserisProductApi({ limit: '12', page: '1' });
         const data = { listData: [...products.data] }
-        console.log('--------------', data);
         return data; // Return the fetched products
       }}
       title="Mẫu thiết kế in hàng loạt"
+      pathString="/"
     />
   )
 }
