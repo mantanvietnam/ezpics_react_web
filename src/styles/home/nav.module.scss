@@ -2,15 +2,12 @@
   background-color: #fff;
   border-right: 1px solid #ccc;
   height: 100vh;
-  width: 300px;
+  width: 15%;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  color: #333;
   position: sticky;
   top: var(--header-height);
 }
@@ -35,7 +32,8 @@
   border-radius: 50%;
 }
 
-.navbar .middle, .bottom {
+.navbar .middle,
+.bottom {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -45,7 +43,8 @@
   border-top: 1px solid #ccc;
 }
 
-.navbar .navItem, .userFunc {
+.navbar .navItem,
+.userFunc {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -63,3 +62,31 @@
 .navbar .avatar {
   border-radius: 50%;
 }
+
+//modalUpPro
+.icon {
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.image {
+  display: none;
+}
+
+.imageActive {
+  position: relative;
+  left: -10px;
+  border-radius: 10px;
+}
+
+.image {
+  display: none;
+}
+
+.imageActive {
+  position: relative;
+  left: -10px;
+  border-radius: 10px;
+}
+
+//
