@@ -1,3 +1,4 @@
+import Providers from "@/redux/Provider";
 import "@/styles/globals.scss";
 import { ToastContainer } from "react-toastify";
 
@@ -13,8 +14,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        {children}
-        <ToastContainer />
+        <Providers>
+          {children}
+          <ToastContainer />
+        </Providers>
       </body>
     </html>
   );

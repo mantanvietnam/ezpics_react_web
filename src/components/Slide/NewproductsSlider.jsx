@@ -10,6 +10,7 @@ const NewProductsSlider = () => {
         return products; // Return the fetched products
       }}
       title="Mẫu thiết kế mới nhất"
+      pathString="new-product"
     />
   );
 };

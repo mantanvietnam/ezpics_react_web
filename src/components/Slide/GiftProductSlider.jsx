@@ -11,6 +11,7 @@ const GiftProductSlider = () => {
         return products; // Return the fetched products
       }}
       title="Thẻ quà tặng - Thẻ giảm giá"
+      pathString="/"
     />
   );
 };
