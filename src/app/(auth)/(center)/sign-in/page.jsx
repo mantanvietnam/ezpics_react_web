@@ -1,8 +1,14 @@
 "use client";
 import { loginByPhone } from '@/api/auth';
+import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from '@/redux/slices/authSlice';
 import styles from '@/styles/auth/sign_in.module.scss';
+import { setCookie } from '@/utils/cookie';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { useState } from "react";
+import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -15,46 +21,57 @@ const schemaConfirm = yup.object().shape({
 });
 
 export default function Login() {
+    const dispatch = useDispatch();
+    const router = useRouter();
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [phoneConfirm, setPhoneConfirm] = useState('');
     const [errors, setErrors] = useState({});
-    const [checkForgotPW, setCheck] = useState(false)
+    const [checkForgotPW, setCheck] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loginError, setLoginError] = useState('');
 
     function handleCheckForgot() {
-        setCheck(true)
+        setCheck(true);
     }
+
+    var expirationHours = 3;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setLoginError('');
+
         try {
             const checkValidate = await schema.validate({ phone, password }, { abortEarly: false });
             if (checkValidate) {
                 setErrors('');
-                try {
-                    const repon = await loginByPhone({
-                        phone: phone,
-                        password: password,
-                        type_device: "web",
-                    });
+                const repon = await loginByPhone({
+                    phone: phone,
+                    password: password,
+                });
 
-                } catch (error) {
-                    // if (axios.isAxiosError(error)) {
-                    //     setError(error.response?.data?.message || error.message);
-                    // } else {
-                    //     setError('An unexpected error occurred');
-                    // }
+                if (repon.code === 0) {
+                    dispatch(CHANGE_STATUS_AUTH(true));
+                    dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
+                    setCookie("token", repon?.info_member?.token_web, expirationHours);
+                    setCookie("user_login", repon?.info_member, expirationHours);
+                    router.push('/dashboard');
+                } else {
+                    setLoginError(repon?.messages[0]?.text);
                 }
             }
-
         } catch (err) {
             const errors = err?.inner?.reduce((acc, error) => {
                 acc[error.path] = error.message;
                 return acc;
             }, {});
             setErrors(errors);
+        } finally {
+            setIsLoading(false);
         }
     };
+
     const handleConfirm = async (e) => {
         e.preventDefault();
         try {
@@ -72,6 +89,7 @@ export default function Login() {
             setErrors(errors);
         }
     };
+
     return (
         <div className="h-screen w-screen">
             <div className={styles["login-bg"]}>
@@ -88,7 +106,8 @@ export default function Login() {
                                 {checkForgotPW ? (
                                     <>
                                         <p className={styles.label_input}>Số điện thoại xác thực</p>
-                                        <input type="text"
+                                        <input
+                                            type="text"
                                             value={phoneConfirm}
                                             placeholder="Số điện thoại"
                                             onChange={(e) => setPhoneConfirm(e.target.value)}
@@ -117,7 +136,24 @@ export default function Login() {
                                             onChange={(e) => setPassword(e.target.value)}
                                         />
                                         {errors.password && <p className={styles.error}>{errors.password}</p>}
-                                        <button className={styles.login} onClick={handleSubmit}> Đăng nhập </button>
+                                        {loginError && <p className={styles.error}>{loginError}</p>}
+                                        <button
+                                            className={styles.login}
+                                            onClick={handleSubmit}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? <Spin
+                                                indicator={
+                                                    <LoadingOutlined
+                                                        style={{
+                                                            fontSize: 24,
+                                                            color: 'white'
+                                                        }}
+                                                        spin
+                                                    />
+                                                }
+                                            /> : 'Đăng nhập'}
+                                        </button>
                                         <p className={styles.or}>Hoặc</p>
                                         <button className={styles.register}>Đăng nhập bằng Google</button>
                                         <p className={styles.option_regis}>Bạn chưa có tài khoản ? - <Link href={'/sign-up'}>Đăng ký</Link></p>
