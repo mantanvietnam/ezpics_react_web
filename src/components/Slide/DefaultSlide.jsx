@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
@@ -15,14 +16,17 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-const DefaultSlide = ({ apiAction, title }) => {
+const DefaultSlide = ({ apiAction, title, pathString }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await apiAction();
-      setProducts(response.listData);
-      console.log(response);
+      try {
+        const response = await apiAction();
+        setProducts(response.listData);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+      }
     };
 
     fetchProducts();
@@ -69,7 +73,13 @@ const DefaultSlide = ({ apiAction, title }) => {
 
   return (
     <div className="w-5/6 mx-auto px-4 pt-4">
-      <h1 className="text-2xl font-bold mb-4">{title}</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-4">{title}</h1>
+        <Link href={pathString} className="font-bold text-red-500 text-sm">
+          Xem thêm
+        </Link>
+      </div>
+
       <div>
         <StyledSlider>
           <Slider {...settings} className="w-full relative">
