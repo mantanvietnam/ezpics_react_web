@@ -1,20 +1,14 @@
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
 
-export default function CenteredLayout({ children }) {
+export default function CenteredLayout(props) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <header>
-          <Header />
-        </header>
-        <main className="flex pt-[--header-height]">
-          <nav className="">
-            <Nav />
-          </nav>
-          <div className="content">{children}</div>
-        </main>
-      </body>
-    </html>
+    <div className="">
+      <Header />
+      <main className="flex pt-[--header-height]">
+        <Nav />
+        {props.children}
+      </main>
+    </div>
   );
 }
