@@ -1,4 +1,6 @@
 import HomeBanner from '@/components/HomeBanner';
+import EndowProduct from '@/components/Slide/EndowProduct';
+import EventProductSlider from '@/components/Slide/EventProductSlider';
 import NewProductsSlider from '@/components/Slide/NewproductsSlider';
 import SerisProductSlider from '@/components/Slide/SerisProductSlider';
 import CollectionProductSlider from '@/components/Slide/collectionProductSlider';
@@ -13,8 +15,8 @@ export default function HomeRoot(props) {
         <NewProductsSlider />
         <SerisProductSlider />
         <CollectionProductSlider />
-        <NewProductsSlider />
-        <NewProductsSlider />
+        <EndowProduct />
+        <EventProductSlider />
     </div>
   );
 }
