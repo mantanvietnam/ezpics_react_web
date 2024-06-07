@@ -6,7 +6,7 @@ import CollectionProductSlider from '@/components/Slide/collectionProductSlider'
 export default function HomeRoot(props) {
   return (
     <div className='flex-col w-[90%]'>
-      <div className='w-full'>
+      <div className='w-full pt-5'>
         <HomeBanner />
       </div>
         {props.children}
