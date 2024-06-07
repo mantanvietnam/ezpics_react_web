@@ -20,27 +20,27 @@ const Nav = () => {
     { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
     { href: "/project/recommend", label: "Danh mục", icon: images.category },
   ];
-  
+
   const userFuncs = [
     { href: "/your-design/purchase-form", label: "Thiết kế của bạn", icon: images.design },
     { href: "/ordered", label: "Order mẫu thiết kế", icon: images.order },
     { href: "/your-collection/purchase-collection", label: "Bộ sưu tập của bạn", icon: images.collection2 },
     { href: "/transaction/table-1", label: "Tổng quan giao dịch", icon: images.transaction },
-    { 
-      href: "/", 
-      label: "Gia hạn bản PRO", 
-      icon: images.renew, 
+    {
+      href: "/",
+      label: "Gia hạn bản PRO",
+      icon: images.renew,
       onClick: () => setOpen(true)
     },
   ];
 
   return (
     <div className={classes.navbar}>
-      { isAuthenticated ? (
+      {isAuthenticated ? (
         <div className={classes.top}>
           <Link href={"/"}>
             <div className={classes.profile}>
-              <Image 
+              <Image
                 src={images.defaultAvatar}
                 alt=""
                 width={40}
@@ -51,7 +51,7 @@ const Nav = () => {
             <div className={classes.info}>
               <p className={classes.name}>Name</p>
               <p className={classes.balance}>
-                <Image 
+                <Image
                   src={images.balance}
                   alt=""
                   width={20}
@@ -60,7 +60,7 @@ const Nav = () => {
                 /> : 0₫
               </p>
               <p className={classes.eCoin}>
-              <Image 
+                <Image
                   src={images.eCoin}
                   alt=""
                   width={20}
