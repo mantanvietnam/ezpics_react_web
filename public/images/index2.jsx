@@ -4,7 +4,17 @@ const images = {
   remove: require('./magic-wand1.png'),
   category: require('./folder.png'),
   picture: require('./picture.png'),
-  discount: require('./discount-coupon.png')
+  discount: require('./discount-coupon.png'),
+  remove: require('./magic-wand1.png'),
+  category: require('./folder.png'),
+  defaultAvatar: require('./default-avatar.png'),
+  balance: require('./banknotes.png'),
+  eCoin: require('./coin.png'),
+  design: require('./database.png'),
+  order: require('./online-order.png'),
+  collection2: require('./paint-roller (1).png'),
+  transaction: require('./history.png'),
+  renew: require('./repeater.png'),
 };
   
 export const proImages = [

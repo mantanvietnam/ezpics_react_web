@@ -2,14 +2,14 @@
   background-color: #fff;
   border-right: 1px solid #ccc;
   height: 100vh;
-  width: 250px;
+  width: 300px;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  // position: sticky;
-  // top: var(--header-height);
+  gap: 10px;
+  position: sticky;
+  top: var(--header-height);
 }
 
 .navbar .top {
@@ -32,13 +32,19 @@
   border-radius: 50%;
 }
 
-.navbar .bottom {
+.navbar .middle,
+.bottom {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.navbar .navItem {
+.navbar .bottom {
+  border-top: 1px solid #ccc;
+}
+
+.navbar .navItem,
+.userFunc {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -48,10 +54,29 @@
   cursor: pointer;
 }
 
+.navbar .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.navbar .avatar {
+  border-radius: 50%;
+}
+
 //modalUpPro
 .icon {
   max-width: 20px;
   max-height: 20px;
+}
+
+.image {
+  display: none;
+}
+
+.imageActive {
+  position: relative;
+  left: -10px;
+  border-radius: 10px;
 }
 
 .image {
