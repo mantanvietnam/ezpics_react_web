@@ -5,6 +5,7 @@ import styles from '@/styles/auth/sign_in.module.scss';
 import { setCookie } from '@/utils/cookie';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
+import { signIn } from 'next-auth/react';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
@@ -88,7 +89,9 @@ export default function Login() {
             setErrors(errors);
         }
     };
-
+    const handleLoginWithGoogle = () => {
+        signIn('google')
+    }
     return (
         <div className="h-screen w-screen">
             <div className={styles["login-bg"]}>
@@ -155,7 +158,7 @@ export default function Login() {
                                             /> : 'Đăng nhập'}
                                         </button>
                                         <p className={styles.or}>Hoặc</p>
-                                        <button className={styles.register}>Đăng nhập bằng Google</button>
+                                        <button className={styles.register} onClick={handleLoginWithGoogle}>Đăng nhập bằng Google</button>
                                         <p className={styles.option_regis}>Bạn chưa có tài khoản ? - <Link href={'/sign-up'}>Đăng ký</Link></p>
                                     </>
                                 )}
