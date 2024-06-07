@@ -1,21 +1,23 @@
 import HomeBanner from "@/components/HomeBanner";
-import {
-  NewProductsSlider,
-  TrendingSlider,
-  TrySlider,
-  SocialSlider,
-} from "@/components/Slide/ListSlider";
+import NewProductsSlider from "@/components/Slide/NewproductsSlider";
+import SerisProductSlider from "@/components/Slide/SerisProductSlider";
 
 export default function HomeRoot(props) {
   return (
-    <>
-      <div className="w-5/6 m-5">
+    <div className="flex-col w-[85%]">
+      <div className="w-full p-[30px]">
         <HomeBanner />
         <NewProductsSlider />
         <TrySlider />
         <TrendingSlider />
         <SocialSlider />
       </div>
-    </>
+      {props.children}
+      {/* <SerisProductSlider /> */}
+      <NewProductsSlider />
+      <NewProductsSlider />
+      <NewProductsSlider />
+      <NewProductsSlider />
+    </div>
   );
 }
