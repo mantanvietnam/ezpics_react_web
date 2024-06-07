@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 
 import { StyledSlider, SampleNextArrow, SamplePrevArrow } from "./CustomSlide";
 import "slick-carousel/slick/slick.css";
@@ -29,7 +28,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
       }
     };
 
-    fetchData();
+    fetchProducts();
   }, [apiAction]);
 
   const settings = {
@@ -72,7 +71,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
   };
 
   return (
-    <div className="w-5/6 mx-auto px-4 pt-4">
+    <div className="w-[90%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold mb-4">{title}</h1>
         <Link href={pathString} className="font-bold text-red-500 text-sm">
@@ -97,9 +96,11 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                   </div>
                   <div className="p-4">
                     <h2 className="text-lg font-medium h-20">{product.name}</h2>
-                    <p className="text-gray-500 mt-2">Đã bán {product.sold}</p>
+                    <p className="text-gray-500 mt-2 text-sm">
+                      Đã bán {product.sold}
+                    </p>
                     <div className="mt-2">
-                      <span className="text-red-500 font-bold mr-2">
+                      <span className="text-red-500 mr-2 font-bold text-sm">
                         {product.sale_price === 0
                           ? "Miễn phí"
                           : VND.format(product.sale_price)}

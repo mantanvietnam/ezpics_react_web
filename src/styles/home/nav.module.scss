@@ -35,7 +35,8 @@
   border-radius: 50%;
 }
 
-.navbar .middle, .bottom {
+.navbar .middle,
+.bottom {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -45,7 +46,8 @@
   border-top: 1px solid #ccc;
 }
 
-.navbar .navItem, .userFunc {
+.navbar .navItem,
+.userFunc {
   display: flex;
   align-items: center;
   gap: 10px;

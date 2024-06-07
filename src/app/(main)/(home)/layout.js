@@ -7,10 +7,6 @@ export default function HomeRoot(props) {
     <div className="flex-col w-[85%]">
       <div className="w-full p-[30px]">
         <HomeBanner />
-        <NewProductsSlider />
-        <TrySlider />
-        <TrendingSlider />
-        <SocialSlider />
       </div>
       {props.children}
       {/* <SerisProductSlider /> */}
