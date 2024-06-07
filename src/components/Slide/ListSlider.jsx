@@ -2,6 +2,7 @@ import {
   getNewProducts,
   getTrendingProducts,
   getProductByCategory,
+  getSeriesProducts,
 } from "@/lib/actions/actions";
 import DefaultSlide from "./DefaultSlide";
 

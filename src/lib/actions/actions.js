@@ -10,6 +10,12 @@ export const getTrendingProducts = async () => {
   );
 };
 
+export const getSeriesProducts = async () => {
+  return fetch("https://apis.ezpics.vn/apis/listProductSeriesAPI").then((res) =>
+    res.json()
+  );
+};
+
 import axios from "axios";
 
 export const getProductByCategory = async (
