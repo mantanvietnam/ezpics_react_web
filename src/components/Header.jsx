@@ -13,7 +13,7 @@ import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const router = useRouter()
+  const router = useRouter();
   const menuItems = [
     { href: "/", label: "Trang chủ" },
     { href: "/new-product", label: "Thiết kế mới " },
@@ -61,9 +61,12 @@ const Header = () => {
 
         <div className="menu flex">
           {menuItems.map((menuItem, index) => (
-            <div key={index} href={menuItem.href} className="primary_btn pl-10">
+            <Link
+              key={index}
+              href={menuItem.href}
+              className="primary_btn pl-10">
               {menuItem.label}
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -76,9 +79,11 @@ const Header = () => {
           </div>
         ))}
         <button className="button-red">Tạo thiết kế</button>
-        <button className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4" onClick={() => {
-          router.push('sign-in')
-        }}>
+        <button
+          className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4"
+          onClick={() => {
+            router.push("sign-in");
+          }}>
           <UserOutlined />
           <p className="pl-2">Đăng nhập</p>
         </button>
