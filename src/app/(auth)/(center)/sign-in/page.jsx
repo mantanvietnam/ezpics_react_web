@@ -55,7 +55,6 @@ export default function Login() {
                     dispatch(CHANGE_STATUS_AUTH(true));
                     dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
                     setCookie("token", repon?.info_member?.token_web, expirationHours);
-                    setCookie("user_login", repon?.info_member, expirationHours);
                     router.push('/test');
                 } else {
                     setLoginError(repon?.messages[0]?.text);
@@ -114,7 +113,7 @@ export default function Login() {
                                             placeholder="Số điện thoại"
                                             onChange={(e) => setPhoneConfirm(e.target.value)}
                                         />
-                                        {errors.phoneConfirm && <p className={styles.error}>{errors.phoneConfirm}</p>}
+                                        {errors?.phoneConfirm && <p className={styles.error}>{errors?.phoneConfirm}</p>}
                                         <button className={styles.confirm} onClick={handleConfirm}> Xác nhận </button>
                                     </>
                                 ) : (
@@ -126,7 +125,7 @@ export default function Login() {
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
                                         />
-                                        {errors.phone && <p className={styles.error}>{errors.phone}</p>}
+                                        {errors?.phone && <p className={styles.error}>{errors?.phone}</p>}
                                         <div className={styles.box_pass}>
                                             <p className={styles.label_input}>Mật khẩu</p>
                                             <p className={styles.forgot_pass} onClick={handleCheckForgot}>Quên mật khẩu ?</p>
@@ -137,7 +136,7 @@ export default function Login() {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                         />
-                                        {errors.password && <p className={styles.error}>{errors.password}</p>}
+                                        {errors?.password && <p className={styles.error}>{errors?.password}</p>}
                                         {loginError && <p className={styles.error}>{loginError}</p>}
                                         <button
                                             type='submit'
