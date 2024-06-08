@@ -2,6 +2,7 @@
 
 import { GlobalOutlined, DownOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import Link from "next/link";
 import ModalUpPro from "@/components/ModalUpPro";
 import FeatureList from "@/components/PricingCompare/FeatureList";
 
@@ -19,7 +20,7 @@ const page = () => {
 
   return (
     <div className="w-full">
-      <h1 className="min-h-[300px] flex justify-center text-5xl font-bold pt-[8%] bg-radial-gradient">
+      <h1 className="min-h-[20%] flex justify-center text-5xl font-bold pt-[8%] bg-radial-gradient">
         Thiết kế
         <span
           className="px-2.5 text-transparent"
@@ -32,46 +33,42 @@ const page = () => {
         với gói đăng ký phù hợp
       </h1>
 
-      <div>
-        <div className="flex flex-row pt-[8%] px-[5%]">
-          <div className="w-1/3">
-            <h1 className="text-xl font-bold">Tính toán cho đội của bạn</h1>
+      <div className="flex flex-row pt-[6%] px-[5%]">
+        <div className="w-1/3">
+          <h1 className="text-xl font-bold">Tính toán cho đội của bạn</h1>
+        </div>
+        <div className="w-1/3">
+          <p className="text-base pb-2">Số lượng thành viên</p>
+          <div className="w-[90%] h-[80%] flex items-center justify-around border-solid border border-slate-400 rounded-lg">
+            <input
+              type="text"
+              placeholder="Tùy chỉnh"
+              className="bg-white border-none text-base outline-none p-2"
+            />
+            <p>thành viên</p>
           </div>
-          <div className="w-1/3">
-            <p className="text-base pb-2">Số lượng thành viên</p>
-            <div className="w-[90%] h-[80%] flex items-center justify-around border-solid border border-slate-400 rounded-lg">
-              <input
-                type="text"
-                placeholder="Tùy chỉnh"
-                className="bg-white border-none text-base outline-none p-2"
-              />
-              <p>thành viên</p>
-            </div>
-          </div>
-          <div className="w-1/3">
-            <p className="text-base pb-2">
-              <strong className="font-bold">Chu kì: </strong>
-              <span style={{ color: "rgb(139, 61, 255);" }}>
-                Tiết kiệm 16%{" "}
-              </span>
-              khi thanh toán theo năm
-            </p>
-            <div className="w-[90%] h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
-              <button
-                className={`w-[90%] h-[80%] rounded-lg ${
-                  selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
-                }`}
-                onClick={() => handleButtonClick("monthly")}>
-                Hàng tháng
-              </button>
-              <button
-                className={`w-[90%] h-[80%] rounded-lg ${
-                  selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
-                }`}
-                onClick={() => handleButtonClick("yearly")}>
-                Hàng năm
-              </button>
-            </div>
+        </div>
+        <div className="w-1/3">
+          <p className="text-base pb-2">
+            <strong className="font-bold">Chu kì: </strong>
+            <span style={{ color: "rgb(139, 61, 255);" }}>Tiết kiệm 16% </span>
+            khi thanh toán theo năm
+          </p>
+          <div className="w-[90%] h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
+            <button
+              className={`w-[90%] h-[80%] rounded-lg ${
+                selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
+              }`}
+              onClick={() => handleButtonClick("monthly")}>
+              Hàng tháng
+            </button>
+            <button
+              className={`w-[90%] h-[80%] rounded-lg ${
+                selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
+              }`}
+              onClick={() => handleButtonClick("yearly")}>
+              Hàng năm
+            </button>
           </div>
         </div>
       </div>
@@ -95,7 +92,7 @@ const page = () => {
               /năm dành cho một thành viên
             </p>
             <button className="flex justify-center items-center w-full bg-[#515558] border-0 pt-2.5 pb-2.5 mt-[15%] rounded-[5px] text-white">
-              Bắt đầu
+              <Link href="/">Bắt đầu</Link>
             </button>
           </div>
           <FeatureList
@@ -238,7 +235,6 @@ const page = () => {
           <img src="/images/fb_logo.png" alt="" className="w-[20px] h-[20px]" />
         </a>
       </div>
-
       <ModalUpPro open={open} handleCancel={handleCancel} />
     </div>
   );

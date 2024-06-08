@@ -1,4 +1,4 @@
-import { getNewProducts } from "@/lib/actions/actions";
+import { getNewProducts } from "@/api/product";
 import DefaultSlide from "./DefaultSlide";
 
 const NewProductsSlider = () => {
