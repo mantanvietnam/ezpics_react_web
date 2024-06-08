@@ -1,16 +1,27 @@
 'use client'
-import { checkAvailableLogin } from '@/utils';
-import React from 'react'
-import { useSelector } from 'react-redux';
+import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from '@/redux/slices/authSlice';
+import { checkAvailableLogin, setCookie } from '@/utils';
+import { useSession } from 'next-auth/react';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 const Index = () => {
-    // Cập nhật trạng thái ngay dựa vào redux
-    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    // Cập nhật trạng thái đăng nhập sau khi load (lưu vào cookies)
+    const dispatch = useDispatch();
+    // Kiểm tra trạng thái đăng nhập sau khi load (lưu vào cookies)
     const isAuthenticated_Cookie = checkAvailableLogin()
+    const { data: session } = useSession();
+    useEffect(() => {
+        if (session?.accessToken) {
+            dispatch(CHANGE_VALUE_TOKEN(session?.accessToken));
+            dispatch(CHANGE_STATUS_AUTH(true));
+            setCookie("token", session?.accessToken, 3);
+        }
+        // cần xem lại dependencies
+    }, [dispatch, session?.accessToken]);
+
     return (
         <div>
-            {isAuthenticated_Cookie || isAuthenticated ? 'Wellcome Đã đăng nhập' : 'Chưa Đăng nhập'}
+            {isAuthenticated_Cookie ? 'Wellcome Đã đăng nhập : ' : 'Chưa Đăng nhập'}
         </div>
     )
 }
