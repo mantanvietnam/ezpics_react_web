@@ -24,16 +24,18 @@ axiosInstance.interceptors.response.use(
         }
     },
     error => {
-        if (error.response) {
-            console.error('Response error:', error.response.status, error.response.data);
-            throw new Error(`Failed with status: ${error.response.status}`);
-        } else if (error.request) {
-            console.error('No response received:', error.request);
-            throw new Error('No response received from the server');
-        } else {
-            console.error('Error setting up request:', error.message);
-            throw new Error(`Error setting up request: ${error.message}`);
+        if (error.response && error.response.status === 401) {
+            // Token is invalid or expired
+            // if (typeof window !== 'undefined') {
+            //     localStorage.removeItem('token');
+            //     // Only redirect if the request is for a protected route
+            //     const protectedRoutes = ['/dashboard', '/profile', '/settings']; // Define your protected routes here
+            //     if (protectedRoutes.includes(Router.pathname)) {
+            //         Router.push('/login');
+            //     }
+            // }
         }
+        return Promise.reject(error);
     }
 );
 

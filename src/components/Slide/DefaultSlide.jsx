@@ -5,7 +5,6 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 
 import { StyledSlider, SampleNextArrow, SamplePrevArrow } from "./CustomSlide";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -86,20 +85,22 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
             {products.map((product) => (
               <div className="slide-content pr-8" key={product.id}>
                 <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                  <div className="bg-orange-100">
+                  <div className="bg-orange-100 overflow-hidden group">
                     <Image
                       src={product.image}
                       width={300}
                       height={200}
-                      className="object-contain h-48 w-96"
+                      className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
                       alt={product.name}
                     />
                   </div>
                   <div className="p-4">
                     <h2 className="text-lg font-medium h-20">{product.name}</h2>
-                    <p className="text-gray-500 mt-2">Đã bán {product.sold}</p>
+                    <p className="text-gray-500 mt-2 text-sm">
+                      Đã bán {product.sold}
+                    </p>
                     <div className="mt-2">
-                      <span className="text-red-500 font-bold mr-2">
+                      <span className="text-red-500 mr-2 font-bold text-sm">
                         {product.sale_price === 0
                           ? "Miễn phí"
                           : VND.format(product.sale_price)}
