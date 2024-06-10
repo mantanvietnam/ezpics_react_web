@@ -13,6 +13,17 @@ export const StyledSlider = styled.div`
   }
 `;
 
+export const SkeletonCustom = styled.div`
+  .ant-skeleton-image {
+    height: 192px !important;
+    width: 220px !important;
+  }
+
+  .ant-skeleton-input {
+    width: 220px !important;
+  }
+`;
+
 export const Arrow = styled.div`
   display: flex !important;
   align-items: center;
