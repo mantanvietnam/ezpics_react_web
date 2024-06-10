@@ -1,8 +1,6 @@
 
-import RecommendAction from '@/components/RecommendPage/RecommendAction'
-import NewProductsSlider from '@/components/Slide/NewproductsSlider'
-import YourProductAction from '@/components/YourProduct/YourProductAction'
 import YourProductBanner from '@/components/YourProduct/YourProductBanner'
+import YourProductAction from '@/components/YourProduct/YourProductAction'
 import React from 'react'
 
 export default function layout(props) {
@@ -11,11 +9,10 @@ export default function layout(props) {
       <div className='w-full pt-5'>
         <YourProductBanner />
       </div>
-      <div>
+      <div className="pb-4">
         <YourProductAction />
       </div>
       {props.children}
-      {/* <NewProductsSlider /> */}
     </div>
   )
 }

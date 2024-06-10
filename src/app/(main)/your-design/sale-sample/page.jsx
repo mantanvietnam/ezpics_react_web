@@ -7,12 +7,13 @@ export default function Page() {
 
   const getMyProductData = async () => {
     return await getMyProductApi({ 
-      type: "user_edit",
+      type: "user_create",
       token: "LF4z0ZHp1VSi6wBN5gxAMRWyCdOKlf1718011010",
       // token: checkTokenCookie(),
       limit: 12,
       page: 1
     });
+    
   };
 
   return (

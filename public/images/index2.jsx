@@ -16,6 +16,7 @@ const images = {
   collection2: require('./paint-roller (1).png'),
   transaction: require('./history.png'),
   renew: require('./repeater.png'),
+  painter: require('./painter.png'),
   };
   
 export const proImages = [
@@ -35,6 +36,12 @@ export const designIcon = {
   docs: require('./docs.svg'),
   youtube: require('./youtube.svg'),
 };
+
+export const designAction = {
+  edit: require('./edit.png').default,
+  copy: require('./copy.png'),
+  delete: require('./delete.png'),
+}
 
 
 export default images;
