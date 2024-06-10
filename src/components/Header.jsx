@@ -254,9 +254,9 @@ const Header = () => {
 
         <div className="menu flex">
           {menuItems.map((menuItem, index) => (
-            <div key={index} href={menuItem.href} className="primary_btn pl-10">
+            <a key={index} href={menuItem.href} className="primary_btn pl-10">
               {menuItem.label}
-            </div>
+            </a>
           ))}
         </div>
       </div>

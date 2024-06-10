@@ -7,47 +7,40 @@ import images, { proImages } from "../../public/images/index2";
 const ModalUpPro = ({ open, handleCancel }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showContent, setShowContent] = useState(true);
-  const [subscriptionSelected, setSubscriptionSelected] = useState(false);
-  const [paymentSelected, setPaymentSelected] = useState(false);
-  const [subscriptionOption, setSubscriptionOption] = useState('');
-  const [paymentOption, setPaymentOption] = useState('');
+  const [formData, setFormData] = useState({
+    subscriptionOption: '',
+    paymentOption: '',
+  });
   const [showDiscountModal, setShowDiscountModal] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % proImages.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (!open) {
+    let interval;
+    if (open) {
+      interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % proImages.length);
+      }, 6000);
+    } else {
       setShowContent(true);
     }
+    return () => clearInterval(interval);
   }, [open]);
 
-  const handleButtonClick = () => setShowContent(false);
-
-  const handleSubscriptionChange = (e) => {
-    setSubscriptionSelected(true);
-    setSubscriptionOption(e.target.value);
+  const handleButtonClick = () => {
+    console.log('Selected Subscription Option:', formData.subscriptionOption);
+    console.log('Selected Payment Option:', formData.paymentOption);
+    // Xử lý logic thanh toán ở đây
   };
 
-  const handlePaymentChange = (e) => {
-    setPaymentSelected(true);
-    setPaymentOption(e.target.value);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const isFormValid = subscriptionSelected && paymentSelected;
+  const isFormValid = formData.subscriptionOption && formData.paymentOption;
 
   const showDiscountModalHandler = () => setShowDiscountModal(true);
 
   const hideModal = () => setShowDiscountModal(false);
-
-  useEffect(() => {
-    console.log('Selected Subscription Option:', subscriptionOption);
-    console.log('Selected Payment Option:', paymentOption);
-  }, [subscriptionOption, paymentOption]);
 
   return (
     <Modal open={open} onCancel={handleCancel} width={1000} footer={null}>
@@ -77,7 +70,7 @@ const ModalUpPro = ({ open, handleCancel }) => {
                   </div>
                 </div>
               </div>
-              <button className="bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold" onClick={handleButtonClick}>Gia hạn Ezpics Pro</button>
+              <button className="bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold" onClick={() => setShowContent(false)}>Gia hạn Ezpics Pro</button>
             </>
           ) : (
             <>
@@ -86,18 +79,18 @@ const ModalUpPro = ({ open, handleCancel }) => {
                 <div className="flex flex-col items-start pl-0">
                   <form className="pl-0 flex flex-col justify-start">
                     <label className="flex items-center">
-                      <input type="radio" name="subscription" value="1" onChange={handleSubscriptionChange} />
+                      <input type="radio" name="subscriptionOption" value="1" onChange={handleChange} />
                       <span className="ml-1">Bản 1 tháng</span>
                     </label>
                     <p className="ml-8 mt-2 text-xs font-normal pb-1">200.000 ₫ <b>hoặc</b> 200 eCoin</p>
                     <label className="flex items-center">
-                      <input type="radio" name="subscription" value="2" onChange={handleSubscriptionChange} />
+                      <input type="radio" name="subscriptionOption" value="2" onChange={handleChange} />
                       <span className="ml-1">Bản 12 tháng <b className="text-red-500 text-base font-normal">(Khuyến nghị)</b></span>
                     </label>
                     <p className="ml-8 mt-2 text-xs font-normal pb-1">1.999.000 ₫ <b>hoặc</b> 2000 eCoin</p>
                   </form>
                     
-                  {[' Chức năng xóa nền tự động' , ' Hỗ trợ khách hàng 24/7' , ' Viết content tự động' , ' Nhận hoa hồng khi giới thiệu người dùng vĩnh viễn' ].map((text, index) => (
+                  {[' Chức năng xóa nền tự động', ' Hỗ trợ khách hàng 24/7', ' Viết content tự động', ' Nhận hoa hồng khi giới thiệu người dùng vĩnh viễn'].map((text, index) => (
                     <div key={index} className="flex pt-2 items-center">
                       <span className="mr-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -111,19 +104,19 @@ const ModalUpPro = ({ open, handleCancel }) => {
                   <p className="mt-2 ml-1 text-sm font-medium text-red-500 mb-0">Tặng 1 bộ sưu tập 500 mẫu Ezpics</p>
                   <form className="pt-4 flex flex-row justify-start">
                     <label className="mr-2 flex items-center">
-                      <input type="radio" name="payment" value="cash" onChange={handlePaymentChange} />
+                      <input type="radio" name="paymentOption" value="cash" onChange={handleChange} />
                       <span className="ml-1">Mua bằng tiền mặt</span>
                     </label>
                     <label className="mr-2 flex items-center">
-                      <input type="radio" name="payment" value="ecoin" onChange={handlePaymentChange} />
+                      <input type="radio" name="paymentOption" value="ecoin" onChange={handleChange} />
                       <span className="ml-1">Mua bằng eCoin</span>
                     </label>
                   </form>
                 </div>
-                </div>
+              </div>
               
-                <div>
-                  <div className="flex flex-row justify-between items-end pb-4">
+              <div>
+                <div className="flex flex-row justify-between items-end pb-4">
                   <div className="flex flex-row items-end">
                     <Image src={images.discount} alt="" className="w-5 h-5" />
                     <p className="m-0 text-xs">Ezpics Voucher</p>
@@ -132,12 +125,12 @@ const ModalUpPro = ({ open, handleCancel }) => {
                 </div>
 
                 <button
-                    className={`bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold ${isFormValid ? '' : 'opacity-50 cursor-not-allowed'}`}
-                    onClick={handleButtonClick}
-                    disabled={!isFormValid}
-                  >
-                    Thanh toán
-                  </button>
+                  className={`bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold ${isFormValid ? '' : 'opacity-50 cursor-not-allowed'}`}
+                  onClick={handleButtonClick}
+                  disabled={!isFormValid}
+                >
+                  Thanh toán
+                </button>
               </div>
             </>
           )}
@@ -152,15 +145,15 @@ const ModalUpPro = ({ open, handleCancel }) => {
           </div>
           <div className="flex justify-end">
             <button
-                className={'boder-2 shadow-xl rounded px-5 py-2 ml-4 h-fit w-fit font-semibold'}
-                onClick={hideModal}
-              >
-                Hủy
+              className={'boder-2 shadow-xl rounded px-5 py-2 ml-4 h-fit w-fit font-semibold'}
+              onClick={hideModal}
+            >
+              Hủy
             </button>  
-             <button
-                className={'bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-fit font-semibold opacity-50 cursor-not-allowed'}
-              >
-                Chọn voucher
+            <button
+              className={'bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-fit font-semibold opacity-50 cursor-not-allowed'}
+            >
+              Chọn voucher
             </button>            
           </div>
         </div>
