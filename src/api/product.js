@@ -1,5 +1,13 @@
 import axios from "axios";
 
+export const getNewProducts = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getNewProductAPI",
+    data
+  );
+  return response.data;
+};
+
 export const getLogoProductApi = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/getProductByCategoryAPI",
