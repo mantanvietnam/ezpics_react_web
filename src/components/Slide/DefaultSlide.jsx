@@ -83,7 +83,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
         <StyledSlider>
           <Slider {...settings} className="w-full relative">
             {products.map((product) => (
-              <div className="slide-content pr-8" key={product.id}>
+              <Link href={`/category/${product.id}`} className="slide-content pr-8" key={product.id}>
                 <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                   <div className="bg-orange-100 overflow-hidden group">
                     <Image
@@ -111,7 +111,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </Slider>
         </StyledSlider>

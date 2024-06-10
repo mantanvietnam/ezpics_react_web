@@ -85,14 +85,14 @@ const CollectionProductSlider = () => {
         <StyledSlider>
           <Slider {...settings} className="w-full relative">
             {products.map((product) => (
-              <div className="slide-content pr-8" key={product.id}>
+              <Link href='' className="slide-content pr-8" key={product.id}>
                 <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                  <div className="bg-orange-100">
+                  <div className="bg-orange-100 overflow-hidden group">
                     <Image
                       src={product.thumbnail}
                       width={300}
                       height={200}
-                      className="object-contain h-48 w-96"
+                      className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
                       alt={product.name}
                     />
                   </div>
@@ -108,7 +108,7 @@ const CollectionProductSlider = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </Slider>
         </StyledSlider>
