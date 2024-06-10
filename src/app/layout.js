@@ -1,6 +1,7 @@
 import Providers from "@/redux/Provider";
 import "@/styles/globals.scss";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
   title: "Create Next App",
@@ -16,7 +17,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning={true}>
         <Providers>
           {children}
-          <ToastContainer />
+          <ToastContainer theme="colored" />
         </Providers>
       </body>
     </html>

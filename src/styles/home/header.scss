@@ -10,6 +10,9 @@ body {
   @apply font-poppins font-thin;
 }
 
+.primary_btn {
+  @apply cursor-pointer;
+}
 .icon-container {
   @apply relative flex items-center;
 
