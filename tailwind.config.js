@@ -29,9 +29,14 @@ module.exports = {
             opacity: "1",
           },
         },
+        animloader: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         slideInFromLeft: "slideInFromLeft 0.75s ease-in-out",
+        animloader: "animloader 2s linear infinite",
       },
     },
   },
