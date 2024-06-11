@@ -24,7 +24,7 @@ export default function Dashboard() {
             token: checkTokenCookie(),
         });
         await signOut({})
-        if (response && response.code === 0) {
+        if (response && response?.code === 0) {
             document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
             dispatch(DELETE_ALL_VALUES());
             router.push("/sign-in");
