@@ -62,16 +62,16 @@ function Search() {
                 content={content}
                 overlayInnerStyle={{width: "745px"}}
                 trigger="click"
-                className="w-full"
+                className="w-4/5"
                 placement="bottomLeft"
             >
-                <div className="relative flex items-center h-12 w-4/5 p-4 rounded-lg shadow-sm border bg-white">
+                <div className="relative flex items-center h-12 p-4 rounded-lg shadow-sm border bg-white">
                 <SearchOutlined className="text-lg text-gray-500" />
                 <input
                     className="ml-2 w-full h-full bg-transparent outline-none"
                     ref={inputRef}
                     value={searchValue}
-                    placeholder="Tìm kiếm sản phẩm..."
+                    placeholder="Tìm kiếm nội dung trên Ezpics"
                     spellCheck={false}
                     onChange={(e) => setSearchValue(e.target.value.trimStart())}
                     />

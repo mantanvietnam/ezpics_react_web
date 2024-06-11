@@ -1,12 +1,10 @@
 "use client";
-import { useRef, useState } from "react";
 import Link from "next/link";
-import { SearchOutlined, StarOutlined } from "@ant-design/icons";
 import Search from "./Search";
+import { useState } from "react";
 
 export default function HomeBanner() {
   const [arrowPosition, setArrowPosition] = useState("2%");
-  const [isSelected, setIsSelected] = useState(false);
   const [isHovered, setIsHovered] = useState({
     action1: false,
     action2: false,
@@ -338,7 +336,7 @@ export default function HomeBanner() {
         </h2>
       </div>
       
-      <Search className="flex w-full bg-[#ffffff] p-3 items-center gap-8 rounded-md" />
+      <Search className="flex w-[700px] bg-[#ffffff] p-3 items-center gap-8 rounded-md" />
 
       <div className="flex items-center justify-between w-full">
         {actions.map((action, index) => (
