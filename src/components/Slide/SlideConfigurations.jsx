@@ -92,5 +92,15 @@ export const SlideConfigurations = {
     },
     title: "Mẫu thiết kế in hàng loạt",
     pathString: "/"
+  },
+  SerisProductSlider: {
+    apiAction: async () => {
+      "use server";
+      const products = await getserisProductApi({ limit: '12', page: '1' });
+      const data = { listData: [...products.data] };
+      return data;
+    },
+    title: "Mẫu thiết kế in hàng loạt",
+    pathString: "/"
   }
 };

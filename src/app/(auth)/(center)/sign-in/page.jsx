@@ -55,7 +55,7 @@ export default function Login() {
                     dispatch(CHANGE_STATUS_AUTH(true));
                     dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
                     setCookie("token", repon?.info_member?.token_web, expirationHours);
-                    router.push('/test');
+                    router.push('/');
                 } else {
                     setLoginError(repon?.messages[0]?.text);
                 }
