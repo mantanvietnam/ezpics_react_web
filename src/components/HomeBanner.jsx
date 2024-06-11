@@ -34,9 +34,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action1 ? "rgb(69, 86, 239)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action1 ? "rgb(69, 86, 239)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action1: true })}
@@ -66,9 +65,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action2 ? "rgb(15, 184, 206)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action2 ? "rgb(15, 184, 206)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action2: true })}
@@ -99,9 +97,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action3 ? "rgb(33, 166, 99)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action3 ? "rgb(33, 166, 99)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action3: true })}
@@ -132,9 +129,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action4 ? "rgb(210, 105, 230)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action4 ? "rgb(210, 105, 230)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action4: true })}
@@ -165,9 +161,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action5 ? "rgb(165, 72, 255)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action5 ? "rgb(165, 72, 255)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action5: true })}
@@ -198,9 +193,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action6 ? "rgb(255, 81, 84)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action6 ? "rgb(255, 81, 84)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action6: true })}
@@ -231,9 +225,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action7 ? "rgb(87, 94, 253)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action7 ? "rgb(87, 94, 253)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action7: true })}
@@ -265,9 +258,8 @@ export default function HomeBanner() {
             borderRadius: "50%",
             padding: 10,
             transition: "background-color 0.3s, fill 0.3s",
-            backgroundColor: `${
-              isHovered.action8 ? "rgb(255, 153, 0)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action8 ? "rgb(255, 153, 0)" : "white"
+              }`,
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action8: true })}
           onMouseLeave={() => setIsHovered({ ...isHovered, action8: false })}
@@ -297,9 +289,8 @@ export default function HomeBanner() {
             height: 45,
             borderRadius: "50%",
             padding: 10,
-            backgroundColor: `${
-              isHovered.action9 ? "rgb(104, 62, 212)" : "white"
-            }`,
+            backgroundColor: `${isHovered.action9 ? "rgb(104, 62, 212)" : "white"
+              }`,
             transition: "background-color 0.3s, fill 0.3s",
           }}
           onMouseEnter={() => setIsHovered({ ...isHovered, action9: true })}

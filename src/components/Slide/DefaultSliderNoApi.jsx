@@ -11,10 +11,8 @@ import {
   SamplePrevArrow,
   SkeletonCustom,
 } from "./CustomSlide";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { getCollectionProductApi } from "@/api/product";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
@@ -23,25 +21,8 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-const CollectionProductSlider = () => {
-  const [products, setProducts] = useState([]);
+const DefaultSlideNoApi = ({ products, title, pathString }) => {
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    const fetchProducts = async () => {
-      try {
-        const response = await getCollectionProductApi();
-        setProducts(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch products:", err);
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const settings = {
     infinite: true,
@@ -85,8 +66,8 @@ const CollectionProductSlider = () => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">Bộ sưu tập thịnh hành</h1>
-        <Link href="/" className="font-bold text-red-500 text-sm">
+        <h1 className="text-2xl font-bold mb-4">{title}</h1>
+        <Link href={pathString} className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
       </div>
@@ -111,11 +92,11 @@ const CollectionProductSlider = () => {
           ) : (
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
-                <div className="slide-content pr-8" key={product.id}>
+                <Link href={`/category/${product.id}`} className="slide-content pr-8" key={product.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="bg-orange-100">
+                    <div className="bg-orange-100 overflow-hidden group">
                       <Image
-                        src={product.thumbnail}
+                        src={product.image}
                         width={300}
                         height={200}
                         className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
@@ -126,18 +107,22 @@ const CollectionProductSlider = () => {
                       <h2 className="text-lg font-medium h-20">
                         {product.name}
                       </h2>
-                      <p className="text-gray-500 mt-2">
-                        Số lượng mẫu {product?.number_product}
+                      <p className="text-gray-500 mt-2 text-sm">
+                        Đã bán {product.sold}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 font-bold mr-2">
+                        <span className="text-red-500 mr-2 font-bold text-sm">
+                          {product.sale_price === 0
+                            ? "Miễn phí"
+                            : VND.format(product.sale_price)}
+                        </span>
+                        <span className="text-gray-500 line-through">
                           {VND.format(product.price)}
                         </span>
-                        <span className="text-gray-500 line-through"></span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </Slider>
           )}
@@ -147,4 +132,4 @@ const CollectionProductSlider = () => {
   );
 };
 
-export default CollectionProductSlider;
+export default DefaultSlideNoApi;

@@ -17,3 +17,11 @@ body {
 .button-red {
   @apply bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit;
 }
+
+.social-icons {
+  @apply w-[24px] h-[24px];
+}
+
+.product-details-e {
+  @apply w-[100px] text-sm text-slate-500;
+}

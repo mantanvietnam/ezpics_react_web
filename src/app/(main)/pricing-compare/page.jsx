@@ -6,7 +6,7 @@ import Link from "next/link";
 import ModalUpPro from "@/components/ModalUpPro";
 import FeatureList from "@/components/PricingCompare/FeatureList";
 
-const page = () => {
+const Page = () => {
   const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
 
@@ -56,16 +56,14 @@ const page = () => {
           </p>
           <div className="w-[90%] h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
             <button
-              className={`w-[90%] h-[80%] rounded-lg ${
-                selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
-              }`}
+              className={`w-[90%] h-[80%] rounded-lg ${selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
+                }`}
               onClick={() => handleButtonClick("monthly")}>
               Hàng tháng
             </button>
             <button
-              className={`w-[90%] h-[80%] rounded-lg ${
-                selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
-              }`}
+              className={`w-[90%] h-[80%] rounded-lg ${selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
+                }`}
               onClick={() => handleButtonClick("yearly")}>
               Hàng năm
             </button>
