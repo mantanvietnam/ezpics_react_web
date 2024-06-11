@@ -1,11 +1,10 @@
 "use client";
-import { useRef, useState } from "react";
 import Link from "next/link";
-import { SearchOutlined, StarOutlined } from "@ant-design/icons";
+import Search from "./Search";
+import { useState } from "react";
 
 export default function HomeBanner() {
   const [arrowPosition, setArrowPosition] = useState("2%");
-  const [isSelected, setIsSelected] = useState(false);
   const [isHovered, setIsHovered] = useState({
     action1: false,
     action2: false,
@@ -297,8 +296,8 @@ export default function HomeBanner() {
           onMouseLeave={() => setIsHovered({ ...isHovered, action9: false })}
           xmlns="http://www.w3.org/2000/svg">
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M6.667 18.667a2.667 2.667 0 1 0 0-5.334 2.667 2.667 0 0 0 0 5.334Zm9.333 0a2.667 2.667 0 1 0 0-5.334 2.667 2.667 0 0 0 0 5.334ZM28 16a2.667 2.667 0 1 1-5.333 0A2.667 2.667 0 0 1 28 16Z"
             style={{
               fill: `${isHovered.action9 ? "white" : "rgb(104, 62, 212)"}`,
@@ -327,16 +326,9 @@ export default function HomeBanner() {
           Bạn muốn thiết kế gì ?
         </h2>
       </div>
-      <div className="flex w-[700px] bg-[#ffffff] p-3 items-center gap-8 rounded-md">
-        <button className="w-[40px] h-[35px] flex items-center justify-center rounded-full hover:bg-slate-200">
-          <SearchOutlined className="text-lg" />
-        </button>
-        <input
-          className="w-full appearance-none border-none focus:outline-none"
-          type="text"
-          placeholder="Tìm kiếm nội dung trên Ezpics"
-        />
-      </div>
+      
+      <Search className="flex w-[700px] bg-[#ffffff] p-3 items-center gap-8 rounded-md" />
+
       <div className="flex items-center justify-between w-full">
         {actions.map((action, index) => (
           <div
