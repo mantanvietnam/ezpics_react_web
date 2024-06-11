@@ -39,3 +39,34 @@ export const getInfoProductApi = async (data) => {
   );
   return response.data;
 };
+export const getMyProductApi = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getMyProductAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getMyProductSeriesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getMyProductSeriesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const deleteProductAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/deleteProductAPI",
+    data
+  );
+  return response.data;
+};
+
+export const duplicateProductAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/clonedProductAPI",
+    data
+  );
+  return response.data;
+};
