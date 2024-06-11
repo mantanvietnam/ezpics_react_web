@@ -92,7 +92,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
       <div>
         <StyledSlider>
           {loading ? (
-            <div className="flex flex-row">
+            <Slider {...settings} className="w-full relative">
               {[...Array(5).keys()].map((index) => (
                 <div key={index}>
                   <SkeletonCustom>
@@ -105,7 +105,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                   </SkeletonCustom>
                 </div>
               ))}
-            </div>
+            </Slider>
           ) : (
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (

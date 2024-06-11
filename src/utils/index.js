@@ -1,2 +1,2 @@
-export { setCookie, getCookie } from '../utils/cookie';
-export { checkAvailableLogin } from '../utils/auth';
+export { setCookie, getCookie, checkTokenCookie } from "../utils/cookie";
+export { checkAvailableLogin } from "../utils/auth";
