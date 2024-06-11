@@ -21,25 +21,8 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-const DefaultSlide = ({ apiAction, title, pathString }) => {
-  const [products, setProducts] = useState([]);
+const DefaultSlideNoApi = ({ products, title, pathString }) => {
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    const fetchProducts = async () => {
-      try {
-        const response = await apiAction();
-        setProducts(response.listData);
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch products:", err);
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [apiAction]);
 
   const settings = {
     infinite: true,
@@ -92,7 +75,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
       <div>
         <StyledSlider>
           {loading ? (
-            <Slider {...settings} className="w-full relative">
+            <div className="flex flex-row">
               {[...Array(5).keys()].map((index) => (
                 <div key={index}>
                   <SkeletonCustom>
@@ -105,7 +88,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                   </SkeletonCustom>
                 </div>
               ))}
-            </Slider>
+            </div>
           ) : (
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
@@ -149,4 +132,4 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
   );
 };
 
-export default DefaultSlide;
+export default DefaultSlideNoApi;
