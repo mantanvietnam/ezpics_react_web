@@ -13,18 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Sign_up = () => {
 
-  // const { mutate } = useMutation({
-  //   mutationFn: (data) => {
-  //     return register(data)
-  //   },
-  //   onSuccess: () => {
-  //     toast.success('thành công rồi nè')
-  //   },
-  //   onError: () => {
-  //     toast.success('xịt r')
-  //   }
-
-  // })
   const {
     values,
     handleBlur,
@@ -39,7 +27,8 @@ const Sign_up = () => {
       email: '',
       password: '',
       password_again: '',
-      affsource: ''
+      affsource: '',
+      token_device: "web",
     },
     validate: (values) => {
       const errors = {}
