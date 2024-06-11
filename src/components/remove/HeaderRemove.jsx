@@ -43,8 +43,8 @@ const HeaderRemove = () => {
 
   const handleRemoveBackground = () => {
     // Kiểm tra xem người dùng có đang đăng nhập hay không
-    // const authentication = checkAvailableLogin();
-    const authentication = true;
+    const authentication = checkAvailableLogin();
+    // const authentication = true;
 
     // Nếu người dùng chưa đăng nhập (authentication là false)
     if (!authentication) {
@@ -206,7 +206,6 @@ const HeaderRemove = () => {
             <button
               className="self-center normal-case text-black bg-white mt-10 mr-2 border-solid border-2 rounded-md p-2 shadow hover:shadow-lg"
               onClick={() => {
-                setModalExtend(false);
                 handleCloseModalFreeExtend();
               }}>
               Không dùng
@@ -214,7 +213,6 @@ const HeaderRemove = () => {
             <button
               className="self-center normal-case text-white bg-[rgb(255,66,78)] mt-10 mr-2 rounded-md p-2 shadow hover:shadow-lg"
               onClick={() => {
-                setModalExtend(false);
                 handleCloseModalFreeExtend();
               }}>
               Vào Editor
