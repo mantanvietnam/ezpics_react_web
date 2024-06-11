@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProductCard from '@/components/YourProduct/ProductCard';
 import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
 import { toast } from 'react-toastify';
+import { checkTokenCookie } from '@/utils/cookie';
 
 export default function DefaultPage({ getData }) {
   const [products, setProducts] = useState([]);
@@ -27,7 +28,7 @@ export default function DefaultPage({ getData }) {
   const onDeleteProduct = async (productId) => {
     try {
       await deleteProductAPI({
-        token: "LF4z0ZHp1VSi6wBN5gxAMRWyCdOKlf1718011010",
+        token: checkTokenCookie(),
         id: productId
       });
       const updatedProducts = products.filter(product => product.id !== productId);
@@ -41,7 +42,7 @@ export default function DefaultPage({ getData }) {
   const onDuplicateProduct = async (productId) => {
     try {
       const newProduct = await duplicateProductAPI({
-        token: "LF4z0ZHp1VSi6wBN5gxAMRWyCdOKlf1718011010",
+         token: checkTokenCookie(),
         id: productId
       });
       const updatedProducts = [newProduct, ...products]; 
