@@ -63,7 +63,7 @@ export default function ProductInfo(props) {
                     }}
                   ></path>
                 </svg>
-                <span className='text-sm font-semibold'>Đã thích ({data?.favorites})</span>
+               <span className='text-sm font-semibold'>Đã thích ({data.favorites || 0})</span>
               </div>
           }
 
@@ -117,8 +117,8 @@ export default function ProductInfo(props) {
               }}></div>
             </div>
             <div className='flex items-center gap-3'>
-              <div className='product-details-e'>Lượt xem</div>
-              <div><span>{data?.views}</span></div>
+              <div className='product-details-e'>Lượt xem:</div>
+              <div><span> `{data?.views} người`</span></div>
             </div>
             <div className='flex items-center gap-3'>
               <button
