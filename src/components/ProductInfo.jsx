@@ -84,6 +84,7 @@ export default function ProductInfo(props) {
             </div>
           </div> :
           <div className='flex flex-col justify-between'>
+            <div className='flex items-center gap-3'><img src="/images/crown.svg" alt="" /><span className='text-xl font-semibold'>{data?.name}</span></div>
             <div className='flex items-center gap-5 bg-slate-100 p-5'>
               <div className='text-3xl text-red-500'>{data?.sale_price ? VND.format(data?.sale_price) : 'Miễn Phí'}</div>
               <div className='line-through text-slate-400 rounded-sm'>{data?.price ? VND.format(data?.sale_price) : ''}</div>
