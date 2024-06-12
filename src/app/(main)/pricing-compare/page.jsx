@@ -6,7 +6,7 @@ import Link from "next/link";
 import ModalUpPro from "@/components/ModalUpPro";
 import FeatureList from "@/components/PricingCompare/FeatureList";
 
-const Page = () => {
+const page = () => {
   const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
 
@@ -56,14 +56,16 @@ const Page = () => {
           </p>
           <div className="w-[90%] h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
             <button
-              className={`w-[90%] h-[80%] rounded-lg ${selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
-                }`}
+              className={`w-[90%] h-[80%] rounded-lg ${
+                selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
+              }`}
               onClick={() => handleButtonClick("monthly")}>
               Hàng tháng
             </button>
             <button
-              className={`w-[90%] h-[80%] rounded-lg ${selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
-                }`}
+              className={`w-[90%] h-[80%] rounded-lg ${
+                selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
+              }`}
               onClick={() => handleButtonClick("yearly")}>
               Hàng năm
             </button>
@@ -220,7 +222,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="w-[75%] h-30 border-t border-[rgb(225,228,231)] flex justify-between items-center absolute pb-[3%] pt-[3%] pl-[5%] mt-10">
+      <div className="w-full h-30 border-t border-[rgb(225,228,231)] flex justify-between items-center py-[3%] px-[5%] mt-10">
         <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3">
           <GlobalOutlined className="text-xl" />
           <p className="pr-[2%] pl-[2%] my-3 text-[rgb(13,18,22)] text-sm">
@@ -228,7 +230,7 @@ const Page = () => {
           </p>
           <DownOutlined />
         </button>
-        <p>© 2023 Mọi quyền được bảo lưu, Ezpics®</p>
+        <p>© 2024 Mọi quyền được bảo lưu, Ezpics®</p>
         <a href="https://www.facebook.com/ezpicsvn">
           <img src="/images/fb_logo.png" alt="" className="w-[20px] h-[20px]" />
         </a>

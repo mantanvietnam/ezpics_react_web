@@ -26,13 +26,15 @@ const Header = () => {
   const actionIcons = [
     {
       icon: <DesktopOutlined style={{ fontSize: "20px" }} />,
-      name: "dowload",
+      name: "download",
       desc: "Tải xuống ứng dụng",
+      href: "/download",
     },
     {
       icon: <SettingOutlined style={{ fontSize: "20px" }} />,
       name: "setting",
       desc: "Cài đặt",
+      href: "/information",
     },
     {
       icon: <BellOutlined style={{ fontSize: "20px" }} />,
@@ -271,12 +273,19 @@ const Header = () => {
       </div>
 
       <div className="action flex justify-center items-center">
-        {actionIcons.map((social, index) => (
-          <div className="icon-container" key={index}>
-            <div className="p-3 icon-primary">{social.icon}</div>
-            <div className="desc">{social.desc}</div>
-          </div>
-        ))}
+        {actionIcons.map((social, index) =>
+          index === 2 ? (
+            <div className="icon-container" key={index}>
+              <div className="p-3 icon-primary">{social.icon}</div>
+              <div className="desc">{social.desc}</div>
+            </div>
+          ) : (
+            <Link className="icon-container" key={index} href={social.href}>
+              <div className="p-3 icon-primary">{social.icon}</div>
+              <div className="desc">{social.desc}</div>
+            </Link>
+          )
+        )}
         <Dropdown
           trigger={["click"]}
           placement="bottomRight"
