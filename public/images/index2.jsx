@@ -43,5 +43,11 @@ export const designAction = {
   delete: require('./delete.png'),
 }
 
+export const contactInfo = {
+  man: require('./contact-man.png'),
+  gmail: require('./gmail.png'),
+  phone: require('./phone-call.png'),
+  bg: require('./bg-designer.png')
+}
 
 export default images;

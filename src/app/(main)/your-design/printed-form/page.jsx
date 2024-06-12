@@ -2,13 +2,14 @@
 import React from 'react';
 import { getMyProductSeriesAPI } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
+import { checkTokenCookie } from '@/utils/cookie';
 
 export default function Page() {
 
   const getMyProductData = async () => {
     return await getMyProductSeriesAPI({ 
-      token: "LF4z0ZHp1VSi6wBN5gxAMRWyCdOKlf1718011010",
-      // token: checkTokenCookie(),
+      // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
+      token: checkTokenCookie(),
       limit: 12,
       page: 1
     });

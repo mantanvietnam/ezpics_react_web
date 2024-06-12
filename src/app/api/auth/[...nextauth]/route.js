@@ -38,7 +38,7 @@ const authOptions = {
             return session;
         },
         async redirect({ url, baseUrl }) {
-            return baseUrl + '/test';
+            return baseUrl;
         },
     },
     secret: process.env.GOOGLE_CLIENT_SECRET,

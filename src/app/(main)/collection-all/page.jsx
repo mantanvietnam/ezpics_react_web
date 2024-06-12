@@ -1,7 +1,23 @@
-import React from 'react'
-import { Input as Search } from 'antd'
+"use client"
+import { searchWarehousesAPI } from '@/api/product'
+import Collection from '@/components/Collection'
+import Search from '@/components/Search'
+import React, { useEffect, useState } from 'react'
 
 export default function Page() {
+  const [collections, setCollections] = useState([])
+
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const response = await searchWarehousesAPI({ limit: 40, page: 1 })
+        setCollections(response.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchApi()
+  }, [])
   return (
     <div className='flex-col w-[90%] mt-5'>
       {/* Banner */}
@@ -19,8 +35,23 @@ export default function Page() {
         </div>
       </div>
       {/* searchButton */}
-      <div>
-        <Search placeholder="input search text" enterButton="Search" size="large" loading />
+      <div className='w-[50%] mt-5'>
+        <Search
+          searchAPI={searchWarehousesAPI}
+          searchParams={{
+            limit: 40,
+            page: 1,
+          }} />
+      </div>
+      {/* list product */}
+      <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5'>
+        {
+          collections.map(collection => (
+            <div key={collection.id} className='flex justify-center items-center'>
+              <Collection collection={collection} />
+            </div>
+          ))
+        }
       </div>
     </div>
   )
