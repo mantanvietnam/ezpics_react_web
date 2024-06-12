@@ -1,19 +1,40 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classes from "@/styles/home/nav.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import images from "../../public/images/index2";
 import ModalUpPro from './ModalUpPro';
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
+import axios from 'axios';
+import { checkAvailableLogin, checkTokenCookie } from '@/utils';
 
 const Nav = () => {
   const [open, setOpen] = useState(false);
+  const [dataUser, setDataUser] = useState()
   const handleCancel = () => {
     setOpen(false);
   };
+  const isAuth = checkAvailableLogin()
 
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios.post(`https://apis.ezpics.vn/apis/getInfoMemberAPI`, {
+        token: checkTokenCookie(),
+        // token: 'dkrczfq9volCGwVnXuEKPOsjSM5TUQ1678707625'
+
+      });
+      if (response.data && response.data.code === 0) {
+        setDataUser(response.data.data);
+        console.log('response', response)
+      }
+    };
+    getData();
+  }, []);
+  console.log('data imgae', dataUser)
+  const formattedBalance = dataUser?.account_balance?.toLocaleString('vi-VN');
+
+  // const [isAuthenticated, setIsAuthenticated] = useState(true);
   const navItems = [
     { href: "/", label: "Trang chủ", icon: images.home },
     { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
@@ -36,12 +57,12 @@ const Nav = () => {
 
   return (
     <div className={classes.navbar}>
-      {isAuthenticated ? (
+      {isAuth ? (
         <div className={classes.top}>
           <Link href={"/"}>
             <div className={classes.profile}>
               <Image
-                src={images.defaultAvatar}
+                src={dataUser?.avatar}
                 alt=""
                 width={40}
                 height={40}
@@ -57,7 +78,7 @@ const Nav = () => {
                   width={20}
                   height={20}
                   className={classes.avatar}
-                /> : 0₫
+                /> : {formattedBalance}
               </p>
               <p className={classes.eCoin}>
                 <Image
@@ -66,7 +87,7 @@ const Nav = () => {
                   width={20}
                   height={20}
                   className={classes.avatar}
-                /> : 109 eCoin
+                /> : {dataUser?.ecoin} eCoin
               </p>
             </div>
           </Link>
@@ -96,7 +117,7 @@ const Nav = () => {
         ))}
       </div>
 
-      {isAuthenticated ? (
+      {isAuth ? (
         <div className={classes.bottom}>
           {userFuncs.map((userFunc, index) => (
             <Link key={index} href={userFunc.href}>
