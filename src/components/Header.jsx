@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   BarsOutlined,
@@ -13,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { Divider, Dropdown, Space } from "antd";
 import images, { designIcon } from "../../public/images/index2";
 import { useEffect, useState } from "react";
-import { checkAvailableLogin, checkTokenCookie } from "@/utils";
+import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import axios from "axios";
 import { signOut } from "next-auth/react";
 import { useDispatch } from "react-redux";
@@ -22,44 +23,21 @@ import { logoutService } from "@/api/auth";
 
 const Header = () => {
   const router = useRouter();
-  const [dataImage, setDataImage] = useState()
-  // const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const isAuth = checkAvailableLogin()
   const dispatch = useDispatch();
-  useEffect(() => {
-    const getData = async () => {
-      const response = await axios.post(`https://apis.ezpics.vn/apis/getInfoMemberAPI`, {
-        token: checkTokenCookie(),
-        // token: 'dkrczfq9volCGwVnXuEKPOsjSM5TUQ1678707625'
+  const isAuth = checkAvailableLogin()
+  const dataInforUser = JSON.parse(getCookie("user_login"))
 
-      });
-      if (response.data && response.data.code === 0) {
-        setDataImage(response.data.data);
-        console.log('response', response)
-      }
-    };
-    getData();
-  }, []);
-  console.log('data imgae', dataImage)
   const handleLogout = async (e) => {
-    // e.preventDefault();
-      const response = await logoutService({
-          token: checkTokenCookie(),
-          // token: 'dkrczfq9volCGwVnXuEKPOsjSM5TUQ1678707625'
-      });
-      await signOut({})
-      if (response && response?.code === 0) {
-          document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-          dispatch(DELETE_ALL_VALUES());
-          // router.push("/sign-in");
-      }
-};
-const handleClick = () => {
-  const confirmed = window.confirm('Bạn có chắc muốn đăng xuất không');
-  if (confirmed) {
-    handleLogout();
-  }
-};
+    const response = await logoutService({
+      token: checkTokenCookie(),
+    });
+    await signOut({})
+    if (response && response?.code === 0) {
+      document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      dispatch(DELETE_ALL_VALUES());
+    }
+  };
 
   const menuItems = [
     { href: "/", label: "Trang chủ" },
@@ -285,17 +263,17 @@ const handleClick = () => {
       key: "18",
     },
   ];
-  const formattedBalance = dataImage?.account_balance?.toLocaleString('vi-VN');
+  const formattedBalance = dataInforUser?.account_balance?.toLocaleString('vi-VN');
   const itemsDropdowUser = [
     {
 
       label: (
         <div className="flex items-center space-x-4 p-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            <img className="w-full h-full object-cover" alt="User Avatar" src={dataImage?.avatar} />
+            <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} />
           </div>
           <div>
-            <p className="font-bold text-lg">{dataImage?.name}</p>
+            <p className="font-bold text-lg">{dataInforUser?.name}</p>
             <p>Tài khoản: <span className="text-green-500">{formattedBalance}₫</span></p>
           </div>
         </div>
@@ -345,7 +323,7 @@ const handleClick = () => {
     },
     {
       label: (
-        <div class="list-item " onClick={handleClick}>
+        <div class="list-item " onClick={handleLogout}>
           <p className="item-text" >Đăng xuất </p>
         </div>
       ),
@@ -425,7 +403,7 @@ const handleClick = () => {
         </Dropdown>
         {isAuth ? (
           <div>
-            {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataImage?.avatar} /> */}
+            {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
 
             <Dropdown
               trigger={["click"]}
@@ -449,7 +427,7 @@ const handleClick = () => {
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                    <img className="w-full h-full object-cover rounded-full" alt="User Avatar" src={dataImage?.avatar} />
+                    <img className="w-full h-full object-cover rounded-full" alt="User Avatar" src={dataInforUser?.avatar} />
                   </div>
                 </Space>
               </a>
