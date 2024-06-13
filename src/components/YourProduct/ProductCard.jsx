@@ -1,10 +1,11 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { designAction } from '../../../public/images/index2';
 import { Skeleton } from 'antd';
+import { toast } from 'react-toastify';
 
 export default function ProductCard({ products, onDeleteProduct, onDuplicateProduct }) {
-  const buttonsData = [
+  let buttonsData = [
     {
       text: 'Sửa',
       icon: designAction.edit,
@@ -15,15 +16,18 @@ export default function ProductCard({ products, onDeleteProduct, onDuplicateProd
       icon: designAction.delete,
       action: onDeleteProduct,
     },
-    {
+  ];
+
+  if (onDuplicateProduct) {
+    buttonsData.push({
       text: 'Nhân bản',
       icon: designAction.copy,
       action: onDuplicateProduct,
-    }
-  ];
+    });
+  }
 
   return (
-    <div className="w-[100%] mx-auto grid grid-cols-4 grid-flow-row gap-4">
+    <div className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${!onDuplicateProduct ? 'gap-8' : 'gap-4'}`}>
       {products?.map((product) => (
         <div
           className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
@@ -45,7 +49,7 @@ export default function ProductCard({ products, onDeleteProduct, onDuplicateProd
                   paragraph={{
                     rows: 4,
                   }}
-                 />
+                />
               </div>
             )}
             {/* Button overlay */}
