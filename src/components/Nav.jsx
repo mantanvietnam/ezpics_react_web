@@ -70,7 +70,7 @@ const Nav = () => {
               />
             </div>
             <div className={classes.info}>
-              <p className={classes.name}>Name</p>
+              <p className={classes.name}>{dataUser?.name}</p>
               <p className={classes.balance}>
                 <Image
                   src={images.balance}
