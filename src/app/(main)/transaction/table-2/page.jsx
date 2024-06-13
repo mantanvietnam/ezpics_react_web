@@ -4,7 +4,7 @@ import ChartPage from '../chart'
 import {  getDataTransactionEcoin } from '@/api/transaction'
 import { checkTokenCookie } from '@/utils/cookie'
 
-const page = () => {
+const Page = () => {
     const [data, setdata] = useState([])
 
       var token = checkTokenCookie();
@@ -165,4 +165,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

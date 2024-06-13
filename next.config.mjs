@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    API_ROOT: "https://apis.ezpics.vn/apis"
+    API_ROOT: "https://apis.ezpics.vn/apis",
   },
   images: {
     remotePatterns: [
@@ -12,6 +12,7 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
     ],
+    domains: ["img.vietqr.io"],
   },
 };
 
