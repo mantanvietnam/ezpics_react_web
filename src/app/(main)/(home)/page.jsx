@@ -11,22 +11,14 @@ export default function Home() {
   // Kiểm tra trạng thái đăng nhập sau khi load (lưu vào cookies)
   const { data: session } = useSession();
   useEffect(() => {
-    if (session?.accessToken) {
-      const getData = async () => {
-        const response = await getInfoMemberAPI({
-          token: session?.accessToken,
-        });
-        if (response && response.code === 0) {
-          setCookie("user_login", response.data, 3);
-        }
-      };
-      getData();
+    if (session?.accessToken != undefined) {
       dispatch(CHANGE_VALUE_TOKEN(session?.accessToken));
       dispatch(CHANGE_STATUS_AUTH(true));
       setCookie("token", session?.accessToken, 3);
+      setCookie("user_login", session?.user_login, 3);
     }
     // cần xem lại dependencies
-  }, [dispatch, session?.accessToken]);
+  }, [dispatch, session]);
 
   return <></>;
 }

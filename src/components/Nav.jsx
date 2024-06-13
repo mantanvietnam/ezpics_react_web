@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classes from "@/styles/home/nav.module.scss";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import ModalUpPro from './ModalUpPro';
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
 import ModalRecharge from './ModelRecharge';
 import { getCookie } from '@/utils';
+import { useSession } from 'next-auth/react';
 
 const Nav = () => {
   const [openPro, setOpenPro] = useState(false);
@@ -15,8 +16,16 @@ const Nav = () => {
   const handleCancelPro = () => {
     setOpenPro(false);
   };
-  const dataInforUser = JSON.parse(getCookie("user_login"))
-
+  // Lấy data user
+  const { data: session } = useSession();
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
 
   const handleCancelRecharge = () => {
     setOpenRecharge(false);
@@ -79,12 +88,12 @@ const Nav = () => {
               </p>
             </div>
           </Link>
-         <div onClick= {() => setOpenRecharge(true)}>
+          <div onClick={() => setOpenRecharge(true)}>
             <button
               className={classes.cashIn}>
               <CrownOutlined style={{ color: "yellow" }}
-            /> Nạp tiền</button>
-         </div>
+              /> Nạp tiền</button>
+          </div>
         </div>
       ) : (
         <div className={classes.top}>

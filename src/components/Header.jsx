@@ -16,7 +16,7 @@ import images, { designIcon } from "../../public/images/index2";
 import { useEffect, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import axios from "axios";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import { logoutService } from "@/api/auth";
@@ -24,9 +24,17 @@ import { logoutService } from "@/api/auth";
 const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { data: session } = useSession();
   const isAuth = checkAvailableLogin()
-  const dataInforUser = JSON.parse(getCookie("user_login"))
-  console.log(dataInforUser);
+  // Lấy data user
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
 
   const handleLogout = async (e) => {
     const response = await logoutService({
