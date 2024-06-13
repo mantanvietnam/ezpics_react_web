@@ -94,3 +94,11 @@ export const searchWarehousesAPI = async (data) => {
   );
   return response.data;
 };
+
+export const getSizeProductAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getSizeProductAPI",
+    data
+  );
+  return response.data;
+};
