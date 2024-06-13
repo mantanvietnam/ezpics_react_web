@@ -20,6 +20,7 @@ const authOptions = {
                         name: user.name
                     });
                     account.token = response?.info_member?.token_web
+                    account.user_login = response?.info_member
                 } catch (error) {
                     console.error('Error saving user data to external API:', error);
                     return false;
@@ -30,11 +31,13 @@ const authOptions = {
         async jwt({ token, account }) {
             if (account?.token) {
                 token.accessToken = account.token;
+                token.user_login = account.user_login;
             }
             return token;
         },
         async session({ session, token }) {
             session.accessToken = token.accessToken;
+            session.user_login = token.user_login;
             return session;
         },
         async redirect({ url, baseUrl }) {
