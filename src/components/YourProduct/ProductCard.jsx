@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import { designAction } from '../../../public/images/index2';
+import { Skeleton } from 'antd';
 
 export default function ProductCard({ products, onDeleteProduct, onDuplicateProduct }) {
   const buttonsData = [
@@ -26,7 +27,7 @@ export default function ProductCard({ products, onDeleteProduct, onDuplicateProd
       {products?.map((product) => (
         <div
           className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
-          key={product.id} // Thêm thuộc tính key duy nhất
+          key={product.id} 
         >
           <div className="relative bg-orange-100">
             {product.image ? (
@@ -39,7 +40,12 @@ export default function ProductCard({ products, onDeleteProduct, onDuplicateProd
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                <span className="text-gray-500">No Image</span>
+                <Skeleton
+                  avatar
+                  paragraph={{
+                    rows: 4,
+                  }}
+                 />
               </div>
             )}
             {/* Button overlay */}
