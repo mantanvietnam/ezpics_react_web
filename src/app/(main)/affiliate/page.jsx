@@ -93,13 +93,13 @@ export default function Page() {
             <img src="/images/gift.png" className="w-24 h-24 ml-8" alt="Gift icon" />
           </div>
           <div className="bg-gray-200 mt-4 border-2 border-gray-300 rounded-md flex flex-row items-center pl-4 justify-between">
-            <p className="truncate">{data.link_affiliate}</p>
+            <p className="truncate">{data?.link_affiliate}</p>
             <button className="px-4 py-2 button-red" onClick={handleCopy}>Sao chép</button>
           </div>
         </div>
         <div className="pr-10 pt-5 relative">
-          <img src={data.link_codeQR} className="w-48 h-48" alt="QR Code" />
-          <p className="mt-2 text-center font-bold">{data.name}</p>
+          <img src={data?.link_codeQR} className="w-48 h-48" alt="QR Code" />
+          <p className="mt-2 text-center font-bold">{data?.name}</p>
         </div>
       </div>
 
