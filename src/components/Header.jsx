@@ -15,6 +15,7 @@ import images, { designIcon } from "../../public/images/index2";
 
 const Header = () => {
   const router = useRouter();
+
   const menuItems = [
     { href: "/", label: "Trang chủ" },
     { href: "/new-product", label: "Thiết kế mới " },
@@ -280,7 +281,7 @@ const Header = () => {
               <div className="desc">{social.desc}</div>
             </div>
           ) : (
-            <Link className="icon-container" key={index} href={social.href}>
+            <Link className="icon-container" href={social.href} key={index}>
               <div className="p-3 icon-primary">{social.icon}</div>
               <div className="desc">{social.desc}</div>
             </Link>
