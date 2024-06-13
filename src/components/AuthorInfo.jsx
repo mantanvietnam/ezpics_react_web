@@ -21,7 +21,16 @@ export default function AuthorInfo(props) {
         <div className='flex flex-col gap-2'>
           <div className='text-lg font-semibold'>{user?.name}</div>
           <div className='text-sm'>Email: {user?.email}</div>
-          <div className='flex gap-1 items-center'>
+          <div
+            className='flex gap-1 items-center justify-center'
+            style={{
+              backgroundColor: 'rgb(255, 245, 241)',
+              border: '1px solid rgb(255, 66, 78)',
+              color: 'rgb(255, 66, 78)',
+              width: '200px',
+              height: '40px',
+            }}
+          >
             <svg
               width="32"
               height="32"
@@ -57,6 +66,6 @@ export default function AuthorInfo(props) {
           <div className='text-sm'>Ngày tạo: <span className='text-red-500'>{formattedDate}</span></div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }

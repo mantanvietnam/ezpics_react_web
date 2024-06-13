@@ -22,12 +22,13 @@ export default function Dashboard() {
     const handleLogout = async () => {
         const response = await logoutService({
             token: checkTokenCookie(),
+            // token: 'dkrczfq9volCGwVnXuEKPOsjSM5TUQ1678707625'
         });
         await signOut({})
         if (response && response?.code === 0) {
             document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
             dispatch(DELETE_ALL_VALUES());
-            router.push("/sign-in");
+            // router.push("/sign-in");
         }
     };
     useEffect(() => {
