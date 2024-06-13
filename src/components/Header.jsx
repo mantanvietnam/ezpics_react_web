@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   BarsOutlined,
@@ -13,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { Divider, Dropdown, Space } from "antd";
 import images, { designIcon } from "../../public/images/index2";
 import { useEffect, useState } from "react";
-import { checkAvailableLogin, checkTokenCookie } from "@/utils";
+import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import axios from "axios";
 import { signOut } from "next-auth/react";
 import { useDispatch } from "react-redux";
@@ -49,6 +50,7 @@ const Header = () => {
     });
     await signOut({})
     if (response && response?.code === 0) {
+      document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
       document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
       dispatch(DELETE_ALL_VALUES());
       // router.push("/sign-in");
@@ -345,7 +347,7 @@ const Header = () => {
     },
     {
       label: (
-        <div class="list-item " onClick={handleClick}>
+        <div class="list-item " onClick={handleLogout}>
           <p className="item-text" >Đăng xuất </p>
         </div>
       ),
