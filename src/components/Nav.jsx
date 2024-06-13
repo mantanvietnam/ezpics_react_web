@@ -6,11 +6,17 @@ import Link from "next/link";
 import images from "../../public/images/index2";
 import ModalUpPro from './ModalUpPro';
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
+import ModalRecharge from './ModelRecharge';
 
 const Nav = () => {
-  const [open, setOpen] = useState(false);
-  const handleCancel = () => {
-    setOpen(false);
+  const [openPro, setOpenPro] = useState(false);
+  const [openRecharge, setOpenRecharge] = useState(false);
+  const handleCancelPro = () => {
+    setOpenPro(false);
+  };
+
+  const handleCancelRecharge = () => {
+    setOpenRecharge(false);
   };
 
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -30,7 +36,7 @@ const Nav = () => {
       href: "/",
       label: "Gia hạn bản PRO",
       icon: images.renew,
-      onClick: () => setOpen(true)
+      onClick: () => setOpenPro(true)
     },
   ];
 
@@ -70,7 +76,12 @@ const Nav = () => {
               </p>
             </div>
           </Link>
-          <button className={classes.cashIn}> <CrownOutlined style={{ color: "yellow" }} /> Nạp tiền</button>
+         <div onClick= {() => setOpenRecharge(true)}>
+            <button
+              className={classes.cashIn}>
+              <CrownOutlined style={{ color: "yellow" }}
+            /> Nạp tiền</button>
+         </div>
         </div>
       ) : (
         <div className={classes.top}>
@@ -115,7 +126,8 @@ const Nav = () => {
         </div>
       ) : null}
 
-      <ModalUpPro open={open} handleCancel={handleCancel} />
+      <ModalUpPro open={openPro} handleCancel={handleCancelPro} />
+      <ModalRecharge open={openRecharge} handleCancel={handleCancelRecharge} />
     </div>
   );
 };
