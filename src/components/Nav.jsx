@@ -7,6 +7,7 @@ import images from "../../public/images/index2";
 import ModalUpPro from './ModalUpPro';
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
 import ModalRecharge from './ModelRecharge';
+import { getCookie } from '@/utils';
 
 const Nav = () => {
   const [openPro, setOpenPro] = useState(false);
@@ -14,6 +15,8 @@ const Nav = () => {
   const handleCancelPro = () => {
     setOpenPro(false);
   };
+  const dataInforUser = JSON.parse(getCookie("user_login"))
+
 
   const handleCancelRecharge = () => {
     setOpenRecharge(false);
@@ -55,7 +58,7 @@ const Nav = () => {
               />
             </div>
             <div className={classes.info}>
-              <p className={classes.name}>{dataUser?.name}</p>
+              <p className={classes.name}>{dataInforUser?.name}</p>
               <p className={classes.balance}>
                 <Image
                   src={images.balance}
