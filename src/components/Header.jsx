@@ -26,6 +26,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const isAuth = checkAvailableLogin()
   const dataInforUser = JSON.parse(getCookie("user_login"))
+  console.log(dataInforUser);
 
   const handleLogout = async (e) => {
     const response = await logoutService({
