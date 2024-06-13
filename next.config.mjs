@@ -8,6 +8,9 @@ const nextConfig = {
       {
         hostname: "apis.ezpics.vn",
       },
+      {
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
   },
 };
