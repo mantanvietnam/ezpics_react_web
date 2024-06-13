@@ -93,12 +93,10 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
                 <Link href={`/category/${product.id}`} className="slide-content pr-8" key={product.id}>
-                  <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="bg-orange-100 overflow-hidden group">
-                      <Image
+                  <div className="card flex flex-col justify-between bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
+                    <div className="overflow-hidden group">
+                      <img
                         src={product.image}
-                        width={300}
-                        height={200}
                         className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
                         alt={product.name}
                       />

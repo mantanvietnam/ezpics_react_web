@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Search from "./Search";
 import { useState } from "react";
+import { searchProductAPI } from '@/api/product';
 
 export default function HomeBanner() {
   const [arrowPosition, setArrowPosition] = useState("2%");
@@ -326,8 +327,15 @@ export default function HomeBanner() {
           Bạn muốn thiết kế gì ?
         </h2>
       </div>
-      
-      <Search className="flex w-[700px] bg-[#ffffff] p-3 items-center gap-8 rounded-md" />
+
+      <Search
+        searchAPI={searchProductAPI}
+        searchParams={{
+          limit: 12,
+          page: 1,
+        }}
+        className="flex w-[700px] bg-[#ffffff] p-3 items-center gap-8 rounded-md"
+      />
 
       <div className="flex items-center justify-between w-full">
         {actions.map((action, index) => (

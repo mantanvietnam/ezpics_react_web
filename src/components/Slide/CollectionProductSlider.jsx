@@ -23,7 +23,7 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-const CollectionProductSlider = () => {
+const CollectionProductSlider = ({title}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -82,10 +82,11 @@ const CollectionProductSlider = () => {
     ],
   };
 
+
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">Bộ sưu tập thịnh hành</h1>
+        <h1 className="text-2xl font-bold mb-4">{title || "Bộ sưu tập bạn có thể thích"}</h1>
         <Link href="/" className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
@@ -111,7 +112,7 @@ const CollectionProductSlider = () => {
           ) : (
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
-                <div className="slide-content pr-8" key={product.id}>
+                <Link href={`/collection-buying/${product.id}`}  className="slide-content pr-8" key={product.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                     <div className="bg-orange-100 overflow-hidden group">
                       <Image
@@ -131,13 +132,13 @@ const CollectionProductSlider = () => {
                       </p>
                       <div className="mt-2">
                         <span className="text-red-500 font-bold mr-2">
-                          {VND.format(product.price)}
+                          {product.price && product.price >= 0 ? VND.format(product.price) : 'Miễn Phí'}
                         </span>
                         <span className="text-gray-500 line-through"></span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </Slider>
           )}

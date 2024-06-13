@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
+// import RequireAuth from "@/components/auth/requireAuth";
 
 export default function CenteredLayout(props) {
   return (
@@ -7,8 +8,10 @@ export default function CenteredLayout(props) {
       <Header />
       <main className="flex pt-[--header-height]">
         <Nav />
-        <div className='w-[calc(100%-15%)] flex justify-center'>
+        <div className='w-[calc(100%-250px)] flex justify-center'>
+          {/* <RequireAuth> */}
         {props.children}
+            {/* </RequireAuth> */}
         </div>
       </main>
     </div>

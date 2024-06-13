@@ -6,7 +6,7 @@ import Link from "next/link";
 import ModalUpPro from "@/components/ModalUpPro";
 import FeatureList from "@/components/PricingCompare/FeatureList";
 
-const page = () => {
+const Page = () => {
   const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
 
@@ -110,7 +110,7 @@ const page = () => {
         <div className="w-1/3">
           <div className="w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="flex justify-between h-10">
-              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold  p-[2%]">
+              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
                 Dành cho một người
               </p>
               <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
@@ -164,7 +164,7 @@ const page = () => {
         <div className="w-1/3">
           <div className="w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="flex justify-between h-10">
-              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold  p-[2%]">
+              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
                 Dành cho một người
               </p>
               <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
@@ -240,4 +240,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
