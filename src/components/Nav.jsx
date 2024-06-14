@@ -82,8 +82,8 @@ const Nav = ({ isOpen }) => {
 
   return (
     <div
-      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-10 ${
-        isOpen ? "block" : "hidden"
+      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-10 transition-transform duration-300 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
       {isAuthenticated ? (
         <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
