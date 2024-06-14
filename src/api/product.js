@@ -86,3 +86,11 @@ export const searchWarehousesAPI = async (data) => {
   );
   return response.data;
 };
+
+export const getProductCategoryAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getProductCategoryAPI",
+    data
+  );
+  return response.data;
+};
