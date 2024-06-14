@@ -15,9 +15,9 @@ export default function CenteredLayout(props) {
       <main className="flex pt-[--header-height]">
         <Nav isOpen={isNavbarOpen} />
         <div
-          className={`sticky left-[250px] flex justify-center ${
-            isNavbarOpen ? "left-[250px] w-[calc(100%-250px)]" : "w-full"
-          }`}>
+          className={`transition-all duration-300 ${
+            isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
+          } flex justify-center`}>
           {/* <RequireAuth> */}
           {props.children}
           {/* </RequireAuth> */}
