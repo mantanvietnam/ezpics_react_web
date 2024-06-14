@@ -21,11 +21,11 @@ import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import { logoutService } from "@/api/auth";
 
-const Header = () => {
+const Header = ({ toggleNavbar }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { data: session } = useSession();
-  const isAuth = checkAvailableLogin()
+  const isAuth = checkAvailableLogin();
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -40,7 +40,7 @@ const Header = () => {
     const response = await logoutService({
       token: checkTokenCookie(),
     });
-    await signOut({})
+    await signOut({});
     if (response && response?.code === 0) {
       document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
       document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -272,25 +272,31 @@ const Header = () => {
       key: "18",
     },
   ];
-  const formattedBalance = dataInforUser?.account_balance?.toLocaleString('vi-VN');
+  const formattedBalance =
+    dataInforUser?.account_balance?.toLocaleString("vi-VN");
   const itemsDropdowUser = [
     {
-
       label: (
         <div className="flex items-center space-x-4 p-5">
           <div className="w-10 h-10 rounded-full overflow-hidden">
-            <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} />
+            <img
+              className="w-full h-full object-cover"
+              alt="User Avatar"
+              src={dataInforUser?.avatar}
+            />
           </div>
           <div>
             <p className="font-bold text-lg">{dataInforUser?.name}</p>
-            <p>Tài khoản: <span className="text-green-500">{formattedBalance}₫</span></p>
+            <p>
+              Tài khoản:{" "}
+              <span className="text-green-500">{formattedBalance}₫</span>
+            </p>
           </div>
         </div>
       ),
       key: "11",
     },
     {
-
       label: (
         <div className="list-item">
           <p className="item-text">Trang cá nhân</p>
@@ -333,18 +339,20 @@ const Header = () => {
     {
       label: (
         <div class="list-item " onClick={handleLogout}>
-          <p className="item-text" >Đăng xuất </p>
+          <p className="item-text">Đăng xuất </p>
         </div>
       ),
       key: "4",
-    }
+    },
   ];
 
   return (
     <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
       <div className="flex justify-center items-center">
         <div className="p-3 mr-4 icon-primary">
-          <BarsOutlined style={{ fontSize: "20px" }} />
+          <button onClick={() => toggleNavbar()}>
+            <BarsOutlined style={{ fontSize: "20px" }} />
+          </button>
         </div>
         <div className="logo flex items-center justify-center">
           <Link href="/" className="flex flex-center">
@@ -379,7 +387,7 @@ const Header = () => {
               <div className="desc">{social.desc}</div>
             </div>
           ) : (
-            <Link className="icon-container" key={index} href={social.href}>
+            <Link className="icon-container" href={social.href} key={index}>
               <div className="p-3 icon-primary">{social.icon}</div>
               <div className="desc">{social.desc}</div>
             </Link>
@@ -436,13 +444,16 @@ const Header = () => {
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                    <img className="w-full h-full object-cover rounded-full" alt="User Avatar" src={dataInforUser?.avatar} />
+                    <img
+                      className="w-full h-full object-cover rounded-full"
+                      alt="User Avatar"
+                      src={dataInforUser?.avatar}
+                    />
                   </div>
                 </Space>
               </a>
             </Dropdown>
           </div>
-
         ) : (
           <div>
             <button
@@ -453,9 +464,7 @@ const Header = () => {
               <UserOutlined />
               <p className="pl-2">Đăng nhập</p>
             </button>
-
           </div>
-
         )}
       </div>
     </div>

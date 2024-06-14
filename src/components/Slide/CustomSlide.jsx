@@ -14,13 +14,16 @@ export const StyledSlider = styled.div`
 `;
 
 export const SkeletonCustom = styled.div`
+  .ant-skeleton {
+    width: 100% !important;
+  }
   .ant-skeleton-image {
     height: 192px !important;
-    width: 220px !important;
+    width: 90% !important;
   }
 
   .ant-skeleton-input {
-    width: 220px !important;
+    width: 90% !important;
   }
 `;
 

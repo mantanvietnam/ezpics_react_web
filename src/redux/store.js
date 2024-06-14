@@ -6,7 +6,7 @@ import ipv4Slice from "./slices/networkSlice";
 export const store = configureStore({
   reducer: {
     auth: authSlice,
-    info: infoSlice,
+    user: infoSlice,
     ipv4: ipv4Slice,
   },
 });

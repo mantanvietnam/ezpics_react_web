@@ -4,6 +4,7 @@
 
 :root {
   --header-height: 64px;
+  --navbar-width: 250px;
 }
 
 body {
@@ -31,6 +32,7 @@ body {
     transform: translateX(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -42,6 +44,7 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(-100%);
     opacity: 0;
