@@ -26,3 +26,41 @@ body {
 .product-details-e {
   @apply w-[100px] text-sm text-slate-500;
 }
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.custom-modal .ant-modal-content {
+  animation: slideInLeft 0.5s forwards;
+  border-radius: 0;
+  border-bottom-right-radius: 20px;
+}
+
+.custom-modal.slide-in-left .ant-modal-content {
+  animation: slideInLeft 0.5s forwards;
+}
+
+.custom-modal.slide-out-left .ant-modal-content {
+  animation: slideOutLeft 0.5s forwards;
+}

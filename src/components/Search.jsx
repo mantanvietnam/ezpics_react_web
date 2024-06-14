@@ -5,6 +5,7 @@ import { useDebounce } from '@/hooks';
 import { searchProductAPI } from '@/api/product';
 import { SearchOutlined } from '@ant-design/icons';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function Search({ searchAPI, searchParams }) {
     const [searchValue, setSearchValue] = useState('');
@@ -50,7 +51,7 @@ function Search({ searchAPI, searchParams }) {
                         <span>{item.name}</span>
                     </div>
                 ))}
-                <div className="text-center text-red-500 cursor-pointer mt-2">Xem thêm</div>
+                <Link href={`/dashboard-search/${debounced}`} className="flex items-center justify-center text-red-500 cursor-pointer mt-2">Xem thêm</Link>
             </div>
         );
     };
