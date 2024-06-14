@@ -3,7 +3,8 @@ import { getInfoMemberAPI } from "@/api/user";
 import { checkAvailableLogin, checkTokenCookie, setCookie } from "@/utils";
 import { Modal, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useRouter, redirect } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { CHANGE_VALUE_USER, DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import axios from "axios";
@@ -17,6 +18,14 @@ const page = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const network = useSelector((state) => state.ipv4.network);
+  const router = useRouter();
+  const isAuthenticated = checkAvailableLogin();
+
+  useLayoutEffect(() => {
+    if (!isAuthenticated) {
+      redirect("/sign-in");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const getData = async () => {
@@ -110,7 +119,7 @@ const page = () => {
           console.log(responseInfoApi.data);
           setCookie("user_login", responseInfoApi.data.data, 1);
           dispatch(CHANGE_VALUE_USER(responseInfoApi.data.data));
-          setData(responseInfoApi.data.data);
+          setData(responseInfoApi?.data?.data);
         }
       }
     }
@@ -118,6 +127,31 @@ const page = () => {
 
   const handleFileInput = (e) => {
     handleDropFiles(e.target.files);
+  };
+
+  // Delete account
+  const [modalDelete, setModalDelete] = useState(false);
+  const handleCloseModalDelete = () => {
+    setModalDelete(false);
+  };
+
+  function deleteCookie(key) {
+    document.cookie = key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+  const handleDeleteAccount = async () => {
+    const response = await axios.post(`${network}/lockAccountAPI`, {
+      token: checkTokenCookie(),
+    });
+    if (response && response.data) {
+      const response = await axios.post(`${network}/getInfoMemberAPI`, {
+        token: checkTokenCookie(),
+      });
+      if (response && response.data.code === 0) {
+        deleteCookie("user_login");
+        dispatch(DELETE_ALL_VALUES());
+        router.path("/", { replace: true });
+      }
+    }
   };
 
   if (loading) {
@@ -198,8 +232,26 @@ const page = () => {
           <ChangePhoneForm data={data} setData={setData} />
         </div>
         <div className="border-b-2 py-[4%]">
-          <ChangePasswordForm data={data} setData={setData} />
+          <ChangePasswordForm />
         </div>
+
+        {/* Delete Account */}
+        <div className="py-[4%]">
+          <h1 className="text-lg my-4">Xóa tài khoản</h1>
+          <div className="flex justify-between  items-center">
+            <p>
+              Một khi bạn xóa tài khoản, bạn sẽ không thể quay lại. Xin hãy chắc
+              chắn.
+            </p>
+            <button
+              class="flex items-center text-red-500 text-sm leading-[22px] normal-case px-2 h-9 w-30 border border-red-500 bg-white"
+              onClick={() => setModalDelete(true)}>
+              Xóa tài khoản
+            </button>
+          </div>
+        </div>
+
+        {/* Modal xem ảnh */}
         <Modal
           open={modalImage}
           onCancel={handleCloseModalFreeExtend}
@@ -210,6 +262,28 @@ const page = () => {
               alt=""
               style={{ width: "100%", height: "100%" }}
             />
+          </div>
+        </Modal>
+
+        {/* Modal delete account */}
+        <Modal
+          open={modalDelete}
+          onCancel={handleCloseModalDelete}
+          footer={null}>
+          <p className="text-lg py-[5%]">
+            Bạn chắc chắn muốn xóa tài khoản này ?
+          </p>
+          <div className="flex justify-end">
+            <button
+              className="items-center text-[#0d1216] leading-[22px] normal-case pl-[10px] pr-[10px] bg-[#e1e4e7] h-[36px] w-[80px] font-bold mr-[10px]"
+              onClick={() => handleCloseModalDelete()}>
+              Hủy
+            </button>
+            <button
+              className="items-center text-[15px] text-white leading-[22px] normal-case pl-[10px] pr-[10px] bg-[#ff424e] h-[36px] w-[80px] font-bold"
+              onClick={() => handleDeleteAccount()}>
+              Xóa
+            </button>
           </div>
         </Modal>
       </div>

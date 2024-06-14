@@ -131,7 +131,7 @@ const ChangePhoneForm = ({ data, setData }) => {
         </div>
       )}
       {showError && formik?.errors?.phone && formik?.touched?.phone && (
-        <p className="text-red-500">{formik.errors.phone}</p>
+        <p className="text-red-500 text-xs">{formik.errors.phone}</p>
       )}
     </div>
   );

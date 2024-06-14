@@ -6,11 +6,10 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCookie, checkTokenCookie } from "@/utils";
 import { CHANGE_VALUE_USER } from "@/redux/slices/infoUser";
-import { Spin, Form, Input } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Form, Input } from "antd";
 import { toast } from "react-toastify";
 
-const ChangePasswordForm = ({ data, setData }) => {
+const ChangePasswordForm = () => {
   const [showError, setShowError] = useState(false);
   const network = useSelector((state) => state.ipv4.network);
   const router = useRouter();
@@ -40,17 +39,13 @@ const ChangePasswordForm = ({ data, setData }) => {
           passAgain: values?.passAgain,
         });
 
-        if (response && response?.data?.code === 0) {
-          const responseInfo = await axios.post(`${network}/getInfoMemberAPI`, {
-            token: checkTokenCookie(),
-          });
+        console.log(response);
 
-          if (responseInfo && responseInfo?.data?.code === 0) {
-            setCookie("user_login", responseInfo?.data?.data, 1);
-            dispatch(CHANGE_VALUE_USER(responseInfo?.data?.data));
-            toast.success("Thay đổi mật khẩu thành công");
-            router.path("/sign-in");
-          }
+        if (response && response.data.code === 0) {
+          setCookie("user_login", responseInfo.data.data, 1);
+          dispatch(CHANGE_VALUE_USER(responseInfo.data.data));
+          toast.success("Thay đổi mật khẩu thành công");
+          router.path("/sign-in");
         }
       } catch (error) {
         toast.error("Lỗi lưu thay đổi mật khẩu");
@@ -64,38 +59,46 @@ const ChangePasswordForm = ({ data, setData }) => {
       <h1 className="text-lg my-4">Mật khẩu</h1>
 
       <div>
-        <Form.Item label="Mật khẩu cũ" name="passOld">
-          <Input.Password
-            id="passOld"
-            name="passOld"
-            {...formik.getFieldProps("passOld")}
-          />
-        </Form.Item>
-        {showError && formik.touched.passOld && formik.errors.passOld && (
-          <p className="text-red-500 text-xs mt-1">{formik.errors.passOld}</p>
-        )}
+        <Form
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 20,
+          }}>
+          <Form.Item label="Mật khẩu cũ" name="passOld">
+            <Input.Password
+              id="passOld"
+              name="passOld"
+              {...formik.getFieldProps("passOld")}
+            />
+          </Form.Item>
+          {showError && formik.touched.passOld && formik.errors.passOld && (
+            <p className="text-red-500 text-xs">{formik.errors.passOld}</p>
+          )}
 
-        <Form.Item label="Mật khẩu mới" name="passNew">
-          <Input.Password
-            id="passNew"
-            name="passNew"
-            {...formik.getFieldProps("passNew")}
-          />
-        </Form.Item>
-        {showError && formik.touched.passNew && formik.errors.passNew && (
-          <p className="text-red-500 text-xs mt-1">{formik.errors.passNew}</p>
-        )}
+          <Form.Item label="Mật khẩu mới" name="passNew">
+            <Input.Password
+              id="passNew"
+              name="passNew"
+              {...formik.getFieldProps("passNew")}
+            />
+          </Form.Item>
+          {showError && formik.touched.passNew && formik.errors.passNew && (
+            <p className="text-red-500 text-xs">{formik.errors.passNew}</p>
+          )}
 
-        <Form.Item label="Xác nhận lại mật khẩu" name="passAgain">
-          <Input.Password
-            id="passAgain"
-            name="passAgian"
-            {...formik.getFieldProps("passAgain")}
-          />
-        </Form.Item>
-        {showError && formik.touched.passAgain && formik.errors.passAgain && (
-          <p className="text-red-500 text-xs mt-1">{formik.errors.passAgain}</p>
-        )}
+          <Form.Item label="Xác nhận lại mật khẩu" name="passAgain">
+            <Input.Password
+              id="passAgain"
+              name="passAgian"
+              {...formik.getFieldProps("passAgain")}
+            />
+          </Form.Item>
+          {showError && formik.touched.passAgain && formik.errors.passAgain && (
+            <p className="text-red-500 text-xs">{formik.errors.passAgain}</p>
+          )}
+        </Form>
 
         <div className="flex flex-row items-center justify-end">
           <button

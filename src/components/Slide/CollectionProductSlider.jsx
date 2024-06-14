@@ -23,7 +23,7 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-const CollectionProductSlider = ({title}) => {
+const CollectionProductSlider = ({ title }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -82,11 +82,12 @@ const CollectionProductSlider = ({title}) => {
     ],
   };
 
-
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">{title || "Bộ sưu tập bạn có thể thích"}</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          {title || "Bộ sưu tập bạn có thể thích"}
+        </h1>
         <Link href="/" className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
@@ -95,7 +96,7 @@ const CollectionProductSlider = ({title}) => {
       <div>
         <StyledSlider>
           {loading ? (
-            <div className="flex flex-row">
+            <Slider {...settings} className="w-full relative">
               {[...Array(5).keys()].map((index) => (
                 <div key={index}>
                   <SkeletonCustom>
@@ -108,11 +109,14 @@ const CollectionProductSlider = ({title}) => {
                   </SkeletonCustom>
                 </div>
               ))}
-            </div>
+            </Slider>
           ) : (
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
-                <Link href={`/collection-buying/${product.id}`}  className="slide-content pr-8" key={product.id}>
+                <Link
+                  href={`/collection-buying/${product.id}`}
+                  className="slide-content pr-8"
+                  key={product.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                     <div className="bg-orange-100 overflow-hidden group">
                       <Image
@@ -132,7 +136,9 @@ const CollectionProductSlider = ({title}) => {
                       </p>
                       <div className="mt-2">
                         <span className="text-red-500 font-bold mr-2">
-                          {product.price && product.price >= 0 ? VND.format(product.price) : 'Miễn Phí'}
+                          {product.price && product.price >= 0
+                            ? VND.format(product.price)
+                            : "Miễn Phí"}
                         </span>
                         <span className="text-gray-500 line-through"></span>
                       </div>

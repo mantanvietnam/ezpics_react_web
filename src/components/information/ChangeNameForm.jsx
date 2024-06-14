@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -131,7 +131,7 @@ const ChangeNameForm = ({ data, setData }) => {
         </div>
       )}
       {showError && formik?.errors?.name && formik?.touched?.name && (
-        <p className="text-red-500">{formik.errors.name}</p>
+        <p className="text-red-500 text-xs">{formik.errors.name}</p>
       )}
     </div>
   );

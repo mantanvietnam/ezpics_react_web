@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import { logoutService } from "@/api/auth";
 
-const Header = () => {
+const Header = ({ toggleNavbar }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -350,7 +350,9 @@ const Header = () => {
     <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
       <div className="flex justify-center items-center">
         <div className="p-3 mr-4 icon-primary">
-          <BarsOutlined style={{ fontSize: "20px" }} />
+          <button onClick={() => toggleNavbar()}>
+            <BarsOutlined style={{ fontSize: "20px" }} />
+          </button>
         </div>
         <div className="logo flex items-center justify-center">
           <Link href="/" className="flex flex-center">

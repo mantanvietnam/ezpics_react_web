@@ -127,7 +127,7 @@ const ChangeMailForm = ({ data, setData }) => {
         </div>
       )}
       {showError && formik?.errors?.email && formik?.touched?.email && (
-        <p className="text-red-500">{formik.errors.email}</p>
+        <p className="text-red-500 text-xs">{formik.errors.email}</p>
       )}
     </div>
   );
