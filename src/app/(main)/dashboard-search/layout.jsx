@@ -151,6 +151,7 @@ export default function Layout(props) {
           const response = await searchProductAPI({ ...searchValue, page });
           if (response.listData.length > 0) {
             setProducts(prevProducts => [...prevProducts, ...response.listData]);
+            setHasMoreData(true)
           } else {
             setHasMoreData(false)
           }
@@ -169,6 +170,7 @@ export default function Layout(props) {
     setLoading(true)
     try {
       const response = await searchProductAPI(searchValue)
+      setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
       setLoading(false)
