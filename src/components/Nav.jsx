@@ -6,35 +6,32 @@ import Link from "next/link";
 import images from "../../public/images/index2";
 import ModalUpPro from './ModalUpPro';
 import { UserOutlined, CrownOutlined } from "@ant-design/icons";
-import axios from 'axios';
-import { checkAvailableLogin, checkTokenCookie } from '@/utils';
+import ModalRecharge from './ModelRecharge';
+import { getCookie } from '@/utils';
+import { useSession } from 'next-auth/react';
 
 const Nav = () => {
-  const [open, setOpen] = useState(false);
-  const [dataUser, setDataUser] = useState()
-  const handleCancel = () => {
-    setOpen(false);
+  const [openPro, setOpenPro] = useState(false);
+  const [openRecharge, setOpenRecharge] = useState(false);
+  const handleCancelPro = () => {
+    setOpenPro(false);
   };
-  const isAuth = checkAvailableLogin()
+  // Lấy data user
+  const { data: session } = useSession();
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await axios.post(`https://apis.ezpics.vn/apis/getInfoMemberAPI`, {
-        token: checkTokenCookie(),
-        // token: 'dkrczfq9volCGwVnXuEKPOsjSM5TUQ1678707625'
+  const handleCancelRecharge = () => {
+    setOpenRecharge(false);
+  };
 
-      });
-      if (response.data && response.data.code === 0) {
-        setDataUser(response.data.data);
-        console.log('response', response)
-      }
-    };
-    getData();
-  }, []);
-  console.log('data imgae', dataUser)
-  const formattedBalance = dataUser?.account_balance?.toLocaleString('vi-VN');
-
-  // const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const navItems = [
     { href: "/", label: "Trang chủ", icon: images.home },
     { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
@@ -51,18 +48,18 @@ const Nav = () => {
       href: "/",
       label: "Gia hạn bản PRO",
       icon: images.renew,
-      onClick: () => setOpen(true)
+      onClick: () => setOpenPro(true)
     },
   ];
 
   return (
     <div className={classes.navbar}>
-      {isAuth ? (
+      {isAuthenticated ? (
         <div className={classes.top}>
           <Link href={"/"}>
             <div className={classes.profile}>
               <Image
-                src={dataUser?.avatar}
+                src={images.defaultAvatar}
                 alt=""
                 width={40}
                 height={40}
@@ -70,7 +67,7 @@ const Nav = () => {
               />
             </div>
             <div className={classes.info}>
-              <p className={classes.name}>Name</p>
+              <p className={classes.name}>{dataInforUser?.name}</p>
               <p className={classes.balance}>
                 <Image
                   src={images.balance}
@@ -78,7 +75,7 @@ const Nav = () => {
                   width={20}
                   height={20}
                   className={classes.avatar}
-                /> : {formattedBalance}
+                /> : 0₫
               </p>
               <p className={classes.eCoin}>
                 <Image
@@ -87,11 +84,16 @@ const Nav = () => {
                   width={20}
                   height={20}
                   className={classes.avatar}
-                /> : {dataUser?.ecoin} eCoin
+                /> : 109 eCoin
               </p>
             </div>
           </Link>
-          <button className={classes.cashIn}> <CrownOutlined style={{ color: "yellow" }} /> Nạp tiền</button>
+          <div onClick={() => setOpenRecharge(true)}>
+            <button
+              className={classes.cashIn}>
+              <CrownOutlined style={{ color: "yellow" }}
+              /> Nạp tiền</button>
+          </div>
         </div>
       ) : (
         <div className={classes.top}>
@@ -117,7 +119,7 @@ const Nav = () => {
         ))}
       </div>
 
-      {isAuth ? (
+      {isAuthenticated ? (
         <div className={classes.bottom}>
           {userFuncs.map((userFunc, index) => (
             <Link key={index} href={userFunc.href}>
@@ -136,7 +138,8 @@ const Nav = () => {
         </div>
       ) : null}
 
-      <ModalUpPro open={open} handleCancel={handleCancel} />
+      <ModalUpPro open={openPro} handleCancel={handleCancelPro} />
+      <ModalRecharge open={openRecharge} handleCancel={handleCancelRecharge} />
     </div>
   );
 };

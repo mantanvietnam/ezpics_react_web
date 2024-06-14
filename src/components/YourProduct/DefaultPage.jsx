@@ -3,6 +3,7 @@ import ProductCard from '@/components/YourProduct/ProductCard';
 import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
 import { toast } from 'react-toastify';
 import { checkTokenCookie } from '@/utils/cookie';
+import { Skeleton } from 'antd';
 
 export default function DefaultPage({ getData }) {
   const [products, setProducts] = useState([]);
@@ -54,7 +55,12 @@ export default function DefaultPage({ getData }) {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (<Skeleton
+              avatar
+              paragraph={{
+                rows: 10,
+              }}
+            />);
   }
 
   if (error) {
