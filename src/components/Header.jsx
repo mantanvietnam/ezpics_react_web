@@ -298,9 +298,9 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div className="list-item">
+        <Link href={'/page-satisfied/your-design'} className="list-item">
           <p className="item-text">Trang cá nhân</p>
-        </div>
+        </Link>
       ),
       key: "0",
     },

@@ -4,6 +4,7 @@ import TabHeader from '@/components/ControlPanel/TabHeader';
 import { checkAvailableLogin } from '@/utils';
 import { checkTokenCookie } from '@/utils/cookie';
 import { formatCurrency } from '@/utils/format';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { FaEdit, FaShareAlt } from 'react-icons/fa';
@@ -123,15 +124,12 @@ export default function ControlRoot(props) {
                                         <FaShareAlt />
                                         <p className="m-0 pl-2 pt-1">Chia sẻ</p>
                                     </button>
-                                    <button
+                                    <Link href={'/information'}
                                         className="ml-5 h-10 text-black bg-gray-300 flex items-center justify-center font-semibold rounded px-4"
-                                        onClick={() => {
-                                            navigate('/information');
-                                        }}
                                     >
                                         <FaEdit />
                                         <p className="m-0 pl-2 pt-1">Chỉnh sửa thông tin cá nhân</p>
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         )}
