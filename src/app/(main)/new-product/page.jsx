@@ -5,6 +5,7 @@ import axios from 'axios';
 function Page() {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
+    const [productsFilter, setProductsFilter] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 24;
@@ -13,7 +14,7 @@ function Page() {
     const [filterOption, setFilterOption] = useState('');
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
-
+    console.log('products', products)
     useEffect(() => {
         fetchCategories();
         fetchProducts();
@@ -54,7 +55,10 @@ function Page() {
     };
 
     const handleCategoryChange = (event) => {
+        const filteredProducts = products.filter(p => p.category_id == event.target.value);
+        setProductsFilter(filteredProducts);
         setSelectedCategory(event.target.value);
+        console.log(filteredProducts)
     };
 
     const handleSortChange = (event) => {
@@ -287,22 +291,45 @@ function Page() {
                 <>
                     {/* Products */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {paginatedProducts?.map((item) => (
-                            <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
-                                <img
-                                    src={item?.image}
-                                    alt={item?.name}
-                                    className="w-full h-48 object-cover rounded-md"
-                                />
-                                <p className="mt-2 text-lg font-medium">{item?.name}</p>
-                                <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
-                                <p className="font-semibold mt-2 text-lg text-red-500">
-                                    <span className="mr-2">{item?.sale_price}₫</span>
-                                    <del className="text-gray-500">{item?.price}₫</del>
-                                </p>
-                            </div>
-                        ))}
+                        {productsFilter.length > 0 ? (
+                            <>
+                                {productsFilter?.map((item) => (
+                                    <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
+                                        <img
+                                            src={item?.image}
+                                            alt={item?.name}
+                                            className="w-full h-48 object-cover rounded-md"
+                                            />
+                                        <p className="mt-2 text-lg font-medium">{item?.name}</p>
+                                        <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
+                                        <p className="font-semibold mt-2 text-lg text-red-500">
+                                            <span className="mr-2">{item?.sale_price}₫</span>
+                                            <del className="text-gray-500">{item?.price}₫</del>
+                                        </p>
+                                    </div>
+                                ))}
+                                </>
+                        ) : (
+                                <>
+                            {paginatedProducts?.map((item) => (
+                                <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
+                                        <img
+                                            src={item?.image}
+                                            alt={item?.name}
+                                            className="w-full h-48 object-cover rounded-md"
+                                            />
+                                        <p className="mt-2 text-lg font-medium">{item?.name}</p>
+                                        <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
+                                        <p className="font-semibold mt-2 text-lg text-red-500">
+                                            <span className="mr-2">{item?.sale_price}₫</span>
+                                            <del className="text-gray-500">{item?.price}₫</del>
+                                        </p>
+                                    </div>
+                                ))}
+                                </>
+                        )}
                     </div>
+
                     {/* Pagination */}
                     <div className="pagination mt-6">
                         <button
@@ -317,11 +344,10 @@ function Page() {
                             <button
                                 key={page + 1}
                                 onClick={() => handlePageChange(page + 1)}
-                                className={`px-4 py-2 rounded-md mr-2 ${
-                                    currentPage === page + 1
-                                        ? 'bg-blue-500 text-white'
-                                        : 'bg-gray-200 text-gray-800'
-                                }`}
+                                className={`px-4 py-2 rounded-md mr-2 ${currentPage === page + 1
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-200 text-gray-800'
+                                    }`}
                             >
                                 {page + 1}
                             </button>
