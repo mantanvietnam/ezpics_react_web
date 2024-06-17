@@ -77,7 +77,7 @@ const Page = () => {
         <div className="w-1/3">
           <div className="w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="h-10 flex">
-              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black my-2">
+              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black p-[2%]">
                 Dành cho một người
               </p>
             </div>
