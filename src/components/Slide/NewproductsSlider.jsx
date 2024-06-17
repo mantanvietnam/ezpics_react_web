@@ -1,13 +1,14 @@
-import { getNewProducts } from "@/api/product";
+import React from "react";
 import DefaultSlide from "./DefaultSlide";
+import { getNewProducts } from "@/api/product";
 
 const NewProductsSlider = () => {
+
   return (
     <DefaultSlide
       apiAction={async () => {
-        "use server";
-        const products = await getNewProducts(); // Call the function with ()
-        return products; // Return the fetched products
+        const products = await getNewProducts();
+        return products;
       }}
       title="Mẫu thiết kế mới nhất"
       pathString="new-product"

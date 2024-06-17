@@ -41,6 +41,8 @@ export const designAction = {
   edit: require('./edit.png').default,
   copy: require('./copy.png'),
   delete: require('./delete.png'),
+  eye: require('./eye.png'),
+  share: require('./share.png'),
 }
 
 export const contactInfo = {
