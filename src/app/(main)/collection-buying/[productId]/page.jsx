@@ -1,5 +1,5 @@
 "use client";
-import { getCollectionProductApi, getProductWareHouseAPI } from '@/api/product';
+import { getCollectionProductApi, getProductsWarehousesAPI } from '@/api/product';
 import { getUserInfoApi } from '@/api/user';
 import AuthorInfo from '@/components/AuthorInfo';
 import CollectionProductSlider from '@/components/Slide/CollectionProductSlider';
@@ -28,22 +28,27 @@ const ProductInfo = (props) => {
   });
 
   return (
-    <div className='flex w-full h-[500px] mt-[100px]'>
-      <div className='w-[50%] h-full flex flex-col items-center justify-between gap-8'>
+    <div className='flex md:flex-row flex-col justify-around w-full h-full mt-[100px] mb-5'>
+      <div className='md:w-1/2 w-full h-full flex flex-col items-center justify-between gap-8'>
         <div className="pr-6 flex items-center">
           {isLoading ? (
             <Skeleton.Image className='flex items-center justify-center' active='true' />
           ) : (
             <div className='flex items-center justify-center bg-orange-100'>
-              <img className='object-contain h-[100%]' src={data?.thumbnail} alt="product" />
+                <Image
+                  className='w-fit h-[500px]'
+                  src={data?.thumbnail} alt="product"
+                  width={800}
+                  height={400}
+                />
             </div>
           )}
         </div>
-        <div className='flex items-center w-[100%] justify-around mb-6'>
+        <div className='flex items-center w-[100%] justify-around pb-6'>
           {isLoading ? (
             <Skeleton.Input active='true' />
           ) : (
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-2 my-2'>
               <span className='text-sm'>Chia sẻ:</span>
               <a href='/'>
                 <img className='social-icons' src="/images/fb_logo.png" alt="fb" />
@@ -100,27 +105,27 @@ const ProductInfo = (props) => {
           </div>
         </div>
       ) : (
-        <div className='flex flex-col justify-between'>
-          <h2 className="text-3xl font-bold">{data?.name}</h2>
+        <div className='md:w-1/2 w-full flex flex-col justify-between'>
+          <h2 className="md:text-3xl text-xl font-bold pb-2">{data?.name}</h2>
           <div className='flex items-center gap-5 bg-slate-100 p-5'>
             <div className='text-3xl text-red-500'>{data?.price ? VND.format(data?.price) : 'Miễn Phí'}</div>
             <div className='line-through text-slate-400 rounded-sm'>{VND.format(defaultPrice)}</div>
             <div className='bg-red-500 text-white p-2 font-semibold rounded-sm'>{data?.price ? `Giảm ${Math.round(100 - (data?.price / defaultPrice) * 100)}%` : 'Miễn Phí'}</div>
           </div>
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3 py-2'>
             <div className='text-sm product-details-e'>Khuyến mãi</div>
             <div className='bg-red-50 border border-red-500 text-red-500 p-2 font-semibold'>
               {data?.price ? `Giảm ${Math.round(100 - (data?.price / defaultPrice) * 100)}%` : 'Miễn Phí'}
             </div>
           </div>
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3 py-2'>
             <div className='product-details-e'>Tác giả</div>
             <div className='w-[35px] h-[35px]'>
               <img className='object-cover rounded-full' src={user?.avatar} alt="" />
             </div>
             <div><span>{data?.author}</span></div>
           </div>
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3 py-2'>
             <div className='product-details-e'>Số ngày sử dụng: </div>
             <div><span>{data?.date_use}</span></div>
           </div>
@@ -128,7 +133,7 @@ const ProductInfo = (props) => {
             <div className='product-details-e'>Lượt xem:</div>
             <div><span>{data?.views}</span></div>
           </div>
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-3 py-2'>
             <>
               <button
                 onClick={showLoading}
@@ -219,7 +224,7 @@ export default function Page({ params }) {
         if (productWithUserId) {
           try {
             const userResponse = await getUserInfoApi({ idUser: `${productWithUserId.user_id}` });
-            const dataWarehouseResponse = await getProductWareHouseAPI({
+            const dataWarehouseResponse = await getProductsWarehousesAPI({
               idWarehouse: productWithUserId.id,
               limit: 100,
               page: 1
@@ -244,7 +249,6 @@ export default function Page({ params }) {
     <div className="flex flex-col w-[90%] mb-[100px]">
       <div className="w-full flex flex-col items-center justify-center gap-8">
         <ProductInfo data={data} user={user} isLoading={isLoading} defaultPrice={defaultPrice} collection={dataWarehouse} />
-        <CollectionProductSlider title="Bộ sưu tập bạn có thể thích"/>
         {isLoading ? (
           <Skeleton
             avatar
@@ -253,6 +257,7 @@ export default function Page({ params }) {
         ) : (
           <AuthorInfo user={user} />
         )}
+        <CollectionProductSlider title="Bộ sưu tập bạn có thể thích"/>
       </div>
     </div>
   );

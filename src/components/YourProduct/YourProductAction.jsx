@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function YourProductAction() {
   const [activeIndex, setActiveIndex] = useState(0);

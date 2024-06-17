@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '@/components/YourProduct/ProductCard';
 import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
-import { toast } from 'react-toastify';
 import { checkTokenCookie } from '@/utils/cookie';
+import { toast } from 'react-toastify';
 import { Skeleton } from 'antd';
 
 export default function DefaultPage({ getData }) {
@@ -14,8 +14,7 @@ export default function DefaultPage({ getData }) {
     const fetchData = async () => {
       try {
         const response = await getData();
-        console.log(response)
-        setProducts(response.listData);
+        setProducts(response.listData || response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error.message);
@@ -24,7 +23,7 @@ export default function DefaultPage({ getData }) {
       }
     };
     fetchData();
-  }, [getData, products]);
+  }, [getData]);
 
   const onDeleteProduct = async (productId) => {
     try {
