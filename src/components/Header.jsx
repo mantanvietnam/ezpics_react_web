@@ -6,6 +6,7 @@ import {
   DesktopOutlined,
   SettingOutlined,
   UserOutlined,
+  EllipsisOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +14,7 @@ import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
 import { Divider, Dropdown, Space } from "antd";
 import images, { designIcon } from "../../public/images/index2";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
@@ -49,11 +50,11 @@ const Header = ({ toggleNavbar }) => {
   };
 
   const menuItems = [
-    { href: "/", label: "Trang chủ" },
-    { href: "/new-product", label: "Thiết kế mới " },
-    { href: "/pricing-compare", label: "Bảng giá" },
-    { href: "/", label: "Hướng dẫn" },
-    { href: "/", label: "Nhà phát triển" },
+    { href: "/", label: "Trang chủ", hiddenOn: "sm" },
+    { href: "/new-product", label: "Thiết kế mới", hiddenOn: "lg" },
+    { href: "/pricing-compare", label: "Bảng giá", hiddenOn: "lg" },
+    { href: "/guide", label: "Hướng dẫn", hiddenOn: "xl" },
+    { href: "/developer", label: "Nhà phát triển", hiddenOn: "xl" },
   ];
   const actionIcons = [
     {
@@ -298,7 +299,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <Link href={'/page-satisfied/your-design'} className="list-item">
+        <Link href={"/page-satisfied/your-design"} className="list-item">
           <p className="item-text">Trang cá nhân</p>
         </Link>
       ),
@@ -346,6 +347,55 @@ const Header = ({ toggleNavbar }) => {
     },
   ];
 
+  //Responsive header
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getHiddenClass = (hiddenOn) => {
+    switch (hiddenOn) {
+      case "xl":
+        return windowWidth <= 1280 ? "hidden" : "";
+      case "lg":
+        return windowWidth <= 1024 ? "hidden" : "";
+      case "md":
+        return windowWidth <= 768 ? "hidden" : "";
+      case "xs":
+        return "";
+      default:
+        return "";
+    }
+  };
+
+  const shouldShowInDropdown = (hiddenOn) => {
+    switch (hiddenOn) {
+      case "xl":
+        return windowWidth < 1280;
+      case "lg":
+        return windowWidth < 1024;
+      case "md":
+        return windowWidth < 768;
+      case "xs":
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
   return (
     <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
       <div className="flex justify-center items-center">
@@ -357,25 +407,50 @@ const Header = ({ toggleNavbar }) => {
         <div className="logo flex items-center justify-center">
           <Link href="/" className="flex flex-center">
             <Image
-              className="object-contain rounded_image"
+              className="object-contain rounded_image inline"
               priority={true}
               src={images.logo}
-              width={40}
-              height={44}
+              style={{ maxWidth: "40px", maxHeight: "40px" }}
               alt="Ezpics Logo"
             />
           </Link>
         </div>
 
-        <div className="menu flex">
-          {menuItems.map((menuItem, index) => (
-            <Link
-              key={index}
-              href={menuItem.href}
-              className="primary_btn pl-10">
-              {menuItem.label}
-            </Link>
-          ))}
+        <div className="relative items-center hidden md:flex">
+          <div className="flex overflow-hidden">
+            {menuItems.map((menuItem, index) => (
+              <Link
+                key={index}
+                href={menuItem.href}
+                className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
+                  menuItem.hiddenOn
+                )}`}>
+                {menuItem.label}
+              </Link>
+            ))}
+          </div>
+          <div className="relative">
+            <button
+              className="text-xl pl-10 xl:hidden"
+              onClick={() => toggleDropdown()}>
+              <EllipsisOutlined />
+            </button>
+            {dropdownVisible && (
+              <div className="absolute right-[-85px] mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                {menuItems.map(
+                  (menuItem, index) =>
+                    shouldShowInDropdown(menuItem.hiddenOn) && (
+                      <Link
+                        key={index}
+                        href={menuItem.href}
+                        className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                        {menuItem.label}
+                      </Link>
+                    )
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -414,7 +489,9 @@ const Header = ({ toggleNavbar }) => {
           )}>
           <a onClick={(e) => e.preventDefault()}>
             <Space>
-              <button className="button-red">Tạo thiết kế</button>
+              <button className="button-red whitespace-nowrap">
+                Tạo thiết kế
+              </button>
             </Space>
           </a>
         </Dropdown>
@@ -457,7 +534,7 @@ const Header = ({ toggleNavbar }) => {
         ) : (
           <div>
             <button
-              className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4"
+              className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
               onClick={() => {
                 router.push("sign-in");
               }}>
