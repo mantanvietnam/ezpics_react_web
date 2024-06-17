@@ -14,8 +14,7 @@ export default function DefaultPage({ getData }) {
     const fetchData = async () => {
       try {
         const response = await getData();
-        console.log(response)
-        setProducts(response.listData);
+        setProducts(response.listData || response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error.message);

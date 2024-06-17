@@ -119,7 +119,7 @@ export default function ProductInfo(props) {
             </div>
             <div className='flex items-center gap-3'>
               <div className='product-details-e'>Lượt xem:</div>
-              <div><span> `{data?.views} người`</span></div>
+              <div><span>{data?.views} người</span></div>
             </div>
             <div className='flex items-center gap-3'>
               <button

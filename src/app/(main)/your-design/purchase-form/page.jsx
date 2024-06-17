@@ -11,7 +11,7 @@ export default function Page() {
       type: "user_edit",
       // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
       token: checkTokenCookie(),
-      limit: 12,
+      limit: 100,
       page: 1
     });
   };

@@ -79,7 +79,7 @@ export const searchProductAPI = async (data) => {
   return response.data;
 };
 
-export const getProductWareHouseAPI = async (data) => {
+export const getProductsWarehousesAPI = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/getProductsWarehousesAPI",
     data
@@ -102,9 +102,26 @@ export const getSizeProductAPI = async (data) => {
   );
   return response.data;
 };
+
 export const getListBuyWarehousesAPI = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/getListBuyWarehousesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getListWarehouseDesignerAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getListWarehouseDesignerAPI",
+    data
+  );
+  return response.data;
+};
+
+export const addWarehouseAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/addWarehouseAPI",
     data
   );
   return response.data;

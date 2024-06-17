@@ -1,5 +1,5 @@
 "use client";
-import { getCollectionProductApi, getProductWareHouseAPI } from '@/api/product';
+import { getCollectionProductApi, getProductsWarehousesAPI } from '@/api/product';
 import { getUserInfoApi } from '@/api/user';
 import AuthorInfo from '@/components/AuthorInfo';
 import CollectionProductSlider from '@/components/Slide/CollectionProductSlider';
@@ -219,7 +219,7 @@ export default function Page({ params }) {
         if (productWithUserId) {
           try {
             const userResponse = await getUserInfoApi({ idUser: `${productWithUserId.user_id}` });
-            const dataWarehouseResponse = await getProductWareHouseAPI({
+            const dataWarehouseResponse = await getProductsWarehousesAPI({
               idWarehouse: productWithUserId.id,
               limit: 100,
               page: 1

@@ -10,6 +10,7 @@ import SerisProductSlider from "@/components/Slide/SerisProductSlider";
 import CollectionProductSlider from "@/components/Slide/collectionProductSlider";
 import ProductCard from "@/components/YourProduct/ProductCard";
 import { checkTokenCookie } from "@/utils";
+import Link from "next/link";
 
 export default function HomeRoot(props) {
   const [products, setProducts] = useState([]);
@@ -30,7 +31,7 @@ export default function HomeRoot(props) {
     };
 
     fetchData();
-  }, []); // Empty dependency array ensures useEffect runs only on mount
+  }, []);
 
   const onDeleteProduct = async (productId) => {
     try {
@@ -60,8 +61,16 @@ export default function HomeRoot(props) {
       <CollectionProductSlider />
       <EndowProduct />
       <EventProductSlider />
-      <h1 className="text-2xl font-bold my-4">Thiết kế gần đây</h1>
-      <ProductCard products={products} onDeleteProduct={onDeleteProduct} />
+      <div className="my-8 px-4">
+        <h1 className="text-2xl font-bold py-4 text-start">Thiết kế gần đây</h1>
+        <ProductCard products={products} onDeleteProduct={onDeleteProduct} />
+      </div>
+
+      <div className="flex justify-center mb-6">
+        <Link href="/your-design/purchase-form">
+          <button className="button-red relative z-10 px-4">Xem thêm</button>
+        </Link>
+      </div>
     </div>
   );
 }

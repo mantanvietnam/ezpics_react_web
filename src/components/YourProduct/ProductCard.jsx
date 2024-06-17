@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { designAction } from '../../../public/images/index2';
 import { Skeleton } from 'antd';
-import { toast } from 'react-toastify';
 
 export default function ProductCard({ products, onDeleteProduct, onDuplicateProduct }) {
   let buttonsData = [
