@@ -43,11 +43,6 @@ export default function Page({ params }) {
     <div className='className="flex-col w-[90%] mb-[100px]'>
       <div className='w-full flex flex-col items-center justify-center gap-8'>
         <ProductInfo data={data} user={user} isLoading={isLoading} />
-        <DefaultSlideNoApi
-          products={otherData}
-          title='Mẫu thiết kế tương tự'
-          pathString='/'
-        />
         {
           isLoading ? <Skeleton
             avatar
@@ -56,6 +51,12 @@ export default function Page({ params }) {
             }}
           /> : <AuthorInfo user={user} />
         }
+        <DefaultSlideNoApi
+          products={otherData}
+          title='Mẫu thiết kế tương tự'
+          pathString='/'
+        />
+
       </div>
     </div>
 
