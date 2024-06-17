@@ -321,9 +321,9 @@ export default function HomeBanner() {
         background:
           "linear-gradient(63deg, rgb(253, 208, 46) 40%, rgb(250, 226, 139) 100%)",
       }}
-      className="flex flex-col items-center justify-center gap-8 p-[50px] rounded-[20px] relative overflow-hidden w-full h-[300px]">
+      className="flex flex-col items-center justify-center gap-8 p-[50px] rounded-[20px] relative overflow-hidden w-full h-fit">
       <div>
-        <h2 className="text-white text-[2.2rem] font-bold">
+        <h2 className="text-white text-[2.2rem] font-bold text-nowrap">
           Bạn muốn thiết kế gì ?
         </h2>
       </div>
@@ -337,15 +337,15 @@ export default function HomeBanner() {
         className="flex w-[700px] bg-[#ffffff] p-3 items-center gap-8 rounded-md"
       />
 
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full overflow-x-auto hide-scrollbar">
         {actions.map((action, index) => (
           <div
             key={index}
-            className="flex flex-col items-center justify-center gap-2">
+            className="flex flex-col items-center justify-center gap-2 min-w-[100px]">
             <Link href={action.path} onClick={() => handleAction(action)}>
               {action.icon}
             </Link>
-            <div className="text-white font-semibold">{action.des}</div>
+            <div className="text-white font-semibold whitespace-nowrap">{action.des}</div>
           </div>
         ))}
       </div>
