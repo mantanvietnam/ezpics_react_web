@@ -7,10 +7,12 @@ import { Button } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Your_design = () => {
+const YourDesign = () => {
     const itemsPerRow = 3;
-    const router = useRouter()
+    const router = useRouter();
     const [dataForYou, setDataForYou] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const getData = async () => {
             try {
@@ -18,19 +20,57 @@ const Your_design = () => {
                     type: "user_edit",
                     token: checkTokenCookie(),
                     limit: 30
-                })
+                });
                 if (response && response?.code === 1) {
                     setDataForYou(response.listData);
                 }
             } catch (error) {
                 console.error("Error fetching data:", error.message);
+            } finally {
+                setLoading(false);
             }
         };
         getData();
     }, []);
+
+    const skeletonArray = new Array(6).fill(0);
+
     return (
         <div style={{ paddingTop: "0px", display: "flex", flexWrap: "wrap", background: 'white' }}>
-            {dataForYou.length > 0 ? (
+            {loading ? (
+                skeletonArray.map((_, index) => (
+                    <div
+                        key={index}
+                        style={{
+                            flex: `0 0 calc(${100 / itemsPerRow}% - 16px)`,
+                            marginBottom: "15px",
+                            boxSizing: "border-box",
+                            padding: "0 8px",
+                            position: "relative",
+                            maxWidth: 280,
+                            marginTop: "2%",
+                            marginRight: "1%",
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: "100%",
+                                height: "180px",
+                                background: "#f0f0f0",
+                                borderRadius: 10,
+                            }}
+                        ></div>
+                        <div
+                            style={{
+                                height: 70,
+                                background: "#f0f0f0",
+                                borderRadius: 10,
+                                marginTop: 10,
+                            }}
+                        ></div>
+                    </div>
+                ))
+            ) : (
                 dataForYou.map((item, index) => (
                     <div
                         key={index}
@@ -61,8 +101,6 @@ const Your_design = () => {
                                 opacity: 0,
                                 transition: "opacity 0.3s",
                                 zIndex: 1000,
-                                display: "flex",
-                                flexDirection: "row",
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.opacity = 1;
@@ -72,7 +110,7 @@ const Your_design = () => {
                             }}
                         >
                             <Button
-                                onClick={(e) => {
+                                onClick={() => {
                                     router.push(`/design`, {
                                         state: { id: item.id, token: checkTokenCookie() },
                                     });
@@ -84,6 +122,9 @@ const Your_design = () => {
                                     borderRadius: 10,
                                     backgroundColor: "white",
                                     width: 80,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
                                 }}
                             >
                                 <img
@@ -101,7 +142,6 @@ const Your_design = () => {
                                     Sửa
                                 </p>
                             </Button>
-
                         </div>
                         <div
                             style={{
@@ -127,7 +167,6 @@ const Your_design = () => {
                                 }}
                             />
                         </div>
-
                         <div
                             style={{
                                 height: 70,
@@ -157,12 +196,10 @@ const Your_design = () => {
                         </div>
                     </div>
                 ))
-            ) : (
-                <></>
             )}
             <div style={{
                 width: '100%', height: 'auto', display: 'flex', alignSelf: 'center', paddingBottom: 10, flexDirection: "column",
-                display: "flex",
+                alignItems: "center",
             }}>
                 <Button
                     variant="contained"
@@ -170,16 +207,11 @@ const Your_design = () => {
                     style={{
                         marginLeft: "20px",
                         height: 40,
-                        alignSelf: "center",
                         textTransform: "none",
                         color: "white",
                         backgroundColor: "rgb(255, 66, 78)",
-                        position: "relative",
                         alignItems: "center",
-                        alignSelf: "center",
                         width: "20%",
-
-
                     }}
                     onClick={() => {
                         window.scrollTo({
@@ -193,7 +225,7 @@ const Your_design = () => {
                 </Button>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Your_design
+export default YourDesign;
