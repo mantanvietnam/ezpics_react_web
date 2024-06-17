@@ -83,7 +83,7 @@ const CollectionProductSlider = ({ title }) => {
   };
 
   return (
-    <div className="w-[100%] mx-auto px-4 pt-4">
+    <div className="w-[100%] mx-auto px-4 pt-2">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold mb-4">
           {title || "Bộ sưu tập bạn có thể thích"}
