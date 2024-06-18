@@ -38,6 +38,10 @@ module.exports = {
         slideInFromLeft: "slideInFromLeft 0.75s ease-in-out",
         animloader: "animloader 2s linear infinite",
       },
+
+      screens: {
+        mobile: "480px",
+      },
     },
   },
   plugins: [],

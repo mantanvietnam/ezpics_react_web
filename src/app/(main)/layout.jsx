@@ -26,18 +26,25 @@ export default function CenteredLayout(props) {
   const toggleNavbar = () => {
     setIsNavbarOpen(!isNavbarOpen);
   };
+
+  const closeNavbar = () => {
+    if (isMobile) {
+      setIsNavbarOpen(false);
+    }
+  };
+
   return (
     <div className="">
       <Header toggleNavbar={toggleNavbar} />
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-100 ${
+        className={`fixed inset-0 bg-black transition-opacity duration-0 ${
           isNavbarOpen && isMobile
             ? "opacity-50 z-40 ml-[250px]"
             : "opacity-0 pointer-events-none"
         }`}
         onClick={toggleNavbar}></div>
       <main className="flex pt-[var(--header-height)]">
-        <Nav isOpen={isNavbarOpen} />
+        <Nav isOpen={isNavbarOpen} closeNavbar={closeNavbar} />
         {isMobile ? (
           <div className=" w-full flex justify-center">{props.children}</div>
         ) : (
