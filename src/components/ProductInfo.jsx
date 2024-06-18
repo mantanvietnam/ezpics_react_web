@@ -9,17 +9,17 @@ const VND = new Intl.NumberFormat("vi-VN", {
 export default function ProductInfo(props) {
   const { data, user, isLoading } = props;
   return (
-    <div className="flex w-full h-[500px] mt-[100px]">
-      <div className="w-[50%] h-full flex flex-col items-center justify-center gap-8">
+    <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
+      <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
         {isLoading ? (
           <SkeletonCustom>
             <Skeleton.Image
-              className="w-[80%] h-[50%] flex items-center justify-center"
+              className="w-full h-[100%] flex items-center justify-center"
               active="true"
             />
           </SkeletonCustom>
         ) : (
-          <div className="w-[80%] h-[50%] flex items-center justify-center bg-orange-100">
+          <div className="w-full h-full flex items-center justify-center">
             <img
               className="object-contain h-[100%]"
               src={data?.image}
@@ -106,7 +106,7 @@ export default function ProductInfo(props) {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col justify-between">
+        <div className="flex xl:w-1/2 w-full h-full flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <img src="/images/crown.svg" alt="" />
             <span className="text-xl font-semibold">{data?.name}</span>
