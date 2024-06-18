@@ -6,7 +6,6 @@ import { getProductCategoryAPI, searchProductAPI } from '@/api/product'
 import ProductComponent from '@/components/ProductComponent'
 import { SkeletonCustom } from '@/components/Slide/CustomSlide'
 import _ from 'lodash'
-import { DateTime } from 'luxon';
 
 export default function Layout(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
