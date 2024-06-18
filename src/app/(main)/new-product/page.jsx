@@ -4,12 +4,13 @@ import axios from 'axios';
 import { SkeletonCustom } from '@/components/Slide/CustomSlide';
 import { Skeleton } from 'antd';
 import { DateTime } from 'luxon';
+import { searchProductAPI } from '@/api/product';
+import { Flex, Spin } from 'antd';
 
 function Page() {
     const [categories, setCategories] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 24;
     const [sortOption, setSortOption] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [filterOption, setFilterOption] = useState('');
@@ -17,102 +18,94 @@ function Page() {
     const [loadingMore, setLoadingMore] = useState(false);
     const [products, setProducts] = useState([]);
     const [productsFilter, setProductsFilter] = useState([]);
-    // console.log('products', products)
+    const [hasMore, setHasMore] = useState(true);
+    console.log('selectedCategory', selectedCategory)
+    const limit = 20;
+    // const observer = useRef();
 
-
-    // const [searchValue, setSearchValue] = useState({
-    //     limit: 20,
-    //     page: 1,
-    //     name: '',
-    //     price: '',
-    //     orderBy: '',
-    //     orderType: '',
-    //     category_id: '',
-    //     color: ''
-    // })
-    useEffect(() => {
-        if (products.length > 0) {
-            const sortProducts = (products) => {
-                return products.sort((a, b) => {
-                    const dateTimeA = DateTime.fromISO(a.created_at);
-                    const dateTimeB = DateTime.fromISO(b.created_at);
-                    return dateTimeB - dateTimeA;
-                });
-            };
-            const sortedProducts = sortProducts([...products]); // Tạo bản sao của mảng để tránh đột biến
-            setProducts(sortedProducts);
-        }
-    }, [products]);
-    // useEffect để sắp xếp sản phẩm khi component được mount
+    const searchValue = {
+        limit: limit,
+        page: currentPage,
+        name: '',
+        price: '',
+        orderBy: filterOption != '' ? filterOption : 'create',
+        orderType: sortOption != '' ? sortOption : 'desc',
+        category_id: selectedCategory != '' ? selectedCategory : '',
+        color: ''
+    }
+    console.log('searchValue', searchValue)
 
     useEffect(() => {
-        fetchCategories();
-        fetchProducts();
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('https://apis.ezpics.vn/apis/getProductCategoryAPI');
+                if (response?.data?.listData) {
+                    setCategories(response.data.listData);
+                } else {
+                    console.error("Invalid response format for categories");
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error.message);
+            }
+        };
+        fetchCategories()
+
     }, []);
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('https://apis.ezpics.vn/apis/getProductCategoryAPI');
-            if (response?.data?.listData) {
-                setCategories(response.data.listData);
-            } else {
-                console.error("Invalid response format for categories");
-            }
-        } catch (error) {
-            console.error("Error fetching categories:", error.message);
-        }
-    };
 
-    const fetchProducts = async () => {
-        try {
-            setLoading(true);
-            let url = 'https://apis.ezpics.vn/apis/getProductAllCategoryAPI';
-            if (selectedCategory) {
-                url += `?category=${selectedCategory}`;
+    useEffect(() => {
+        setLoading(true)
+        const fetchData = async () => {
+            try {
+                const response = await searchProductAPI(searchValue)
+                setLoading(false)
+                if (response.listData.length === 0) {
+                    setHasMore(false); // No more products to load
+                } else {
+                    setProducts((prevProducts) => [...prevProducts, ...response.listData]);
+                }
+            } catch (error) {
+                console.log(error);
+                setLoading(false)
             }
-            const response = await axios.get(url);
-            if (response?.data?.listData) {
-                const combinedListData = response?.data?.listData.flatMap(item => item.listData);
-                setProducts(combinedListData);
-            } else {
-                console.error("Invalid response format for products");
-            }
-        } catch (error) {
-            console.error("Error fetching products:", error.message);
-        } finally {
-            setLoading(false);
         }
-    };
+        fetchData()
+    }, [selectedCategory, filterOption, sortOption, currentPage])
 
     const handleCategoryChange = (event) => {
-        const filteredProducts = products.filter(p => p.category_id == event.target.value);
-        setProductsFilter(filteredProducts);
+        // const filteredProducts = products.filter(p => p.category_id == event.target.value);
+        // setProductsFilter(filteredProducts);
+        // setSelectedCategory(event.target.value);
+        // console.log(filteredProducts)
+        setProducts([]);
+        setProductsFilter([]);
+        setCurrentPage(1);
+        setHasMore(true);
         setSelectedCategory(event.target.value);
-        console.log(filteredProducts)
     };
 
     const handleSortChange = (event) => {
         setSortOption(event.target.value);
+        setProducts([]);
+        setProductsFilter([]);
+        setCurrentPage(1);
+        setHasMore(true);
+        // setSortOption(event.target.value);
         // sortItems(products,)
     };
 
     const handleFilterChange = (event) => {
         setFilterOption(event.target.value);
+        setProducts([]);
+        setProductsFilter([]);
+        setCurrentPage(1);
+        setHasMore(true);
+        // setFilterOption(event.target.value);
     };
-    if (sortOption !== '') {
-        setProducts(sortItems(products, sortOption))
-    } else if (filterOption !== '') {
-        // setProducts(sortItems(products, sortOption))
 
-    }
 
     console.log('filterOption', filterOption)
     console.log('sortOption', sortOption)
     const handleSubmit = () => {
-        // fetchProducts();
-        // const filteredProducts = products.filter(p => p.category_id == event.target.value);
-        // sortItems(products, sortOption) 
-        // console.log('sortItems',sortItems)
-
         toggleDrawer();
     };
 
@@ -125,63 +118,51 @@ function Page() {
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
-    const onSubmit = async ({ sortOption, filterOption }) => {
-        try {
-            let url = 'https://apis.ezpics.vn/apis/getProductAllCategoryAPI';
-            let params = {};
-            if (selectedCategory) {
-                params.category = selectedCategory;
-            }
-            if (filterOption) {
-                params.filter = filterOption;
-            }
-            if (sortOption) {
-                params.sort = sortOption;
-            }
-            const response = await axios.get(url, { params });
-            if (response?.data?.listData) {
-                setProducts(response.data.listData[0]?.listData);
-            } else {
-                console.error("Invalid response format");
-            }
-        } catch (error) {
-            console.error("Error fetching products:", error.message);
+
+    const handleScroll = () => {
+        if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || loadingMore || !hasMore) {
+            return;
         }
+        setLoadingMore(true);
+        setCurrentPage((prevPage) => prevPage + 1);
+        // setLoadingMore(false);
     };
-    // useEffect(() => {
-    //     if (sortOption !== '') {
-    //         setSortedProducts(sortItems([...products], sortOption));
-    //     } else {
-    //         setSortedProducts([...products]);
-    //     }
-    // }, [sortOption, products]);
-    const sortItems = (items, option) => {
-        switch (option) {
-            case 'priceAsc':
-                return items.sort((a, b) => a.sale_price - b.sale_price);
-            case 'priceDesc':
-                return items.sort((a, b) => b.sale_price - a.sale_price);
-            case 'createdAt':
-                return items.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            case 'likes':
-                return items.sort((a, b) => b.likes - a.likes);
-            case 'views':
-                return items.sort((a, b) => b.views - a.views);
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [loadingMore, hasMore]);
+
+
+    useEffect(() => {
+        if (loadingMore) {
+            const fetchData = async () => {
+                try {
+                    const response = await searchProductAPI(searchValue);
+                    if (response.listData.length === 0) {
+                        setHasMore(false);
+                    } else {
+                        setProducts((prevProducts) => [...prevProducts, ...response.listData]);
+                    }
+                } catch (error) {
+                    console.log(error);
+                } finally {
+                    setLoadingMore(false);
+                }
+            };
+            fetchData();
+        }
+    }, [loadingMore]);
+    function momartprice(a) {
+
+        switch (a) {
+            case a.price:
+                break;
             default:
-                return items;
+                break;
         }
-    };
 
-    const paginatedProducts = products?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    const totalPages = Math.ceil(products?.length / itemsPerPage);
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
+    }
 
     return (
         <div className="p-6">
@@ -212,8 +193,8 @@ function Page() {
 
             {/* Drawer */}
             {drawerOpen && (
-                <div className="fixed inset-0 z-50 flex">
-                    <div className="bg-white w-64 p-4 shadow-lg">
+                <div className="fixed inset-0 z-50 flex ">
+                    <div className="bg-white w-64 p-4 shadow-lg ">
                         <button
                             onClick={toggleDrawer}
                             className="text-red-500 font-semibold mb-4"
@@ -221,61 +202,7 @@ function Page() {
                             Close
                         </button>
                         <h3 className="font-bold mb-2">Tìm kiếm nâng cao</h3>
-                        <div className="mb-4">
-                            <label className="block mb-2">Sắp xếp theo</label>
-                            <div className="flex flex-col space-y-2">
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="priceAsc"
-                                        checked={sortOption === 'priceAsc'}
-                                        onChange={handleSortChange}
-                                        className="mr-2"
-                                    />
-                                    Giá tăng dần
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="priceDesc"
-                                        checked={sortOption === 'priceDesc'}
-                                        onChange={handleSortChange}
-                                        className="mr-2"
-                                    />
-                                    Giá giảm dần
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="createdAt"
-                                        checked={sortOption === 'createdAt'}
-                                        onChange={handleSortChange}
-                                        className="mr-2"
-                                    />
-                                    Theo thời gian tạo
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="likes"
-                                        checked={sortOption === 'likes'}
-                                        onChange={handleSortChange}
-                                        className="mr-2"
-                                    />
-                                    Yêu thích
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="views"
-                                        checked={sortOption === 'views'}
-                                        onChange={handleSortChange}
-                                        className="mr-2"
-                                    />
-                                    Lượt xem
-                                </label>
-                            </div>
-                        </div>
+
                         <div className="mb-4">
                             <label className="block mb-2">Lọc theo</label>
                             <div className="flex flex-col space-y-2">
@@ -302,8 +229,8 @@ function Page() {
                                 <label>
                                     <input
                                         type="radio"
-                                        value="createdAt"
-                                        checked={filterOption === 'createdAt'}
+                                        value="create"
+                                        checked={filterOption === 'create'}
                                         onChange={handleFilterChange}
                                         className="mr-2"
                                     />
@@ -312,8 +239,8 @@ function Page() {
                                 <label>
                                     <input
                                         type="radio"
-                                        value="views"
-                                        checked={filterOption === 'views'}
+                                        value="view"
+                                        checked={filterOption === 'view'}
                                         onChange={handleFilterChange}
                                         className="mr-2"
                                     />
@@ -322,8 +249,8 @@ function Page() {
                                 <label>
                                     <input
                                         type="radio"
-                                        value="likes"
-                                        checked={filterOption === 'likes'}
+                                        value="favorite"
+                                        checked={filterOption === 'favorite'}
                                         onChange={handleFilterChange}
                                         className="mr-2"
                                     />
@@ -331,18 +258,43 @@ function Page() {
                                 </label>
                             </div>
                         </div>
+                        <div className="mb-4">
+                            <label className="block mb-2">Sắp xếp theo</label>
+                            <div className="flex flex-col space-y-2">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="asc"
+                                        checked={sortOption === 'asc'}
+                                        onChange={handleSortChange}
+                                        className="mr-2"
+                                    />
+                                    Tăng dần
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="desc"
+                                        checked={sortOption === 'desc'}
+                                        onChange={handleSortChange}
+                                        className="mr-2"
+                                    />
+                                    Giảm dần
+                                </label>
+                            </div>
+                        </div>
                         <div className="flex space-x-4">
-                            <button
+                            {/* <button
                                 onClick={handleSubmit}
                                 className="bg-blue-500 text-white p-2 rounded-md"
                             >
                                 Gửi
-                            </button>
+                            </button> */}
                             <button
                                 onClick={handleCancel}
                                 className="bg-gray-500 text-white p-2 rounded-md"
                             >
-                                Hủy
+                                Xóa bộ lọc
                             </button>
                         </div>
                     </div>
@@ -355,11 +307,11 @@ function Page() {
 
             {/* Loading spinner */}
             {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
                     {Array.from({ length: 20 }).map((_, index) => (
                         <SkeletonCustom key={index}>
                             <Skeleton.Image active />
-                            <Skeleton.Input active size="large" className="w-full pt-4" />
+                            <Skeleton.Input active size="small" className="w-full pt-4" />
                         </SkeletonCustom>
                     ))}
                 </div>
@@ -379,7 +331,7 @@ function Page() {
                                         <p className="mt-2 text-lg font-medium">{item?.name}</p>
                                         <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
                                         <p className="font-semibold mt-2 text-lg text-red-500">
-                                            <span className="mr-2">{item?.sale_price}₫</span>
+                                            <span className="mr-2">{item?.sale_price === '0' ? 'Miễn phí' : item?.sale_price}₫</span>
                                             <del className="text-gray-500">{item?.price}₫</del>
                                         </p>
                                     </div>
@@ -387,7 +339,7 @@ function Page() {
                             </>
                         ) : (
                             <>
-                                {paginatedProducts?.map((item) => (
+                                {products?.map((item) => (
                                     <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
                                         <img
                                             src={item?.image}
@@ -397,8 +349,8 @@ function Page() {
                                         <p className="mt-2 text-lg font-medium">{item?.name}</p>
                                         <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
                                         <p className="font-semibold mt-2 text-lg text-red-500">
-                                            <span className="mr-2">{item?.sale_price}₫</span>
-                                            <del className="text-gray-500">{item?.price}₫</del>
+                                            <span className="mr-2">{item?.sale_price == 0 ? 'Miễn phí' : `${item?.sale_price}₫`}</span>
+                                            <del className="text-gray-500">{item?.price == 0 ? ''  :`${item?.price}₫`}</del>
                                         </p>
                                     </div>
                                 ))}
@@ -406,37 +358,6 @@ function Page() {
                         )}
                     </div>
 
-                    {/* Pagination */}
-                    <div className="pagination mt-6">
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-                        >
-                            Previous
-                        </button>
-
-                        {[...Array(totalPages).keys()].map((page) => (
-                            <button
-                                key={page + 1}
-                                onClick={() => handlePageChange(page + 1)}
-                                className={`px-4 py-2 rounded-md mr-2 ${currentPage === page + 1
-                                    ? 'bg-blue-500 text-white'
-                                    : 'bg-gray-200 text-gray-800'
-                                    }`}
-                            >
-                                {page + 1}
-                            </button>
-                        ))}
-
-                        <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
-                        >
-                            Next
-                        </button>
-                    </div>
                     {/* Loading more indicator */}
                     {loadingMore && (
                         <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
