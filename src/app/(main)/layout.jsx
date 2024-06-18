@@ -30,7 +30,7 @@ export default function CenteredLayout(props) {
     <div className="">
       <Header toggleNavbar={toggleNavbar} />
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-100 ${
+        className={`fixed inset-0 bg-black transition-opacity duration-0 ${
           isNavbarOpen && isMobile
             ? "opacity-50 z-40 ml-[250px]"
             : "opacity-0 pointer-events-none"

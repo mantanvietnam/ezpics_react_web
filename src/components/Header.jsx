@@ -455,19 +455,21 @@ const Header = ({ toggleNavbar }) => {
       </div>
 
       <div className="action flex justify-center items-center">
-        {actionIcons.map((social, index) =>
-          index === 2 ? (
-            <div className="icon-container" key={index}>
-              <div className="p-3 icon-primary">{social.icon}</div>
-              <div className="desc">{social.desc}</div>
-            </div>
-          ) : (
-            <Link className="icon-container" href={social.href} key={index}>
-              <div className="p-3 icon-primary">{social.icon}</div>
-              <div className="desc">{social.desc}</div>
-            </Link>
-          )
-        )}
+        <div className="hidden sm:flex">
+          {actionIcons.map((social, index) =>
+            index === 2 ? (
+              <div className="icon-container" key={index}>
+                <div className="p-3 icon-primary">{social.icon}</div>
+                <div className="desc">{social.desc}</div>
+              </div>
+            ) : (
+              <Link className="icon-container" href={social.href} key={index}>
+                <div className="p-3 icon-primary">{social.icon}</div>
+                <div className="desc">{social.desc}</div>
+              </Link>
+            )
+          )}
+        </div>
         <Dropdown
           trigger={["click"]}
           placement="bottomRight"
