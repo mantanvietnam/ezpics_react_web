@@ -3,12 +3,12 @@ import React from "react";
 const IntroduceApp = () => {
   return (
     <div className="py-[3%] px-[5%]">
-      <div className="bg-[rgb(232,229,244)] h-[200px] w-full rounded-[20px] px-[5%] py-[2%] flex justify-between">
+      <div className="bg-[rgb(232,229,244)] h-full md:h-[200px] w-full rounded-[20px] px-[5%] py-[2%] flex flex-col md:flex-row justify-between">
         <div>
           <h1 className="text-4xl font-bold my-6">
             Tải ứng dụng Ezpics về điện thoại !
           </h1>
-          <p className="pr-[10%]">
+          <p className="lg:pr-[10%]">
             Hãy thử tải ứng dụng Ezpics của chúng tôi để tận hưởng trải sửa ảnh
             trực tuyến tối ưu nhất
           </p>

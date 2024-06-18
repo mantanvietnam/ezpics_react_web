@@ -9,7 +9,7 @@ import ModalRecharge from "./ModelRecharge";
 import { checkAvailableLogin, getCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 
-const Nav = ({ isOpen }) => {
+const Nav = ({ isOpen, closeNavbar }) => {
   const [openPro, setOpenPro] = useState(false);
   const [openRecharge, setOpenRecharge] = useState(false);
   const handleCancelPro = () => {
@@ -73,11 +73,13 @@ const Nav = ({ isOpen }) => {
   const handleNavItem = (item) => {
     setActiveItem(item);
     setActiveFunc(null);
+    closeNavbar(); // Close the navbar when a link is clicked
   };
   const [activeFunc, setActiveFunc] = useState("");
   const hanldeFuncItem = (item) => {
     setActiveFunc(item);
     setActiveItem(null);
+    closeNavbar(); // Close the navbar when a link is clicked
   };
 
   return (
