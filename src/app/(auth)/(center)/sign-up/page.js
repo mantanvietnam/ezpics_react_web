@@ -28,7 +28,7 @@ const Sign_up = () => {
       password: '',
       password_again: '',
       affsource: '',
-      token_device: "web",
+      // token_device: "web",
     },
     validate: (values) => {
       const errors = {}
