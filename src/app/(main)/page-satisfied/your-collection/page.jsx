@@ -33,7 +33,7 @@ const Your_collection = () => {
                     <div
                         key={index}
                         style={{
-                            flex: `0 0 calc(${100 / itemsPerRow}% - 16px)`,
+                            flex: `0 0 calc(${100 / itemsPerRow.desktop}% - 16px)`,
                             marginBottom: "15px",
                             boxSizing: "border-box",
                             padding: "0 8px",
