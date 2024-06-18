@@ -1,11 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { SkeletonCustom } from '@/components/Slide/CustomSlide';
+import { Skeleton } from 'antd';
+import { DateTime } from 'luxon';
 
 function Page() {
     const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [productsFilter, setProductsFilter] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 24;
@@ -14,12 +15,40 @@ function Page() {
     const [filterOption, setFilterOption] = useState('');
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
-    console.log('products', products)
+    const [products, setProducts] = useState([]);
+    const [productsFilter, setProductsFilter] = useState([]);
+    // console.log('products', products)
+
+
+    // const [searchValue, setSearchValue] = useState({
+    //     limit: 20,
+    //     page: 1,
+    //     name: '',
+    //     price: '',
+    //     orderBy: '',
+    //     orderType: '',
+    //     category_id: '',
+    //     color: ''
+    // })
+    useEffect(() => {
+        if (products.length > 0) {
+            const sortProducts = (products) => {
+                return products.sort((a, b) => {
+                    const dateTimeA = DateTime.fromISO(a.created_at);
+                    const dateTimeB = DateTime.fromISO(b.created_at);
+                    return dateTimeB - dateTimeA;
+                });
+            };
+            const sortedProducts = sortProducts([...products]); // Tạo bản sao của mảng để tránh đột biến
+            setProducts(sortedProducts);
+        }
+    }, [products]);
+    // useEffect để sắp xếp sản phẩm khi component được mount
+
     useEffect(() => {
         fetchCategories();
         fetchProducts();
     }, []);
-
     const fetchCategories = async () => {
         try {
             const response = await axios.get('https://apis.ezpics.vn/apis/getProductCategoryAPI');
@@ -63,14 +92,27 @@ function Page() {
 
     const handleSortChange = (event) => {
         setSortOption(event.target.value);
+        // sortItems(products,)
     };
 
     const handleFilterChange = (event) => {
         setFilterOption(event.target.value);
     };
+    if (sortOption !== '') {
+        setProducts(sortItems(products, sortOption))
+    } else if (filterOption !== '') {
+        // setProducts(sortItems(products, sortOption))
 
+    }
+
+    console.log('filterOption', filterOption)
+    console.log('sortOption', sortOption)
     const handleSubmit = () => {
-        fetchProducts();
+        // fetchProducts();
+        // const filteredProducts = products.filter(p => p.category_id == event.target.value);
+        // sortItems(products, sortOption) 
+        // console.log('sortItems',sortItems)
+
         toggleDrawer();
     };
 
@@ -83,7 +125,36 @@ function Page() {
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
-
+    const onSubmit = async ({ sortOption, filterOption }) => {
+        try {
+            let url = 'https://apis.ezpics.vn/apis/getProductAllCategoryAPI';
+            let params = {};
+            if (selectedCategory) {
+                params.category = selectedCategory;
+            }
+            if (filterOption) {
+                params.filter = filterOption;
+            }
+            if (sortOption) {
+                params.sort = sortOption;
+            }
+            const response = await axios.get(url, { params });
+            if (response?.data?.listData) {
+                setProducts(response.data.listData[0]?.listData);
+            } else {
+                console.error("Invalid response format");
+            }
+        } catch (error) {
+            console.error("Error fetching products:", error.message);
+        }
+    };
+    // useEffect(() => {
+    //     if (sortOption !== '') {
+    //         setSortedProducts(sortItems([...products], sortOption));
+    //     } else {
+    //         setSortedProducts([...products]);
+    //     }
+    // }, [sortOption, products]);
     const sortItems = (items, option) => {
         switch (option) {
             case 'priceAsc':
@@ -284,8 +355,13 @@ function Page() {
 
             {/* Loading spinner */}
             {loading ? (
-                <div className="flex justify-center items-center h-64">
-                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {Array.from({ length: 20 }).map((_, index) => (
+                        <SkeletonCustom key={index}>
+                            <Skeleton.Image active />
+                            <Skeleton.Input active size="large" className="w-full pt-4" />
+                        </SkeletonCustom>
+                    ))}
                 </div>
             ) : (
                 <>
@@ -299,7 +375,7 @@ function Page() {
                                             src={item?.image}
                                             alt={item?.name}
                                             className="w-full h-48 object-cover rounded-md"
-                                            />
+                                        />
                                         <p className="mt-2 text-lg font-medium">{item?.name}</p>
                                         <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
                                         <p className="font-semibold mt-2 text-lg text-red-500">
@@ -308,16 +384,16 @@ function Page() {
                                         </p>
                                     </div>
                                 ))}
-                                </>
+                            </>
                         ) : (
-                                <>
-                            {paginatedProducts?.map((item) => (
-                                <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
+                            <>
+                                {paginatedProducts?.map((item) => (
+                                    <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
                                         <img
                                             src={item?.image}
                                             alt={item?.name}
                                             className="w-full h-48 object-cover rounded-md"
-                                            />
+                                        />
                                         <p className="mt-2 text-lg font-medium">{item?.name}</p>
                                         <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
                                         <p className="font-semibold mt-2 text-lg text-red-500">
@@ -326,7 +402,7 @@ function Page() {
                                         </p>
                                     </div>
                                 ))}
-                                </>
+                            </>
                         )}
                     </div>
 
@@ -363,8 +439,13 @@ function Page() {
                     </div>
                     {/* Loading more indicator */}
                     {loadingMore && (
-                        <div className="mt-8 flex justify-center">
-                            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                        <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
+                            {Array.from({ length: 20 }).map((_, index) => (
+                                <SkeletonCustom key={index}>
+                                    <Skeleton.Image active />
+                                    <Skeleton.Input active size="small" className="w-full pt-4" />
+                                </SkeletonCustom>
+                            ))}
                         </div>
                     )}
                 </>
