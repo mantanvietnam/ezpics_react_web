@@ -93,7 +93,7 @@ export default function Login() {
         signIn('google')
     }
     return (
-        <div className="h-screen w-screen">
+        <div className={styles.container_login}>
             <div className={styles["login-bg"]}>
                 <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40">
                     <div className={styles.padding}>
