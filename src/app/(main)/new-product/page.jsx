@@ -2,10 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SkeletonCustom } from '@/components/Slide/CustomSlide';
-import { Skeleton } from 'antd';
+import { Image, Skeleton } from 'antd';
 import { DateTime } from 'luxon';
 import { searchProductAPI } from '@/api/product';
-import { Flex, Spin } from 'antd';
+// import { Flex, Spin } from 'antd';
+import Link from "next/link";
+import { Button, Dropdown, Modal, Space, Input, Radio, Menu, Spin, Flex } from 'antd';
+import { ControlOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons';
+import { checkTokenCookie, getCookie } from "@/utils";
+import { useSession } from 'next-auth/react';
+
 
 function Page() {
     const [categories, setCategories] = useState([]);
@@ -14,14 +20,15 @@ function Page() {
     const [sortOption, setSortOption] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [filterOption, setFilterOption] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
     const [products, setProducts] = useState([]);
-    const [productsFilter, setProductsFilter] = useState([]);
+    // const [productsFilter, setProductsFilter] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [closing, setClosing] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    console.log('selectedCategory', selectedCategory)
+    const [dataInforUser, setdataInforUser] = useState(null);
     const limit = 20;
-    // const observer = useRef();
 
     const searchValue = {
         limit: limit,
@@ -33,7 +40,29 @@ function Page() {
         category_id: selectedCategory != '' ? selectedCategory : '',
         color: ''
     }
-    console.log('searchValue', searchValue)
+    const cookie = checkTokenCookie()
+    useEffect(()=>{
+        const fetchDataUser = async ()=>{
+            try {
+               const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI',{
+                token: cookie
+               });
+
+               if (response) {
+                    // console.log('response',response?.data?.data);      
+                    setdataInforUser(response?.data?.data)         
+            } else {
+                console.error("Invalid response format for categories");
+            }
+
+            } catch (error) {
+               throw new Error(error)
+            }   
+
+        }
+        fetchDataUser();
+    },[cookie])
+console.log('dataInforUser',dataInforUser)
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -51,10 +80,9 @@ function Page() {
         fetchCategories()
 
     }, []);
-
     useEffect(() => {
-        setLoading(true)
         const fetchData = async () => {
+            // setLoading(true)
             try {
                 const response = await searchProductAPI(searchValue)
                 setLoading(false)
@@ -72,12 +100,8 @@ function Page() {
     }, [selectedCategory, filterOption, sortOption, currentPage])
 
     const handleCategoryChange = (event) => {
-        // const filteredProducts = products.filter(p => p.category_id == event.target.value);
-        // setProductsFilter(filteredProducts);
-        // setSelectedCategory(event.target.value);
-        // console.log(filteredProducts)
         setProducts([]);
-        setProductsFilter([]);
+        // setProductsFilter([]);
         setCurrentPage(1);
         setHasMore(true);
         setSelectedCategory(event.target.value);
@@ -86,37 +110,43 @@ function Page() {
     const handleSortChange = (event) => {
         setSortOption(event.target.value);
         setProducts([]);
-        setProductsFilter([]);
+        // setProductsFilter([]);
         setCurrentPage(1);
         setHasMore(true);
-        // setSortOption(event.target.value);
-        // sortItems(products,)
     };
 
     const handleFilterChange = (event) => {
         setFilterOption(event.target.value);
         setProducts([]);
-        setProductsFilter([]);
+        // setProductsFilter([]);
         setCurrentPage(1);
         setHasMore(true);
-        // setFilterOption(event.target.value);
     };
-
-
-    console.log('filterOption', filterOption)
-    console.log('sortOption', sortOption)
-    const handleSubmit = () => {
-        toggleDrawer();
-    };
-
+    
     const handleCancel = () => {
         setSortOption('');
         setFilterOption('');
         toggleDrawer();
+        setClosing(true);
     };
-
+    
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
+    };
+    
+    const handleSubmit = () => {
+        toggleDrawer();
+    };
+    const showModal = () => {
+        setIsModalOpen(true);
+        setClosing(false); // Reset trạng thái khi mở modal
+    };
+
+    const handleOk = () => {
+        setClosing(true);
+        setTimeout(() => {
+            setIsModalOpen(false);
+        }, 500); // Thời gian trễ phải trùng với thời gian của animation
     };
 
     const handleScroll = () => {
@@ -153,16 +183,12 @@ function Page() {
             fetchData();
         }
     }, [loadingMore]);
-    function momartprice(a) {
 
-        switch (a) {
-            case a.price:
-                break;
-            default:
-                break;
-        }
-
-    }
+    const VND = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+    });
+    console.log(products)
 
     return (
         <div className="p-6">
@@ -171,38 +197,34 @@ function Page() {
 
             {/* Search Bar and Drawer */}
             <div className="flex justify-between items-center mb-6">
-                <select
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    className="p-2 border rounded-md"
-                >
-                    <option value="">Chọn danh mục</option>
-                    {categories?.map(category => (
-                        <option key={category.id} value={category.id}>
-                            {category.name}
-                        </option>
-                    ))}
-                </select>
-                <button
-                    onClick={toggleDrawer}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                >
-                    Tìm kiếm nâng cao
-                </button>
+                <div className="flex items-center gap-3">
+                    <button onClick={toggleDrawer} className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
+                        <ControlOutlined />
+                        <span>Nâng cao</span>
+                    </button>
+                    <select
+                        value={selectedCategory}
+                        onChange={handleCategoryChange}
+                        className="p-2 border rounded-md"
+                    >
+                        <option value="">Chọn danh mục</option>
+                        {categories?.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             {/* Drawer */}
             {drawerOpen && (
-                <div className="fixed inset-0 z-50 flex ">
-                    <div className="bg-white w-64 p-4 shadow-lg ">
-                        <button
-                            onClick={toggleDrawer}
-                            className="text-red-500 font-semibold mb-4"
-                        >
+                <div className="fixed inset-0 z-50 flex">
+                    <div className="bg-white w-64 p-4 shadow-lg">
+                        <button onClick={toggleDrawer} className="text-red-500 font-semibold mb-4">
                             Close
                         </button>
                         <h3 className="font-bold mb-2">Tìm kiếm nâng cao</h3>
-
                         <div className="mb-4">
                             <label className="block mb-2">Lọc theo</label>
                             <div className="flex flex-col space-y-2">
@@ -284,12 +306,6 @@ function Page() {
                             </div>
                         </div>
                         <div className="flex space-x-4">
-                            {/* <button
-                                onClick={handleSubmit}
-                                className="bg-blue-500 text-white p-2 rounded-md"
-                            >
-                                Gửi
-                            </button> */}
                             <button
                                 onClick={handleCancel}
                                 className="bg-gray-500 text-white p-2 rounded-md"
@@ -307,66 +323,60 @@ function Page() {
 
             {/* Loading spinner */}
             {loading ? (
-                <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
-                    {Array.from({ length: 20 }).map((_, index) => (
-                        <SkeletonCustom key={index}>
-                            <Skeleton.Image active />
-                            <Skeleton.Input active size="small" className="w-full pt-4" />
-                        </SkeletonCustom>
-                    ))}
+                <div className="center text-center">
+                    <Flex align="center" gap="middle" className="flex justify-center items-center">
+                        {/* Placeholder for loading spinner */}
+                    </Flex>
                 </div>
             ) : (
                 <>
                     {/* Products */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {productsFilter.length > 0 ? (
-                            <>
-                                {productsFilter?.map((item) => (
-                                    <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
-                                        <img
-                                            src={item?.image}
-                                            alt={item?.name}
-                                            className="w-full h-48 object-cover rounded-md"
-                                        />
-                                        <p className="mt-2 text-lg font-medium">{item?.name}</p>
-                                        <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
-                                        <p className="font-semibold mt-2 text-lg text-red-500">
-                                            <span className="mr-2">{item?.sale_price === '0' ? 'Miễn phí' : item?.sale_price}₫</span>
-                                            <del className="text-gray-500">{item?.price}₫</del>
-                                        </p>
+                    {products.length > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-1 gap-1 justify-center">
+                            {products.map((item) => (
+                                <div className="block">
+                                    <div className="card bg-white rounded-lg shadow-md overflow-hidden">
+                                        <div className="bg-orange-100 overflow-hidden text-center">
+                                            <Image
+                                                src={item.image}
+                                                width={300}
+                                                height={200}
+                                                className="object-cover h-48 w-full"
+                                                alt={item.name}
+                                            />
+                                        </div>
+                                        <Link href={`/category/${item.id}`} key={item.id}>
+                                            <div className="p-4">
+                                                <h2 className="text-lg font-medium h-20 line-clamp-3">{item.name}</h2>
+                                                <p className="text-gray-500 mt-2 text-sm">Đã bán {item.sold}</p>
+                                                <div className="mt-2">
+                                                    <span className="text-red-500 mr-2 font-bold text-sm">
+                                                        {item.sale_price === 0 || (dataInforUser?.member_pro === 1 && item?.free_pro) ? "Miễn phí" : VND.format(item.sale_price)}
+                                                    </span>
+                                                    {item.sale_price !== 0 && (
+                                                        <span className="text-gray-500 line-through">{VND.format(item.price)}</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </Link>
                                     </div>
-                                ))}
-                            </>
-                        ) : (
-                            <>
-                                {products?.map((item) => (
-                                    <div key={item?.id} className="bg-white rounded-md shadow-md p-4">
-                                        <img
-                                            src={item?.image}
-                                            alt={item?.name}
-                                            className="w-full h-48 object-cover rounded-md"
-                                        />
-                                        <p className="mt-2 text-lg font-medium">{item?.name}</p>
-                                        <p className="mt-1 text-gray-500">Đã bán {item?.sold}</p>
-                                        <p className="font-semibold mt-2 text-lg text-red-500">
-                                            <span className="mr-2">{item?.sale_price == 0 ? 'Miễn phí' : `${item?.sale_price}₫`}</span>
-                                            <del className="text-gray-500">{item?.price == 0 ? ''  :`${item?.price}₫`}</del>
-                                        </p>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="center text-center">
+                            <Flex align="center" gap="middle" className="flex justify-center items-center">
+                                {/* Placeholder for no products found */}<Spin size="large" />
+                            </Flex>
+                        </div>
+                    )}
 
                     {/* Loading more indicator */}
                     {loadingMore && (
-                        <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
-                            {Array.from({ length: 20 }).map((_, index) => (
-                                <SkeletonCustom key={index}>
-                                    <Skeleton.Image active />
-                                    <Skeleton.Input active size="small" className="w-full pt-4" />
-                                </SkeletonCustom>
-                            ))}
+                        <div className="center text-center">
+                            <Flex align="center" gap="middle" className="flex justify-center items-center">
+                                {/* Placeholder for loading more spinner */}<Spin size="large" />
+                            </Flex>
                         </div>
                     )}
                 </>
