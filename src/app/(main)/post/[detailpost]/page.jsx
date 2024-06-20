@@ -13,6 +13,8 @@ const NewsDetailPage = ({params}) => {
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
 // console.log(article , id)
+// console.log(article , id)
+
   useEffect(() => {
     if (true) {
       const fetchArticle = async () => {
