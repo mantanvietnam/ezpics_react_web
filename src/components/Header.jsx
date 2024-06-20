@@ -307,6 +307,14 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
+        <Link href={"/favorite_designs"} className="list-item">
+          <p className="item-text">Mẫu thiết kế yêu thích</p>
+        </Link>
+      ),
+      key: "6",
+    },
+    {
+      label: (
         <div class="list-item ">
           <p className="item-text">Sửa thông tin cá nhân</p>
         </div>
@@ -343,7 +351,7 @@ const Header = ({ toggleNavbar }) => {
           <p className="item-text">Đăng xuất </p>
         </div>
       ),
-      key: "4",
+      key: "5",
     },
   ];
 
