@@ -55,6 +55,7 @@ const Header = ({ toggleNavbar }) => {
     { href: "/pricing-compare", label: "Bảng giá", hiddenOn: "lg" },
     { href: "/guide", label: "Hướng dẫn", hiddenOn: "xl" },
     { href: "/developer", label: "Nhà phát triển", hiddenOn: "xl" },
+    { href: "/post", label: "Tin tức", hiddenOn: "xl" },
   ];
   const actionIcons = [
     {
