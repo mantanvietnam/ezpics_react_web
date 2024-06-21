@@ -5,4 +5,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+  .img-center img{
+    margin: auto;
+
+  }
+  .img-center{
+    text-align: center;
+  }

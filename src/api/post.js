@@ -10,5 +10,12 @@ export const getInforPost = async (data) => {
       "https://apis.ezpics.vn/apis/getMyProductAPI",
       data
     );
-    return response.data;
+    return response.data.listData;
   };
+  // export const searchProductAPI = async (data) => {
+  //   const response = await axios.post(
+  //     "https://apis.ezpics.vn/apis/searchProductAPI",
+  //     data
+  //   );
+  //   return response.data;
+  // };

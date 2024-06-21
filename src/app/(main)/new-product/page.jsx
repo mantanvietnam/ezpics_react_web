@@ -193,10 +193,10 @@ function Page() {
     return (
         <div className="p-6">
             {/* Header */}
-            <h1 className="text-2xl font-semibold mb-6">Thiết kế mới trong tuần</h1>
+            <h1 className="text-2xl font-semibold mb-6 w-full">Thiết kế mới trong tuần</h1>
 
             {/* Search Bar and Drawer */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 w-full">
                 <div className="flex items-center gap-3">
                     <button onClick={toggleDrawer} className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
                         <ControlOutlined />
@@ -323,7 +323,7 @@ function Page() {
 
             {/* Loading spinner */}
             {loading ? (
-                <div className="center text-center">
+                <div className="center text-center w-full">
                     <Flex align="center" gap="middle" className="flex justify-center items-center">
                         {/* Placeholder for loading spinner */}
                     </Flex>
@@ -364,7 +364,7 @@ function Page() {
                             ))}
                         </div>
                     ) : (
-                        <div className="center text-center">
+                        <div className="center text-center w-full">
                             <Flex align="center" gap="middle" className="flex justify-center items-center">
                                 {/* Placeholder for no products found */}<Spin size="large" />
                             </Flex>
@@ -373,7 +373,7 @@ function Page() {
 
                     {/* Loading more indicator */}
                     {loadingMore && (
-                        <div className="center text-center">
+                        <div className="center text-center w-full">
                             <Flex align="center" gap="middle" className="flex justify-center items-center">
                                 {/* Placeholder for loading more spinner */}<Spin size="large" />
                             </Flex>
