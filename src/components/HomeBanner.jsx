@@ -307,7 +307,7 @@ export default function HomeBanner() {
       ),
       des: "Xem thêm",
       selected: "91.5%",
-      path: "/",
+      path: "/dashboard-search",
     },
   ];
 

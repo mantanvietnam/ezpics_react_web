@@ -24,6 +24,7 @@
     "chart.js": "^4.4.3",
     "firebase": "^10.12.2",
     "formik": "^2.4.6",
+    "js-cookie": "^3.0.5",
     "luxon": "^3.4.4",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
