@@ -165,3 +165,11 @@ export const deleteFavoriteAPI = async (data) => {
   );
   return response.data;
 };
+
+export const buyProductAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/buyProductAPI",
+    data
+  );
+  return response.data;
+};

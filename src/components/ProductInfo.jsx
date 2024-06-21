@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Skeleton, Space, Spin } from "antd";
-import { SkeletonCustom } from "./Slide/CustomSlide";
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import { checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from '@/api/product';
-import { toast } from 'react-toastify';
-import { LoadingOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from "react"
+import { Button, Modal, Radio, Skeleton, Space, Spin, Table, Tag } from "antd"
+import { SkeletonCustom } from "./Slide/CustomSlide"
+import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
+import { buyProductAPI, checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from '@/api/product'
+import { toast } from 'react-toastify'
+import { LoadingOutlined } from '@ant-design/icons'
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
-});
+})
 
 export default function ProductInfo(props) {
   const { data, user, isLoading } = props
-  console.log('🚀 ~ ProductInfo ~ data:', data)
   const router = useRouter()
 
   const [isFavorited, setIsFavorited] = useState(0)
@@ -22,6 +21,86 @@ export default function ProductInfo(props) {
   const userLogin = Cookies.get('user_login')
   const token = Cookies.get('token')
 
+  const [open, setOpen] = useState(false)
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [type, setType] = useState('')
+
+  const showModal = () => {
+    if (!userLogin || !token) {
+      router.push('/sign-in')
+    } else {
+      setOpen(true)
+    }
+  }
+  const handleOk = async () => {
+    try {
+      setConfirmLoading(true)
+      const response = await buyProductAPI({
+        id: data?.id,
+        token: token,
+        type: type
+      })
+      console.log('🚀 ~ handleOk ~ response.messages[0].text:', response.messages[0].text)
+      if (response.code === 0) {
+        toast.success('Bạn đã mua thiết kế thành công')
+      } else {
+        toast.error(response.messages[0].text)
+      }
+      setOpen(false)
+      setConfirmLoading(false)
+    } catch (error) {
+      console.log(error)
+      setOpen(false)
+      setConfirmLoading(false)
+    }
+  }
+
+  const handleCancel = () => {
+    console.log('Clicked cancel button')
+    setOpen(false)
+  }
+
+  const columns = [
+    {
+      title: 'Tên',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Giá',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: 'Giảm',
+      dataIndex: 'discount',
+      key: 'discount',
+    },
+    {
+      title: 'Thành tiền',
+      dataIndex: 'sale_price',
+      key: 'sale_price',
+    },
+    {
+      title: 'eCoin',
+      dataIndex: 'ecoin',
+      key: 'ecoin',
+    },
+  ];
+  const dataTable = [
+    {
+      key: '1',
+      name: data?.name,
+      price: data?.price ? VND.format(data?.price) : "Miễn Phí",
+      discount: data?.sale_price
+        ? `${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
+        : "Miễn Phí",
+      sale_price: data?.sale_price ? VND.format(data?.sale_price) : "Miễn Phí",
+      ecoin: data?.ecoin ? `${data?.ecoin} e` : "0 e"
+    },
+  ]
+
   useEffect(() => {
     const checkFavorited = async () => {
       setLoadingFavorite(true)
@@ -29,8 +108,7 @@ export default function ProductInfo(props) {
         const response = await checkFavoriteAPI({
           product_id: data.id,
           token: token
-        });
-        console.log('is favorite', response.code);
+        })
         setIsFavorited(response.code)
         setLoadingFavorite(false)
       }
@@ -75,6 +153,10 @@ export default function ProductInfo(props) {
 
       }
     }
+  }
+
+  const handleChangeRadio = (e) => {
+    setType(e.target.value)
   }
 
   return (
@@ -185,7 +267,7 @@ export default function ProductInfo(props) {
               {data?.sale_price ? VND.format(data?.sale_price) : "Miễn Phí"}
             </div>
             <div className="line-through text-slate-400 rounded-sm">
-              {data?.price ? VND.format(data?.sale_price) : ""}
+              {data?.price ? VND.format(data?.price) : ""}
             </div>
             <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
               {data?.sale_price
@@ -302,13 +384,48 @@ export default function ProductInfo(props) {
                 width: "200px",
                 paddingTop: "11.5px",
                 paddingBottom: "11.5px",
-              }}>
+              }}
+              onClick={showModal}
+            >
               Mua ngay
             </button>
           </div>
         </div >
       )
       }
+      <Modal
+        title="Mua thiết kế"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        footer={null}
+        className='buy-product-modal'
+      >
+        <div>
+          <Table columns={columns} dataSource={dataTable} pagination={false} className='mb-[20px]' />
+          <Radio.Group name="radiogroup" defaultValue={type} onChange={handleChangeRadio} className='mb-[20px]'>
+            <Radio value=''>Mua bằng tiền tài khoản</Radio>
+            <Radio value='ecoin'>Mua bằng ecoin</Radio>
+          </Radio.Group>
+          <div className='flex gap-2 justify-end mb-[20px] items-center'>
+            <div className='text-lg font-semibold'>Tổng tiền:</div>
+            <div className='text-lg font-semibold'>{type === 'ecoin' ? `${data?.ecoin} eCoin` : VND.format(data?.sale_price)}</div>
+          </div>
+          <div className='flex justify-end'>
+            <Button className='h-[35px]' onClick={handleCancel}>Hủy</Button>
+            <button className='button-red text-sm font-semibold h-[35px] w-[200px]' onClick={handleOk}>
+              {confirmLoading ?
+                <div>
+                  <Space>
+                    <Spin indicator={<LoadingOutlined style={{ fontSize: 20, color: "white" }} spin />} />
+                  </Space>
+                </div> :
+                'Thanh toán ngay'}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div >
-  );
+  )
 }
