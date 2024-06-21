@@ -1,3 +1,4 @@
+import React from "react";
 import { getLogoProductApi } from "@/api/product";
 import DefaultSlide from "./DefaultSlide";
 

@@ -55,6 +55,7 @@ const Header = ({ toggleNavbar }) => {
     { href: "/pricing-compare", label: "Bảng giá", hiddenOn: "lg" },
     { href: "/guide", label: "Hướng dẫn", hiddenOn: "xl" },
     { href: "/developer", label: "Nhà phát triển", hiddenOn: "xl" },
+    { href: "/post", label: "Tin tức", hiddenOn: "xl" },
   ];
   const actionIcons = [
     {
@@ -546,7 +547,7 @@ const Header = ({ toggleNavbar }) => {
             <button
               className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
               onClick={() => {
-                router.push("sign-in");
+                router.push("/sign-in");
               }}>
               <UserOutlined />
               <p className="pl-2">Đăng nhập</p>

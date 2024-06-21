@@ -75,3 +75,11 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.buy-product-modal .ant-modal-content {
+  @apply md:w-[135%];
+}
+.img-center img{
+  margin: auto;
+
+}

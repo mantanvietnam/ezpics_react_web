@@ -31,11 +31,13 @@ export default function DefaultPage({ getData }) {
     try {
       await deleteProductAPI({
         token: checkTokenCookie(),
-        id: productId
+        id: productId,
       });
-      const updatedProducts = products.filter(product => product.id !== productId);
+      const updatedProducts = products.filter(
+        (product) => product.id !== productId
+      );
       setProducts(updatedProducts);
-      toast.success("Xóa thành công !!!")
+      toast.success("Xóa thành công !!!");
     } catch (error) {
       console.error("Error deleting product:", error.message);
     }
@@ -44,11 +46,11 @@ export default function DefaultPage({ getData }) {
     try {
       const newProduct = await duplicateProductAPI({
         token: checkTokenCookie(),
-        id: productId
+        id: productId,
       });
       const updatedProducts = [newProduct, ...products];
       setProducts(updatedProducts);
-      toast.success("Nhân bản thành công !!!")
+      toast.success("Nhân bản thành công !!!");
     } catch (error) {
       console.error("Error duplicating product:", error.message);
     }
@@ -57,13 +59,37 @@ export default function DefaultPage({ getData }) {
     router.push(`/specified-printed/${productId}`)
   };
 
+  const onDownloadProduct = async (imageUrl) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "downloaded_image.png"; // Set the desired filename
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      URL.revokeObjectURL(url);
+      toast.success("Tải xuống thành công !!!");
+    } catch (error) {
+      console.error("Error downloading the image:", error);
+    }
+  };
+
   if (loading) {
-    return (<Skeleton
-      avatar
-      paragraph={{
-        rows: 10,
-      }}
-    />);
+    return (
+      <Skeleton
+        avatar
+        paragraph={{
+          rows: 10,
+        }}
+      />
+    );
   }
 
   if (error) {
@@ -74,6 +100,7 @@ export default function DefaultPage({ getData }) {
     <ProductCard
       products={products}
       onDeleteProduct={onDeleteProduct}
+      onDownloadProduct={onDownloadProduct}
       onDuplicateProduct={onDuplicateProduct}
       onPrintedPhoto={onPrintedPhoto}
     />

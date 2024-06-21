@@ -26,7 +26,8 @@ const Nav = ({ isOpen, closeNavbar }) => {
     dataInforUser = null;
   }
 
-  // console.log(dataInforUser);
+  // Determine if the user is a Pro member
+  const isProMember = dataInforUser?.member_pro === 1;
 
   const handleCancelRecharge = () => {
     setOpenRecharge(false);
@@ -62,7 +63,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
     },
     {
       href: "/",
-      label: "Gia hạn bản PRO",
+      label: `${isProMember ? "Gia hạn bản PRO" : "Dùng thử bản PRO"}`,
       icon: images.renew,
       onClick: () => setOpenPro(true),
     },
@@ -89,7 +90,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
       }`}>
       {isAuthenticated ? (
         <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
-          <div className="flex justify-around items-center">
+          <div className="relative flex justify-around items-center">
             <div className="w-10 h-10 rounded-full overflow-hidden m-2">
               <Image
                 src={dataInforUser?.avatar}
@@ -99,6 +100,15 @@ const Nav = ({ isOpen, closeNavbar }) => {
                 className="w-full h-full object-cover rounded-full"
               />
             </div>
+            {isProMember && (
+              <Image
+                src="/images/crown.png"
+                alt=""
+                width={18}
+                height={18}
+                className="absolute bottom-[10%] left-[20%]"
+              />
+            )}
             <div>
               <p>{dataInforUser?.name}</p>
               <div className="flex items-center text-slate-500">
@@ -186,7 +196,11 @@ const Nav = ({ isOpen, closeNavbar }) => {
         </div>
       ) : null}
 
-      <ModalUpPro open={openPro} handleCancel={handleCancelPro} />
+      <ModalUpPro
+        isProMember={isProMember}
+        open={openPro}
+        handleCancel={handleCancelPro}
+      />
       <ModalRecharge open={openRecharge} handleCancel={handleCancelRecharge} />
     </div>
   );

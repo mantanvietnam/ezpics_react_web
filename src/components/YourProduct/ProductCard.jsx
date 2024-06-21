@@ -1,48 +1,62 @@
-import Image from 'next/image';
-import React from 'react';
-import { designAction } from '../../../public/images/index2';
-import { Skeleton } from 'antd';
+import Image from "next/image";
+import React from "react";
+import { designAction } from "../../../public/images/index2";
+import { Skeleton } from "antd";
 
-export default function ProductCard({ products, onDeleteProduct, onDuplicateProduct, onPrintedPhoto }) {
-  let baseButtonsData = [
+export default function ProductCard({
+  products,
+  onDeleteProduct,
+  onDownloadProduct,
+  onDuplicateProduct,
+  onPrintedPhoto
+}) {
+  let buttonsData = [
     {
-      text: 'Sửa',
+      text: "Sửa",
       icon: designAction.edit,
-      action: (productId) => console.log('Edit action for product ID:', productId),
+      action: (productId) =>
+        console.log("Edit action for product ID:", productId),
     },
     {
-      text: 'Xóa',
+      text: "Xóa",
       icon: designAction.delete,
       action: onDeleteProduct,
     },
   ];
 
   if (onDuplicateProduct) {
-    baseButtonsData.push({
-      text: 'Nhân bản',
+    buttonsData.push({
+      text: "Nhân bản",
       icon: designAction.copy,
       action: onDuplicateProduct,
     });
   }
 
   return (
-    <div className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${!onDuplicateProduct ? 'gap-8' : 'gap-4'}`}>
+    <div
+      className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${!onDuplicateProduct ? "gap-8" : "gap-4"
+        }`}>
       {products?.map((product) => {
-        let buttonsData = [...baseButtonsData];
+        let buttonsData2 = [...buttonsData];
 
         if (onPrintedPhoto && product.status === 1) {
-          buttonsData.push({
+          buttonsData2.push({
             text: 'In ảnh',
             icon: designAction.copy,
             action: onPrintedPhoto,
           });
         }
-
+        if (onDownloadProduct && product.status === 0) {
+          buttonsData2.push({
+            text: 'Tải xuống',
+            icon: designAction.download,
+            action: onDownloadProduct,
+          });
+        }
         return (
           <div
             className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
-            key={product.id}
-          >
+            key={product.id}>
             <div className="relative bg-orange-100">
               {product.image ? (
                 <Image
@@ -65,17 +79,31 @@ export default function ProductCard({ products, onDeleteProduct, onDuplicateProd
               {/* Button overlay */}
               <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg">
                 <div className="flex flex-wrap justify-center">
-                  {buttonsData.map((button, index) => (
+                  {buttonsData2.map((button, index) => (
                     <button
                       key={index}
                       onClick={() => button.action(product.id)}
                       className="flex items-center justify-center mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2"
-                      style={{ width: '100px' }}
-                    >
-                      <Image src={button.icon} alt={button.text} className="w-5 h-5" />
+                      style={{ width: "100px" }}>
+                      <Image
+                        src={button.icon}
+                        alt={button.text}
+                        className="w-5 h-5"
+                      />
                       <span className="ml-2 text-sm">{button.text}</span>
                     </button>
                   ))}
+                  {/* <button
+                    onClick={() => onDownloadProduct(product.image)}
+                    className="flex items-center justify-center mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2"
+                    style={{ width: "100px" }}>
+                    <Image
+                      src={designAction.download}
+                      alt="Tải xuống"
+                      className="w-5 h-5"
+                    />
+                    <span className="ml-2 text-sm">Tải Xuống</span>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -83,7 +111,7 @@ export default function ProductCard({ products, onDeleteProduct, onDuplicateProd
               <h2 className="text-lg font-medium h-20">{product.name}</h2>
             </div>
           </div>
-        );
+        )
       })}
     </div>
   );
