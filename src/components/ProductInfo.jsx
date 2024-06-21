@@ -1,13 +1,82 @@
-import React from "react";
-import { Skeleton } from "antd";
+import React, { useEffect, useState } from "react";
+import { Skeleton, Space, Spin } from "antd";
 import { SkeletonCustom } from "./Slide/CustomSlide";
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from '@/api/product';
+import { toast } from 'react-toastify';
+import { LoadingOutlined } from '@ant-design/icons';
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
 });
 
 export default function ProductInfo(props) {
-  const { data, user, isLoading } = props;
+  const { data, user, isLoading } = props
+  console.log('🚀 ~ ProductInfo ~ data:', data)
+  const router = useRouter()
+
+  const [isFavorited, setIsFavorited] = useState(0)
+  const [loadingFavorite, setLoadingFavorite] = useState(true)
+
+  const userLogin = Cookies.get('user_login')
+  const token = Cookies.get('token')
+
+  useEffect(() => {
+    const checkFavorited = async () => {
+      setLoadingFavorite(true)
+      if (data && data.id) {
+        const response = await checkFavoriteAPI({
+          product_id: data.id,
+          token: token
+        });
+        console.log('is favorite', response.code);
+        setIsFavorited(response.code)
+        setLoadingFavorite(false)
+      }
+    }
+    checkFavorited()
+  }, [data, token, router])
+
+  const handleFavorite = async () => {
+    if (!userLogin || !token) {
+      router.push('/sign-in')
+    } else {
+      if (isFavorited === 1) {
+        try {
+          setLoadingFavorite(true)
+          await deleteFavoriteAPI({
+            product_id: data.id,
+            token: token
+          })
+          setIsFavorited(0)
+          toast.success('Xóa khỏi danh sách yêu thích')
+          setLoadingFavorite(false)
+        } catch (error) {
+          console.log(error)
+          setLoadingFavorite(false)
+          toast.error('Vui lòng thử lại!')
+        }
+      } else {
+        try {
+          setLoadingFavorite(true)
+          await saveFavoriteAPI({
+            product_id: data.id,
+            token: token
+          })
+          toast.success('Thêm vào danh sách yêu thích')
+          setIsFavorited(1)
+          setLoadingFavorite(false)
+        } catch (error) {
+          console.log(error)
+          setLoadingFavorite(false)
+          toast.error('Vui lòng thử lại!')
+        }
+
+      }
+    }
+  }
+
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
@@ -87,7 +156,7 @@ export default function ProductInfo(props) {
                   }}></path>
               </svg>
               <span className="text-sm font-semibold">
-                Đã thích ({data.favorites || 0})
+                Đã thích ({data?.favorites || 0})
               </span>
             </div>
           )}
@@ -106,7 +175,7 @@ export default function ProductInfo(props) {
           </div>
         </div>
       ) : (
-        <div className="flex xl:w-1/2 w-full h-full flex-col justify-between gap-3">
+        <div className="flex xl:w-1/2 w-full h-full flex-col justify-between gap-8">
           <div className="flex items-center gap-3">
             <img src="/images/crown.svg" alt="" />
             <span className="text-xl font-semibold">{data?.name}</span>
@@ -120,7 +189,7 @@ export default function ProductInfo(props) {
             </div>
             <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
               {data?.sale_price
-                ? `Giảm ${100 - (data?.sale_price / data?.price) * 100}%`
+                ? `Giảm ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
                 : "Miễn Phí"}
             </div>
           </div>
@@ -135,7 +204,7 @@ export default function ProductInfo(props) {
                 fontWeight: "semibold",
               }}>
               {data?.sale_price
-                ? `Lên đến ${100 - (data?.sale_price / data?.price) * 100}%`
+                ? `Lên đến ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
                 : "Miễn Phí"}
             </div>
           </div>
@@ -178,17 +247,52 @@ export default function ProductInfo(props) {
                 animation:
                   "2s linear 0s infinite normal none running thumbs-up",
               }}
-              className="flex items-center justify-center py-2">
-              <svg
-                style={{
-                  color: "rgb(255, 66, 78)",
-                  width: "30px",
-                  height: "30px",
-                  fill: "currentColor",
-                }}>
-                <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
-              </svg>
-              <div>Thêm vào yêu thích</div>
+              className="flex items-center justify-center py-2"
+              onClick={handleFavorite}
+            >
+              {
+                isFavorited === 1 ? (
+                  <>
+                    {
+                      loadingFavorite ? <div><Space>
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 30, color: "rgb(255, 66, 78)" }} spin />} />
+                      </Space></div> :
+                        <>
+                          <svg
+                            style={{
+                              color: "rgb(255, 66, 78)",
+                              width: "30px",
+                              height: "30px",
+                              fill: "currentColor",
+                            }}>
+                            <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                          </svg>
+                          <div>Đã yêu thích</div>
+                        </>
+                    }
+                  </>
+                ) :
+                  (<>
+                    {
+                      loadingFavorite ? <div><Space>
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 30, color: "rgb(255, 66, 78)" }} spin />} />
+                      </Space></div> :
+                        <>
+                          <svg
+                            style={{
+                              color: "rgb(255, 66, 78)",
+                              width: "30px",
+                              height: "30px",
+                              fill: "currentColor",
+                            }}>
+                            <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                          </svg>
+                          <div>Thêm vào yêu thích</div>
+                        </>
+                    }
+                  </>)
+              }
+
             </button>
             <button
               style={{
@@ -202,8 +306,9 @@ export default function ProductInfo(props) {
               Mua ngay
             </button>
           </div>
-        </div>
-      )}
-    </div>
+        </div >
+      )
+      }
+    </div >
   );
 }

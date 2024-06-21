@@ -547,7 +547,7 @@ const Header = ({ toggleNavbar }) => {
             <button
               className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
               onClick={() => {
-                router.push("sign-in");
+                router.push("/sign-in");
               }}>
               <UserOutlined />
               <p className="pl-2">Đăng nhập</p>
