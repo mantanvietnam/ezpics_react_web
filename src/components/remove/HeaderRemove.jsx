@@ -5,7 +5,9 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Modal, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { checkTokenCookie, checkAvailableLogin } from "@/utils";
+import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
+import { useSession } from "next-auth/react";
+import { useDispatch } from "react-redux";
 
 const HeaderRemove = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // New state for uploaded image URL
@@ -14,6 +16,19 @@ const HeaderRemove = () => {
   const inputFileRef = useRef(null);
   const router = useRouter();
   const [reloadKey, setReloadKey] = useState(0);
+
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const isAuth = checkAvailableLogin();
+  // Lấy data user
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
 
   const handleCloseModalFreeExtend = () => {
     setModalExtend(false);

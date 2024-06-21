@@ -137,9 +137,17 @@ export const addWarehouseAPI = async (data) => {
 export const checkFavoriteAPI = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/checkFavoriteProductAPI",
-    data
+  data
   );
   return response.data;
+};
+
+export const getMyProductFavoriteAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getMyProductFavoriteAPI",
+    data 
+  );
+    return response.data;
 };
 
 export const saveFavoriteAPI = async (data) => {
