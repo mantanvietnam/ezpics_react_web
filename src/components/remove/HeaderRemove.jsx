@@ -8,6 +8,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
+import ModalUpPro from "../ModalUpPro";
 
 const HeaderRemove = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // New state for uploaded image URL
@@ -16,6 +17,11 @@ const HeaderRemove = () => {
   const inputFileRef = useRef(null);
   const router = useRouter();
   const [reloadKey, setReloadKey] = useState(0);
+
+  const [openPro, setOpenPro] = useState(false);
+  const handleCancelPro = () => {
+    setOpenPro(false);
+  };
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -29,6 +35,8 @@ const HeaderRemove = () => {
   } else {
     dataInforUser = null;
   }
+
+  console.log(dataInforUser);
 
   const handleCloseModalFreeExtend = () => {
     setModalExtend(false);
@@ -160,6 +168,24 @@ const HeaderRemove = () => {
     }
   };
 
+  const handleClickBtnBg = () => {
+    // Kiểm tra xem người dùng có đang đăng nhập hay không
+    const authentication = checkAvailableLogin();
+
+    // Nếu người dùng chưa đăng nhập (authentication là false)
+    if (!authentication) {
+      // In ra giá trị của authentication (sẽ là false)
+      console.log(authentication);
+
+      // Điều hướng người dùng đến trang đăng nhập
+      router.push("/sign-in");
+    } else if (dataInforUser.member_pro === 1) {
+      handleRemoveBackground();
+    } else {
+      setOpenPro(true);
+    }
+  };
+
   return (
     <div key={reloadKey}>
       <div className="header animate-slideInFromLeft z-1 bg-custom-remove xl:bg-left bg-no-repeat bg-contain pt-[5%] pl-[5%] xl:flex justify-between">
@@ -178,7 +204,7 @@ const HeaderRemove = () => {
           </p>
           <button
             className="mt-2 md:mt-5 w-[250px] h-[60px] self-center normal-case text-white bg-[rgb(81,100,255)] rounded-[30px] text-[20px] font-semibold hover:shadow-lg active:bg-blue-600"
-            onClick={() => handleRemoveBackground()}>
+            onClick={() => handleClickBtnBg()}>
             {loadingRemove ? (
               <span>
                 <Spin
@@ -261,6 +287,7 @@ const HeaderRemove = () => {
           </div>
         </div>
       </Modal>
+      <ModalUpPro open={openPro} handleCancel={handleCancelPro} />
     </div>
   );
 };
