@@ -229,10 +229,13 @@ export default function Layout(props) {
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
         />
-        <Button onClick={handleSearch} type="primary" danger className='h-[40px] w-[100px]' icon={loading ? '' : <SearchOutlined />}>{loading ?
-          <Flex align="center" gap="middle">
-            <Spin size="small" />
-          </Flex> : 'Search'}</Button>
+        <Button onClick={handleSearch} type="primary" danger className='h-[40px] w-[100px]' icon={loading ? '' : <SearchOutlined />}>
+          {loading ?
+            <Flex align="center" gap="middle">
+              <Spin size="small" />
+            </Flex> : 'Search'
+            }
+        </Button>
       </div>
       <div className='flex items-center gap-3'>
         <Button onClick={showModal} className='h-[40px]' icon={<ControlOutlined />}>Nâng cao</Button>

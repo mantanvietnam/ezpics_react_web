@@ -7,7 +7,7 @@ import EndowProduct from "@/components/Slide/EndowProduct";
 import EventProductSlider from "@/components/Slide/EventProductSlider";
 import NewProductsSlider from "@/components/Slide/NewproductsSlider";
 import SerisProductSlider from "@/components/Slide/SerisProductSlider";
-import CollectionProductSlider from "@/components/Slide/collectionProductSlider";
+import CollectionProductSlider from "@/components/Slide/CollectionProductSlider";
 import ProductCard from "@/components/YourProduct/ProductCard";
 import { checkTokenCookie } from "@/utils";
 import Link from "next/link";

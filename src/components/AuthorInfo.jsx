@@ -14,7 +14,7 @@ export default function AuthorInfo(props) {
   return (
     <div className='flex flex-col gap-5 w-full'>
       <h2 className='text-lg font-semibold'>Chi tiết tác giả</h2>
-      <div className='flex w-fit md:flex-row flex-col justify-between items-center w-full gap-8'>
+      <div className='flex w-fit xl:flex-row flex-col justify-between items-start w-full gap-8'>
         <div className="flex justify-start">
           <div className='w-[65px] h-[65px]'>
             <img className='object-cover rounded-full mr-4' src={user?.avatar} alt="" />
@@ -56,12 +56,12 @@ export default function AuthorInfo(props) {
             </div>
           </div>
         </div>
-        <div className="flex md:flex-row flex-col w-full justify-around">
+        <div className="flex xl:flex-row flex-col w-full justify-around">
           <div className='flex flex-col gap-2'>
             <div className='text-sm'>Số lượng theo dõi: <span className='text-red-500'>{user?.quantityFollow}</span></div>
             <div className='text-sm'>Số lượng sản phẩm: <span className='text-red-500'>{user?.quantityProduct}</span></div>
           </div>
-          <div className='flex flex-col gap-2 md:py-0 py-3'>
+          <div className='flex flex-col gap-2 xl:py-0 py-3'>
             <div className='text-sm'>Số lượng đã bán: <span className='text-red-500'>{user?.quantitySell}</span></div>
             <div className='text-sm'>Thành tiền: <span className='text-red-500'>{user?.sellingMoney}</span></div>
           </div>

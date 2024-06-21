@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const ProductInfo = (props) => {
+const Product = (props) => {
   const { data, user, isLoading, defaultPrice, collection } = props;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -28,15 +28,15 @@ const ProductInfo = (props) => {
   });
 
   return (
-    <div className='flex md:flex-row flex-col justify-around w-full h-full mt-[100px] mb-5'>
-      <div className='md:w-1/2 w-full h-full flex flex-col items-center justify-between gap-8'>
+    <div className='flex xl:flex-row flex-col justify-around w-full h-full mt-[100px] mb-5'>
+      <div className='xl:w-1/2 w-full h-full flex flex-col items-center justify-between gap-8'>
         <div className="pr-6 flex items-center">
           {isLoading ? (
             <Skeleton.Image className='flex items-center justify-center' active='true' />
           ) : (
             <div className='flex items-center justify-center bg-orange-100'>
                 <Image
-                  className='w-fit h-[500px]'
+                  className='w-fit h-fit'
                   src={data?.thumbnail} alt="product"
                   width={800}
                   height={400}
@@ -105,8 +105,8 @@ const ProductInfo = (props) => {
           </div>
         </div>
       ) : (
-        <div className='md:w-1/2 w-full flex flex-col justify-between'>
-          <h2 className="md:text-3xl text-xl font-bold pb-2">{data?.name}</h2>
+        <div className='xl:w-1/2 w-full flex flex-col justify-between'>
+          <h2 className="xl:text-3xl text-xl font-bold pb-2">{data?.name}</h2>
           <div className='flex items-center gap-5 bg-slate-100 p-5'>
             <div className='text-3xl text-red-500'>{data?.price ? VND.format(data?.price) : 'Miễn Phí'}</div>
             <div className='line-through text-slate-400 rounded-sm'>{VND.format(defaultPrice)}</div>
@@ -154,7 +154,7 @@ const ProductInfo = (props) => {
                     collection.map((item) => (
                       <Link
                         href={`/collection-buying/${item.id}`}
-                        className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
+                        className="relative card bg-white rounded-lg shadow-xl overflow-hidden cursor-pointer w-full sm:w-58"
                         key={item.id} 
                       >
                         <div className="relative bg-orange-100">
@@ -248,7 +248,7 @@ export default function Page({ params }) {
   return (
     <div className="flex flex-col w-[90%] mb-[100px]">
       <div className="w-full flex flex-col items-center justify-center gap-8">
-        <ProductInfo data={data} user={user} isLoading={isLoading} defaultPrice={defaultPrice} collection={dataWarehouse} />
+        <Product data={data} user={user} isLoading={isLoading} defaultPrice={defaultPrice} collection={dataWarehouse} />
         {isLoading ? (
           <Skeleton
             avatar
