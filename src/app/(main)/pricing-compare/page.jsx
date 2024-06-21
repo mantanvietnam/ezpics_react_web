@@ -5,6 +5,9 @@ import { useState } from "react";
 import Link from "next/link";
 import ModalUpPro from "@/components/ModalUpPro";
 import FeatureList from "@/components/PricingCompare/FeatureList";
+import { memberTrialProAPI } from "@/api/transaction";
+import { checkTokenCookie } from "@/utils/cookie";
+import { toast } from "react-toastify";
 
 const Page = () => {
   const [selected, setSelected] = useState("monthly");
@@ -16,6 +19,19 @@ const Page = () => {
 
   const handleCancel = () => {
     setOpen(false);
+  };
+
+  const handleTrialButtonClick = async () => {
+    let token = checkTokenCookie();
+
+    try {
+      const response = await memberTrialProAPI({ token: token });
+
+      toast.info(response.mess);
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
+    // console.log("test")
   };
 
   return (
@@ -99,8 +115,10 @@ const Page = () => {
             <p className="text-sm font-normal my-3">
               /năm dành cho một thành viên
             </p>
-            <button className="flex justify-center items-center w-full bg-[#515558] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white">
-              <Link href="/">Bắt đầu</Link>
+            <button
+              className="flex justify-center items-center w-full bg-[#515558] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white"
+              onClick={() => handleTrialButtonClick()}>
+              Bắt đầu
             </button>
           </div>
           <FeatureList
