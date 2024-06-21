@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import ProductCard from "@/components/YourProduct/ProductCard";
-import { deleteProductAPI, duplicateProductAPI } from "@/api/product";
-import { checkTokenCookie } from "@/utils/cookie";
-import { toast } from "react-toastify";
-import { Skeleton } from "antd";
+import React, { useEffect, useState } from 'react';
+import ProductCard from '@/components/YourProduct/ProductCard';
+import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
+import { checkTokenCookie } from '@/utils/cookie';
+import { toast } from 'react-toastify';
+import { Skeleton } from 'antd';
+import { useRouter } from 'next/navigation';
 
 export default function DefaultPage({ getData }) {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,7 +42,6 @@ export default function DefaultPage({ getData }) {
       console.error("Error deleting product:", error.message);
     }
   };
-
   const onDuplicateProduct = async (productId) => {
     try {
       const newProduct = await duplicateProductAPI({
@@ -53,6 +54,9 @@ export default function DefaultPage({ getData }) {
     } catch (error) {
       console.error("Error duplicating product:", error.message);
     }
+  };
+  const onPrintedPhoto = async (productId) => {
+    router.push(`/specified-printed/${productId}`)
   };
 
   const onDownloadProduct = async (imageUrl) => {
@@ -98,6 +102,7 @@ export default function DefaultPage({ getData }) {
       onDeleteProduct={onDeleteProduct}
       onDownloadProduct={onDownloadProduct}
       onDuplicateProduct={onDuplicateProduct}
+      onPrintedPhoto={onPrintedPhoto}
     />
   );
 }

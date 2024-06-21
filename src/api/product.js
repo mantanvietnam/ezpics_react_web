@@ -137,7 +137,7 @@ export const addWarehouseAPI = async (data) => {
 export const checkFavoriteAPI = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/checkFavoriteProductAPI",
-  data
+    data
   );
   return response.data;
 };
@@ -145,11 +145,34 @@ export const checkFavoriteAPI = async (data) => {
 export const getMyProductFavoriteAPI = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/getMyProductFavoriteAPI",
-    data 
+    data
   );
-    return response.data;
+  return response.data;
 };
 
+export const detailProductSeriesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/detailProductSeriesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getProductAllCategoryAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getProductAllCategoryAPI",
+    data
+  );
+  return response.data;
+};
+
+export const listLayerAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/listLayerAPI",
+    data
+  );
+  return response.data;
+};
 export const saveFavoriteAPI = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/saveFavoriteProductAPI",

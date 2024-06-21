@@ -7,11 +7,10 @@ import { checkTokenCookie } from '@/utils/cookie';
 export default function Page() {
 
   const getMyProductData = async () => {
-    return await getMyProductSeriesAPI({ 
-      // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
+    return await getMyProductSeriesAPI({
       token: checkTokenCookie(),
-      limit: 12,
-      page: 1
+      type: "user_series",
+      limit: 100
     });
   };
 
