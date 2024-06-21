@@ -141,3 +141,27 @@ export const getMyProductFavoriteAPI = async (data) => {
   );
   return response.data;
 };
+
+export const detailProductSeriesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/detailProductSeriesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getProductAllCategoryAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getProductAllCategoryAPI",
+    data
+  );
+  return response.data;
+};
+
+export const listLayerAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/listLayerAPI",
+    data
+  );
+  return response.data;
+};

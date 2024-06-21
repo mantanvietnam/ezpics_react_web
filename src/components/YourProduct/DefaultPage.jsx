@@ -4,8 +4,10 @@ import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
 import { checkTokenCookie } from '@/utils/cookie';
 import { toast } from 'react-toastify';
 import { Skeleton } from 'antd';
+import { useRouter } from 'next/navigation';
 
 export default function DefaultPage({ getData }) {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,28 +40,30 @@ export default function DefaultPage({ getData }) {
       console.error("Error deleting product:", error.message);
     }
   };
-
   const onDuplicateProduct = async (productId) => {
     try {
       const newProduct = await duplicateProductAPI({
-         token: checkTokenCookie(),
+        token: checkTokenCookie(),
         id: productId
       });
-      const updatedProducts = [newProduct, ...products]; 
+      const updatedProducts = [newProduct, ...products];
       setProducts(updatedProducts);
       toast.success("Nhân bản thành công !!!")
     } catch (error) {
       console.error("Error duplicating product:", error.message);
     }
   };
+  const onPrintedPhoto = async (productId) => {
+    router.push(`/specified-printed/${productId}`)
+  };
 
   if (loading) {
     return (<Skeleton
-              avatar
-              paragraph={{
-                rows: 10,
-              }}
-            />);
+      avatar
+      paragraph={{
+        rows: 10,
+      }}
+    />);
   }
 
   if (error) {
@@ -67,10 +71,11 @@ export default function DefaultPage({ getData }) {
   }
 
   return (
-    <ProductCard 
-      products={products} 
-      onDeleteProduct={onDeleteProduct} 
-      onDuplicateProduct={onDuplicateProduct} 
-    />   
+    <ProductCard
+      products={products}
+      onDeleteProduct={onDeleteProduct}
+      onDuplicateProduct={onDuplicateProduct}
+      onPrintedPhoto={onPrintedPhoto}
+    />
   );
 }
