@@ -21,12 +21,41 @@ import { signOut, useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import { logoutService } from "@/api/auth";
+import { toast } from "react-toastify";
 
 const Header = ({ toggleNavbar }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { data: session } = useSession();
   const isAuth = checkAvailableLogin();
+  const [dataInforUsercheck, setdataInforUsercheck] = useState(null);
+  const cookie = checkTokenCookie()
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      try {
+        const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
+          token: cookie
+        });
+        if (response) {
+          setdataInforUsercheck(response?.data?.data)
+        } else {
+          console.error("Invalid response format for categories");
+        }
+      } catch (error) {
+        throw new Error(error)
+      }
+
+    }
+    fetchDataUser();
+  }, [cookie])
+  if (dataInforUsercheck?.otp != null) {
+    setTimeout(() => {
+      toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
+      router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
+    }, 10000)
+  }
+  console.log('dataInforUser',)
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
