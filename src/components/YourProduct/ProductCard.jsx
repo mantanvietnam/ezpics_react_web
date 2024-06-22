@@ -2,13 +2,14 @@ import Image from "next/image";
 import React from "react";
 import { designAction } from "../../../public/images/index2";
 import { Skeleton } from "antd";
+import "@/styles/home/header.scss";
 
 export default function ProductCard({
   products,
   onDeleteProduct,
   onDownloadProduct,
   onDuplicateProduct,
-  onPrintedPhoto
+  onPrintedPhoto,
 }) {
   let buttonsData = [
     {
@@ -34,23 +35,24 @@ export default function ProductCard({
 
   return (
     <div
-      className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${!onDuplicateProduct ? "gap-8" : "gap-4"
-        }`}>
+      className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${
+        !onDuplicateProduct ? "gap-8" : "gap-4"
+      }`}>
       {products?.map((product) => {
         let buttonsData2 = [...buttonsData];
 
         if (onPrintedPhoto && product.status === 1) {
           buttonsData2.push({
-            text: 'In ảnh',
+            text: "In ảnh",
             icon: designAction.copy,
             action: onPrintedPhoto,
           });
         }
         if (onDownloadProduct && product.status === 0) {
           buttonsData2.push({
-            text: 'Tải xuống',
+            text: "Tải xuống",
             icon: designAction.download,
-            action: onDownloadProduct,
+            action: () => onDownloadProduct(product.image),
           });
         }
         return (
@@ -83,27 +85,20 @@ export default function ProductCard({
                     <button
                       key={index}
                       onClick={() => button.action(product.id)}
-                      className="flex items-center justify-center mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2"
+                      className="flex items-center justify-center group mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2"
                       style={{ width: "100px" }}>
-                      <Image
-                        src={button.icon}
-                        alt={button.text}
-                        className="w-5 h-5"
-                      />
-                      <span className="ml-2 text-sm">{button.text}</span>
+                      <div className="relative flex items-center">
+                        <Image
+                          src={button.icon}
+                          alt={button.text}
+                          className="w-5 h-5"
+                        />
+                        <div className="absolute opacity-0 group-hover:opacity-100 mt-6 left-1/2 transform -translate-x-1/2 top-0 p-2 bg-neutral-600 rounded text-white text-xs whitespace-nowrap">
+                          {button.text}
+                        </div>
+                      </div>
                     </button>
                   ))}
-                  {/* <button
-                    onClick={() => onDownloadProduct(product.image)}
-                    className="flex items-center justify-center mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2"
-                    style={{ width: "100px" }}>
-                    <Image
-                      src={designAction.download}
-                      alt="Tải xuống"
-                      className="w-5 h-5"
-                    />
-                    <span className="ml-2 text-sm">Tải Xuống</span>
-                  </button> */}
                 </div>
               </div>
             </div>
@@ -111,7 +106,7 @@ export default function ProductCard({
               <h2 className="text-lg font-medium h-20">{product.name}</h2>
             </div>
           </div>
-        )
+        );
       })}
     </div>
   );
