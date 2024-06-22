@@ -8,10 +8,12 @@ import FeatureList from "@/components/PricingCompare/FeatureList";
 import { memberTrialProAPI } from "@/api/transaction";
 import { checkTokenCookie } from "@/utils/cookie";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const handleButtonClick = (buttonType) => {
     setSelected(buttonType);
@@ -27,7 +29,12 @@ const Page = () => {
     try {
       const response = await memberTrialProAPI({ token: token });
 
-      toast.info(response.mess);
+      if (response?.code === 1) {
+        toast.success(response.mess);
+        router.push("/sign-in");
+      } else {
+        toast.info(response.mess);
+      }
     } catch (error) {
       console.error("API call failed:", error);
     }
@@ -50,49 +57,27 @@ const Page = () => {
       </h1>
 
       <div className="md:flex flex-row pt-[6%] px-[2%] xl:px-[5%]">
-        <div className="w-full md:w-1/3">
-          <h1 className="text-xl font-bold w-[90%] pb-4">
-            Tính toán cho đội của bạn
-          </h1>
-        </div>
-        <div className="mobile:flex w-full md:w-2/3">
-          <div className="mobile:w-1/2">
-            <p className="text-base pb-2 mobile:h-[56px] w-[90%]">
-              Số lượng thành viên
-            </p>
-            <div className="w-full mobile:w-[90%] h-[60%] xl:h-[80%] flex items-center justify-around border-solid border border-slate-400 rounded-lg">
-              <input
-                type="text"
-                placeholder="Tùy chỉnh"
-                className="bg-white border-none text-base outline-none p-2 w-[80%] mobile:w-[50%] xl:w-[70%]"
-              />
-              <p>thành viên</p>
-            </div>
-          </div>
-          <div className="mobile:w-1/2">
-            <p className="text-base pb-2 mobile:h-[56px] w-[90%]">
-              <strong className="font-bold">Chu kì: </strong>
-              <span style={{ color: "rgb(139, 61, 255);" }}>
-                Tiết kiệm 16%{" "}
-              </span>
-              khi thanh toán theo năm
-            </p>
-            <div className="w-full mobile:w-[90%] h-[50px] mobile:h-[60%] xl:h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
-              <button
-                className={`w-[90%] h-[80%] rounded-lg ${
-                  selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
-                }`}
-                onClick={() => handleButtonClick("monthly")}>
-                Hàng tháng
-              </button>
-              <button
-                className={`w-[90%] h-[80%] rounded-lg ${
-                  selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
-                }`}
-                onClick={() => handleButtonClick("yearly")}>
-                Hàng năm
-              </button>
-            </div>
+        <div className="w-full">
+          <p className="text-base pb-2 w-[90%]">
+            <strong className="font-bold">Chu kì: </strong>
+            <span className="text-purple-700">Tiết kiệm 16% </span>
+            khi thanh toán theo năm
+          </p>
+          <div className="w-1/2 md:w-1/3 h-[56px] md:h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2 mb-4">
+            <button
+              className={`w-[90%] h-[80%] rounded-lg ${
+                selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
+              }`}
+              onClick={() => handleButtonClick("monthly")}>
+              Hàng tháng
+            </button>
+            <button
+              className={`w-[90%] h-[80%] rounded-lg ${
+                selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
+              }`}
+              onClick={() => handleButtonClick("yearly")}>
+              Hàng năm
+            </button>
           </div>
         </div>
       </div>
@@ -118,7 +103,7 @@ const Page = () => {
             <button
               className="flex justify-center items-center w-full bg-[#515558] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white"
               onClick={() => handleTrialButtonClick()}>
-              Bắt đầu
+              Bắt đầu dùng thử 7 ngày
             </button>
           </div>
           <FeatureList
@@ -169,7 +154,7 @@ const Page = () => {
             <button
               onClick={() => setOpen(true)}
               className="flex justify-center items-center w-full bg-[rgb(255,66,78)] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white">
-              Bắt đầu bản dùng thử
+              Bắt đầu đăng kí Pro
             </button>
           </div>
           <FeatureList
