@@ -16,7 +16,7 @@ const YourDesign = () => {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [loadMore, setLoadMore] = useState(false);
     const [page, setPage] = useState(1);
-    const limit = 9;
+    const limit = 8;
     const observer = useRef();
 
     const lastItemRef = useCallback(node => {
@@ -54,7 +54,7 @@ const YourDesign = () => {
         getData();
     }, [page]);
 
-    const skeletonArray = new Array(6).fill(0);
+    const skeletonArray = new Array(8).fill(0);
     return (
         <div className="container">
             {loading ? (
@@ -69,7 +69,7 @@ const YourDesign = () => {
                     const isLastItem = index === dataForYou.length - 1;
                     return (
                         <div className="item" key={index} ref={isLastItem ? lastItemRef : null}>
-                            <div
+                            {/* <div
                                 className="overlay"
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.opacity = 1;
@@ -93,7 +93,7 @@ const YourDesign = () => {
                                     />
                                     <p className="edit-text">Sửa</p>
                                 </Button>
-                            </div>
+                            </div> */}
                             <div
                                 className="image-container"
                                 onClick={() => {
@@ -158,7 +158,7 @@ const YourDesign = () => {
                     justify-content: center;
                 }
                 .item {
-                    flex: 0 0 calc(33.33% - 16px);
+                    flex: 0 0 calc(25% - 16px);
                     margin-bottom: 15px;
                     box-sizing: border-box;
                     padding: 0 8px;
