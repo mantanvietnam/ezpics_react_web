@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   BarsOutlined,
@@ -13,12 +12,10 @@ import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
 import { Divider, Dropdown, Space } from "antd";
 import images, { designIcon } from "../../public/images/index2";
-import { useEffect, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
-import axios from "axios";
-import { signOut, useSession } from "next-auth/react";
+import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
-import { DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
+import { DELETE_ALL_VALUES } from "../redux/slices/user/userSlice";
 import { logoutService } from "@/api/auth";
 
 const Header = ({ toggleNavbar }) => {
@@ -55,6 +52,7 @@ const Header = ({ toggleNavbar }) => {
     { href: "/", label: "Hướng dẫn" },
     { href: "/", label: "Nhà phát triển" },
   ];
+
   const actionIcons = [
     {
       icon: <DesktopOutlined style={{ fontSize: "20px" }} />,
@@ -347,127 +345,129 @@ const Header = ({ toggleNavbar }) => {
   ];
 
   return (
-    <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
-      <div className="flex justify-center items-center">
-        <div className="p-3 mr-4 icon-primary">
-          <button onClick={() => toggleNavbar()}>
-            <BarsOutlined style={{ fontSize: "20px" }} />
-          </button>
-        </div>
-        <div className="logo flex items-center justify-center">
-          <Link href="/" className="flex flex-center">
-            <Image
-              className="object-contain rounded_image"
-              priority={true}
-              src={images.logo}
-              width={40}
-              height={44}
-              alt="Ezpics Logo"
-            />
-          </Link>
-        </div>
-
-        <div className="menu flex">
-          {menuItems.map((menuItem, index) => (
-            <Link
-              key={index}
-              href={menuItem.href}
-              className="primary_btn pl-10">
-              {menuItem.label}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="action flex justify-center items-center">
-        {actionIcons.map((social, index) =>
-          index === 2 ? (
-            <div className="icon-container" key={index}>
-              <div className="p-3 icon-primary">{social.icon}</div>
-              <div className="desc">{social.desc}</div>
-            </div>
-          ) : (
-            <Link className="icon-container" href={social.href} key={index}>
-              <div className="p-3 icon-primary">{social.icon}</div>
-              <div className="desc">{social.desc}</div>
-            </Link>
-          )
-        )}
-        <Dropdown
-          trigger={["click"]}
-          placement="bottomRight"
-          arrow={true}
-          dropdownRender={() => (
-            <div
-              style={{
-                maxHeight: "400px",
-                background: "white",
-                overflowY: "overlay",
-                borderRadius: "10px",
-                scrollbarWidth: "thin",
-                scrollbars: "false",
-              }}>
-              {items.map((item) => (
-                <div key={item.key}>{item.label}</div>
-              ))}
-            </div>
-          )}>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              <button className="button-red">Tạo thiết kế</button>
-            </Space>
-          </a>
-        </Dropdown>
-        {isAuth ? (
-          <div>
-            {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
-
-            <Dropdown
-              trigger={["click"]}
-              placement="bottomRight"
-              arrow={true}
-              dropdownRender={() => (
-                <div
-                  style={{
-                    maxHeight: "400px",
-                    background: "white",
-                    overflowY: "overlay",
-                    borderRadius: "10px",
-                    scrollbarWidth: "thin",
-                    scrollbars: "false",
-                  }}>
-                  {itemsDropdowUser.map((item) => (
-                    <div key={item.key}>{item.label}</div>
-                  ))}
-                </div>
-              )}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                    <img
-                      className="w-full h-full object-cover rounded-full"
-                      alt="User Avatar"
-                      src={dataInforUser?.avatar}
-                    />
-                  </div>
-                </Space>
-              </a>
-            </Dropdown>
-          </div>
-        ) : (
-          <div>
-            <button
-              className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4"
-              onClick={() => {
-                router.push("sign-in");
-              }}>
-              <UserOutlined />
-              <p className="pl-2">Đăng nhập</p>
+    <SessionProvider>
+      <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
+        <div className="flex justify-center items-center">
+          <div className="p-3 mr-4 icon-primary">
+            <button onClick={() => toggleNavbar()}>
+              <BarsOutlined style={{ fontSize: "20px" }} />
             </button>
           </div>
-        )}
+          <div className="logo flex items-center justify-center">
+            <Link href="/" className="flex flex-center">
+              <Image
+                className="object-contain rounded_image"
+                priority={true}
+                src={images.logo}
+                width={40}
+                height={44}
+                alt="Ezpics Logo"
+              />
+            </Link>
+          </div>
+  
+          <div className="menu flex">
+            {menuItems.map((menuItem, index) => (
+              <Link
+                key={index}
+                href={menuItem.href}
+                className="primary_btn pl-10">
+                {menuItem.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+  
+        <div className="action flex justify-center items-center">
+          {actionIcons.map((social, index) =>
+            index === 2 ? (
+              <div className="icon-container" key={index}>
+                <div className="p-3 icon-primary">{social.icon}</div>
+                <div className="desc">{social.desc}</div>
+              </div>
+            ) : (
+              <Link className="icon-container" href={social.href} key={index}>
+                <div className="p-3 icon-primary">{social.icon}</div>
+                <div className="desc">{social.desc}</div>
+              </Link>
+            )
+          )}
+          <Dropdown
+            trigger={["click"]}
+            placement="bottomRight"
+            arrow={true}
+            dropdownRender={() => (
+              <div
+                style={{
+                  maxHeight: "400px",
+                  background: "white",
+                  overflowY: "overlay",
+                  borderRadius: "10px",
+                  scrollbarWidth: "thin",
+                  scrollbars: "false",
+                }}>
+                {items.map((item) => (
+                  <div key={item.key}>{item.label}</div>
+                ))}
+              </div>
+            )}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                <button className="button-red">Tạo thiết kế</button>
+              </Space>
+            </a>
+          </Dropdown>
+          {isAuth ? (
+            <div>
+              {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
+  
+              <Dropdown
+                trigger={["click"]}
+                placement="bottomRight"
+                arrow={true}
+                dropdownRender={() => (
+                  <div
+                    style={{
+                      maxHeight: "400px",
+                      background: "white",
+                      overflowY: "overlay",
+                      borderRadius: "10px",
+                      scrollbarWidth: "thin",
+                      scrollbars: "false",
+                    }}>
+                    {itemsDropdowUser.map((item) => (
+                      <div key={item.key}>{item.label}</div>
+                    ))}
+                  </div>
+                )}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <div className="w-10 h-10 rounded-full overflow-hidden m-5">
+                      <img
+                        className="w-full h-full object-cover rounded-full"
+                        alt="User Avatar"
+                        src={dataInforUser?.avatar}
+                      />
+                    </div>
+                  </Space>
+                </a>
+              </Dropdown>
+            </div>
+          ) : (
+            <div>
+              <button
+                className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4"
+                onClick={() => {
+                  router.push("sign-in");
+                }}>
+                <UserOutlined />
+                <p className="pl-2">Đăng nhập</p>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </SessionProvider>
   );
 };
 

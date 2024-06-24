@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { storage } from '@/utils/firebaseConfig'; // Assuming Firebase storage import
+import { storage } from '@/utils/media/firebaseConfig'; // Assuming Firebase storage import
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { UploadOutlined } from '@ant-design/icons';
 import { Upload } from 'antd';

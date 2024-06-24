@@ -3,7 +3,7 @@ import { getInfoMemberAPI } from '@/api/user';
 import TabHeader from '@/components/ControlPanel/TabHeader';
 import { checkAvailableLogin } from '@/utils';
 import { checkTokenCookie } from '@/utils/cookie';
-import { formatCurrency } from '@/utils/format';
+import { formatCurrency } from '@/utils/media/format';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect, useLayoutEffect, useState } from 'react';

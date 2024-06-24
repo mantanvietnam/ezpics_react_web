@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { deleteProductAPI, getMyProductApi } from "@/api/product";
 import { toast } from "react-toastify";
-import HomeBanner from "@/components/HomeBanner";
+import HomeBanner from "../../../components/HomeBanner";
 import EndowProduct from "@/components/Slide/EndowProduct";
 import EventProductSlider from "@/components/Slide/EventProductSlider";
 import NewProductsSlider from "@/components/Slide/NewproductsSlider";
@@ -11,6 +10,7 @@ import CollectionProductSlider from "@/components/Slide/collectionProductSlider"
 import ProductCard from "@/components/YourProduct/ProductCard";
 import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
+import { deleteProductAPI, getMyProductApi } from "../../../api/product";
 
 export default function HomeRoot(props) {
   const [products, setProducts] = useState([]);

@@ -1,6 +1,7 @@
 "use client";
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
+import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 
 export default function CenteredLayout(props) {
@@ -10,7 +11,8 @@ export default function CenteredLayout(props) {
     setIsNavbarOpen(!isNavbarOpen);
   };
   return (
-    <div className="">
+    <SessionProvider className=""
+    >
       <Header toggleNavbar={toggleNavbar} />
       <main className="flex pt-[--header-height]">
         <Nav isOpen={isNavbarOpen} />
@@ -23,6 +25,6 @@ export default function CenteredLayout(props) {
           {/* </RequireAuth> */}
         </div>
       </main>
-    </div>
+    </SessionProvider>
   );
 }

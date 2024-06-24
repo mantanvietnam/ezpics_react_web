@@ -2,7 +2,7 @@
 import {
   CHANGE_STATUS_AUTH,
   CHANGE_VALUE_TOKEN,
-} from "@/redux/slices/authSlice";
+} from "../../../../redux/slices/auth";
 import { checkAvailableLogin, getCookie, setCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 import React, { useEffect } from "react";

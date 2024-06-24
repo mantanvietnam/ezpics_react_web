@@ -3,23 +3,23 @@ import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import images from '../../public/images/index2';
 import { saveRequestBankingAPI } from '@/api/transaction';
-import { checkTokenCookie } from '@/utils';
+import { checkTokenCookie, getCookie } from '@/utils';
 import Link from 'next/link';
 
 const ModalRecharge = ({ open, handleCancel }) => {
-  const userInfo = {
-    user: {
-      avatar: "https://apis.ezpics.vn//upload/admin/images/50/avatar-50.jpg",
-      name: "Trần Ngọc Mạnh"
-    },
-    balance: 3133000,
-    eCoin: 236
-  };
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
 
-  return <UserInfo {...userInfo} open={open} handleCancel={handleCancel} />;
+  return <UserInfo {...dataInforUser} open={open} handleCancel={handleCancel} />;
 };
 
-const UserInfo = ({ user, balance, eCoin, open, handleCancel }) => {
+const UserInfo = ({ avatar, name, account_balance, ecoin, open, handleCancel }) => {
   const [transaction, setTransaction] = useState({});
   const [inputValue, setInputValue] = useState(0);
   const [showBankTransfer, setShowBankTransfer] = useState(false);
@@ -74,12 +74,12 @@ const UserInfo = ({ user, balance, eCoin, open, handleCancel }) => {
               alt=""
               width={20}
               height={20}
-              src={user.avatar}
+              src={avatar}
               className="rounded-full w-10 h-10"
             />
           </div>
           <p className="font-bold pl-1">
-            <span className="text-gray-600">Tên :</span> {user.name}
+            <span className="text-gray-600">Tên :</span> {name}
           </p>
         </div>
 
@@ -91,7 +91,7 @@ const UserInfo = ({ user, balance, eCoin, open, handleCancel }) => {
             height={20}
           />
           <p className="text-gray-800 text-sm pl-1 font-bold">
-            : {balance.toLocaleString()}₫
+            : {account_balance.toLocaleString()}₫
           </p>
         </div>
         
@@ -103,7 +103,7 @@ const UserInfo = ({ user, balance, eCoin, open, handleCancel }) => {
             height={20}
           /> 
           <p className="text-gray-800 text-sm font-bold pl-1">
-            :{eCoin} eCoin
+            :{ecoin} ecoin
           </p>
         </div>
       </div>

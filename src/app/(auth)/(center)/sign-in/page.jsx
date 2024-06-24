@@ -1,6 +1,6 @@
 "use client";
 import { loginByPhone } from '@/api/auth';
-import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from '@/redux/slices/authSlice';
+import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from "../../../../redux/slices/auth";
 import styles from '@/styles/auth/sign_in.module.scss';
 import { setCookie } from '@/utils/cookie';
 import { LoadingOutlined } from '@ant-design/icons';
