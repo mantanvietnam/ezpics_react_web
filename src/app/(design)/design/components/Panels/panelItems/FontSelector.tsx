@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { useAppSelector, useAppDispatch } from "../../../../../../hooks/hook";
 import { REPLACE_font } from "../../../../../../redux/slices/font/fontSlice";
 import Image from "next/image";
-import images from "../../../../../../../public/images/index2";
+import { logo } from "../../../../../../../public/images/logo.png";
 
 export default function FontSelector() {
   const [query, setQuery] = React.useState("");
@@ -86,7 +86,7 @@ export default function FontSelector() {
 
   const handleFontFamilyChange = async (x: any) => {
     if (editor) {
-      let selectedFont = null;
+      let selectedFont;
 
       if (x.font) {
         selectedFont = x.font;
@@ -262,7 +262,7 @@ export default function FontSelector() {
               width={40}
               height={40}
               alt=""
-              src={images.logo}
+              src={logo}
             />
           </div>
         </div>

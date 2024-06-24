@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "../redux/slices/user/userSlice";
 import { logoutService } from "@/api/auth";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Header = ({ toggleNavbar }) => {
   const router = useRouter();

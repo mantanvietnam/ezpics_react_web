@@ -5,8 +5,10 @@ import images from '../../public/images/index2';
 import { saveRequestBankingAPI } from '@/api/transaction';
 import { checkTokenCookie, getCookie } from '@/utils';
 import Link from 'next/link';
+import { useSession } from "next-auth/react";
 
 const ModalRecharge = ({ open, handleCancel }) => {
+  const { data: session } = useSession();
   let dataInforUser;
   if (getCookie("user_login")) {
     dataInforUser = JSON.parse(getCookie("user_login"));
@@ -91,7 +93,7 @@ const UserInfo = ({ avatar, name, account_balance, ecoin, open, handleCancel }) 
             height={20}
           />
           <p className="text-gray-800 text-sm pl-1 font-bold">
-            : {account_balance.toLocaleString()}₫
+            : {account_balance?.toLocaleString()}₫
           </p>
         </div>
         

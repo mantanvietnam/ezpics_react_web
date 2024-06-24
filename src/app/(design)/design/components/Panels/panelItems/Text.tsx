@@ -25,13 +25,7 @@ export default function Text() {
   const [allText, setAllText] = useState<any[]>([]);
   const [css] = useStyletron();
   const [loading, setLoading] = React.useState(false);
-  const {
-    setDisplayPreview,
-    setScenes,
-    setCurrentDesign,
-    currentDesign,
-    scenes,
-  } = useDesignEditorContext();
+  const { currentDesign, scenes } = useDesignEditorContext();
   function findIndexById(arr: any, targetId: any) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].id === targetId) {
@@ -134,11 +128,11 @@ export default function Text() {
   };
   const handleAddText = async (item: any) => {
     if (editor) {
-      // const font: FontItem = {
-      //   name: "Helve",
-      //   url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
-      // };
-      // await loadFonts([font]);
+      const font: FontItem = {
+        name: "Helve",
+        url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
+      };
+      await loadFonts([font]);
       console.log(item);
       const response = await axios.post(`${network}/addLayerText`, {
         idproduct: idProduct,
@@ -194,35 +188,35 @@ export default function Text() {
     getAllText();
   }, []);
 
-  const addComponent = async (component: any) => {
-    if (editor) {
-      const fontItemsList: FontItem[] = [];
-      if (component.objects) {
-        component.objects.forEach((object: any) => {
-          if (object.type === "StaticText" || object.type === "DynamicText") {
-            fontItemsList.push({
-              name: object.fontFamily,
-              url: object.fontURL,
-            });
-          }
-        });
-        const filteredFonts = fontItemsList.filter((f) => !!f.url);
-        await loadFonts(filteredFonts);
-      } else {
-        if (
-          component.type === "StaticText" ||
-          component.type === "DynamicText"
-        ) {
-          fontItemsList.push({
-            name: component.fontFamily,
-            url: component.fontURL,
-          });
-          await loadFonts(fontItemsList);
-        }
-      }
-      editor.objects.add(component);
-    }
-  };
+  // const addComponent = async (component: any) => {
+  //   if (editor) {
+  //     const fontItemsList: FontItem[] = [];
+  //     if (component.objects) {
+  //       component.objects.forEach((object: any) => {
+  //         if (object.type === "StaticText" || object.type === "DynamicText") {
+  //           fontItemsList.push({
+  //             name: object.fontFamily,
+  //             url: object.fontURL,
+  //           });
+  //         }
+  //       });
+  //       const filteredFonts = fontItemsList.filter((f) => !!f.url);
+  //       await loadFonts(filteredFonts);
+  //     } else {
+  //       if (
+  //         component.type === "StaticText" ||
+  //         component.type === "DynamicText"
+  //       ) {
+  //         fontItemsList.push({
+  //           name: component.fontFamily,
+  //           url: component.fontURL,
+  //         });
+  //         await loadFonts(fontItemsList);
+  //       }
+  //     }
+  //     editor.objects.add(component);
+  //   }
+  // };
   return (
     <>
       <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -403,7 +397,8 @@ function TextComponentItem({
           },
         })}
       ></div>
-      <img
+      <Image
+        alt=""
         src={component.preview}
         className={css({
           width: "100%",

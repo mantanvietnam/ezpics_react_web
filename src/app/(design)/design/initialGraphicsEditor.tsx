@@ -1,9 +1,9 @@
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import Panels from "./components/Panels";
-import Canvas from "./Canvas";
+import Canvas from "./components/Canvas";
 import Footer from "./components/Footer";
 import Toolbox from "./components/Toolbox";
-import EditorContainer from "./EditorContainer";
+import EditorContainer from "./components/EditorContainer";
 import PresentationEditor from "./page";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -18,20 +18,21 @@ import { v4 as uuidv4 } from "uuid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import { loadFonts } from "@/utils/media/fonts";
 import { toast } from "react-toastify";
-import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/store/slices/token/reducers";
+import {
+  REPLACE_TOKEN,
+  REPLACE_ID_USER,
+} from "../../../redux/slices/token/reducers";
 import "../../components/Resizable/loading.css";
-import { REPLACE_font } from "@/store/slices/font/fontSlice";
+import { REPLACE_font } from "../../../redux/slices/font/fontSlice";
 import "../../../src/views/DesignEditor/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
-import { REPLACE_TYPE_USER } from "@/store/slices/type/typeSlice";
-import { REPLACE_PRO_USER } from "@/store/slices/token/reducers";
+import { REPLACE_TYPE_USER } from "../../../redux/slices/type/typeSlice";
+import { REPLACE_PRO_USER } from "../../../redux/slices/token/reducers";
+import Image from "next/image";
 
 function GraphicEditor() {
   const dispatch = useAppDispatch();
   const [commonFonts, setCommonFonts] = React.useState<any[]>([]);
-  const [loadedFonts, setLoadedFonts] = React.useState<any[]>([]);
-  const [widthSrc, setWidthSrc] = useState<number>(0);
-  const [heightSrc, setHeightSrc] = useState<number>(0);
   const [fontURLInitial, setFontURLInitial] = React.useState<string>("");
   const [errorMessage, setError] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -607,10 +608,12 @@ function GraphicEditor() {
               flexDirection: "column",
             }}
           >
-            <img
+            <Image
               src="../../../assets/error.jpg"
               alt="lỗi"
-              style={{ width: 300, height: 300, alignSelf: "center" }}
+              width={300}
+              height={300}
+              style={{ alignSelf: "center" }}
             />
             <h2
               style={{
@@ -638,14 +641,15 @@ function GraphicEditor() {
                 <div>
                   <div></div>
                 </div>
-                <img
+                <Image
                   style={{
                     position: "absolute",
                     top: "12%",
                     left: "16%",
-                    width: 40,
-                    height: 40,
                   }}
+                  width={40}
+                  height={40}
+                  alt=""
                   src={ezpiclogo}
                 />
               </div>

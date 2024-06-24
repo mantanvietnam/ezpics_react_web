@@ -1,6 +1,5 @@
 import React from "react";
 import { useActiveObject, useEditor } from "@layerhub-io/react";
-// import getSelectionType from "@/utils/media/get-selection-type"
 import { Input } from "baseui/input";
 import { Block } from "baseui/block";
 import { ChevronDown } from "baseui/icon";

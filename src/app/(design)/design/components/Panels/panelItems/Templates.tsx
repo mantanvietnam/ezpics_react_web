@@ -1,19 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
+import axios from "axios";
 import { useEditor, useActiveObject } from "@layerhub-io/react";
 import { Block } from "baseui/block";
-import { loadFonts } from "@/utils/media/fonts";
 import Scrollable from "@/components/Scrollable";
 import AngleDoubleLeft from "@/components/Icons/AngleDoubleLeft";
 import { useStyletron } from "baseui";
-import { SAMPLE_TEMPLATES } from "@/constants/editor";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import useEditorType from "@/hooks/useEditorType";
 import ezlogo from "./EZPICS (converted)-03.png";
-
-import { loadVideoEditorAssets } from "@/utils/media/video";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/hooks/hook";
 import { Button, SIZE } from "baseui/button";
@@ -516,7 +512,7 @@ export default function Templates() {
                 <div></div>
               </div>
             </div>
-            <img
+            <Image
               style={{
                 position: "absolute",
                 top: "12%",
@@ -525,6 +521,7 @@ export default function Templates() {
                 height: 40,
               }}
               src={ezlogo}
+              alt=""
             />
           </div>
         </div>
@@ -595,8 +592,9 @@ function ImageItem({
             },
           })}
         ></div>
-        <img
+        <Image
           src={preview}
+          alt=""
           className={css({
             width: "100%",
             height: "100%",
@@ -611,13 +609,13 @@ function ImageItem({
 }
 
 const Modal = ({
-  onClose = () => {},
-  position = () => {},
-  currentItem = () => {},
-  onClick = () => {},
-  loadingTrue = () => {},
-  loadingFalse = () => {},
-  pageId = () => {},
+  onClose,
+  position,
+  currentItem,
+  onClick,
+  loadingTrue,
+  loadingFalse,
+  pageId,
 }) => {
   // const [css] = useStyletron();
   // const editor = useEditor();
