@@ -16,7 +16,6 @@ export default function Page() {
     limit: 20,
     page: 1,
     name: searchTerm,
-
   })
 
   // const getMyProductData = async () => {
@@ -28,19 +27,20 @@ export default function Page() {
   //     page: 1
   //   });
   // }; 
-  const getMyProductData = async () => {
-    return await getMyProductApi(searchValue);
-  }; 
+  // const getMyProductData = async () => {
+  //   return await getMyProductApi(searchValue);
+  // }; 
   useEffect(() => {
     const fetchData = async () => {
-        // setLoading(true)
+        setLoading(true)
         try {
-            const response = await getMyProductData(searchValue);
+            const response = await getMyProductApi(searchValue);
             setLoading(false)
-            if (response.listData.length === 0) {
+            if (response?.listData?.length === 0) {
                 setHasMore(false); // No more products to load
             } else {
-                setProducts((prevProducts) => [...prevProducts, ...response.listData]);
+                setProducts(response?.listData);
+                console.log(products)
             }
         } catch (error) {
             console.log(error);
@@ -48,28 +48,11 @@ export default function Page() {
         }
     }
     fetchData()
-})
-  useEffect(() => {
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('https://apis.ezpics.vn/apis/getProductCategoryAPI');
-            if (response?.data?.listData) {
-                setCategories(response.data.listData);
-            } else {
-                console.error("Invalid response format for categories");
-            }
-        } catch (error) {
-            console.error("Error fetching categories:", error.message);
-        }
-    };
-    fetchCategories()
-
-}, []);
-
+},[searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
-      const response = await searchProductAPI(searchValue)
+      const response = await getMyProductApi(searchValue)
       setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
@@ -123,7 +106,8 @@ export default function Page() {
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
       </div>
-      <DefaultPage getData={getMyProductData} searchValue={products} />
+      <DefaultPage getData={products} searchValue={searchValue} />
+      {/* <DefaultPage getData={getMyProductData} searchValue={searchValue} /> */}
     </>
   );
 }

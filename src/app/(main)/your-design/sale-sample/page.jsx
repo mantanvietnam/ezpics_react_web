@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getMyProductApi } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
 import { checkTokenCookie } from '@/utils/cookie';
@@ -11,30 +11,46 @@ export default function Page() {
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
-  const getMyProductData = async () => {
-    return await getMyProductApi({
-      type: "user_create",
-      // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
-      token: checkTokenCookie(),
-      limit: 12,
-      page: 1
-    });
-
-  };
+  // const getMyProductData = async () => {
+  //   return await getMyProductApi({
+  //     type: "user_create",
+  //     // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
+  //     token: checkTokenCookie(),
+  //     limit: 12,
+  //     page: 1
+  //   });
+  // };
   const [searchValue, setSearchValue] = useState({
-    limit: 20,
+    limit: 2000,
     page: 1,
-    name: '',
-    price: '',
-    orderBy: '',
-    orderType: '',
-    category_id: '',
-    color: ''
+    name: searchTerm,
+    token: checkTokenCookie(),
+    color: '',
+    type: "user_create",
   })
+  useEffect(() => {
+    const fetchData = async () => {
+        setLoading(true)
+        try {
+            const response = await getMyProductApi(searchValue);
+            setLoading(false)
+            if (response?.listData?.length === 0) {
+                setHasMore(false); // No more products to load
+            } else {
+                setProducts(response?.listData);
+                console.log(products)
+            }
+        } catch (error) {
+            console.log(error);
+            setLoading(false)
+        }
+    }
+    fetchData()
+},[searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
-      const response = await searchProductAPI(searchValue)
+      const response = await getMyProductApi(searchValue)
       setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
@@ -49,7 +65,7 @@ export default function Page() {
       setLoading(true)
       try {
         setLoading(true)
-        const response = await searchProductAPI(searchValue)
+        const response = await getMyProductApi(searchValue)
         setHasMoreData(true)
         setPage(1)
         setProducts(response.listData)
@@ -88,7 +104,7 @@ export default function Page() {
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
       </div>
-      <DefaultPage getData={getMyProductData} />
+      <DefaultPage getData={products} />
     </>
   );
 }

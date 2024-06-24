@@ -9,11 +9,14 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { checkTokenCookie, getCookie } from '@/utils';
+import { useSession } from 'next-auth/react';
 
 const OtpVerification = ({ phone }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [isLoading, setIsLoading] = useState(false);
     const [isOtpSent, setIsOtpSent] = useState(false);
+    // const
+    const { data: session } = useSession();
     const router = useRouter();
     const token = checkTokenCookie()
     console.log(token)
@@ -32,7 +35,7 @@ const OtpVerification = ({ phone }) => {
         try {
             const response = await SendOtp({ phone: dataInforUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
             if (response?.code == 0) {
-                console.log('response::',response);
+                console.log('response::', response);
                 toast.success('Mã OTP đã được gửi lại !');
                 setOtp(['', '', '', '', '', '']); // Reset lại các ô nhập OTP
                 setIsOtpSent(true); // Đã gửi mã OTP thành công
@@ -90,7 +93,7 @@ const OtpVerification = ({ phone }) => {
                 console.log(response)
                 if (response?.code === 1) {
                     toast.success('Xác thực thành công!');
-                    router.push('/'); // Redirect to a welcome page or dashboard after successful verification
+                    router.push('/sign-in'); // Redirect to a welcome page or dashboard after successful verification
                 } else {
                     toast.error('Mã OTP không hợp lệ, vui lòng thử lại.');
                 }
@@ -109,51 +112,51 @@ const OtpVerification = ({ phone }) => {
         <div className={styles.formOtpVerification}>
             <div className={styles.backgroundform}>
                 <h2 className="text-2xl font-bold mb-4">Xác Thực OTP điện thoại</h2>
-                        <form onSubmit={handleOtpSubmit} className={styles.formSubmit}>
-                            <div className={styles.groupInput}>
-                                {otp.map((digit, index) => (
-                                    <input
-                                        key={index}
-                                        id={`otp-input-${index}`}
-                                        type="text"
-                                        maxLength="1"
-                                        className={styles.otpInput}
-                                        value={digit}
-                                        onChange={(e) => handleOtpChange(e, index)}
+                <form onSubmit={handleOtpSubmit} className={styles.formSubmit}>
+                    <div className={styles.groupInput}>
+                        {otp.map((digit, index) => (
+                            <input
+                                key={index}
+                                id={`otp-input-${index}`}
+                                type="text"
+                                maxLength="1"
+                                className={styles.otpInput}
+                                value={digit}
+                                onChange={(e) => handleOtpChange(e, index)}
+                            />
+                        ))}
+                    </div>
+                    <button type="submit" className={`${styles.btnVerifyOtp} mt-4`}>
+                        {isLoading ? (
+                            <Spin
+                                indicator={
+                                    <LoadingOutlined
+                                        style={{
+                                            fontSize: 24,
+                                            color: 'white',
+                                        }}
+                                        spin
                                     />
-                                ))}
-                            </div>
-                            <button type="submit" className={`${styles.btnVerifyOtp} mt-4`}>
-                                {isLoading ? (
-                                    <Spin
-                                        indicator={
-                                            <LoadingOutlined
-                                                style={{
-                                                    fontSize: 24,
-                                                    color: 'white',
-                                                }}
-                                                spin
-                                            />
-                                        }
-                                    />
-                                ) : (
-                                    'Xác Thực'
-                                )}
-                            </button>
-                {isOtpSent ? (
-                    <>
+                                }
+                            />
+                        ) : (
+                            'Xác Thực'
+                        )}
+                    </button>
+                    {isOtpSent ? (
+                        <>
                             <button type="button" onClick={handleResendOtp} className={`${styles.btnResendOtp} mt-2`}>
                                 Gửi Lại OTP
                             </button>
-                    </>
-                ) : (
-                    <>
-                        <button type="button" onClick={handleSendOtp} className={`${styles.btnSendOtp} mt-2`}>
-                            Nhận OTP
-                        </button>
-                    </>
-                )}
-                        </form>
+                        </>
+                    ) : (
+                        <>
+                            <button type="button" onClick={handleSendOtp} className={`${styles.btnSendOtp} mt-2`}>
+                                Nhận OTP
+                            </button>
+                        </>
+                    )}
+                </form>
             </div>
 
         </div>

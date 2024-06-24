@@ -5,6 +5,7 @@ import { checkTokenCookie } from '@/utils/cookie';
 import { toast } from 'react-toastify';
 import { Skeleton } from 'antd';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export default function DefaultPage({ getData,searchValue }) {
   const router = useRouter();
@@ -15,8 +16,9 @@ export default function DefaultPage({ getData,searchValue }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getData();
-        setProducts(response.listData || response.data);
+        const response = await getData;
+        // setProducts(response.listData || response.data);
+        setProducts(response);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error.message);
@@ -26,21 +28,24 @@ export default function DefaultPage({ getData,searchValue }) {
     };
     fetchData();
   }, [getData]);
-console.log(searchValue)
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getData();
-  //       setProducts(response.listData || response.data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error.message);
-  //       setError(error.message);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [searchValue]);
+// console.log(searchValue)
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const response = await axios.post('https://apis.ezpics.vn/apis/getMyProductAPI',{
+//           token: checkTokenCookie(),
+//           name: searchValue?.name
+//         });
+//         setProducts(response?.listData || response?.data?.listData);
+//         setLoading(false);
+//       } catch (error) {
+//         console.error("Error fetching data:", error.message);
+//         setError(error.message);
+//         setLoading(false);
+//       }
+//     };
+//     fetchData();
+//   }, [searchValue]);
 
 
   const onDeleteProduct = async (productId) => {
