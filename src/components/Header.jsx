@@ -379,9 +379,9 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div class="list-item ">
+        <Link href={"/affiliate"} class="list-item ">
           <p className="item-text">Giới thiệu bạn bè</p>
-        </div>
+        </Link>
       ),
       key: "4",
     },
