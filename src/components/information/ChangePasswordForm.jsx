@@ -9,7 +9,7 @@ import { CHANGE_VALUE_USER } from "@/redux/slices/infoUser";
 import { Form, Input } from "antd";
 import { toast } from "react-toastify";
 
-const ChangePasswordForm = () => {
+const ChangePasswordForm = (handleCloseModalPassword) => {
   const [showError, setShowError] = useState(false);
   const network = useSelector((state) => state.ipv4.network);
   const router = useRouter();
@@ -72,7 +72,7 @@ const ChangePasswordForm = () => {
             span: 6,
           }}
           wrapperCol={{
-            span: 20,
+            span: 24,
           }}>
           <Form.Item label="Mật khẩu cũ" name="passOld">
             <Input.Password
