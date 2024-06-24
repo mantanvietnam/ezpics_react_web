@@ -1,11 +1,17 @@
 "use client";
 import { getInfoMemberAPI } from "@/api/user";
-import { checkAvailableLogin, checkTokenCookie, setCookie } from "@/utils";
+import {
+  checkAvailableLogin,
+  checkTokenCookie,
+  setCookie,
+  getCookie,
+} from "@/utils";
 import { Modal, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useRouter, redirect } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
+import { useSession } from "next-auth/react";
 import { CHANGE_VALUE_USER, DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import axios from "axios";
 import ChangeNameForm from "@/components/information/ChangeNameForm";
@@ -13,7 +19,7 @@ import ChangeMailForm from "@/components/information/ChangeMailForm";
 import ChangePhoneForm from "@/components/information/ChangePhoneForm";
 import ChangePasswordForm from "@/components/information/ChangePasswordForm";
 
-const page = () => {
+const Page = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -27,19 +33,35 @@ const page = () => {
     }
   }, [isAuthenticated]);
 
+  const { data: session } = useSession();
+
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
+
   useEffect(() => {
     const getData = async () => {
-      const response = await getInfoMemberAPI({
-        token: checkTokenCookie(),
-      });
-      if (response && response.code === 0) {
-        setData(response?.data);
+      if (dataInforUser) {
+        const response = await getInfoMemberAPI({
+          token: checkTokenCookie(),
+        });
+        if (response && response.code === 0) {
+          setData(response?.data);
+        }
       }
       setLoading(false);
     };
+
     getData();
   }, []);
+
   console.log(data);
+  console.log(dataInforUser);
 
   // Btn xem anh hien tai
   const [modalImage, setModalImage] = useState(false);
@@ -120,6 +142,7 @@ const page = () => {
           setCookie("user_login", responseInfoApi.data.data, 1);
           dispatch(CHANGE_VALUE_USER(responseInfoApi.data.data));
           setData(responseInfoApi?.data?.data);
+          window.location.reload();
         }
       }
     }
@@ -152,6 +175,12 @@ const page = () => {
         router.path("/", { replace: true });
       }
     }
+  };
+
+  //Modal password
+  const [modalPassword, setModalPassword] = useState(false);
+  const handleCloseModalPassword = () => {
+    setModalPassword(false);
   };
 
   if (loading) {
@@ -228,11 +257,22 @@ const page = () => {
         <div className="border-b-2 py-[4%]">
           <ChangeMailForm data={data} setData={setData} />
         </div>
-        <div className="border-b-2 py-[4%]">
+        {/* <div className="border-b-2 py-[4%]">
           <ChangePhoneForm data={data} setData={setData} />
-        </div>
+        </div> */}
         <div className="border-b-2 py-[4%]">
-          <ChangePasswordForm />
+          <h1 className="text-lg my-4">Mật khẩu</h1>
+          <div className="flex justify-between items-center">
+            <p>*********</p>
+            <div className="flex flex-row items-center">
+              <button
+                type="button"
+                className="items-center text-[#0d1216] leading-[22px] normal-case pl-[10px] pr-[10px] bg-[#e1e4e7] h-[36px] w-[80px] font-bold mr-[10px]"
+                onClick={() => setModalPassword(true)}>
+                Sửa
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Delete Account */}
@@ -244,12 +284,23 @@ const page = () => {
               chắn.
             </p>
             <button
-              class="flex items-center text-red-500 text-sm leading-[22px] normal-case px-2 h-9 w-30 border border-red-500 bg-white"
+              className="flex items-center text-red-500 text-sm leading-[22px] normal-case px-2 h-9 w-30 border border-red-500 bg-white"
               onClick={() => setModalDelete(true)}>
               Xóa tài khoản
             </button>
           </div>
         </div>
+
+        {/* Modal password */}
+        <Modal
+          open={modalPassword}
+          onCancel={handleCloseModalPassword}
+          footer={null}
+          width={"40%"}>
+          <div>
+            <ChangePasswordForm data={data} setData={setData} />
+          </div>
+        </Modal>
 
         {/* Modal xem ảnh */}
         <Modal
@@ -291,4 +342,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

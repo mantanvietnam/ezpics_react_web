@@ -51,6 +51,7 @@ const ChangeNameForm = ({ data, setData }) => {
             setCookie("user_login", responseInfo?.data?.data, 1);
             dispatch(CHANGE_VALUE_USER(responseInfo?.data?.data));
             setData(responseInfo?.data?.data); // Cập nhật state dữ liệu mới
+            window.location.reload();
 
             toast.success("Thay đổi tên thành công");
             setInputName(false);
