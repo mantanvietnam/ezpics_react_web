@@ -30,7 +30,7 @@ const ContentRemove = () => {
             <p className="ml-2.5 font-semibold text-[14px]">Tải ảnh lên</p>
           </div>
           <p className="my-6">
-            Tải lên hoặc Kéo và thả hình ảnh vào khung "Tải ảnh lên" để bắt đầu{" "}
+            Tải lên hoặc Kéo và thả hình ảnh vào khung (Tải ảnh lên) để bắt đầu{" "}
             <b className="font-bold">chỉnh sửa với Ezpics RB</b>
           </p>
         </div>

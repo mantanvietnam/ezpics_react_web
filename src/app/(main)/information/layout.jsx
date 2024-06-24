@@ -13,7 +13,7 @@ import ChangeMailForm from "@/components/information/ChangeMailForm";
 import ChangePhoneForm from "@/components/information/ChangePhoneForm";
 import ChangePasswordForm from "@/components/information/ChangePasswordForm";
 
-const page = () => {
+const Page = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -291,4 +291,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

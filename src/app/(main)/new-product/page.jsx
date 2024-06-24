@@ -333,8 +333,8 @@ function Page() {
                     {/* Products */}
                     {products.length > 0 ? (
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-1 gap-1 justify-center">
-                            {products.map((item) => (
-                                <div className="block">
+                            {products.map((item, index) => (
+                                <div className="block" key={index}>
                                     <div className="card bg-white rounded-lg shadow-md overflow-hidden">
                                         <div className="bg-orange-100 overflow-hidden text-center">
                                             <Image
