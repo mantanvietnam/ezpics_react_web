@@ -5,7 +5,10 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Modal, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { checkTokenCookie, checkAvailableLogin } from "@/utils";
+import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
+import { useSession } from "next-auth/react";
+import { useDispatch } from "react-redux";
+import ModalUpPro from "../ModalUpPro";
 
 const HeaderRemove = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // New state for uploaded image URL
@@ -14,6 +17,26 @@ const HeaderRemove = () => {
   const inputFileRef = useRef(null);
   const router = useRouter();
   const [reloadKey, setReloadKey] = useState(0);
+
+  const [openPro, setOpenPro] = useState(false);
+  const handleCancelPro = () => {
+    setOpenPro(false);
+  };
+
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const isAuth = checkAvailableLogin();
+  // Lấy data user
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
+
+  console.log(dataInforUser);
 
   const handleCloseModalFreeExtend = () => {
     setModalExtend(false);
@@ -125,23 +148,54 @@ const HeaderRemove = () => {
       formData.append("token", checkTokenCookie());
 
       // Gửi yêu cầu POST để tải lên tệp và nhận phản hồi từ máy chủ
-      const response = await axios.post(
-        `${network}/removeBackgroundImageAPI`,
-        formData,
-        config
-      );
+      try {
+        const response = await axios.post(
+          `${network}/removeBackgroundImageAPI`,
+          formData,
+          config
+        );
 
-      // Kiểm tra phản hồi từ máy chủ
-      if (response && response.data) {
-        // Đặt lại trạng thái đang tải lên là false
+        // Kiểm tra phản hồi từ máy chủ
+        if (response && response.data) {
+          // Đặt lại trạng thái đang tải lên là false
+          setLoadingRemove(false);
+
+          // Lưu URL của hình ảnh đã tải lên
+          setUploadedImageUrl(response.data.linkOnline);
+
+          // Mở rộng modal để hiển thị hình ảnh đã tải lên
+          setModalExtend(true);
+        } else {
+          // Xử lý trường hợp phản hồi không có dữ liệu
+          console.error("Response does not contain data");
+          setLoadingRemove(false);
+        }
+      } catch (error) {
+        // Xử lý lỗi khi gửi yêu cầu hoặc phản hồi từ máy chủ
+        console.error(
+          "An error occurred while removing background image:",
+          error
+        );
         setLoadingRemove(false);
-
-        // Lưu URL của hình ảnh đã tải lên
-        setUploadedImageUrl(response.data.linkOnline);
-
-        // Mở rộng modal để hiển thị hình ảnh đã tải lên
-        setModalExtend(true);
       }
+    }
+  };
+
+  const handleClickBtnBg = () => {
+    // Kiểm tra xem người dùng có đang đăng nhập hay không
+    const authentication = checkAvailableLogin();
+
+    // Nếu người dùng chưa đăng nhập (authentication là false)
+    if (!authentication) {
+      // In ra giá trị của authentication (sẽ là false)
+      console.log(authentication);
+
+      // Điều hướng người dùng đến trang đăng nhập
+      router.push("/sign-in");
+    } else if (dataInforUser.member_pro === 1) {
+      handleRemoveBackground();
+    } else {
+      setOpenPro(true);
     }
   };
 
@@ -163,7 +217,7 @@ const HeaderRemove = () => {
           </p>
           <button
             className="mt-2 md:mt-5 w-[250px] h-[60px] self-center normal-case text-white bg-[rgb(81,100,255)] rounded-[30px] text-[20px] font-semibold hover:shadow-lg active:bg-blue-600"
-            onClick={() => handleRemoveBackground()}>
+            onClick={() => handleClickBtnBg()}>
             {loadingRemove ? (
               <span>
                 <Spin
@@ -217,7 +271,7 @@ const HeaderRemove = () => {
             <img
               src={uploadedImageUrl}
               alt="Uploaded"
-              className="max-w-[200px] h-auto rounded-lg mt-5"
+              className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] object-cover rounded-lg mt-5"
             />
           )}
           <div>
@@ -246,6 +300,7 @@ const HeaderRemove = () => {
           </div>
         </div>
       </Modal>
+      <ModalUpPro open={openPro} handleCancel={handleCancelPro} />
     </div>
   );
 };

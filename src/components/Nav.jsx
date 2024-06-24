@@ -8,6 +8,7 @@ import { UserOutlined, CrownOutlined } from "@ant-design/icons";
 import ModalRecharge from "./ModelRecharge";
 import { checkAvailableLogin, getCookie } from "@/utils";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 const Nav = ({ isOpen, closeNavbar }) => {
   const [openPro, setOpenPro] = useState(false);
@@ -26,7 +27,8 @@ const Nav = ({ isOpen, closeNavbar }) => {
     dataInforUser = null;
   }
 
-  // console.log(dataInforUser);
+  // Determine if the user is a Pro member
+  const isProMember = dataInforUser?.member_pro === 1;
 
   const handleCancelRecharge = () => {
     setOpenRecharge(false);
@@ -62,7 +64,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
     },
     {
       href: "/",
-      label: "Gia hạn bản PRO",
+      label: `${isProMember ? "Gia hạn bản PRO" : "Dùng thử bản PRO"}`,
       icon: images.renew,
       onClick: () => setOpenPro(true),
     },
@@ -70,12 +72,28 @@ const Nav = ({ isOpen, closeNavbar }) => {
 
   //Them bg vao button khi chon tren thanh nav
   const [activeItem, setActiveItem] = useState(0);
+  const [activeFunc, setActiveFunc] = useState("");
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const navItemIndex = navItems.findIndex((item) => item.href === pathname);
+    const funcItemIndex = userFuncs.findIndex((item) => item.href === pathname);
+
+    if (navItemIndex !== -1) {
+      setActiveItem(navItemIndex);
+      setActiveFunc(null);
+    } else if (funcItemIndex !== -1) {
+      setActiveFunc(funcItemIndex);
+      setActiveItem(null);
+    }
+  }, [pathname]);
+
   const handleNavItem = (item) => {
     setActiveItem(item);
     setActiveFunc(null);
     closeNavbar(); // Close the navbar when a link is clicked
   };
-  const [activeFunc, setActiveFunc] = useState("");
+
   const hanldeFuncItem = (item) => {
     setActiveFunc(item);
     setActiveItem(null);
@@ -89,7 +107,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
       }`}>
       {isAuthenticated ? (
         <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
-          <div className="flex justify-around items-center">
+          <div className="relative flex justify-around items-center">
             <div className="w-10 h-10 rounded-full overflow-hidden m-2">
               <Image
                 src={dataInforUser?.avatar}
@@ -99,6 +117,15 @@ const Nav = ({ isOpen, closeNavbar }) => {
                 className="w-full h-full object-cover rounded-full"
               />
             </div>
+            {isProMember && (
+              <Image
+                src="/images/crown.png"
+                alt=""
+                width={18}
+                height={18}
+                className="absolute bottom-[10%] left-[20%]"
+              />
+            )}
             <div>
               <p>{dataInforUser?.name}</p>
               <div className="flex items-center text-slate-500">
@@ -124,9 +151,11 @@ const Nav = ({ isOpen, closeNavbar }) => {
             </div>
           </div>
           <div className="w-full mt-3" onClick={() => setOpenRecharge(true)}>
-            <button className="w-full bg-gray-300 flex h-10 items-center text-center justify-center text-sm text-gray-900 leading-[22px] font-bold rounded-[10px] py-2">
-              <CrownOutlined style={{ color: "yellow" }} className="pr-1" /> Nạp
-              tiền
+            <button className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 flex h-12 items-center text-center justify-center text-sm text-white font-bold rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+              <p className="flex items-center space-x-2">
+                <img src="/images/crown.png" alt="" className="w-5 h-5" />
+                <span className="text-lg">Nạp tiền</span>
+              </p>
             </button>
           </div>
         </div>
@@ -186,7 +215,11 @@ const Nav = ({ isOpen, closeNavbar }) => {
         </div>
       ) : null}
 
-      <ModalUpPro open={openPro} handleCancel={handleCancelPro} />
+      <ModalUpPro
+        isProMember={isProMember}
+        open={openPro}
+        handleCancel={handleCancelPro}
+      />
       <ModalRecharge open={openRecharge} handleCancel={handleCancelRecharge} />
     </div>
   );

@@ -6,6 +6,8 @@ import {
   SettingOutlined,
   UserOutlined,
   EllipsisOutlined,
+  DownOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,12 +21,41 @@ import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "../redux/slices/user/userSlice";
 import { logoutService } from "@/api/auth";
+import { toast } from "react-toastify";
 
 const Header = ({ toggleNavbar }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { data: session } = useSession();
   const isAuth = checkAvailableLogin();
+  const [dataInforUsercheck, setdataInforUsercheck] = useState(null);
+  const cookie = checkTokenCookie()
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      try {
+        const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
+          token: cookie
+        });
+        if (response) {
+          setdataInforUsercheck(response?.data?.data)
+        } else {
+          console.error("Invalid response format for categories");
+        }
+      } catch (error) {
+        throw new Error(error)
+      }
+
+    }
+    fetchDataUser();
+  }, [cookie])
+  if (dataInforUsercheck?.otp != null) {
+    setTimeout(() => {
+      toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
+      router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
+    }, 10000)
+  }
+  console.log('dataInforUser',)
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -51,8 +82,18 @@ const Header = ({ toggleNavbar }) => {
     { href: "/", label: "Trang chủ", hiddenOn: "sm" },
     { href: "/new-product", label: "Thiết kế mới", hiddenOn: "lg" },
     { href: "/pricing-compare", label: "Bảng giá", hiddenOn: "lg" },
-    { href: "/guide", label: "Hướng dẫn", hiddenOn: "xl" },
-    { href: "/developer", label: "Nhà phát triển", hiddenOn: "xl" },
+    {
+      label: "Hướng dẫn",
+      hiddenOn: "xl",
+      subMenu: [
+        {
+          href: "https://www.youtube.com/watch?v=7zSlqhcsHLI&list=PLngg14zy8vvw-hSi3ly3ehls1RHTWgQdJ",
+          label: "Điện thoại",
+        },
+        { href: "/guide/desktop", label: "Máy tính" },
+      ],
+    },
+    { href: "/post", label: "Tin tức", hiddenOn: "xl" },
   ];
 
   const actionIcons = [
@@ -306,6 +347,14 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
+        <Link href={"/favorite_designs"} className="list-item">
+          <p className="item-text">Mẫu thiết kế yêu thích</p>
+        </Link>
+      ),
+      key: "6",
+    },
+    {
+      label: (
         <div class="list-item ">
           <p className="item-text">Sửa thông tin cá nhân</p>
         </div>
@@ -342,13 +391,14 @@ const Header = ({ toggleNavbar }) => {
           <p className="item-text">Đăng xuất </p>
         </div>
       ),
-      key: "4",
+      key: "5",
     },
   ];
 
   //Responsive header
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
+  const [submenuVisible, setSubmenuVisible] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -395,6 +445,10 @@ const Header = ({ toggleNavbar }) => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  const toggleSubmenu = () => {
+    setSubmenuVisible(!submenuVisible);
+  };
+
   return (
     <SessionProvider>
       <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
@@ -419,14 +473,47 @@ const Header = ({ toggleNavbar }) => {
         <div className="relative items-center hidden md:flex">
           <div className="flex overflow-hidden">
             {menuItems.map((menuItem, index) => (
-              <Link
+              // <Link
+              //   key={index}
+              //   href={menuItem.href}
+              //   className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
+              //     menuItem.hiddenOn
+              //   )}`}>
+              //   {menuItem.label}
+              // </Link>
+
+              <div
                 key={index}
-                href={menuItem.href}
-                className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
-                  menuItem.hiddenOn
-                )}`}>
-                {menuItem.label}
-              </Link>
+                className={`${getHiddenClass(menuItem.hiddenOn)}`}>
+                {!menuItem.subMenu ? (
+                  <Link
+                    href={menuItem.href}
+                    className="primary_btn pl-10 whitespace-nowrap">
+                    {menuItem.label}
+                  </Link>
+                ) : (
+                  <div>
+                    <button
+                      className="primary_btn pl-10 whitespace-nowrap flex items-center"
+                      onClick={() => toggleSubmenu()}>
+                      {menuItem.label}
+                      <DownOutlined className="ml-2" />
+                    </button>
+                    {submenuVisible && (
+                      <div className="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                        {menuItem.subMenu.map((subItem, subIndex) => (
+                          <Link
+                            key={subIndex}
+                            href={subItem.href}
+                            className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                            {subItem.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
           <div className="relative">
@@ -439,14 +526,36 @@ const Header = ({ toggleNavbar }) => {
               <div className="absolute right-[-85px] mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                 {menuItems.map(
                   (menuItem, index) =>
-                    shouldShowInDropdown(menuItem.hiddenOn) && (
+                    shouldShowInDropdown(menuItem.hiddenOn) &&
+                    (!menuItem.subMenu ? (
                       <Link
                         key={index}
                         href={menuItem.href}
                         className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
                         {menuItem.label}
                       </Link>
-                    )
+                    ) : (
+                      <div key={index} className="relative">
+                        <button
+                          className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap flex items-center w-full text-left"
+                          onClick={() => toggleSubmenu()}>
+                          {menuItem.label}
+                          <RightOutlined className="ml-2" />
+                        </button>
+                        {submenuVisible && (
+                          <div className="absolute top-0 left-[102%] w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                            {menuItem.subMenu.map((subItem, subIndex) => (
+                              <Link
+                                key={subIndex}
+                                href={subItem.href}
+                                className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                                {subItem.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))
                 )}
               </div>
             )}
@@ -538,7 +647,7 @@ const Header = ({ toggleNavbar }) => {
             <button
               className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
               onClick={() => {
-                router.push("sign-in");
+                router.push("/sign-in");
               }}>
               <UserOutlined />
               <p className="pl-2">Đăng nhập</p>

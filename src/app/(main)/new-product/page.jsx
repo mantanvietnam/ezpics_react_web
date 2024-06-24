@@ -41,28 +41,28 @@ function Page() {
         color: ''
     }
     const cookie = checkTokenCookie()
-    useEffect(()=>{
-        const fetchDataUser = async ()=>{
+    useEffect(() => {
+        const fetchDataUser = async () => {
             try {
-               const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI',{
-                token: cookie
-               });
+                const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
+                    token: cookie
+                });
 
-               if (response) {
+                if (response) {
                     // console.log('response',response?.data?.data);      
-                    setdataInforUser(response?.data?.data)         
-            } else {
-                console.error("Invalid response format for categories");
-            }
+                    setdataInforUser(response?.data?.data)
+                } else {
+                    console.error("Invalid response format for categories");
+                }
 
             } catch (error) {
-               throw new Error(error)
-            }   
+                throw new Error(error)
+            }
 
         }
         fetchDataUser();
-    },[cookie])
-console.log('dataInforUser',dataInforUser)
+    }, [cookie])
+    console.log('dataInforUser', dataInforUser)
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -122,18 +122,18 @@ console.log('dataInforUser',dataInforUser)
         setCurrentPage(1);
         setHasMore(true);
     };
-    
+
     const handleCancel = () => {
         setSortOption('');
         setFilterOption('');
         toggleDrawer();
         setClosing(true);
     };
-    
+
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
-    
+
     const handleSubmit = () => {
         toggleDrawer();
     };
@@ -193,10 +193,10 @@ console.log('dataInforUser',dataInforUser)
     return (
         <div className="p-6">
             {/* Header */}
-            <h1 className="text-2xl font-semibold mb-6">Thiết kế mới trong tuần</h1>
+            <h1 className="text-2xl font-semibold mb-6 w-full">Thiết kế mới trong tuần</h1>
 
             {/* Search Bar and Drawer */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 w-full">
                 <div className="flex items-center gap-3">
                     <button onClick={toggleDrawer} className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
                         <ControlOutlined />
@@ -323,7 +323,7 @@ console.log('dataInforUser',dataInforUser)
 
             {/* Loading spinner */}
             {loading ? (
-                <div className="center text-center">
+                <div className="center text-center w-full">
                     <Flex align="center" gap="middle" className="flex justify-center items-center">
                         {/* Placeholder for loading spinner */}
                     </Flex>
@@ -364,7 +364,7 @@ console.log('dataInforUser',dataInforUser)
                             ))}
                         </div>
                     ) : (
-                        <div className="center text-center">
+                        <div className="center text-center w-full">
                             <Flex align="center" gap="middle" className="flex justify-center items-center">
                                 {/* Placeholder for no products found */}<Spin size="large" />
                             </Flex>
@@ -373,7 +373,7 @@ console.log('dataInforUser',dataInforUser)
 
                     {/* Loading more indicator */}
                     {loadingMore && (
-                        <div className="center text-center">
+                        <div className="center text-center w-full">
                             <Flex align="center" gap="middle" className="flex justify-center items-center">
                                 {/* Placeholder for loading more spinner */}<Spin size="large" />
                             </Flex>

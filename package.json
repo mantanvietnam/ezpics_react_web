@@ -34,6 +34,7 @@
     "chart.js": "^4.4.3",
     "firebase": "^10.12.2",
     "formik": "^2.4.6",
+    "js-cookie": "^3.0.5",
     "luxon": "^3.4.4",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
@@ -64,7 +65,8 @@
     "mime": "^3.0.0",
     "styletron-engine-atomic": "^1.6.2",
     "react-responsive-carousel": "^3.2.23",
-    "react-player": "^2.10.1"
+    "react-player": "^2.10.1",
+    "swiper": "^11.1.4"
   },
   "devDependencies": {
     "eslint": "^8",

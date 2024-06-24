@@ -133,3 +133,82 @@ export const addWarehouseAPI = async (data) => {
   );
   return response.data;
 };
+
+export const checkFavoriteAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/checkFavoriteProductAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getMyProductFavoriteAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getMyProductFavoriteAPI",
+    data
+  );
+  return response.data;
+};
+
+export const detailProductSeriesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/detailProductSeriesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getProductAllCategoryAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getProductAllCategoryAPI",
+    data
+  );
+  return response.data;
+};
+
+export const listLayerAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/listLayerAPI",
+    data
+  );
+  return response.data;
+};
+export const saveFavoriteAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/saveFavoriteProductAPI",
+    data
+  );
+  return response.data;
+};
+
+export const deleteFavoriteAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/deleteFavoriteProductAPI",
+    data
+  );
+  return response.data;
+};
+
+export const buyProductAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/buyProductAPI",
+    data
+  );
+  return response.data;
+};
+
+export const buyWarehousesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/buyWarehousesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getInfoWarehouseApi = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getInfoWarehouseAPI",
+    data
+  );
+  return response.data;
+};

@@ -13,8 +13,6 @@ import {
 } from "./CustomSlide";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useSession } from "next-auth/react";
-import { getCookie } from "@/utils";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
@@ -26,17 +24,7 @@ const VND = new Intl.NumberFormat("vi-VN", {
 const DefaultSlide = ({ apiAction, title, pathString }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  //get data user
-  const { data: session } = useSession();
-  let dataInforUser;
-  if (getCookie("user_login")) {
-    dataInforUser = JSON.parse(getCookie("user_login"));
-  } else if (session?.user_login) {
-    dataInforUser = session?.user_login;
-  } else {
-    dataInforUser = null;
-  }
-  console.log('dataInforUser', dataInforUser)
+
   useEffect(() => {
     setLoading(true);
     const fetchProducts = async () => {
@@ -144,10 +132,9 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                       </p>
                       <div className="mt-2">
                         <span className="text-red-500 mr-2 font-bold text-sm">
-                          {/* {product.sale_price === 0
+                          {product.sale_price === 0
                             ? "Miễn phí"
-                            : VND.format(product.sale_price)} */}
-                            {product.sale_price === 0 || (dataInforUser?.member_pro === 1 && product?.free_pro) ? "Miễn phí" : VND.format(product.sale_price)}
+                            : VND.format(product.sale_price)}
                         </span>
                         <span className="text-gray-500 line-through">
                           {VND.format(product.price)}

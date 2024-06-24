@@ -6,6 +6,16 @@ export const register = async (user) => {
    const result = await axiosInstance.post('/saveRegisterMemberAPI', user)
    return result
 }
+// https://apis.ezpics.vn/apis/resendOtpAPI
+export const SendOtp = async (user) => {
+   const result = await axiosInstance.post('/resendOtpAPI', user)
+   return result
+}
+// https://apis.ezpics.vn/apis/acceptMemberAPI
+export const acceptMemberAPI = async (user) => {
+   const result = await axiosInstance.post('/acceptMemberAPI', user)
+   return result
+}
 export const getUserDetail = async (data) => {
    const response = await axios.post(
       "https://apis.ezpics.vn/apis/getInfoMemberAPI",
