@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
+import images from '../../../../../public/images/index2';
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -23,7 +24,7 @@ const ProductInfo = (props) => {
   const [openBuy, setOpenBuy] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [type, setType] = useState('')
-  const userLogin = Cookies.get('user_login')
+  const userLogin = JSON.parse(Cookies.get('user_login'))
   const token = Cookies.get('token')
 
   const showLoading = () => {
@@ -311,6 +312,31 @@ const ProductInfo = (props) => {
             <Radio value=''>Mua bằng tiền tài khoản</Radio>
             <Radio value='ecoin'>Mua bằng ecoin</Radio>
           </Radio.Group>
+          <div className='flex gap-3 justify-end'>
+            <div className='text-sm'>Số dư:</div>
+            <div className='flex flex-col gap-1'>
+              <div className="flex items-center text-slate-500">
+                <Image
+                  src={images.balance}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="rounded-full pr-1"
+                />{" "}
+                <p>: {VND.format(userLogin?.account_balance)}</p>
+              </div>
+              <div className="flex items-center text-slate-500">
+                <Image
+                  src={images.eCoin}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="rounded-full pr-1"
+                />{" "}
+                <p>: {userLogin?.ecoin} eCoin</p>
+              </div>
+            </div>
+          </div>
           <div className='flex gap-2 justify-end mb-[20px] items-center'>
             <div className='text-lg font-semibold'>Tổng tiền:</div>
             <div className='text-lg font-semibold'>{type === 'ecoin' ? `${data?.ecoin} eCoin` : VND.format(data?.price)}</div>

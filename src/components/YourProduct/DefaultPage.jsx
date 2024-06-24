@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { Skeleton } from 'antd';
 import { useRouter } from 'next/navigation';
 
-export default function DefaultPage({ getData }) {
+export default function DefaultPage({ getData,searchValue }) {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +26,22 @@ export default function DefaultPage({ getData }) {
     };
     fetchData();
   }, [getData]);
+console.log(searchValue)
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getData();
+  //       setProducts(response.listData || response.data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error.message);
+  //       setError(error.message);
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [searchValue]);
+
 
   const onDeleteProduct = async (productId) => {
     try {

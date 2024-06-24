@@ -1,13 +1,51 @@
+import { getCookie } from '@/utils';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
 });
 
+
 export default function ProductComponent({ product }) {
+  // const [dataInforUser, setdataInforUser] = useState(null);
+    // Lấy data user
+  const { data: session } = useSession();
+  let dataInforUser;
+  if (getCookie("user_login")) {
+    dataInforUser = JSON.parse(getCookie("user_login"));
+  } else if (session?.user_login) {
+    dataInforUser = session?.user_login;
+  } else {
+    dataInforUser = null;
+  }
+  console.log('dataInforUser', dataInforUser)
+
+//   const cookie = checkTokenCookie()
+// useEffect(() => {
+//     const fetchDataUser = async () => {
+//         try {
+//             const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
+//                 token: cookie
+//             });
+
+//             if (response) {
+//                 // console.log('response',response?.data?.data);      
+//                 setdataInforUser(response?.data?.data)
+//             } else {
+//                 console.error("Invalid response format for categories");
+//             }
+
+//         } catch (error) {
+//             throw new Error(error)
+//         }
+//     }
+//     fetchDataUser();
+// }, [cookie])
+
   return (
     <Link href={`/category/${product?.id}`} className="slide-content pr-8" key={product?.id}>
       <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
@@ -29,9 +67,10 @@ export default function ProductComponent({ product }) {
           </p>
           <div className="mt-2">
             <span className="text-red-500 mr-2 font-bold text-sm">
-              {product?.sale_price === 0
+              {/* {product?.sale_price === 0
                 ? "Miễn phí"
-                : VND.format(product?.sale_price)}
+                : VND.format(product?.sale_price)} */}
+                  {product.sale_price === 0 || (dataInforUser?.member_pro === 1 && product?.free_pro) ? "Miễn phí" : VND.format(product.sale_price)}
             </span>
             <span className="text-gray-500 line-through">
               {VND.format(product?.price)}

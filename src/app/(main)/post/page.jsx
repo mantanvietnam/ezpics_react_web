@@ -29,22 +29,7 @@ const NewsPage = () => {
     limit: limit,
     page: currentPage,
   }
-  // useEffect(() => {
-  //   const fetchNews = async () => {
-  //     try {
-  //             const response = await axios.post('https://apis.ezpics.vn/apis/getNewPostAPI', {
-  //             });
-  //       // const response = await getPost(searchValue);
-  //       setNews(response?.data?.listData || []);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error('Error fetching news data:', error);
-  //       setLoading(false);
-  //     }
-  //   };
 
-  //   fetchNews();
-  // });
   const fetchNews = async (page) => {
     try {
       const response = await axios.post('https://apis.ezpics.vn/apis/getNewPostAPI', {
