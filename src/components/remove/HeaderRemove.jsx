@@ -25,7 +25,7 @@ const HeaderRemove = () => {
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
-  const isAuth = checkAvailableLogin();
+
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {

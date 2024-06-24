@@ -20,8 +20,16 @@ export default function ProductInfo(props) {
   const [isFavorited, setIsFavorited] = useState(0)
   const [loadingFavorite, setLoadingFavorite] = useState(true)
 
-  const userLogin = JSON.parse(Cookies.get('user_login'))
-  console.log('🚀 ~ ProductInfo ~ userLogin:', userLogin)
+  const user_login = Cookies.get('user_login')
+  let userLogin = null
+  if (user_login) {
+    try {
+      // Parse the user_login JSON string
+      userLogin = JSON.parse(user_login);
+    } catch (error) {
+      console.error('Error parsing user_login JSON:', error);
+    }
+  }
   const token = Cookies.get('token')
 
   const [open, setOpen] = useState(false)

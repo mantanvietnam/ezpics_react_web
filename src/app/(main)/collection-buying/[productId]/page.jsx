@@ -24,7 +24,16 @@ const Product = (props) => {
   const [openBuy, setOpenBuy] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [type, setType] = useState('')
-  const userLogin = JSON.parse(Cookies.get('user_login'))
+  const user_login = Cookies.get('user_login')
+  let userLogin = null
+  if (user_login) {
+    try {
+      // Parse the user_login JSON string
+      userLogin = JSON.parse(user_login);
+    } catch (error) {
+      console.error('Error parsing user_login JSON:', error);
+    }
+  }
   const token = Cookies.get('token')
 
   const showLoading = () => {
