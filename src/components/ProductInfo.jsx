@@ -6,6 +6,8 @@ import Cookies from 'js-cookie'
 import { buyProductAPI, checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from '@/api/product'
 import { toast } from 'react-toastify'
 import { LoadingOutlined } from '@ant-design/icons'
+import Image from 'next/image'
+import images from '../../public/images/index2'
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
@@ -18,7 +20,16 @@ export default function ProductInfo(props) {
   const [isFavorited, setIsFavorited] = useState(0)
   const [loadingFavorite, setLoadingFavorite] = useState(true)
 
-  const userLogin = Cookies.get('user_login')
+  const user_login = Cookies.get('user_login')
+  let userLogin = null
+  if (user_login) {
+    try {
+      // Parse the user_login JSON string
+      userLogin = JSON.parse(user_login);
+    } catch (error) {
+      console.error('Error parsing user_login JSON:', error);
+    }
+  }
   const token = Cookies.get('token')
 
   const [open, setOpen] = useState(false)
@@ -32,6 +43,7 @@ export default function ProductInfo(props) {
       setOpen(true)
     }
   }
+
   const handleOk = async () => {
     try {
       setConfirmLoading(true)
@@ -40,7 +52,6 @@ export default function ProductInfo(props) {
         token: token,
         type: type
       })
-      console.log('🚀 ~ handleOk ~ response.messages[0].text:', response.messages[0].text)
       if (response.code === 0) {
         toast.success('Bạn đã mua thiết kế thành công')
       } else {
@@ -408,6 +419,31 @@ export default function ProductInfo(props) {
             <Radio value=''>Mua bằng tiền tài khoản</Radio>
             <Radio value='ecoin'>Mua bằng ecoin</Radio>
           </Radio.Group>
+          <div className='flex gap-3 justify-end'>
+            <div className='text-sm'>Số dư:</div>
+            <div className='flex flex-col gap-1'>
+              <div className="flex items-center text-slate-500">
+                <Image
+                  src={images.balance}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="rounded-full pr-1"
+                />{" "}
+                <p>: {VND.format(userLogin?.account_balance)}</p>
+              </div>
+              <div className="flex items-center text-slate-500">
+                <Image
+                  src={images.eCoin}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="rounded-full pr-1"
+                />{" "}
+                <p>: {userLogin?.ecoin} eCoin</p>
+              </div>
+            </div>
+          </div>
           <div className='flex gap-2 justify-end mb-[20px] items-center'>
             <div className='text-lg font-semibold'>Tổng tiền:</div>
             <div className='text-lg font-semibold'>{type === 'ecoin' ? `${data?.ecoin} eCoin` : VND.format(data?.sale_price)}</div>

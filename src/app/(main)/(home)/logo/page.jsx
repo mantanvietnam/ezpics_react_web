@@ -1,7 +1,7 @@
-import LogoProductSlider from '@/components/Slide/logoProductSlider'
+"use client";
+
+import LogoProductSlider from "@/components/Slide/logoProductSlider";
 
 export default function Page() {
-  return (
-    <LogoProductSlider />
-  )
+  return <LogoProductSlider />;
 }

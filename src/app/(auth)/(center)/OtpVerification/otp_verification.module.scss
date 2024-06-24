@@ -1,0 +1,86 @@
+.formOtpVerification {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: url('../../../../styles/image/background.jpg') no-repeat center center / cover;
+    padding: 1rem;
+  
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .backgroundform{
+            background: antiquewhite;
+            padding: 50px;
+            text-align: center; border-radius: 10%;
+            box-shadow: 0 0 10px black;
+    }
+    .btnSendOtp{
+        padding: 10px 20px;
+        color: white;
+        background-color: rgb(251, 107, 107);
+        border-radius: 10px;
+
+    }
+    .btnSendOtp:hover{
+        padding: 10px 20px;
+        color:  yellow;
+        background-color: red;
+
+
+    }
+    .formSubmit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  
+      .groupInput {
+        display: flex;
+        gap: 0.5rem;
+      }
+  
+      .otpInput {
+        width: 3rem;
+        height: 3rem;
+        text-align: center;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 1.25rem;
+        transition: border-color 0.2s;
+  
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+      }
+  
+      .btnVerifyOtp,
+      .btnResendOtp {
+        background-color: #3b82f6;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        margin-top: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+  
+        &:hover {
+          background-color: #2563eb;
+        }
+      }
+  
+      .btnResendOtp {
+        background-color: #6b7280;
+  
+        &:hover {
+          background-color: #4b5563;
+        }
+      }
+    }
+  }
+  

@@ -25,7 +25,7 @@ const HeaderRemove = () => {
 
   const dispatch = useDispatch();
   const { data: session } = useSession();
-  const isAuth = checkAvailableLogin();
+
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -148,22 +148,35 @@ const HeaderRemove = () => {
       formData.append("token", checkTokenCookie());
 
       // Gửi yêu cầu POST để tải lên tệp và nhận phản hồi từ máy chủ
-      const response = await axios.post(
-        `${network}/removeBackgroundImageAPI`,
-        formData,
-        config
-      );
+      try {
+        const response = await axios.post(
+          `${network}/removeBackgroundImageAPI`,
+          formData,
+          config
+        );
 
-      // Kiểm tra phản hồi từ máy chủ
-      if (response && response.data) {
-        // Đặt lại trạng thái đang tải lên là false
+        // Kiểm tra phản hồi từ máy chủ
+        if (response && response.data) {
+          // Đặt lại trạng thái đang tải lên là false
+          setLoadingRemove(false);
+
+          // Lưu URL của hình ảnh đã tải lên
+          setUploadedImageUrl(response.data.linkOnline);
+
+          // Mở rộng modal để hiển thị hình ảnh đã tải lên
+          setModalExtend(true);
+        } else {
+          // Xử lý trường hợp phản hồi không có dữ liệu
+          console.error("Response does not contain data");
+          setLoadingRemove(false);
+        }
+      } catch (error) {
+        // Xử lý lỗi khi gửi yêu cầu hoặc phản hồi từ máy chủ
+        console.error(
+          "An error occurred while removing background image:",
+          error
+        );
         setLoadingRemove(false);
-
-        // Lưu URL của hình ảnh đã tải lên
-        setUploadedImageUrl(response.data.linkOnline);
-
-        // Mở rộng modal để hiển thị hình ảnh đã tải lên
-        setModalExtend(true);
       }
     }
   };
@@ -258,7 +271,7 @@ const HeaderRemove = () => {
             <img
               src={uploadedImageUrl}
               alt="Uploaded"
-              className="max-w-[200px] h-auto rounded-lg mt-5"
+              className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] object-cover rounded-lg mt-5"
             />
           )}
           <div>

@@ -196,3 +196,19 @@ export const buyProductAPI = async (data) => {
   );
   return response.data;
 };
+
+export const buyWarehousesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/buyWarehousesAPI",
+    data
+  );
+  return response.data;
+};
+
+export const getInfoWarehouseApi = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/getInfoWarehouseAPI",
+    data
+  );
+  return response.data;
+};
