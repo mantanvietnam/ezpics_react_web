@@ -19,6 +19,19 @@ import "./modal.css";
 import check from "./check.png";
 import remove from "./magic-wand (1).png";
 import Image from "next/image";
+import { checkTokenCookie } from "@/utils";
+
+interface CurrentItem {
+  link: string;
+  width: string;
+  height: string;
+  // Các thuộc tính khác nếu cần
+}
+
+interface Position {
+  top: number;
+  left: number;
+}
 
 export default function Templates() {
   const inputFileRef = React.useRef<HTMLInputElement>(null);
@@ -166,7 +179,7 @@ export default function Templates() {
     async function fetchData() {
       try {
         const response = await axios.post<any>(`${network}/listImage`, {
-          token: token,
+          token: checkTokenCookie(),
         });
         setTemplates(response.data.data);
         setIsLoading(false);
@@ -183,7 +196,7 @@ export default function Templates() {
   const setIsSidebarOpen = useSetIsSidebarOpen();
   const { setCurrentScene, currentScene } = useDesignEditorContext();
   const idProduct = useAppSelector((state) => state.token.id);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState<Position>({ top: 0, left: 0 });
   const [currentItem, setCurrentItem] = useState(null);
   // const [modalOpen, setModalOpen] = useState(false);
   const closeModal = () => {
@@ -480,7 +493,7 @@ export default function Templates() {
                 <Modal
                   onClose={closeModal}
                   // item={item}
-                  position={position}
+                  // position={position}
                   // onClick={onClick}
                   currentItem={currentItem}
                   onClick={() => handleImage(currentItem)}
@@ -592,7 +605,7 @@ function ImageItem({
             },
           })}
         ></div>
-        <Image
+        <img
           src={preview}
           alt=""
           className={css({
@@ -621,24 +634,33 @@ const Modal = ({
   // const editor = useEditor();
 
   const proUser = useAppSelector((state) => state.token.proUser);
-  const downloadImage = async (fileName: any) => {
+  const downloadImage = async (fileName: string) => {
     loadingTrue();
     try {
+      if (!currentItem || !currentItem.link) {
+        throw new Error("Invalid item or missing link");
+      }
+
       // Fetch the image data
       const response = await fetch(currentItem.link);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const blob = await response.blob();
 
       // Create a link element and trigger the download
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = fileName;
+      document.body.appendChild(link); // Append to body to ensure click works in all browsers
       link.click();
 
       // Release the object URL to free up resources
       window.URL.revokeObjectURL(link.href);
-      loadingFalse();
+      document.body.removeChild(link); // Remove from body after click
     } catch (error) {
       console.error("Error downloading image:", error);
+    } finally {
       loadingFalse();
     }
   };
@@ -822,8 +844,8 @@ const Modal = ({
     <div
       style={{
         position: "fixed",
-        top: position?.top,
-        left: position?.left,
+        top: position.top,
+        left: position.left,
         background: "#fff",
         width: "160px",
         border: "1px solid #ccc",
@@ -837,12 +859,16 @@ const Modal = ({
     >
       {/* */}
       <div className="my-div" onClick={onClick}>
-        <img src={check} alt="" style={{ width: 15, height: 15 }} />
+        <img src="./check.png" alt="" style={{ width: 15, height: 15 }} />
         {"\u00A0"}Sử dụng
       </div>
       {/*  */}
       <div className="my-div" onClick={() => removeBackground("storageKey")}>
-        <img src={remove} alt="" style={{ width: 15, height: 15 }} />
+        <img
+          src="./magic-wand (1).png"
+          alt=""
+          style={{ width: 15, height: 15 }}
+        />
         {"\u00A0"}Xóa nền
         <img
           src="../../../../../../assets/premium.png"

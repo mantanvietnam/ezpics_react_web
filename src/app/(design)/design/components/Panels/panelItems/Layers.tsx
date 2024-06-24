@@ -23,13 +23,19 @@ import { toast } from "react-toastify";
 import { loadFonts } from "../../../../../../utils/media/fonts";
 import { FontItem } from "../../../../../../interfaces/common";
 import Image from "next/image";
+import { checkTokenCookie } from "@/utils";
+import { RootState } from "@/redux/store";
+
 export default function Layers() {
   const inputFileRef = React.useRef<HTMLInputElement>(null);
   const [uploads, setUploads] = React.useState<any[]>([]);
   const network = useAppSelector((state) => state.network.ipv4Address);
-  const token = useAppSelector((state) => state.token.token);
   const [loading, setLoading] = React.useState(false);
   const { currentDesign, scenes } = useDesignEditorContext();
+  // const token = useAppSelector((state) => state.token.token);
+  const token = checkTokenCookie();
+  const idProduct = useAppSelector((state: RootState) => state?.token?.id);
+
   const addObject = async () => {
     if (editor) {
       const font: FontItem = {
@@ -88,7 +94,6 @@ export default function Layers() {
   const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
   const setIsSidebarOpen = useSetIsSidebarOpen();
   const { setActiveSubMenu } = useAppContext();
-  const idProduct = useAppSelector((state) => state?.token?.id);
 
   const dispatch = useAppDispatch();
   const objectMetadata = (object: any) => {
@@ -183,7 +188,9 @@ export default function Layers() {
       }
     );
     console.log(res.data);
-    console.log(files);
+    console.log(file);
+    console.log(idProduct);
+    console.log(token);
 
     if (res.data.code === 1) {
       console.log(
@@ -310,32 +317,32 @@ export default function Layers() {
                   }}
                 >
                   {object?.metadata?.variable !== "" && (
-                    // <Button
-                    //   kind={KIND.tertiary}
-                    //   size={SIZE.mini}
-                    //   onClick={() => objectMetadata(object)}
-                    //   overrides={{
-                    //     Root: {
-                    //       style: {
-                    //         paddingLeft: "4px",
-                    //         paddingRight: "4px",
-                    //       },
-                    //     },
-                    //   }}
-                    // >
-                    <Image
-                      src={Lighting}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        paddingLeft: "4px",
-                        paddingRight: "4px",
-                        paddingTop: "2px",
-                      }}
-                      alt=""
+                    <Button
+                      kind={KIND.tertiary}
+                      size={SIZE.mini}
                       onClick={() => objectMetadata(object)}
-                    />
-                    // </Button>
+                      overrides={{
+                        Root: {
+                          style: {
+                            paddingLeft: "4px",
+                            paddingRight: "4px",
+                          },
+                        },
+                      }}
+                    >
+                      <img
+                        src="./setting.png"
+                        style={{
+                          width: 18,
+                          height: 18,
+                          paddingLeft: "4px",
+                          paddingRight: "4px",
+                          paddingTop: "2px",
+                        }}
+                        alt=""
+                        onClick={() => objectMetadata(object)}
+                      />
+                    </Button>
                   )}
                   {object.locked ? (
                     <Button
