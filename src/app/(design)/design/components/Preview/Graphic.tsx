@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import { generateToServer } from "@/api/gererateToServer";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-export default function () {
+export default function Graphic() {
   const editor = useEditor();
   const [loading, setLoading] = React.useState(true);
   const {
@@ -189,70 +189,69 @@ export default function () {
       const image = (await editor.renderer.render(template)) as string;
       setLoading(false);
       if (image) {
-        // const res = await axios.post(`${network}/addListLayerAPI`, {
-        //   idProduct: idProduct,
-        //   token: token,
-        //   listLayer: JSON.stringify(parseGraphicJSON()),
-        // });
-        // if (res.data.code === 1) {
-        //   setState({ image });
-        //   // const imageFile = await fetch(image).then((res) => res.blob());
-        //   // await handleConversion(image, "preview.png")
-        //   const base64Data = image.split(",")[1];
-        //   console.log(base64Data, image);
+        const res = await axios.post(`${network}/addListLayerAPI`, {
+          idProduct: idProduct,
+          token: token,
+          listLayer: JSON.stringify(parseGraphicJSON()),
+        });
+        if (res.data.code === 1) {
+          setState({ image });
+          // const imageFile = await fetch(image).then((res) => res.blob());
+          // await handleConversion(image, "preview.png")
+          const base64Data = image.split(",")[1];
+          console.log(base64Data, image);
 
-        //   // Convert base64 to a Blob
-        //   const blob = new File([base64Data], image, { type: "image/png" });
+          // Convert base64 to a Blob
+          const blob = new File([base64Data], image, { type: "image/png" });
 
-        //   // Create a FormData object
-        //   const formData = new FormData();
+          // Create a FormData object
+          const formData = new FormData();
 
-        //   formData.append("file", base64toFile(image,'preview.png'));
-        //   formData.append("idProduct", idProduct);
-        //   formData.append("token", token);
+          formData.append("file", base64toFile(image, "preview.png"));
+          formData.append("idProduct", idProduct);
+          formData.append("token", token);
 
-        //   try {
-        //     // Make an Axios POST request with the FormData
-        //     const response = await axios.post(
-        //       `${network}/saveImageProductAPI`,
-        //       formData,
-        //       {
-        //         headers: {
-        //           "Content-Type": "multipart/form-data",
-        //         },
-        //       }
-        //     );
+          try {
+            // Make an Axios POST request with the FormData
+            const response = await axios.post(
+              `${network}/saveImageProductAPI`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );
 
-        //     console.log("File uploaded successfully:", response.data);
-        //     if (response.data.code === 1) {
-        //       downloadImage(image, "preview.png");
-        //     }
-
-        //   } catch (error) {
-        //     console.error("Error uploading file:", error);
-        //   }
-        //   toast("Xuất ảnh thành công !! 🦄", {
-        //     position: "top-left",
-        //     autoClose: 2000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: false,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: "dark",
-        //   });
-        // } else {
-        //   toast("Xuất ảnh thất bại !! 🦄", {
-        //     position: "top-left",
-        //     autoClose: 2000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: false,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: "dark",
-        //   });
-        // }
+            console.log("File uploaded successfully:", response.data);
+            if (response.data.code === 1) {
+              downloadImage(image, "preview.png");
+            }
+          } catch (error) {
+            console.error("Error uploading file:", error);
+          }
+          toast("Xuất ảnh thành công !! 🦄", {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        } else {
+          toast("Xuất ảnh thất bại !! 🦄", {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
         downloadImage(image, "preview.png");
 
         setState({ image });
@@ -303,8 +302,7 @@ export default function () {
         justifyContent: "center",
         display: "flex",
         padding: "5rem",
-      }}
-    >
+      }}>
       {!loading && <img width={"auto"} height={"100%"} src={state.image} />}
     </Block>
   );

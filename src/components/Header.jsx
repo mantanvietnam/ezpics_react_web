@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "../redux/slices/user/userSlice";
 import { logoutService } from "@/api/auth";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Header = ({ toggleNavbar }) => {
   const router = useRouter();
@@ -29,33 +30,37 @@ const Header = ({ toggleNavbar }) => {
   const { data: session } = useSession();
   const isAuth = checkAvailableLogin();
   const [dataInforUsercheck, setdataInforUsercheck] = useState(null);
-  const cookie = checkTokenCookie()
+  const cookie = checkTokenCookie();
 
   useEffect(() => {
     const fetchDataUser = async () => {
       try {
-        const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
-          token: cookie
-        });
+        const response = await axios.post(
+          "https://apis.ezpics.vn/apis/getInfoMemberAPI",
+          {
+            token: cookie,
+          }
+        );
         if (response) {
-          setdataInforUsercheck(response?.data?.data)
+          setdataInforUsercheck(response?.data?.data);
         } else {
           console.error("Invalid response format for categories");
         }
       } catch (error) {
-        throw new Error(error)
+        throw new Error(error);
       }
-
-    }
+    };
     fetchDataUser();
-  }, [cookie])
+  }, [cookie]);
   if (dataInforUsercheck?.otp != null) {
     setTimeout(() => {
-      toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
-      router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
-    }, 10000)
+      toast.warning(
+        "Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực"
+      );
+      router.push("/OtpVerification"); // Redirect to a welcome page or dashboard after successful verification
+    }, 10000);
   }
-  console.log('dataInforUser',)
+  console.log("dataInforUser");
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -456,201 +461,201 @@ const Header = ({ toggleNavbar }) => {
           <div className="p-3 mr-4 icon-primary">
             <button onClick={() => toggleNavbar()}>
               <BarsOutlined style={{ fontSize: "20px" }} />
-          </button>
-        </div>
-        <div className="logo flex items-center justify-center">
-          <Link href="/" className="flex flex-center">
-            <Image
-              className="object-contain rounded_image inline"
-              priority={true}
-              src={images.logo}
-              style={{ maxWidth: "40px", maxHeight: "40px" }}
-              alt="Ezpics Logo"
-            />
-          </Link>
-        </div>
-
-        <div className="relative items-center hidden md:flex">
-          <div className="flex overflow-hidden">
-            {menuItems.map((menuItem, index) => (
-              // <Link
-              //   key={index}
-              //   href={menuItem.href}
-              //   className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
-              //     menuItem.hiddenOn
-              //   )}`}>
-              //   {menuItem.label}
-              // </Link>
-
-              <div
-                key={index}
-                className={`${getHiddenClass(menuItem.hiddenOn)}`}>
-                {!menuItem.subMenu ? (
-                  <Link
-                    href={menuItem.href}
-                    className="primary_btn pl-10 whitespace-nowrap">
-                    {menuItem.label}
-                  </Link>
-                ) : (
-                  <div>
-                    <button
-                      className="primary_btn pl-10 whitespace-nowrap flex items-center"
-                      onClick={() => toggleSubmenu()}>
-                      {menuItem.label}
-                      <DownOutlined className="ml-2" />
-                    </button>
-                    {submenuVisible && (
-                      <div className="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                        {menuItem.subMenu.map((subItem, subIndex) => (
-                          <Link
-                            key={subIndex}
-                            href={subItem.href}
-                            className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
-                            {subItem.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="relative">
-            <button
-              className="text-xl pl-10 xl:hidden"
-              onClick={() => toggleDropdown()}>
-              <EllipsisOutlined />
             </button>
-            {dropdownVisible && (
-              <div className="absolute right-[-85px] mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                {menuItems.map(
-                  (menuItem, index) =>
-                    shouldShowInDropdown(menuItem.hiddenOn) &&
-                    (!menuItem.subMenu ? (
-                      <Link
-                        key={index}
-                        href={menuItem.href}
-                        className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
-                        {menuItem.label}
-                      </Link>
-                    ) : (
-                      <div key={index} className="relative">
-                        <button
-                          className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap flex items-center w-full text-left"
-                          onClick={() => toggleSubmenu()}>
-                          {menuItem.label}
-                          <RightOutlined className="ml-2" />
-                        </button>
-                        {submenuVisible && (
-                          <div className="absolute top-0 left-[102%] w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                            {menuItem.subMenu.map((subItem, subIndex) => (
-                              <Link
-                                key={subIndex}
-                                href={subItem.href}
-                                className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
-                                {subItem.label}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))
-                )}
-              </div>
-            )}
           </div>
-        </div>
-      </div>
+          <div className="logo flex items-center justify-center">
+            <Link href="/" className="flex flex-center">
+              <Image
+                className="object-contain rounded_image inline"
+                priority={true}
+                src={images.logo}
+                style={{ maxWidth: "40px", maxHeight: "40px" }}
+                alt="Ezpics Logo"
+              />
+            </Link>
+          </div>
 
-      <div className="action flex justify-center items-center">
-        <div className="hidden sm:flex">
-          {actionIcons.map((social, index) =>
-            index === 2 ? (
-              <div className="icon-container" key={index}>
-                <div className="p-3 icon-primary">{social.icon}</div>
-                <div className="desc">{social.desc}</div>
-              </div>
-            ) : (
-              <Link className="icon-container" href={social.href} key={index}>
-                <div className="p-3 icon-primary">{social.icon}</div>
-                <div className="desc">{social.desc}</div>
-              </Link>
-            )
-          )}
-        </div>
-        <Dropdown
-          trigger={["click"]}
-          placement="bottomRight"
-          arrow={true}
-          dropdownRender={() => (
-            <div
-              style={{
-                maxHeight: "400px",
-                background: "white",
-                overflowY: "overlay",
-                borderRadius: "10px",
-                scrollbarWidth: "thin",
-                scrollbars: "false",
-              }}>
-              {items.map((item) => (
-                <div key={item.key}>{item.label}</div>
+          <div className="relative items-center hidden md:flex">
+            <div className="flex overflow-hidden">
+              {menuItems.map((menuItem, index) => (
+                // <Link
+                //   key={index}
+                //   href={menuItem.href}
+                //   className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
+                //     menuItem.hiddenOn
+                //   )}`}>
+                //   {menuItem.label}
+                // </Link>
+
+                <div
+                  key={index}
+                  className={`${getHiddenClass(menuItem.hiddenOn)}`}>
+                  {!menuItem.subMenu ? (
+                    <Link
+                      href={menuItem.href}
+                      className="primary_btn pl-10 whitespace-nowrap">
+                      {menuItem.label}
+                    </Link>
+                  ) : (
+                    <div>
+                      <button
+                        className="primary_btn pl-10 whitespace-nowrap flex items-center"
+                        onClick={() => toggleSubmenu()}>
+                        {menuItem.label}
+                        <DownOutlined className="ml-2" />
+                      </button>
+                      {submenuVisible && (
+                        <div className="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                          {menuItem.subMenu.map((subItem, subIndex) => (
+                            <Link
+                              key={subIndex}
+                              href={subItem.href}
+                              className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                              {subItem.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
-          )}>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              <button className="button-red whitespace-nowrap">
-                Tạo thiết kế
+            <div className="relative">
+              <button
+                className="text-xl pl-10 xl:hidden"
+                onClick={() => toggleDropdown()}>
+                <EllipsisOutlined />
               </button>
-            </Space>
-          </a>
-        </Dropdown>
-        {isAuth ? (
-          <div>
-            {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
-
-            <Dropdown
-              trigger={["click"]}
-              placement="bottomRight"
-              arrow={true}
-              dropdownRender={() => (
-                <div
-                  style={{
-                    maxHeight: "400px",
-                    background: "white",
-                    overflowY: "overlay",
-                    borderRadius: "10px",
-                    scrollbarWidth: "thin",
-                    scrollbars: "false",
-                  }}>
-                  {itemsDropdowUser.map((item) => (
-                    <div key={item.key}>{item.label}</div>
-                  ))}
+              {dropdownVisible && (
+                <div className="absolute right-[-85px] mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                  {menuItems.map(
+                    (menuItem, index) =>
+                      shouldShowInDropdown(menuItem.hiddenOn) &&
+                      (!menuItem.subMenu ? (
+                        <Link
+                          key={index}
+                          href={menuItem.href}
+                          className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                          {menuItem.label}
+                        </Link>
+                      ) : (
+                        <div key={index} className="relative">
+                          <button
+                            className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap flex items-center w-full text-left"
+                            onClick={() => toggleSubmenu()}>
+                            {menuItem.label}
+                            <RightOutlined className="ml-2" />
+                          </button>
+                          {submenuVisible && (
+                            <div className="absolute top-0 left-[102%] w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                              {menuItem.subMenu.map((subItem, subIndex) => (
+                                <Link
+                                  key={subIndex}
+                                  href={subItem.href}
+                                  className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                                  {subItem.label}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                  )}
                 </div>
-              )}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                    <img
-                      className="w-full h-full object-cover rounded-full"
-                      alt="User Avatar"
-                      src={dataInforUser?.avatar}
-                    />
-                  </div>
-                </Space>
-              </a>
-            </Dropdown>
+              )}
+            </div>
           </div>
-        ) : (
-          <div>
-            <button
-              className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
-              onClick={() => {
-                router.push("/sign-in");
-              }}>
-              <UserOutlined />
-              <p className="pl-2">Đăng nhập</p>
+        </div>
+
+        <div className="action flex justify-center items-center">
+          <div className="hidden sm:flex">
+            {actionIcons.map((social, index) =>
+              index === 2 ? (
+                <div className="icon-container" key={index}>
+                  <div className="p-3 icon-primary">{social.icon}</div>
+                  <div className="desc">{social.desc}</div>
+                </div>
+              ) : (
+                <Link className="icon-container" href={social.href} key={index}>
+                  <div className="p-3 icon-primary">{social.icon}</div>
+                  <div className="desc">{social.desc}</div>
+                </Link>
+              )
+            )}
+          </div>
+          <Dropdown
+            trigger={["click"]}
+            placement="bottomRight"
+            arrow={true}
+            dropdownRender={() => (
+              <div
+                style={{
+                  maxHeight: "400px",
+                  background: "white",
+                  overflowY: "overlay",
+                  borderRadius: "10px",
+                  scrollbarWidth: "thin",
+                  scrollbars: "false",
+                }}>
+                {items.map((item) => (
+                  <div key={item.key}>{item.label}</div>
+                ))}
+              </div>
+            )}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                <button className="button-red whitespace-nowrap">
+                  Tạo thiết kế
+                </button>
+              </Space>
+            </a>
+          </Dropdown>
+          {isAuth ? (
+            <div>
+              {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
+
+              <Dropdown
+                trigger={["click"]}
+                placement="bottomRight"
+                arrow={true}
+                dropdownRender={() => (
+                  <div
+                    style={{
+                      maxHeight: "400px",
+                      background: "white",
+                      overflowY: "overlay",
+                      borderRadius: "10px",
+                      scrollbarWidth: "thin",
+                      scrollbars: "false",
+                    }}>
+                    {itemsDropdowUser.map((item) => (
+                      <div key={item.key}>{item.label}</div>
+                    ))}
+                  </div>
+                )}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <div className="w-10 h-10 rounded-full overflow-hidden m-5">
+                      <img
+                        className="w-full h-full object-cover rounded-full"
+                        alt="User Avatar"
+                        src={dataInforUser?.avatar}
+                      />
+                    </div>
+                  </Space>
+                </a>
+              </Dropdown>
+            </div>
+          ) : (
+            <div>
+              <button
+                className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
+                onClick={() => {
+                  router.push("/sign-in");
+                }}>
+                <UserOutlined />
+                <p className="pl-2">Đăng nhập</p>
               </button>
             </div>
           )}

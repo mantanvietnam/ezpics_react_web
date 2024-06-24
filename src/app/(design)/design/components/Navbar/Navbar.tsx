@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
-import { styled, ThemeProvider, DarkTheme } from "baseui";
+import { styled, ThemeProvider, DarkTheme, LightTheme } from "baseui";
 import { Theme } from "baseui/theme";
 import { Button, KIND } from "baseui/button";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
@@ -719,7 +719,6 @@ export default function Navbar() {
   };
 
   return (
-    // @ts-ignore
     <>
       <ThemeProvider theme={DarkTheme}>
         <Container>
