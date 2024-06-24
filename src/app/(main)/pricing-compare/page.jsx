@@ -20,7 +20,7 @@ const Page = () => {
 
   return (
     <div className="w-full">
-      <h1 className="min-h-[20%] flex justify-center text-5xl font-bold pt-[8%] bg-radial-gradient">
+      <h1 className="min-h-[4%] mobile:min-h-[6%] md:min-h-[10%] xl:min-h-[20%] flex justify-center text-xl mobile:text-2xl xl:text-5xl font-bold pt-[8%] bg-radial-gradient whitespace-nowra">
         Thiết kế
         <span
           className="px-2.5 text-transparent"
@@ -33,49 +33,57 @@ const Page = () => {
         với gói đăng ký phù hợp
       </h1>
 
-      <div className="flex flex-row pt-[6%] px-[5%]">
-        <div className="w-1/3">
-          <h1 className="text-xl font-bold">Tính toán cho đội của bạn</h1>
+      <div className="md:flex flex-row pt-[6%] px-[2%] xl:px-[5%]">
+        <div className="w-full md:w-1/3">
+          <h1 className="text-xl font-bold w-[90%] pb-4">
+            Tính toán cho đội của bạn
+          </h1>
         </div>
-        <div className="w-1/3">
-          <p className="text-base pb-2">Số lượng thành viên</p>
-          <div className="w-[90%] h-[80%] flex items-center justify-around border-solid border border-slate-400 rounded-lg">
-            <input
-              type="text"
-              placeholder="Tùy chỉnh"
-              className="bg-white border-none text-base outline-none p-2"
-            />
-            <p>thành viên</p>
+        <div className="mobile:flex w-full md:w-2/3">
+          <div className="mobile:w-1/2">
+            <p className="text-base pb-2 mobile:h-[56px] w-[90%]">
+              Số lượng thành viên
+            </p>
+            <div className="w-full mobile:w-[90%] h-[60%] xl:h-[80%] flex items-center justify-around border-solid border border-slate-400 rounded-lg">
+              <input
+                type="text"
+                placeholder="Tùy chỉnh"
+                className="bg-white border-none text-base outline-none p-2 w-[80%] mobile:w-[50%] xl:w-[70%]"
+              />
+              <p>thành viên</p>
+            </div>
           </div>
-        </div>
-        <div className="w-1/3">
-          <p className="text-base pb-2">
-            <strong className="font-bold">Chu kì: </strong>
-            <span style={{ color: "rgb(139, 61, 255);" }}>Tiết kiệm 16% </span>
-            khi thanh toán theo năm
-          </p>
-          <div className="w-[90%] h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
-            <button
-              className={`w-[90%] h-[80%] rounded-lg ${
-                selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
-              }`}
-              onClick={() => handleButtonClick("monthly")}>
-              Hàng tháng
-            </button>
-            <button
-              className={`w-[90%] h-[80%] rounded-lg ${
-                selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
-              }`}
-              onClick={() => handleButtonClick("yearly")}>
-              Hàng năm
-            </button>
+          <div className="mobile:w-1/2">
+            <p className="text-base pb-2 mobile:h-[56px] w-[90%]">
+              <strong className="font-bold">Chu kì: </strong>
+              <span style={{ color: "rgb(139, 61, 255);" }}>
+                Tiết kiệm 16%{" "}
+              </span>
+              khi thanh toán theo năm
+            </p>
+            <div className="w-full mobile:w-[90%] h-[50px] mobile:h-[60%] xl:h-[80%] flex items-center border-solid border border-slate-400 rounded-lg px-2">
+              <button
+                className={`w-[90%] h-[80%] rounded-lg ${
+                  selected === "monthly" ? "bg-[rgb(255,66,78)] text-white" : ""
+                }`}
+                onClick={() => handleButtonClick("monthly")}>
+                Hàng tháng
+              </button>
+              <button
+                className={`w-[90%] h-[80%] rounded-lg ${
+                  selected === "yearly" ? "bg-[rgb(255,66,78)] text-white" : ""
+                }`}
+                onClick={() => handleButtonClick("yearly")}>
+                Hàng năm
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row pt-[6%] px-[5%]">
-        <div className="w-1/3">
-          <div className="w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
+      <div className="flex flex-col md:flex-row pt-[6%] px-[2%] xl:px-[5%]">
+        <div className="w-full md:w-1/3 mb-3">
+          <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="h-10 flex">
               <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black p-[2%]">
                 Dành cho một người
@@ -91,7 +99,7 @@ const Page = () => {
             <p className="text-sm font-normal my-3">
               /năm dành cho một thành viên
             </p>
-            <button className="flex justify-center items-center w-full bg-[#515558] border-0 pt-2.5 pb-2.5 mt-[15%] rounded-[5px] text-white">
+            <button className="flex justify-center items-center w-full bg-[#515558] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white">
               <Link href="/">Bắt đầu</Link>
             </button>
           </div>
@@ -107,8 +115,8 @@ const Page = () => {
             showContactInfo={false}
           />
         </div>
-        <div className="w-1/3">
-          <div className="w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
+        <div className="w-full md:w-1/3 mb-3">
+          <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="flex justify-between h-10">
               <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
                 Dành cho một người
@@ -142,7 +150,7 @@ const Page = () => {
             )}
             <button
               onClick={() => setOpen(true)}
-              className="flex justify-center items-center w-full bg-[rgb(255,66,78)] border-0 pt-2.5 pb-2.5 mt-[15%] rounded-[5px] text-white">
+              className="flex justify-center items-center w-full bg-[rgb(255,66,78)] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white">
               Bắt đầu bản dùng thử
             </button>
           </div>
@@ -161,8 +169,8 @@ const Page = () => {
             showContactInfo={false}
           />
         </div>
-        <div className="w-1/3">
-          <div className="w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
+        <div className="w-full md:w-1/3 mb-3">
+          <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="flex justify-between h-10">
               <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
                 Dành cho một người
@@ -196,7 +204,7 @@ const Page = () => {
             )}
             <button
               onClick={() => setOpen(true)}
-              className="flex justify-center items-center w-full bg-[rgb(255,66,78)] border-0 pt-2.5 pb-2.5 mt-[15%] rounded-[5px] text-white">
+              className="flex justify-center items-center w-full bg-[rgb(255,66,78)] border-0 pt-2.5 pb-2.5 md:mt-[15%] rounded-[5px] text-white">
               Bắt đầu mua và trải nghiệm
             </button>
           </div>
@@ -222,16 +230,16 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="w-full h-30 border-t border-[rgb(225,228,231)] flex justify-between items-center py-[3%] px-[5%] mt-10">
-        <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3">
+      <div className="w-full h-30 border-t border-[rgb(225,228,231)] mobile:flex justify-between items-center py-[3%] pl-[5%] mobile:px-[5%] mt-5 mobile:mt-10">
+        <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3 pb-3">
           <GlobalOutlined className="text-xl" />
           <p className="pr-[2%] pl-[2%] my-3 text-[rgb(13,18,22)] text-sm">
             Tiếng Việt (Việt Nam)
           </p>
           <DownOutlined />
         </button>
-        <p>© 2024 Mọi quyền được bảo lưu, Ezpics®</p>
-        <a href="https://www.facebook.com/ezpicsvn">
+        <p className="pb-3">© 2024 Mọi quyền được bảo lưu, Ezpics®</p>
+        <a href="https://www.facebook.com/ezpicsvn" className="pb-3">
           <img src="/images/fb_logo.png" alt="" className="w-[20px] h-[20px]" />
         </a>
       </div>

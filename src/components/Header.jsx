@@ -5,6 +5,7 @@ import {
   DesktopOutlined,
   SettingOutlined,
   UserOutlined,
+  EllipsisOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +13,7 @@ import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
 import { Divider, Dropdown, Space } from "antd";
 import images, { designIcon } from "../../public/images/index2";
+import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
@@ -38,19 +40,19 @@ const Header = ({ toggleNavbar }) => {
       token: checkTokenCookie(),
     });
     await signOut({});
-    if (response && response?.code === 0) {
-      document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      dispatch(DELETE_ALL_VALUES());
-    }
+    // if (response && response?.code === 0) {
+    document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    dispatch(DELETE_ALL_VALUES());
+    // }
   };
 
   const menuItems = [
-    { href: "/", label: "Trang chủ" },
-    { href: "/new-product", label: "Thiết kế mới " },
-    { href: "/pricing-compare", label: "Bảng giá" },
-    { href: "/", label: "Hướng dẫn" },
-    { href: "/", label: "Nhà phát triển" },
+    { href: "/", label: "Trang chủ", hiddenOn: "sm" },
+    { href: "/new-product", label: "Thiết kế mới", hiddenOn: "lg" },
+    { href: "/pricing-compare", label: "Bảng giá", hiddenOn: "lg" },
+    { href: "/guide", label: "Hướng dẫn", hiddenOn: "xl" },
+    { href: "/developer", label: "Nhà phát triển", hiddenOn: "xl" },
   ];
 
   const actionIcons = [
@@ -296,7 +298,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <Link href={'/page-satisfied/your-design'} className="list-item">
+        <Link href={"/page-satisfied/your-design"} className="list-item">
           <p className="item-text">Trang cá nhân</p>
         </Link>
       ),
@@ -344,6 +346,55 @@ const Header = ({ toggleNavbar }) => {
     },
   ];
 
+  //Responsive header
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getHiddenClass = (hiddenOn) => {
+    switch (hiddenOn) {
+      case "xl":
+        return windowWidth <= 1280 ? "hidden" : "";
+      case "lg":
+        return windowWidth <= 1024 ? "hidden" : "";
+      case "md":
+        return windowWidth <= 768 ? "hidden" : "";
+      case "xs":
+        return "";
+      default:
+        return "";
+    }
+  };
+
+  const shouldShowInDropdown = (hiddenOn) => {
+    switch (hiddenOn) {
+      case "xl":
+        return windowWidth < 1280;
+      case "lg":
+        return windowWidth < 1024;
+      case "md":
+        return windowWidth < 768;
+      case "xs":
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
   return (
     <SessionProvider>
       <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
@@ -351,34 +402,60 @@ const Header = ({ toggleNavbar }) => {
           <div className="p-3 mr-4 icon-primary">
             <button onClick={() => toggleNavbar()}>
               <BarsOutlined style={{ fontSize: "20px" }} />
-            </button>
-          </div>
-          <div className="logo flex items-center justify-center">
-            <Link href="/" className="flex flex-center">
-              <Image
-                className="object-contain rounded_image"
-                priority={true}
-                src={images.logo}
-                width={40}
-                height={44}
-                alt="Ezpics Logo"
-              />
-            </Link>
-          </div>
-  
-          <div className="menu flex">
+          </button>
+        </div>
+        <div className="logo flex items-center justify-center">
+          <Link href="/" className="flex flex-center">
+            <Image
+              className="object-contain rounded_image inline"
+              priority={true}
+              src={images.logo}
+              style={{ maxWidth: "40px", maxHeight: "40px" }}
+              alt="Ezpics Logo"
+            />
+          </Link>
+        </div>
+
+        <div className="relative items-center hidden md:flex">
+          <div className="flex overflow-hidden">
             {menuItems.map((menuItem, index) => (
               <Link
                 key={index}
                 href={menuItem.href}
-                className="primary_btn pl-10">
+                className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
+                  menuItem.hiddenOn
+                )}`}>
                 {menuItem.label}
               </Link>
             ))}
           </div>
+          <div className="relative">
+            <button
+              className="text-xl pl-10 xl:hidden"
+              onClick={() => toggleDropdown()}>
+              <EllipsisOutlined />
+            </button>
+            {dropdownVisible && (
+              <div className="absolute right-[-85px] mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                {menuItems.map(
+                  (menuItem, index) =>
+                    shouldShowInDropdown(menuItem.hiddenOn) && (
+                      <Link
+                        key={index}
+                        href={menuItem.href}
+                        className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
+                        {menuItem.label}
+                      </Link>
+                    )
+                )}
+              </div>
+            )}
+          </div>
         </div>
-  
-        <div className="action flex justify-center items-center">
+      </div>
+
+      <div className="action flex justify-center items-center">
+        <div className="hidden sm:flex">
           {actionIcons.map((social, index) =>
             index === 2 ? (
               <div className="icon-container" key={index}>
@@ -392,76 +469,79 @@ const Header = ({ toggleNavbar }) => {
               </Link>
             )
           )}
-          <Dropdown
-            trigger={["click"]}
-            placement="bottomRight"
-            arrow={true}
-            dropdownRender={() => (
-              <div
-                style={{
-                  maxHeight: "400px",
-                  background: "white",
-                  overflowY: "overlay",
-                  borderRadius: "10px",
-                  scrollbarWidth: "thin",
-                  scrollbars: "false",
-                }}>
-                {items.map((item) => (
-                  <div key={item.key}>{item.label}</div>
-                ))}
-              </div>
-            )}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                <button className="button-red">Tạo thiết kế</button>
-              </Space>
-            </a>
-          </Dropdown>
-          {isAuth ? (
-            <div>
-              {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
-  
-              <Dropdown
-                trigger={["click"]}
-                placement="bottomRight"
-                arrow={true}
-                dropdownRender={() => (
-                  <div
-                    style={{
-                      maxHeight: "400px",
-                      background: "white",
-                      overflowY: "overlay",
-                      borderRadius: "10px",
-                      scrollbarWidth: "thin",
-                      scrollbars: "false",
-                    }}>
-                    {itemsDropdowUser.map((item) => (
-                      <div key={item.key}>{item.label}</div>
-                    ))}
-                  </div>
-                )}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                      <img
-                        className="w-full h-full object-cover rounded-full"
-                        alt="User Avatar"
-                        src={dataInforUser?.avatar}
-                      />
-                    </div>
-                  </Space>
-                </a>
-              </Dropdown>
+        </div>
+        <Dropdown
+          trigger={["click"]}
+          placement="bottomRight"
+          arrow={true}
+          dropdownRender={() => (
+            <div
+              style={{
+                maxHeight: "400px",
+                background: "white",
+                overflowY: "overlay",
+                borderRadius: "10px",
+                scrollbarWidth: "thin",
+                scrollbars: "false",
+              }}>
+              {items.map((item) => (
+                <div key={item.key}>{item.label}</div>
+              ))}
             </div>
-          ) : (
-            <div>
-              <button
-                className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4"
-                onClick={() => {
-                  router.push("sign-in");
-                }}>
-                <UserOutlined />
-                <p className="pl-2">Đăng nhập</p>
+          )}>
+          <a onClick={(e) => e.preventDefault()}>
+            <Space>
+              <button className="button-red whitespace-nowrap">
+                Tạo thiết kế
+              </button>
+            </Space>
+          </a>
+        </Dropdown>
+        {isAuth ? (
+          <div>
+            {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
+
+            <Dropdown
+              trigger={["click"]}
+              placement="bottomRight"
+              arrow={true}
+              dropdownRender={() => (
+                <div
+                  style={{
+                    maxHeight: "400px",
+                    background: "white",
+                    overflowY: "overlay",
+                    borderRadius: "10px",
+                    scrollbarWidth: "thin",
+                    scrollbars: "false",
+                  }}>
+                  {itemsDropdowUser.map((item) => (
+                    <div key={item.key}>{item.label}</div>
+                  ))}
+                </div>
+              )}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <div className="w-10 h-10 rounded-full overflow-hidden m-5">
+                    <img
+                      className="w-full h-full object-cover rounded-full"
+                      alt="User Avatar"
+                      src={dataInforUser?.avatar}
+                    />
+                  </div>
+                </Space>
+              </a>
+            </Dropdown>
+          </div>
+        ) : (
+          <div>
+            <button
+              className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
+              onClick={() => {
+                router.push("sign-in");
+              }}>
+              <UserOutlined />
+              <p className="pl-2">Đăng nhập</p>
               </button>
             </div>
           )}

@@ -55,35 +55,36 @@ function Ordered() {
       console.error("Error:", error.message);
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau.");
     }
-    console.log(contactText);
   };
 
   return (
-    <div className="container mx-auto px-8 py-4 flex flex-col md:flex-row">
+    <div className="container mx-auto h-screen w-screen px-8 py-4 flex flex-col md:flex-row">
       <div
-        className="relative w-full md:w-1/2 bg-gray-100 rounded-l-lg shadow-md p-6 flex flex-col justify-between items-center"
+        className="relative w-full md:w-1/2 bg-gray-100 rounded-l-lg shadow-md p-6 flex flex-col items-center"
         style={{ backgroundImage: 'url(./images/bg-designer.png)' }}
       >
-        <div className="absolute inset-0 backdrop-filter backdrop-blur-sm rounded-l-lg bg-black bg-opacity-50"></div>      
-        <div className="info relative z-10">
-          <h1 className="text-3xl font-bold text-white">Liên hệ với chúng tôi</h1>
-          <div className="contact-details flex flex-col gap-4 mt-6">
-            {contactItems.map((item, index) => (
-              <ContactDetail
-                key={index}
-                icon={item.icon}
-                title={item.title}
-                content={item.content}
-              />
-            ))}
+        <div>
+          <div className="absolute inset-0 backdrop-filter backdrop-blur-sm rounded-l-lg bg-black bg-opacity-50"></div>      
+          <div className="info relative z-10">
+            <h1 className="text-3xl font-bold text-white">Liên hệ với chúng tôi</h1>
+            <div className="contact-details flex flex-col gap-4 mt-6">
+              {contactItems.map((item, index) => (
+                <ContactDetail
+                  key={index}
+                  icon={item.icon}
+                  title={item.title}
+                  content={item.content}
+                />
+              ))}
+            </div>
           </div>
         </div>
-        <button className="button-red mb-6 relative z-10">
+        <button className="button-red mb-6 mt-20 relative z-10">
           Hỗ trợ trực tuyến
         </button>
       </div>
 
-      <div className="flex flex-col items-center justify-between w-full md:w-1/2 bg-white rounded-r-lg shadow-md border-2 border-slate-300 p-6">
+      <div className="flex flex-col w-full md:w-1/2  items-center justify-between bg-white rounded-r-lg shadow-md border-2 border-slate-300 p-6">
         <form onSubmit={handleSubmit} className="flex flex-col w-full items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-800">Gửi nội dung liên hệ</h1>
           <textarea
@@ -93,10 +94,10 @@ function Ordered() {
             onChange={handleInputChange}
             rows="10"
           />
+          <button type="submit" className="button-red w-2/5 mb-6 mt-10">
+            Gửi liên hệ
+          </button>
         </form>
-        <button type="submit" className="button-red w-2/5 mb-6">
-          Gửi liên hệ
-        </button>
       </div>
       <ToastContainer />
     </div>

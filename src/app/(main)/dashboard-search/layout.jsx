@@ -1,10 +1,9 @@
 "use client"
 import { useCallback, useEffect, useState } from 'react'
-import { Button, Dropdown, Modal, Space, Input, Radio, Menu, Skeleton, Pagination } from 'antd'
+import { Button, Dropdown, Modal, Space, Input, Radio, Menu, Skeleton, Pagination, Flex, Spin } from 'antd'
 import { ControlOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { getProductCategoryAPI, searchProductAPI } from '@/api/product'
 import ProductComponent from '@/components/ProductComponent'
-import { SkeletonCustom } from '@/components/Slide/CustomSlide'
 import _ from 'lodash'
 
 export default function Layout(props) {
@@ -145,25 +144,29 @@ export default function Layout(props) {
   }, [handleScroll]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (page > 1) {
-        try {
-          const response = await searchProductAPI({ ...searchValue, page });
-          if (response.listData.length > 0) {
-            setProducts(prevProducts => [...prevProducts, ...response.listData]);
-            setHasMoreData(true)
-          } else {
-            setHasMoreData(false)
+    if (!hasMoreData) {
+      setLoading(false);
+      return
+    } else {
+      const fetchData = async () => {
+        if (page > 1) {
+          try {
+            const response = await searchProductAPI({ ...searchValue, page });
+            if (response.listData.length > 0) {
+              setProducts(prevProducts => [...prevProducts, ...response.listData]);
+              setHasMoreData(true)
+            } else {
+              setHasMoreData(false)
+            }
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setLoading(false);
           }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
         }
-      }
-    };
-
-    fetchData();
+      };
+      fetchData();
+    }
   }, [page]);
 
   const handleSearch = async () => {
@@ -180,6 +183,23 @@ export default function Layout(props) {
     }
   }
 
+  const handleKeyDown = async (event) => {
+    if (event.key === 'Enter') {
+      setLoading(true)
+      try {
+        setLoading(true)
+        const response = await searchProductAPI(searchValue)
+        setHasMoreData(true)
+        setPage(1)
+        setProducts(response.listData)
+        setLoading(false)
+      } catch (error) {
+        console.log(error)
+        setLoading(false)
+      }
+    }
+  };
+
   const menuProps = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key=''>Tất cả</Menu.Item>
@@ -191,7 +211,6 @@ export default function Layout(props) {
       }
     </Menu>
   )
-  console.log('-------------', page);
 
   return (
     <div className='flex flex-col w-[90%] gap-5'>
@@ -208,8 +227,15 @@ export default function Layout(props) {
           }}
           className='w-[60%] h-[40px] p-3'
           onChange={handleSearchChange}
+          onKeyDown={handleKeyDown}
         />
-        <Button onClick={handleSearch} type="primary" danger className='h-[40px]' icon={<SearchOutlined />}>Search</Button>
+        <Button onClick={handleSearch} type="primary" danger className='h-[40px] w-[100px]' icon={loading ? '' : <SearchOutlined />}>
+          {loading ?
+            <Flex align="center" gap="middle">
+              <Spin size="small" />
+            </Flex> : 'Search'
+            }
+        </Button>
       </div>
       <div className='flex items-center gap-3'>
         <Button onClick={showModal} className='h-[40px]' icon={<ControlOutlined />}>Nâng cao</Button>
@@ -269,33 +295,20 @@ export default function Layout(props) {
         </div>
       </Modal>
       {
-        loading ? (
-          <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
-            {Array.from({ length: 20 }).map((_, index) => (
-              <SkeletonCustom key={index}>
-                <Skeleton.Image active />
-                <Skeleton.Input active size="small" className="w-full pt-4" />
-              </SkeletonCustom>
-            ))}
-          </div>
-        ) :
-          (<div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5 mb-10'>
+        products.length > 0 ?
+          (<div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5'>
             {
-              products.length !== 0 ?
-                products.map(product => (
-                  <div key={product.id} className='flex justify-center items-center'>
-                    <ProductComponent product={product} />
-                  </div>
-
-                )) :
-                <div className='flex'>
-                  <div className='text- font-semibold'>Không tìm thấy</div>
+              products.map(product => (
+                <div key={product.id} className='flex justify-center items-center'>
+                  <ProductComponent product={product} />
                 </div>
+              ))
             }
-          </div>)
-      }
-      {
-        hasMoreData ? (<div></div>) : (<div className=' text-center mb-10 font-semibold'>Không còn dữ liệu</div>)
+            {loading &&
+              <Flex align="center" gap="middle" className='flex justify-center items-center'>
+                <Spin size="large" />
+              </Flex>}
+          </div>) : (<div className='mt-5 font-semibold text-lg'>Không tìm thấy kết quả</div>)
       }
     </div >
   )

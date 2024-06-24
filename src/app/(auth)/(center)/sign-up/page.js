@@ -1,17 +1,22 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import '../../../../styles/auth/sign_up.css'
 import { images } from '../../../../../public/images'
 import Image from "next/image";
 import { useFormik } from 'formik';
 import { register } from '@/api/auth';
-// import { toast } from 'react-toastify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/router';
 
 // import { useMutation } from '@tanstack/react-query';
 
 const Sign_up = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const {
     values,
@@ -28,7 +33,6 @@ const Sign_up = () => {
       password: '',
       password_again: '',
       affsource: '',
-      token_device: "web",
     },
     validate: (values) => {
       const errors = {}
@@ -60,25 +64,32 @@ const Sign_up = () => {
       return errors
     },
     onSubmit: (values) => {
+      setIsLoading(true);
+
       register(values)
         .then(response => {
-          if (response.data.code === 0){
-            console.log(response.data)
+          if (response.code === 0) {
+            console.log(response.code)
             toast.success('thành công rồi nè =)))')
-          }else if(response.data.code ===2){
+          } else if (response.code === 2) {
             toast.warning('gửi thiếu dữ liệu =)))')
-          }else if(response.data.code ===3){
+          } else if (response.code === 3) {
             toast.warning('Số điện thoại này đãn tồn tại')
 
-          }else if(response.data.code ===4){
+          } else if (response.code === 4) {
             alert('pass nhập lại sai')
             toast.error('pass nhập lại sai')
 
           }
+        }).then(() => {
+          setIsLoading(false);
+          setTimeout(() => {
+            router.push('/sign-in');
+          }, 2000);
         })
         .catch(error => {
           console.error('Đã xảy ra lỗi khi đăng ký:', error);
-        });
+        })
 
     }
 
@@ -174,7 +185,19 @@ const Sign_up = () => {
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" class="btn-submit-sign">Đăng ký</button>
+            <button type="submit" class="btn-submit-sign">                                            
+              {isLoading ? <Spin
+              indicator={
+                <LoadingOutlined
+                  style={{
+                    fontSize: 24,
+                    color: 'white'
+                  }}
+                  spin
+                />
+              }
+            /> : 'Đăng ký'}
+            </button>
             <div class="nav-sign">
               <p>Bạn đã có tài khoản ? - <a href="">Đăng nhập</a></p>
             </div>

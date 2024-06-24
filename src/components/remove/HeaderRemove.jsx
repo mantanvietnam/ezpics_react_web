@@ -21,23 +21,39 @@ const HeaderRemove = () => {
     setReloadKey((prevKey) => prevKey + 1);
   };
 
-  const handleImageDownload = () => {
+  const handleImageDownload = async () => {
     // Check if an image URL is available
     if (uploadedImageUrl) {
-      //Create a temporary anchor element
-      const a = document.createElement("a");
-      a.href = uploadedImageUrl;
-      a.download = "downloaded_image.png"; // Set the desired filename
+      try {
+        // Fetch the image data
+        const response = await fetch(uploadedImageUrl);
+        const blob = await response.blob();
 
-      // Append the anchor element to the body
-      document.body.appendChild(a);
+        // Create a temporary URL for the blob
+        const url = URL.createObjectURL(blob);
 
-      // Trigger a click event on the anchor to start the download
-      a.click();
+        // Create a temporary anchor element
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "downloaded_image.png"; // Set the desired filename
 
-      // Remove the anchor element from the body
-      document.body.removeChild(a);
-      setModalExtend(false);
+        // Append the anchor element to the body
+        document.body.appendChild(a);
+
+        // Trigger a click event on the anchor to start the download
+        a.click();
+
+        // Remove the anchor element from the body
+        document.body.removeChild(a);
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url);
+
+        // Optional: Close the modal if needed
+        setModalExtend(false);
+      } catch (error) {
+        console.error("Error downloading the image:", error);
+      }
     }
   };
 
@@ -131,20 +147,22 @@ const HeaderRemove = () => {
 
   return (
     <div key={reloadKey}>
-      <div className="header animate-slideInFromLeft z-1 bg-custom-remove bg-left bg-no-repeat bg-contain pt-[5%] pl-[5%] flex justify-between">
+      <div className="header animate-slideInFromLeft z-1 bg-custom-remove xl:bg-left bg-no-repeat bg-contain pt-[5%] pl-[5%] xl:flex justify-between">
         <div className="header-text">
-          <h1 className="text-5xl text-slate-800 font-bold mb-10">
+          <h1 className="text-3xl md:text-5xl text-slate-800 font-bold mb-4 md:mb-10">
             Xóa hình ảnh
           </h1>
-          <h1 className="text-5xl text-slate-800 font-bold my-10">
+          <h1 className="text-3xl md:text-5xl text-slate-800 font-bold mb-4 md:my-10">
             Nền tiện lợi và nhanh
           </h1>
-          <h1 className="text-5xl text-slate-800 font-bold my-10">chóng</h1>
-          <p className="my-5">
+          <h1 className="text-3xl md:text-5xl text-slate-800 font-bold mb4 md:my-10">
+            chóng
+          </h1>
+          <p className="my-2 md:my-5">
             Remover nền trực tuyến dễ dàng nhất từ ​​trước đến nay
           </p>
           <button
-            className="mt-5 w-[250px] h-[60px] self-center normal-case text-white bg-[rgb(81,100,255)] rounded-[30px] text-[20px] font-semibold hover:shadow-lg active:bg-blue-600"
+            className="mt-2 md:mt-5 w-[250px] h-[60px] self-center normal-case text-white bg-[rgb(81,100,255)] rounded-[30px] text-[20px] font-semibold hover:shadow-lg active:bg-blue-600"
             onClick={() => handleRemoveBackground()}>
             {loadingRemove ? (
               <span>
@@ -174,14 +192,14 @@ const HeaderRemove = () => {
           <img
             src="/images/remove/bg-banner.png"
             alt="bg-banner"
-            className="max-w-full "
+            className="  md:max-w-full"
           />
         </div>
         <video
           autoPlay
           muted
           loop
-          className="w-[720px] h-[540px] mt-[5%] rounded-[20px]">
+          className="w-[432px] md:w-[720px] h-[324px] md:h-[540px] mt-[5%] rounded-[20px]">
           <source src="/images/remove/en1.6b3b0bc4.mp4" />
           Your browser does not support the video tag.
         </video>
