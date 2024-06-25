@@ -1,17 +1,70 @@
+import { createImageSeriesAPI } from "@/api/product";
 import { capitalizeFirstLetter } from "@/utils/format";
-import { Button, Modal, Skeleton } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Button, Modal, Skeleton, Spin } from "antd";
 import React, { useState } from "react";
 import { SkeletonCustom } from "./Slide/CustomSlide";
+import Share_Social from "./Share_Social";
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
 });
 
 export default function ProductInfoPrinted(props) {
-  const { data, user, isLoading, dataLayer } = props;
+  const { data, user, isLoading, dataLayer, id_param } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([]);
+  const [inputValues, setInputValues] = useState({});
+  const [previews, setPreviews] = useState({});
+  const [previewsImageAfter, setPreviewsImageAfter] = useState();
+  const [checkModalContent, setCheckModalContent] = useState(false)
+  const [loadingCreateImg, setLoadingCreateImg] = useState(false)
+  const handleInputChange = (e, index) => {
+    const variableLabel = dataFilter[index]?.content?.variableLabel;
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [variableLabel]: e.target.value,
+    }));
+  };
 
+  const handleFileInputChange = (e, index) => {
+    const variableLabel = dataFilter[index]?.content?.variableLabel;
+    const file = e.target.files[0];
+
+    if (file) {
+      // Lưu file gốc vào inputValues
+      setInputValues((prevValues) => ({
+        ...prevValues,
+        [variableLabel]: file,
+      }));
+
+      // Tạo preview URL chỉ để hiển thị
+      const previewUrl = URL.createObjectURL(file);
+      setPreviews((prevPreviews) => ({
+        ...prevPreviews,
+        [variableLabel]: previewUrl,
+      }));
+    }
+  };
+
+  const handleRemoveImage = (variableLabel) => {
+    // Xóa file khỏi inputValues
+    setInputValues((prevValues) => {
+      const newValues = { ...prevValues };
+      delete newValues[variableLabel];
+      return newValues;
+    });
+
+    // Xóa preview và giải phóng bộ nhớ
+    setPreviews((prevPreviews) => {
+      const newPreviews = { ...prevPreviews };
+      if (newPreviews[variableLabel]) {
+        URL.revokeObjectURL(newPreviews[variableLabel]);
+        delete newPreviews[variableLabel];
+      }
+      return newPreviews;
+    });
+  };
   const showModal = async () => {
     setIsModalOpen(true);
     const dataPrint = dataLayer.filter((layer) => {
@@ -22,22 +75,29 @@ export default function ProductInfoPrinted(props) {
     });
     if (dataPrint) {
       setDataFilter(dataPrint);
-      const updatedInputValues = dataPrint.map(() => "");
-      // setInputValues(updatedInputValues);
-      // setLoadingBuying(false)
-      // setModalPrinted(true);
     }
   };
-
-  const handleOk = async () => {
-    setIsModalOpen(false);
-
+  const handleClickNavigate = async () => {
+    try {
+      setLoadingCreateImg(true)
+      const filteredInputValues = Object.fromEntries(
+        Object.entries(inputValues).filter(([_, value]) => value !== "")
+      );
+      const response = await createImageSeriesAPI({ idProduct: id_param, full_name: filteredInputValues["Họ tên"], avatar: previews })
+      if (response) {
+        setPreviewsImageAfter(response.data?.dataImage);
+        setCheckModalContent(true)
+        setLoadingCreateImg(false)
+      }
+    } catch (error) {
+      console.error("Error during processing:", error);
+    } finally {
+      setLoadingCreateImg(false)
+    }
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
@@ -61,37 +121,7 @@ export default function ProductInfoPrinted(props) {
           {isLoading ? (
             <Skeleton.Input active="true" />
           ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Chia sẻ:</span>
-              <a href="/">
-                <img
-                  className="social-icons"
-                  src="/images/fb_logo.png"
-                  alt="fb"
-                />
-              </a>
-              <a href="/">
-                <img
-                  className="social-icons"
-                  src="/images/twitter.png"
-                  alt="fb"
-                />
-              </a>
-              <a href="/">
-                <img
-                  className="social-icons"
-                  src="/images/messenger.png"
-                  alt="fb"
-                />
-              </a>
-              <a href="/">
-                <img
-                  className="social-icons"
-                  src="/images/pinterest.png"
-                  alt="fb"
-                />
-              </a>
-            </div>
+            <Share_Social id_param={id_param} data_image={data?.image} />
           )}
           {isLoading ? (
             <Skeleton.Input active="true" />
@@ -226,116 +256,212 @@ export default function ProductInfoPrinted(props) {
               Tạo ảnh
             </button>
             <Modal open={isModalOpen} footer={false} closeIcon={false}>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 22,
-                  fontWeight: "bold",
-                  paddingBottom: "10px",
-                  textAlign: "center"
-                }}
-              >
-                Tạo ảnh hàng loạt
-              </p>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "20px 50px",
-                  gap: "20px",
-                }}
-              >
-                {dataFilter &&
-                  dataFilter.map((data, index) => (
-                    <React.Fragment key={index}>
-                      <div style={{ flex: "0 1 45%", marginBottom: "20px" }}>
-                        <p style={{ fontWeight: "bold", marginBottom: "10px" }}>
-                          {capitalizeFirstLetter(data.content.variableLabel)}
-                        </p>
-                        {data.content.type === "text" ? (
-                          <input
-                            // value={inputValues[data.content.variableLabel] || ""}
-                            // onChange={(e) => handleInputChange(e, index)}
-                            style={{
-                              width: "100%",
-                              padding: "10px",
-                              borderRadius: "5px",
-                              border: "1px solid #ccc",
-                              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                            }}
-                          />
-                        ) : (
-                          <div>
+              {!checkModalContent ? <>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 22,
+                    fontWeight: "bold",
+                    paddingBottom: "10px",
+                    textAlign: "center"
+                  }}
+                >
+                  Tạo ảnh hàng loạt
+                </p>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "20px 50px",
+                    gap: "20px",
+                  }}
+                >
+                  {dataFilter &&
+                    dataFilter.map((data, index) => (
+                      <React.Fragment key={index}>
+                        <div style={{ flex: '0 1 45%', marginBottom: '20px' }}>
+                          <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+                            {capitalizeFirstLetter(data.content.variableLabel)}
+                          </p>
+                          {data.content.type === 'text' ? (
                             <input
-                              type="file"
-                              style={{ display: "none" }}
-                              id={`fileInput-${index}`}
-                            // onChange={(e) => handleFileInputChange(e, index)}
+                              value={inputValues[data.content.variableLabel] || ''}
+                              onChange={(e) => handleInputChange(e, index)}
+                              style={{
+                                width: '100%',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: '1px solid #ccc',
+                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                marginBottom: '10px',
+                              }}
                             />
-                            <label htmlFor={`fileInput-${index}`}>
-                              <Button
-                                variant="contained"
-                                component="span"
-                                size="large"
+                          ) : (
+                            <div>
+                              <input
+                                type="file"
+                                style={{ display: 'none' }}
+                                id={`fileInput-${index}`}
+                                accept="image/*"
+                                onChange={(e) => handleFileInputChange(e, index)}
+                              />
+                              <label htmlFor={`fileInput-${index}`}>
+                                <button
+                                  type="button"
+                                  style={{
+                                    height: '40px',
+                                    width: '100%',
+                                    color: 'white',
+                                    backgroundColor: 'rgb(255, 66, 78)',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                    fontSize: '14px',
+                                  }}
+                                  onClick={() => document.getElementById(`fileInput-${index}`).click()}
+                                >
+                                  Chọn ảnh
+                                </button>
+                              </label>
+                              <div
                                 style={{
-                                  height: "40px",
-                                  textTransform: "none",
-                                  color: "white",
-                                  backgroundColor: "rgb(255, 66, 78)",
-                                  width: "100%",
-                                  borderRadius: "5px",
-                                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                  marginTop: '10px',
+                                  width: '100%',
+                                  height: '200px',
+                                  border: '1px dashed #ccc',
+                                  borderRadius: '5px',
+                                  overflow: 'hidden',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  position: 'relative',
                                 }}
                               >
-                                Chọn ảnh
-                              </Button>
-                            </label>
-                          </div>
-                        )}
-                      </div>
-                    </React.Fragment>
-                  ))}
-              </div>
-              <div style={{ display: "flex" }}>
-                <Button
-                  variant="contained"
-                  size="medium"
-                  style={{
-                    height: 40,
-                    alignSelf: "center",
-                    textTransform: "none",
-                    color: "black",
-                    backgroundColor: "white",
-                    marginTop: "40px",
-                    width: "60%",
-                    marginRight: 10,
-                  }}
-                  onClick={() => handleCancel()}
-                >
-                  Hủy
-                </Button>
-                <Button
-                  variant="contained"
-                  size="medium"
-                  style={{
-                    height: 40,
-                    alignSelf: "center",
-                    textTransform: "none",
-                    color: "white",
-                    backgroundColor: "rgb(255, 66, 78)",
-                    marginTop: "40px",
-                    width: "100%",
-                  }}
-                  onClick={() => handleOk()}
-                >
-                  {" "}
-                  Tạo ảnh
-                </Button>
-              </div>
+                                {previews[data.content.variableLabel] ? (
+                                  <>
+                                    <img
+                                      src={previews[data.content.variableLabel]}
+                                      alt="Preview"
+                                      style={{
+                                        maxWidth: '100%',
+                                        maxHeight: '100%',
+                                        objectFit: 'contain',
+                                      }}
+                                    />
+                                    <button
+                                      onClick={() => handleRemoveImage(data.content.variableLabel)}
+                                      style={{
+                                        position: 'absolute',
+                                        top: '5px',
+                                        right: '5px',
+                                        background: 'rgba(255, 255, 255, 0.7)',
+                                        border: 'none',
+                                        borderRadius: '50%',
+                                        width: '25px',
+                                        height: '25px',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                      }}
+                                    >
+                                      ×
+                                    </button>
+                                  </>
+                                ) : (
+                                  <p style={{ color: '#888', fontSize: '14px' }}>
+                                    Ảnh minh họa sẽ hiển thị ở đây
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </React.Fragment>
+                    ))}
+                </div>
+                <div style={{ display: "flex" }}>
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    style={{
+                      height: 40,
+                      alignSelf: "center",
+                      textTransform: "none",
+                      color: "black",
+                      backgroundColor: "white",
+                      marginTop: "40px",
+                      width: "60%",
+                      marginRight: 10,
+                    }}
+                    onClick={() => handleCancel()}
+                  >
+                    Hủy
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    style={{
+                      height: 40,
+                      alignSelf: "center",
+                      textTransform: "none",
+                      color: "white",
+                      backgroundColor: "rgb(255, 66, 78)",
+                      marginTop: "40px",
+                      width: "100%",
+                    }}
+                    onClick={() => handleClickNavigate()}
+                  >
+                    {" "}
+                    {loadingCreateImg ? <Spin indicator={<LoadingOutlined spin />} /> : 'Tạo ảnh'}
+                  </Button>
+                </div>
+              </> : <>
+                <div>
+                  <div style={{ display: "flex", marginBottom: '16px' }}>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      style={{
+                        height: 40,
+                        alignSelf: "center",
+                        textTransform: "none",
+                        color: "white",
+                        backgroundColor: "rgb(255, 66, 78)",
+                        marginTop: "40px",
+                        width: "100%",
+                        marginRight: 10,
+                      }}
+                      onClick={() => handleCancel()}
+                    >
+                      Tải ảnh
+                    </Button>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      style={{
+                        height: 40,
+                        alignSelf: "center",
+                        textTransform: "none",
+                        color: "white",
+                        backgroundColor: "rgb(255, 66, 78)",
+                        marginTop: "40px",
+                        width: "100%",
+                      }}
+                      onClick={() => setCheckModalContent(false)}
+                    >
+                      {" "}
+                      Nhập lại thông tin
+                    </Button>
+                  </div>
+                  <img src={`data:image/png;base64,${previewsImageAfter}`} alt="" />
+                </div>
+              </>}
             </Modal>
           </div>
         </div>
