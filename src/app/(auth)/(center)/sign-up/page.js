@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
+import { setCookie } from '@/utils';
 // import { useRouter } from 'next/router';
 
 // import { useMutation } from '@tanstack/react-query';
@@ -17,6 +18,7 @@ import { useRouter } from 'next/navigation';
 const Sign_up = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const expirationHours = 3;
 
   const {
     values,
@@ -68,9 +70,14 @@ const Sign_up = () => {
 
       register(values)
         .then(response => {
+          console.log(response)
           if (response.code === 0) {
+            setCookie("token", response?.info_member?.token_web, expirationHours);
+            toast.success('thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại')
+            setTimeout(() => {
+              router.push('/OtpVerification')
+            }, 3000)
             console.log(response.code)
-            toast.success('thành công rồi nè =)))')
           } else if (response.code === 2) {
             toast.warning('gửi thiếu dữ liệu =)))')
           } else if (response.code === 3) {
@@ -83,9 +90,9 @@ const Sign_up = () => {
           }
         }).then(() => {
           setIsLoading(false);
-          setTimeout(() => {
-            router.push('/sign-in');
-          }, 2000);
+          // setTimeout(() => {
+          //   router.push('/sign-in');
+          // }, 2000);
         })
         .catch(error => {
           console.error('Đã xảy ra lỗi khi đăng ký:', error);
@@ -96,21 +103,20 @@ const Sign_up = () => {
   })
   return (
     <>
-      <div class="form-signup">
-        <form onSubmit={handleSubmit} action="" class="form-submit">
-          <div class="box-left">
+      <div className="form-signup">
+        <form onSubmit={handleSubmit} action="" className="form-submit">
+          <div className="box-left">
             {/* Image */}
             <Image
-              className="object-contain rounded_image"
+              className="object-contain rounded_image img-singup"
               priority={true}
               src={images.imgsignup}
               alt="Ezpics Logo"
-              class="img-singup"
             />
           </div>
-          <div class="box-right">
-            <h2 class="title-sign">Ezpics - Dùng là thích! 👋</h2>
-            <div class="group-input">
+          <div className="box-right">
+            <h2 className="title-sign">Ezpics - Dùng là thích! 👋</h2>
+            <div className="group-input">
               <p for="">Tên</p>
               <input type="text" placeholder="Tên" name='name'
                 onBlur={handleBlur}
@@ -123,7 +129,7 @@ const Sign_up = () => {
                   </span>
                 )}
             </div>
-            <div class="group-input">
+            <div className="group-input">
               <p for="">Số điện thoại</p>
               <input type="text" placeholder="Số điện thoại" name='phone'
                 onBlur={handleBlur}
@@ -136,7 +142,7 @@ const Sign_up = () => {
                   </span>
                 )}
             </div>
-            <div class="group-input">
+            <div className="group-input">
               <p for="">Email</p>
               <input type="text" placeholder="Email" name='email'
                 onBlur={handleBlur}
@@ -149,8 +155,8 @@ const Sign_up = () => {
                   </span>
                 )}
             </div>
-            <div class="group-input-pasword">
-              <div class="group-input">
+            <div className="group-input-pasword">
+              <div className="group-input">
                 <p for="">Mật khẩu</p>
                 <input type="password" placeholder="Mật khẩu" name='password'
                   onBlur={handleBlur}
@@ -163,7 +169,7 @@ const Sign_up = () => {
                     </span>
                   )}
               </div>
-              <div class="group-input">
+              <div className="group-input">
                 <p for="">Nhập lại mật khẩu</p>
                 <input type="password" placeholder="Nhập lại mật khẩu" name='password_again'
                   onBlur={handleBlur}
@@ -178,14 +184,14 @@ const Sign_up = () => {
               </div>
 
             </div>
-            <div class="group-input">
+            <div className="group-input">
               <p for="">Mã giới thiệu</p>
               <input type="text" placeholder="Mã giới thiệu" name='affsource'
                 onBlur={handleBlur}
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" class="btn-submit-sign">                                            
+            <button type="submit" className="btn-submit-sign">                                            
               {isLoading ? <Spin
               indicator={
                 <LoadingOutlined
@@ -198,8 +204,8 @@ const Sign_up = () => {
               }
             /> : 'Đăng ký'}
             </button>
-            <div class="nav-sign">
-              <p>Bạn đã có tài khoản ? - <a href="">Đăng nhập</a></p>
+            <div className="nav-sign">
+              <p>Bạn đã có tài khoản ? - <a href="/sign-in">Đăng nhập</a></p>
             </div>
           </div>
         </form>
