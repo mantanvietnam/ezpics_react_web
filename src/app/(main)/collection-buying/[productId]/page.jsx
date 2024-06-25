@@ -1,6 +1,6 @@
 "use client";
 import { buyWarehousesAPI, getCollectionProductApi, getInfoWarehouseApi, getProductsWarehousesAPI } from '@/api/product';
-import { getUserInfoApi } from '@/api/user';
+import { getInfoMemberAPI, getUserInfoApi } from '@/api/user';
 import AuthorInfo from '@/components/AuthorInfo';
 import CollectionProductSlider from '@/components/Slide/CollectionProductSlider';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
 import images from '../../../../../public/images/index2';
+import { setCookie } from '@/utils';
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -62,6 +63,15 @@ const ProductInfo = (props) => {
       })
       if (response.code === 1) {
         toast.success('Bạn đã mua thiết kế thành công')
+        try {
+          const response = await getInfoMemberAPI({ token: token })
+          if (response.code === 0) {
+            setCookie("user_login", response.data, 3)
+            console.log('--------------------------------', JSON.stringify(response.data))
+          }
+        } catch (error) {
+          console.log(error)
+        }
       } else {
         toast.error(response.mess)
       }
@@ -316,36 +326,33 @@ const ProductInfo = (props) => {
         className='buy-product-modal'
       >
         <div>
+          <div className='flex gap-2 mb-[20px]'>
+            <div className="flex items-center text-slate-500">
+              <Image
+                src={images.balance}
+                alt=""
+                width={20}
+                height={20}
+                className="rounded-full pr-1"
+              />{" "}
+              <p className='text-sm font-semibold'>: {VND.format(userLogin?.account_balance)}</p>
+            </div>
+            <div className="flex items-center text-slate-500">
+              <Image
+                src={images.eCoin}
+                alt=""
+                width={20}
+                height={20}
+                className="rounded-full pr-1"
+              />{" "}
+              <p className='text-sm font-semibold'>: {userLogin?.ecoin} eCoin</p>
+            </div>
+          </div>
           <Table columns={columns} dataSource={dataTable} pagination={false} className='mb-[20px]' />
           <Radio.Group name="radiogroup" defaultValue={type} onChange={handleChangeRadio} className='mb-[20px]'>
             <Radio value=''>Mua bằng tiền tài khoản</Radio>
             <Radio value='ecoin'>Mua bằng ecoin</Radio>
           </Radio.Group>
-          <div className='flex gap-3 justify-end'>
-            <div className='text-sm'>Số dư:</div>
-            <div className='flex flex-col gap-1'>
-              <div className="flex items-center text-slate-500">
-                <Image
-                  src={images.balance}
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="rounded-full pr-1"
-                />{" "}
-                <p>: {VND.format(userLogin?.account_balance)}</p>
-              </div>
-              <div className="flex items-center text-slate-500">
-                <Image
-                  src={images.eCoin}
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="rounded-full pr-1"
-                />{" "}
-                <p>: {userLogin?.ecoin} eCoin</p>
-              </div>
-            </div>
-          </div>
           <div className='flex gap-2 justify-end mb-[20px] items-center'>
             <div className='text-lg font-semibold'>Tổng tiền:</div>
             <div className='text-lg font-semibold'>{type === 'ecoin' ? `${data?.ecoin} eCoin` : VND.format(data?.price)}</div>

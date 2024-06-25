@@ -33,31 +33,31 @@ const Header = ({ toggleNavbar }) => {
   const [dataInforUsercheck, setdataInforUsercheck] = useState(null);
   const cookie = checkTokenCookie()
 
-  useEffect(() => {
-    const fetchDataUser = async () => {
-      try {
-        const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
-          token: cookie
-        });
-        if (response) {
-          setdataInforUsercheck(response?.data?.data)
-        } else {
-          console.error("Invalid response format for categories");
-        }
-      } catch (error) {
-        throw new Error(error)
-      }
+  // useEffect(() => {
+  //   const fetchDataUser = async () => {
+  //     try {
+  //       const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
+  //         token: cookie
+  //       });
+  //       if (response) {
+  //         setdataInforUsercheck(response?.data?.data)
+  //       } else {
+  //         console.error("Invalid response format for categories");
+  //       }
+  //     } catch (error) {
+  //       throw new Error(error)
+  //     }
 
-    }
-    fetchDataUser();
-  }, [cookie])
-  if (dataInforUsercheck?.otp != null) {
-    setTimeout(() => {
-      toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
-      router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
-    }, 10000)
-  }
-  console.log('dataInforUser',)
+  //   }
+  //   fetchDataUser();
+  // }, [cookie])
+  // if (dataInforUsercheck?.otp != null) {
+  //   setTimeout(() => {
+  //     toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
+  //     router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
+  //   }, 10000)
+  // }
+  // console.log('dataInforUser',)
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
