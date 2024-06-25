@@ -57,7 +57,7 @@ export default function Page({ params }) {
     return (
         <div className='className="flex-col w-[90%] mb-[100px]'>
             <div className='w-full flex flex-col items-center justify-center gap-8'>
-                <ProductInfoPrinted data={data} user={user} isLoading={isLoading} dataLayer={dataLayer} />
+                <ProductInfoPrinted data={data} user={user} isLoading={isLoading} dataLayer={dataLayer} id_param={params.product_id} />
                 {
                     isLoading ? <Skeleton
                         avatar
