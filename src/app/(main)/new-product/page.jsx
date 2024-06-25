@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import { checkTokenCookie, getCookie } from "@/utils";
 import { useSession } from "next-auth/react";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 function Page() {
   const [categories, setCategories] = useState([]);
@@ -170,7 +171,7 @@ function Page() {
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop !==
-        document.documentElement.offsetHeight ||
+      document.documentElement.offsetHeight ||
       loadingMore ||
       !hasMore
     ) {
@@ -223,8 +224,8 @@ function Page() {
       </h1>
 
       {/* Search Bar and Drawer */}
-      <div className="flex justify-between items-center mb-6 w-full">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-start items-center mb-6 w-full">
+        <div className="flex items-start gap-3">
           <button
             onClick={toggleDrawer}
             className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
@@ -351,7 +352,7 @@ function Page() {
 
       {/* Loading spinner */}
       {loading ? (
-        <div className="center text-center w-full">
+        <div className=" w-full">
           <Flex
             align="center"
             gap="middle"
@@ -363,6 +364,8 @@ function Page() {
         <>
           {/* Products */}
           {products.length > 0 ? (
+            <div className="w-full">
+
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-1 gap-1 justify-center">
               {products.map((item, index) => (
                 <div className="block" key={index}>
@@ -387,7 +390,7 @@ function Page() {
                         <div className="mt-2">
                           <span className="text-red-500 mr-2 font-bold text-sm">
                             {item.sale_price === 0 ||
-                            (dataInforUser?.member_pro === 1 && item?.free_pro)
+                              (dataInforUser?.member_pro === 1 && item?.free_pro)
                               ? "Miễn phí"
                               : VND.format(item.sale_price)}
                           </span>
@@ -403,6 +406,8 @@ function Page() {
                 </div>
               ))}
             </div>
+            </div>
+
           ) : (
             <div className="center text-center w-full">
               <Flex
@@ -414,7 +419,7 @@ function Page() {
               </Flex>
             </div>
           )}
-
+          <ScrollToTopButton />
           {/* Loading more indicator */}
           {loadingMore && (
             <div className="center text-center w-full">

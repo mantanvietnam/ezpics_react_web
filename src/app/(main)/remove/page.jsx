@@ -5,6 +5,7 @@ import IntroduceApp from "@/components/remove/IntroduceApp";
 import AdvantageApp from "@/components/remove/AdvantageApp";
 import PerformanceApp from "@/components/remove/PerformanceApp";
 import AskingApp from "@/components/remove/AskingApp";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const page = () => {
   return (
@@ -15,6 +16,7 @@ const page = () => {
       <AdvantageApp />
       <PerformanceApp />
       <AskingApp />
+
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { ControlOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons
 import { getProductCategoryAPI, searchProductAPI } from '@/api/product'
 import ProductComponent from '@/components/ProductComponent'
 import _ from 'lodash'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
 
 export default function Layout(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -307,6 +308,7 @@ export default function Layout(props) {
               </Flex>}
           </div>) : (<div className='mt-5 font-semibold text-lg'>Không tìm thấy kết quả</div>)
       }
+      <ScrollToTopButton/>
     </div >
   )
 }

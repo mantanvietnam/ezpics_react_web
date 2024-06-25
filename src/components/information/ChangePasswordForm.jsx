@@ -9,7 +9,7 @@ import { CHANGE_VALUE_USER } from "@/redux/slices/infoUser";
 import { Form, Input } from "antd";
 import { toast } from "react-toastify";
 
-const ChangePasswordForm = (handleCloseModalPassword) => {
+const ChangePasswordForm = () => {
   const [showError, setShowError] = useState(false);
   const network = useSelector((state) => state.ipv4.network);
   const router = useRouter();

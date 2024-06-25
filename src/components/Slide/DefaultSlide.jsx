@@ -36,7 +36,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
   } else {
     dataInforUser = null;
   }
-  console.log('dataInforUser', dataInforUser)
+  // console.log('dataInforUser', dataInforUser)
   useEffect(() => {
     setLoading(true);
     const fetchProducts = async () => {
