@@ -10,6 +10,7 @@ import styles from './styles.module.css'
 import Link from 'next/link';
 import 'swiper/css';
 import { getPost } from '@/api/post';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -184,6 +185,7 @@ console.log(news)
           </div>
         )}
         </div>
+        <ScrollToTopButton/>
 
         {/* <aside className="w-full lg:w-64 ml-0 lg:ml-8 mt-8 lg:mt-0">
           <div className="bg-white p-4 rounded shadow">

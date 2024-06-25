@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ChartPage from '../chart'
 import {  getDataTransactionEcoin } from '@/api/transaction'
 import { checkTokenCookie } from '@/utils/cookie'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
 
 const Page = () => {
     const [data, setdata] = useState([])
@@ -160,6 +161,7 @@ const Page = () => {
                 </table>
 
             </div>
+            <ScrollToTopButton/>
 
         </div>
     )
