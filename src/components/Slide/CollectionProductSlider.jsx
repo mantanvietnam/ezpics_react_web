@@ -88,7 +88,7 @@ const CollectionProductSlider = ({ title }) => {
         <h1 className="text-2xl font-bold mb-4">
           {title || "Bộ sưu tập bạn có thể thích"}
         </h1>
-        <Link href="/" className="font-bold text-red-500 text-sm">
+        <Link href="/dashboard-search" className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
       </div>

@@ -14,7 +14,7 @@ const EndowProduct = () => {
         return products;
       }}
       title="Banner Ưu đãi"
-      pathString="/"
+      pathString="/dashboard-search"
     />
   );
 };
