@@ -18,7 +18,7 @@ const ChangeNameForm = ({ data, setData }) => {
 
   const formik = useFormik({
     initialValues: {
-      name: data.name || "",
+      name: data?.name || "",
     },
     validationSchema: Yup.object({
       name: Yup.string()
