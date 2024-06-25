@@ -79,11 +79,13 @@ export default function Page() {
     }
   };
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setSearchValue((prev) => ({ ...prev, name: value }));
+    setTimeout(() => {
+      const value = e.target.value;
+      setSearchTerm(value);
+      setSearchValue((prev) => ({ ...prev, name: value }));
+    }, 1000)
   };
-
+  
   return (
     <>
       <div className='w-1/3 pt-1 flex items-center gap-2 mb-5'>
