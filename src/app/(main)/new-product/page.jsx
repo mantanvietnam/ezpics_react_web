@@ -217,12 +217,12 @@ function Page() {
   console.log(products);
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       {/* Header */}
+      <div className="w-full text-start">
       <h1 className="text-2xl font-semibold mb-6 w-full">
         Thiết kế mới trong tuần
       </h1>
-
       {/* Search Bar and Drawer */}
       <div className="flex justify-start items-center mb-6 w-full">
         <div className="flex items-start gap-3">
@@ -244,6 +244,7 @@ function Page() {
             ))}
           </select>
         </div>
+      </div>
       </div>
 
       {/* Drawer */}
