@@ -6,6 +6,7 @@ import { Button } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import _ from 'lodash'
 import { Flex, Spin } from 'antd'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
 
 export default function Page() {
   const [collections, setCollections] = useState([])
@@ -170,9 +171,12 @@ export default function Page() {
             {loading &&
               <Flex align="center" gap="middle" className='flex justify-center items-center'>
                 <Spin size="large" />
-              </Flex>}
+              </Flex>
+              }
           </div>) : (<div className='mt-5 font-semibold text-lg'>Không tìm thấy kết quả</div>)
       }
+      <ScrollToTopButton/>
+
     </div>
   );
 }

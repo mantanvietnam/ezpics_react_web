@@ -14,7 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
-import { Divider, Dropdown, Space } from "antd";
+import { Button, Divider, Dropdown, Modal, Space } from "antd";
 import images, { designIcon } from "../../public/images/index2";
 import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
@@ -24,6 +24,9 @@ import { useDispatch } from "react-redux";
 import { DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
 import { logoutService } from "@/api/auth";
 import { toast } from "react-toastify";
+import { Box } from "@mui/material";
+import useCheckInternet from "@/hooks/useCheckInternet ";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 const Header = ({ toggleNavbar }) => {
   const router = useRouter();
@@ -31,32 +34,67 @@ const Header = ({ toggleNavbar }) => {
   const { data: session } = useSession();
   const isAuth = checkAvailableLogin();
   const [dataInforUsercheck, setdataInforUsercheck] = useState(null);
+  const [modalLogoutDevice, setModalLogoutDevice] = useState(false);
   const cookie = checkTokenCookie()
 
-  // useEffect(() => {
-  //   const fetchDataUser = async () => {
-  //     try {
-  //       const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
-  //         token: cookie
-  //       });
-  //       if (response) {
-  //         setdataInforUsercheck(response?.data?.data)
-  //       } else {
-  //         console.error("Invalid response format for categories");
-  //       }
-  //     } catch (error) {
-  //       throw new Error(error)
-  //     }
+  // check online
+  const isOnline = useCheckInternet();
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    if (isOnline) {
+      const timer = setTimeout(() => {
+        setShow(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setShow(true);
+    }
+  }, [isOnline]);
+// check sign-double
+  const handleLogoutDevice = () => {
+    document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    dispatch(DELETE_ALL_VALUES());
+    setModalLogoutDevice(false);
+  };
+  const handleLogoutdouble = async () => {
+    const response = await axios.post(`${network}/logoutMemberAPI`, {
+      token: checkTokenCookie(),
+    });
+    if (response && response.data.code === 0) {
+      document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      dispatch(DELETE_ALL_VALUES());
+      setModalLogoutDevice(false);
 
-  //   }
-  //   fetchDataUser();
-  // }, [cookie])
-  // if (dataInforUsercheck?.otp != null) {
-  //   setTimeout(() => {
-  //     toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
-  //     router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
-  //   }, 10000)
-  // }
+      navigate("/login", { replace: true });
+    }
+  };
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      try {
+        const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
+          token: cookie
+        });
+        if (response) {
+          setdataInforUsercheck(response?.data?.data)
+        } else {
+          console.error("Invalid response format for categories");
+        }
+      } catch (error) {
+        throw new Error(error)
+      }
+
+    }
+    fetchDataUser();
+  }, [cookie])
+  if (dataInforUsercheck?.otp != null) {
+    setTimeout(() => {
+      toast.warning('Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực')
+      router.push('/OtpVerification'); // Redirect to a welcome page or dashboard after successful verification
+    }, 10000)
+  }
   // console.log('dataInforUser',)
   // Lấy data user
   let dataInforUser;
@@ -449,7 +487,21 @@ const Header = ({ toggleNavbar }) => {
   const toggleSubmenu = () => {
     setSubmenuVisible(!submenuVisible);
   };
-
+  const styleModalBuyingFree = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "30%",
+    height: "40%",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    paddingTop: "15px",
+    borderRadius: "15px",
+  };
   return (
     <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
       <div className="flex justify-center items-center">
@@ -654,6 +706,70 @@ const Header = ({ toggleNavbar }) => {
             </button>
           </div>
         )}
+      </div>
+      <Modal
+        open={modalLogoutDevice}
+        onClose={handleLogoutDevice}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleModalBuyingFree}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 22,
+              fontWeight: "bold",
+              paddingBottom: "10px",
+            }}
+          >
+            Cảnh báo
+          </p>
+          {/* <img
+            src={warning}
+            alt=""
+            style={{ width: "20%", height: "30%", marginBottom: "10px" }}
+          /> */}
+          <p
+            style={{
+              margin: 0,
+              fontSize: 17,
+              fontWeight: "500",
+              paddingTop: "10px",
+            }}
+          >
+            Tài khoản đã bị đăng nhập ở thiết bị khác
+          </p>
+          <div style={{ display: "flex" }}>
+            <Button
+              variant="contained"
+              size="medium"
+              style={{
+                height: 40,
+                alignSelf: "center",
+                textTransform: "none",
+                color: "white",
+                backgroundColor: "rgb(255, 66, 78)",
+                marginTop: "40px",
+                width: "100%",
+              }}
+              onClick={() => handleLogout()}
+            >
+              Đăng xuất
+            </Button>
+          </div>
+        </Box>
+      </Modal>
+      <div
+        className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline ? 'bg-green-500 text-white opacity-0' : 'bg-red-500 text-white opacity-100'
+          } ${show ? 'opacity-100' : 'opacity-0'}`}
+        style={{ transition: 'opacity 1s' }}
+      >
+        {isOnline ? (
+          <p>Bạn đang trực tuyến.</p>
+        ) : (
+          <p>Bạn đang ngoại tuyến. Vui lòng kiểm tra kết nối internet của bạn.</p>
+        )}
+        {/* <ScrollToTopButton/> */}
       </div>
     </div>
   );
