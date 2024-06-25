@@ -1,4 +1,5 @@
 // components/ScrollToTopButton.jsx
+"use client"
 import { useEffect, useState } from 'react';
 import { AiFillCaretUp } from "react-icons/ai";
 const ScrollToTopButton = () => {
