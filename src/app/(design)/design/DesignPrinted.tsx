@@ -4,7 +4,7 @@ import GraphicPrinted from "./GraphicPrinted";
 import PresentationEditor from "./page";
 import VideoEditor from "./VideoEditor";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import Preview from "./Preview";
+import Preview from "../design/components/Preview/index";
 
 function DesignPrinted() {
   const editorType = useEditorType();

@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import Panels from "./components/Panels";
 
 function PresentationEditor() {
-  console.log(123);
   return (
     <>
       <EditorContainer>

@@ -8,12 +8,13 @@ import {
   EllipsisOutlined,
   DownOutlined,
   RightOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
 import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
-import { Divider, Dropdown, Space } from "antd";
+import { Divider, Dropdown, Modal, Space, Spin } from "antd";
 import images, { designIcon } from "../../public/images/index2";
 import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
@@ -60,7 +61,7 @@ const Header = ({ toggleNavbar }) => {
       router.push("/OtpVerification"); // Redirect to a welcome page or dashboard after successful verification
     }, 10000);
   }
-  console.log("dataInforUser");
+  // console.log("dataInforUser");
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -70,6 +71,129 @@ const Header = ({ toggleNavbar }) => {
   } else {
     dataInforUser = null;
   }
+
+  //Lấy danh sách mẫu thiết kế
+  const [dataSizeBox, setDataSizeBox] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await axios.get(
+          `https://apis.ezpics.vn/apis/getSizeProductAPI`
+        );
+        if (response && response.data) {
+          setDataSizeBox(response.data);
+        } else {
+          console.error("Invalid response format");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    };
+
+    getData();
+  }, []);
+
+  //Ẩn hiện popup mẫu thiết kế
+  const [creatingBucket, setCreatingBucket] = useState(false);
+
+  //Check auth khi ấn btn tạo thiết kế
+  const handleAddNewDesign = () => {
+    if (isAuth) {
+      setCreatingBucket(!creatingBucket);
+    } else {
+      router.push("/sign-in");
+    }
+  };
+
+  //Popup modal btn cỡ tùy chỉnh
+  const [openModalCreating, setOpenModalCreating] = useState(false);
+
+  const handleShowModalCreating = () => {
+    setOpenModalCreating(true);
+  };
+  const handleCanCelModalCreating = () => {
+    setOpenModalCreating(false);
+    document.body.style.overflowY = "auto";
+  };
+
+  //Loading spin
+  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
+    useState(false);
+
+  //Luu url file
+  const [urlSelectedFile, setUrlSelectedFile] = useState("");
+
+  //Chon file tai len
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleFileChange = (event) => {
+    const fileInput = event.target;
+    const files = fileInput.files;
+
+    if (files.length > 0) {
+      const file = files[0];
+      console.log("Selected file:", file);
+
+      // Lưu trữ thông tin về tệp tin trong trạng thái của component
+      setSelectedFile(file);
+      setUrlSelectedFile(URL.createObjectURL(file));
+      // Bạn có thể thực hiện các xử lý khác tại đây
+    }
+  };
+
+  //Button tạo thiết kế tùy chỉnh
+  const handleCreateCustom = async (e) => {
+    e.preventDefault();
+    setLoadingButtonModalCreate(true);
+
+    try {
+      if (selectedFile) {
+        const response = await axios.post(
+          `https://apis.ezpics.vn/apis/createProductAPI`,
+          {
+            token: checkTokenCookie(),
+            type: "user_create",
+            category_id: 0,
+            sale_price: 0,
+            name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
+            background: selectedFile,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log(response);
+
+        if (response && response.data && response.data.code === 0) {
+          setLoadingButtonModalCreate(false);
+          setOpenModalCreating(false);
+          document.body.style.overflowY = "auto";
+
+          setTimeout(function () {
+            router.push(`/design`, {
+              state: {
+                id: response.data.product_id,
+                token: checkTokenCookie(),
+              },
+            });
+          }, 1500);
+        } else {
+          // Handle unexpected response structure or error code
+          console.error("Unexpected response:", response);
+          setLoadingButtonModalCreate(false);
+        }
+      } else {
+        console.log("Không thấy ảnh");
+        setLoadingButtonModalCreate(false);
+      }
+    } catch (error) {
+      console.error("Error creating custom product:", error);
+      // Handle error (e.g., show error message to the user)
+      setLoadingButtonModalCreate(false);
+    }
+  };
 
   const handleLogout = async (e) => {
     const response = await logoutService({
@@ -121,203 +245,6 @@ const Header = ({ toggleNavbar }) => {
     },
   ];
 
-  const items = [
-    {
-      label: (
-        <div className="list-item">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M3 6.165V19a2 2 0 0 0 2 2h12.835c-.06-.05-.12-.102-.176-.159L16.318 19.5H5a.5.5 0 0 1-.5-.5V7.682L3.159 6.341A2.275 2.275 0 0 1 3 6.165ZM17.28 4.22a.75.75 0 0 1 0 1.06l-2 2a.75.75 0 1 1-1.06-1.06l.72-.72H6.56l.72.72a.75.75 0 0 1-1.06 1.06l-2-2a.75.75 0 0 1 0-1.06l2-2a.75.75 0 0 1 1.06 1.06L6.56 4h8.38l-.72-.72a.75.75 0 0 1 1.06-1.06l2 2ZM19.78 19.78a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l.72.72V9.06l-.72.72a.75.75 0 1 1-1.06-1.06l2-2a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1-1.06 1.06L20 9.06v8.38l.72-.72a.75.75 0 1 1 1.06 1.06l-2 2Z"
-              fill="black"></path>
-          </svg>
-          <p className="item-text">Cỡ tùy chỉnh</p>
-        </div>
-      ),
-      key: "0",
-    },
-    {
-      label: (
-        <div class="list-item border-b-[0.5px] border-[#BFC4C8]">
-          <Image src={designIcon.paperRolls} alt="" className="w-6 h-6" />
-          <p className="item-text">Mẫu in hàng loạt</p>
-        </div>
-      ),
-      key: "1",
-    },
-    {
-      label: (
-        <p className="m-0 text-[rgba(13,18,22,0.7)] text-[14px] font-semibold pt-1.5 pl-3">
-          Đề xuất
-        </p>
-      ),
-      key: "2",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.presentation} alt="" className="w-6 h-6" />
-          <p className="item-text">Bài thuyết trình (16:9)</p>
-          <span className="size">1920 x 1080 px</span>
-        </div>
-      ),
-      key: "3",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.presentation} alt="" className="w-6 h-6" />
-          <p className="item-text">Bài thuyết trình (9:16)</p>
-          <span className="size">1080 x 1920 px</span>
-        </div>
-      ),
-      key: "4",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.picture} alt="" className="w-6 h-6" />
-          <p className="item-text">Logo</p>
-          <span className="size">500 x 500 px</span>
-        </div>
-      ),
-      key: "5",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.poster} alt="" className="w-6 h-6" />
-          <p className="item-text">Poster (dọc)</p>
-          <span className="size">4960 x 7015 px</span>
-        </div>
-      ),
-      key: "6",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.instagram} alt="" className="w-6 h-6" />
-          <p className="item-text">Bài đăng Instagram (vuông)</p>
-          <span className="size">1080 x 1080 px</span>
-        </div>
-      ),
-      key: "7",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.facebook} alt="" className="w-6 h-6" />
-          <p className="item-text">Bài đăng Facebook (vuông)</p>
-          <span className="size">940 x 788 px</span>
-        </div>
-      ),
-      key: "8",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.facebook} alt="" className="w-6 h-6" />
-          <p className="item-text">Avatar Facebook</p>
-          <span className="size">761 x 761 px</span>
-        </div>
-      ),
-      key: "9",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.facebook} alt="" className="w-6 h-6" />
-          <p className="item-text">Ảnh bìa Facebook</p>
-          <span className="size">1640 x 924 px</span>
-        </div>
-      ),
-      key: "10",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.youtube} alt="" className="w-6 h-6" />
-          <p className="item-text">Ảnh thumbnail video Youtube</p>
-          <span className="size">1280 x 720 px</span>
-        </div>
-      ),
-      key: "11",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.picture} alt="" className="w-6 h-6" />
-          <p className="item-text">Hình nền máy tính </p>
-          <span className="size">1920 x 1080 px</span>
-        </div>
-      ),
-      key: "12",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.docs} alt="" className="w-6 h-6" />
-          <p className="item-text">A0 (dọc) </p>
-          <span className="size">3179 x 4494 px</span>
-        </div>
-      ),
-      key: "13",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.docs} alt="" className="w-6 h-6" />
-          <p className="item-text">A1 (dọc) </p>
-          <span className="size">2245 x 3179 px</span>
-        </div>
-      ),
-      key: "14",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.docs} alt="" className="w-6 h-6" />
-          <p className="item-text">A2 (dọc) </p>
-          <span className="size">1578 x 2245 px</span>
-        </div>
-      ),
-      key: "15",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.docs} alt="" className="w-6 h-6" />
-          <p className="item-text">A3 (dọc) </p>
-          <span className="size">1123 x 1578 px</span>
-        </div>
-      ),
-      key: "16",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.docs} alt="" className="w-6 h-6" />
-          <p className="item-text">A4 (dọc) </p>
-          <span className="size">794 x 1123 px</span>
-        </div>
-      ),
-      key: "17",
-    },
-    {
-      label: (
-        <div className="list-item">
-          <Image src={designIcon.docs} alt="" className="w-6 h-6" />
-          <p className="item-text">A5 (dọc) </p>
-          <span className="size">559 x 794 px</span>
-        </div>
-      ),
-      key: "18",
-    },
-  ];
   const formattedBalance =
     dataInforUser?.account_balance?.toLocaleString("vi-VN");
   const itemsDropdowUser = [
@@ -360,7 +287,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div class="list-item ">
+        <div className="list-item ">
           <p className="item-text">Sửa thông tin cá nhân</p>
         </div>
       ),
@@ -368,7 +295,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div class="list-item ">
+        <div className="list-item ">
           <p className="item-text">Khiếu nại </p>
         </div>
       ),
@@ -376,7 +303,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div class="list-item ">
+        <div className="list-item ">
           <p className="item-text">Tải ứng dụng Ezpics</p>
         </div>
       ),
@@ -384,7 +311,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <Link href={"/affiliate"} class="list-item ">
+        <Link href={"/affiliate"} className="list-item ">
           <p className="item-text">Giới thiệu bạn bè</p>
         </Link>
       ),
@@ -392,7 +319,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div class="list-item " onClick={handleLogout}>
+        <div className="list-item " onClick={handleLogout}>
           <p className="item-text">Đăng xuất </p>
         </div>
       ),
@@ -478,15 +405,6 @@ const Header = ({ toggleNavbar }) => {
           <div className="relative items-center hidden md:flex">
             <div className="flex overflow-hidden">
               {menuItems.map((menuItem, index) => (
-                // <Link
-                //   key={index}
-                //   href={menuItem.href}
-                //   className={`primary_btn pl-10 whitespace-nowrap ${getHiddenClass(
-                //     menuItem.hiddenOn
-                //   )}`}>
-                //   {menuItem.label}
-                // </Link>
-
                 <div
                   key={index}
                   className={`${getHiddenClass(menuItem.hiddenOn)}`}>
@@ -584,33 +502,61 @@ const Header = ({ toggleNavbar }) => {
               )
             )}
           </div>
-          <Dropdown
-            trigger={["click"]}
-            placement="bottomRight"
-            arrow={true}
-            dropdownRender={() => (
+          <button
+            className="button-red whitespace-nowrap"
+            onClick={() => handleAddNewDesign()}>
+            Tạo thiết kế
+          </button>
+          {creatingBucket && (
+            <div className="relative">
               <div
-                style={{
-                  maxHeight: "400px",
-                  background: "white",
-                  overflowY: "overlay",
-                  borderRadius: "10px",
-                  scrollbarWidth: "thin",
-                  scrollbars: "false",
-                }}>
-                {items.map((item) => (
-                  <div key={item.key}>{item.label}</div>
+                className="absolute top-7 right-full w-[330px] max-h-[400px] bg-white overflow-y-auto rounded-[10px]"
+                style={{ scrollbarWidth: "thin", scrollbars: "false" }}>
+                <div
+                  className="list-item"
+                  onClick={() => {
+                    setCreatingBucket(false);
+                    handleShowModalCreating();
+                    document.body.style.overflowY = "hidden";
+                  }}>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 6.165V19a2 2 0 0 0 2 2h12.835c-.06-.05-.12-.102-.176-.159L16.318 19.5H5a.5.5 0 0 1-.5-.5V7.682L3.159 6.341A2.275 2.275 0 0 1 3 6.165ZM17.28 4.22a.75.75 0 0 1 0 1.06l-2 2a.75.75 0 1 1-1.06-1.06l.72-.72H6.56l.72.72a.75.75 0 0 1-1.06 1.06l-2-2a.75.75 0 0 1 0-1.06l2-2a.75.75 0 0 1 1.06 1.06L6.56 4h8.38l-.72-.72a.75.75 0 0 1 1.06-1.06l2 2ZM19.78 19.78a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l.72.72V9.06l-.72.72a.75.75 0 1 1-1.06-1.06l2-2a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1-1.06 1.06L20 9.06v8.38l.72-.72a.75.75 0 1 1 1.06 1.06l-2 2Z"
+                      fill="black"></path>
+                  </svg>
+                  <p className="item-text">Cỡ tùy chỉnh</p>
+                </div>
+                <div className="list-item border-b-[0.5px] border-[#BFC4C8]">
+                  <Image
+                    src={designIcon.paperRolls}
+                    alt=""
+                    className="w-6 h-6"
+                  />
+                  <p className="item-text">Mẫu in hàng loạt</p>
+                </div>
+                <p className="m-0 text-[rgba(13,18,22,0.7)] text-[14px] font-semibold pt-1.5 pl-3">
+                  Đề xuất
+                </p>
+                {dataSizeBox.map((item, index) => (
+                  <div key={index}>
+                    <div className="list-item">
+                      <Image src={item.icon} alt="" width={24} height={24} />
+                      <p className="item-text">{item.name}</p>
+                      <span className="size">
+                        {item.width} x {item.height} px
+                      </span>
+                    </div>
+                  </div>
                 ))}
               </div>
-            )}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                <button className="button-red whitespace-nowrap">
-                  Tạo thiết kế
-                </button>
-              </Space>
-            </a>
-          </Dropdown>
+            </div>
+          )}
+
           {isAuth ? (
             <div>
               {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
@@ -661,6 +607,141 @@ const Header = ({ toggleNavbar }) => {
           )}
         </div>
       </div>
+
+      <Modal
+        open={openModalCreating}
+        onCancel={handleCanCelModalCreating}
+        footer={null}
+        width={"30%"}>
+        <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
+          <h1 className="text-2xl font-bold text-[#735400] ml-[22px] mt-10">
+            Bắt đầu tạo mẫu thiết kế
+          </h1>
+          <br></br>
+          <h1 style={{ fontSize: 15 }} className="ml-[22px]">
+            Hãy điền đầy đủ thông tin trước khi tạo nhé
+          </h1>
+        </div>
+        {selectedFile ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "24px",
+            }}>
+            <img
+              src={urlSelectedFile}
+              alt=""
+              style={{
+                width: 200,
+                height: "auto",
+                alignSelf: "center",
+              }}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-col relative pt-4">
+            <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
+            <form
+              id="file-upload-form"
+              className="block clear-both mx-auto w-full max-w-600"
+              style={{ marginTop: 40 }}>
+              <input
+                className="hidden"
+                id="file-upload"
+                type="file"
+                name="fileUpload"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+
+              <label
+                className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                htmlFor="file-upload"
+                id="file-drag"
+                style={{ height: 200, cursor: "pointer" }}>
+                <img id="file-image" src="#" alt="Preview" className="hidden" />
+                <div id="">
+                  <img
+                    src="/images/direct-download.png"
+                    alt=""
+                    style={{
+                      width: 30,
+                      height: 30,
+                      alignSelf: "center",
+                      margin: "0 auto",
+                      marginBottom: "2%",
+                    }}
+                  />
+                  <div id="notimage" className="hidden">
+                    Hãy chọn ảnh
+                  </div>
+                  <span id="file-upload-btn" className="">
+                    {selectedFile === null ? "Chọn ảnh" : "Chọn lại"}
+                  </span>
+                </div>
+                <div id="response" className="hidden">
+                  <div id="messages"></div>
+                  <progress className="progress" id="file-progress" value="0">
+                    <span>0</span>%
+                  </progress>
+                </div>
+              </label>
+            </form>
+          </div>
+        )}
+        <div>
+          {selectedFile !== null ? (
+            <div>
+              <button
+                className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={(e) => handleCreateCustom(e)}>
+                {loadingButtonModalCreate ? (
+                  <span>
+                    <Spin
+                      indicator={
+                        <LoadingOutlined
+                          style={{
+                            fontSize: 24,
+                            color: "#fff",
+                          }}
+                          spin
+                        />
+                      }
+                    />
+                  </span>
+                ) : (
+                  "Bắt đầu tạo mẫu"
+                )}
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button
+                className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
+                disabled>
+                Bắt đầu tạo mẫu
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="px-4 text-center text-sm text-gray-500">
+          <p>
+            Nếu bạn chưa có thông tin, hãy tham khảo
+            <a href="#" className="block text-purple-600 no-underline">
+              Mẫu thiết kế có sẵn
+            </a>
+          </p>
+        </div>
+      </Modal>
     </SessionProvider>
   );
 };

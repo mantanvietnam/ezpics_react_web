@@ -19,6 +19,8 @@ export default function Graphic() {
   const [state, setState] = React.useState({
     image: "",
   });
+  const idProduct = useAppSelector((state) => state.token.id);
+  const token = useAppSelector((state) => state.token.token);
   const parseGraphicJSON = () => {
     const currentScene = editor.scene.exportToJSON();
     const updatedScenes = scenes.map((scn) => {
@@ -169,8 +171,7 @@ export default function Graphic() {
     }
     return new File([u8arr], filename, { type: mime });
   }
-  const idProduct = useAppSelector((state) => state.token.id);
-  const token = useAppSelector((state) => state.token.token);
+
   function base64toFile(base64Data: any, filename: any) {
     const arr = base64Data.split(",");
     const mime = arr[0].match(/:(.*?);/)[1];

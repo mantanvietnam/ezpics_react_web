@@ -54,13 +54,13 @@ export default function EditorContainer({
   const handleSave = async () => {
     if (editor) {
       const retrievedData = localStorage.getItem("data-ezpics");
-      const dataParsed = JSON.parse(retrievedData);
+      const dataParsed = retrievedData ? JSON.parse(retrievedData) : null;
       setLoading(true);
 
       try {
         const res = await axios.post(`${network}/addListLayerAPI`, {
           idProduct: idProduct,
-          token: checkTokenCookie(),
+          token: token,
           listLayer: JSON.stringify(parseGraphicJSON(dataParsed)),
         });
 
@@ -108,7 +108,7 @@ export default function EditorContainer({
     async () => {
       if (editor) {
         const initial = editor.scene.exportToJSON();
-        const template = JSON.parse(initial);
+        const template = initial;
 
         const fonts: any[] = [];
         template.layers.forEach((object: any) => {
@@ -127,7 +127,7 @@ export default function EditorContainer({
         // setCurrentScene
         // setCurrentScene({ ...template, id: currentScene?.id });
         // scenes.push({ ...template, id: currentScene?.id });
-        setCurrentScene({ ...template, id: currentScene?.id });
+        setCurrentScene({ ...template, id: currentScene?.id ?? "" });
         // setCurrentDesign({...template, id: currentScene?.id });
       }
     },
@@ -306,9 +306,12 @@ export default function EditorContainer({
       window.removeEventListener("online", getValueOnline);
     };
   }, [editor]);
-  function throttle(callback: any, delay: any) {
+  function throttle<T extends (...args: any[]) => any>(
+    callback: T,
+    delay: number
+  ): (...args: Parameters<T>) => void {
     let lastTime = 0;
-    return function (...args) {
+    return function (...args: Parameters<T>) {
       const currentTime = new Date().getTime();
       if (currentTime - lastTime >= delay) {
         callback(...args);
@@ -350,8 +353,7 @@ export default function EditorContainer({
         display: "flex",
         flexDirection: "column",
         background: "#FFFFFF",
-      }}
-    >
+      }}>
       {children}
     </Block>
   );

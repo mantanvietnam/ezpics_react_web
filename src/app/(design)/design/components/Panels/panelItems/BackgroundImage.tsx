@@ -259,16 +259,14 @@ export default function BackgroundImage() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
             Thành phần
           </h4>
 
           <Block
             onClick={() => setActiveSubMenu("Graphics")}
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
+            $style={{ cursor: "pointer", display: "flex" }}>
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -281,8 +279,7 @@ export default function BackgroundImage() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
                 Ảnh nền
               </h4>
@@ -292,8 +289,7 @@ export default function BackgroundImage() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}
-            >
+              }}>
               {templates
                 // .filter((item) => item.keyword === "Ảnh nền")
                 .map((item, index) => (
@@ -315,8 +311,7 @@ export default function BackgroundImage() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -332,7 +327,7 @@ export default function BackgroundImage() {
                 width: 40,
                 height: 40,
               }}
-              src={ezlogo}
+              src="./EZPICS (converted)-03.png"
             />
           </div>
         </div>
@@ -361,8 +356,7 @@ function ImageItem({
         "::before:hover": {
           opacity: 1,
         },
-      })}
-    >
+      })}>
       <div
         className={css({
           backgroundImage: `linear-gradient(to bottom,
@@ -394,8 +388,7 @@ function ImageItem({
           ":hover": {
             opacity: 1,
           },
-        })}
-      ></div>
+        })}></div>
       <img
         src={preview}
         className={css({
