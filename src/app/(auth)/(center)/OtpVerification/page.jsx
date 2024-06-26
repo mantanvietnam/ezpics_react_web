@@ -19,7 +19,7 @@ const OtpVerification = ({ phone }) => {
     const { data: session } = useSession();
     const router = useRouter();
     const token = checkTokenCookie()
-    console.log(token)
+    // console.log(token)
     // Lấy data user
     let dataInforUser;
     if (getCookie("user_login")) {
@@ -29,7 +29,7 @@ const OtpVerification = ({ phone }) => {
     } else {
         dataInforUser = null;
     }
-    console.log(dataInforUser)
+    // console.log(dataInforUser)
     const handleResendOtp = async () => {
         setIsLoading(true);
         try {
