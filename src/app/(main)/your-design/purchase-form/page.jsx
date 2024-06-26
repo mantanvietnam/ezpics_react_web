@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getMyProductApi } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
 import { checkTokenCookie } from '@/utils/cookie';
@@ -10,7 +10,7 @@ export default function Page() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-
+  const timeoutRef = useRef(null);
   const [searchValue, setSearchValue] = useState({
     token: checkTokenCookie(),
     limit: 20,
@@ -78,15 +78,27 @@ export default function Page() {
       }
     }
   };
-  const handleSearchChange = (e) => {
-    setTimeout(() => {
-      const value = e.target.value;
-      setSearchTerm(value);
-      setSearchValue((prev) => ({ ...prev, name: value }));
-    }, 1000)
-  };
+  // const handleSearchChange = (e) => {
+  //   const value = e.target.value;
+  //   setTimeout(() => {
+  //     setSearchTerm(value);
+  //     setSearchValue((prev) => ({ ...prev, name: value }));
+  //   }, 1000)
+  // };
   
-  return (
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setSearchValue((prev) => ({ ...prev, name: value }));
+    }, 2000); // 2000 milliseconds = 2 seconds
+  };
+  return ( 
     <>
       <div className='w-1/3 pt-1 flex items-center gap-2 mb-5'>
         <input
