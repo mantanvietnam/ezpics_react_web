@@ -11,13 +11,13 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { setCookie } from '@/utils';
-// import { useRouter } from 'next/router';
-
-// import { useMutation } from '@tanstack/react-query';
+import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from '@/redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Sign_up = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
   const expirationHours = 3;
 
   const {
@@ -71,7 +71,10 @@ const Sign_up = () => {
       register(values)
         .then(response => {
           console.log(response)
-          if (response.code === 0) {
+          if (response?.code === 0) {
+            dispatch(CHANGE_STATUS_AUTH(true));
+            dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
+            setCookie("user_login", repon?.info_member, expirationHours);
             setCookie("token", response?.info_member?.token_web, expirationHours);
             toast.success('thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại')
             setTimeout(() => {

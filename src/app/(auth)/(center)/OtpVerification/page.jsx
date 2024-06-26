@@ -93,7 +93,7 @@ const OtpVerification = ({ phone }) => {
                 console.log(response)
                 if (response?.code === 1) {
                     toast.success('Xác thực thành công!');
-                    router.push('/sign-in'); // Redirect to a welcome page or dashboard after successful verification
+                    router.push('/'); // Redirect to a welcome page or dashboard after successful verification
                 } else {
                     toast.error('Mã OTP không hợp lệ, vui lòng thử lại.');
                 }
