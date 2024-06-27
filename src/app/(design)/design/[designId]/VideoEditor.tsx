@@ -1,9 +1,9 @@
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import Panels from "./components/Panels";
-import Canvas from "./Canvas";
+import Canvas from "./components/Canvas";
 import Footer from "./components/Footer";
 import Toolbox from "./components/Toolbox";
-import EditorContainer from "./EditorContainer";
+import EditorContainer from "./components/EditorContainer";
 
 function VideoEditor() {
   return (

@@ -12,7 +12,10 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useRouter, redirect } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
-import { CHANGE_VALUE_USER, DELETE_ALL_VALUES } from "@/redux/slices/infoUser";
+import {
+  CHANGE_VALUE_USER,
+  DELETE_ALL_VALUES,
+} from "../../../redux/slices/user/userSlice";
 import axios from "axios";
 import ChangeNameForm from "@/components/information/ChangeNameForm";
 import ChangeMailForm from "@/components/information/ChangeMailForm";

@@ -29,21 +29,24 @@ export const loadTemplateFonts = async (design: IScene) => {
 
 export const loadFonts = (fonts: FontItem[]) => {
   const promisesList = fonts.map(async (font) => {
-    return new FontFace(font.name, `url(${font.url})`)
-      .load()
-      .catch((err) => err);
+    try {
+      const loadedFont = await new FontFace(font.name, `url(${font.url})`).load();
+      return loadedFont;
+    } catch (err) {
+      console.error(`Failed to load font ${font.name}:`, err);
+      return null; // Return null or handle error as needed
+    }
   });
+
   return new Promise((resolve, reject) => {
     Promise.all(promisesList)
       .then((res) => {
-        res.forEach((uniqueFont: any) => {
-          if (uniqueFont) {
-            console.log(uniqueFont);
-            //  && uniqueFont.name
+        res.forEach((uniqueFont: FontFace | null) => {
+          if (uniqueFont instanceof FontFace) {
             document.fonts.add(uniqueFont);
-            resolve(true);
           }
         });
+        resolve(true);
       })
       .catch((err) => reject(err));
   });
@@ -51,21 +54,24 @@ export const loadFonts = (fonts: FontItem[]) => {
 
 export const loadFontsSelector = (fonts: FontItem[]) => {
   const promisesList = fonts.map(async (font) => {
-    return new FontFace(font.name, `url(${font.url})`)
-      .load()
-      .catch((err) => err);
+    try {
+      const loadedFont = await new FontFace(font.name, `url(${font.url})`).load();
+      return loadedFont;
+    } catch (err) {
+      console.error(`Failed to load font ${font.name}:`, err);
+      return null; // Return null or handle error as needed
+    }
   });
+
   return new Promise((resolve, reject) => {
     Promise.all(promisesList)
       .then((res) => {
-        res.forEach((uniqueFont: any) => {
-          if (uniqueFont) {
-            console.log(uniqueFont);
-            //  && uniqueFont.name
-            // document.fonts.add(uniqueFont)
-            resolve(true);
+        res.forEach((uniqueFont: FontFace | null) => {
+          if (uniqueFont instanceof FontFace) {
+            // document.fonts.add(uniqueFont);
           }
         });
+        resolve(true);
       })
       .catch((err) => reject(err));
   });

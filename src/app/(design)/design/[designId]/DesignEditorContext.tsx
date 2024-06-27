@@ -5,7 +5,7 @@ import {
   ContextMenuTimelineRequest,
   DesignType,
   IDesign,
-} from "../../../interfaces/DesignEditor";
+} from "@/interfaces/DesignEditor";
 
 interface ISceneEditorContext {
   scenes: IScene[];

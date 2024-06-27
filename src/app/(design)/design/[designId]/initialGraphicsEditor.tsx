@@ -1,10 +1,10 @@
-import Navbar from "./Navbar";
+import Navbar from "../[designId]/components/Navbar";
 import Panels from "./components/Panels";
-import Canvas from "./Canvas";
+import Canvas from "../[designId]/components/Canvas";
 import Footer from "./components/Footer";
 import Toolbox from "./components/Toolbox";
-import EditorContainer from "./EditorContainer";
-import PresentationEditor from "./page";
+import EditorContainer from "../[designId]/components/EditorContainer";
+import PresentationEditor from "./PresentationEditor";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/hooks/hook";
@@ -18,13 +18,13 @@ import { v4 as uuidv4 } from "uuid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import { loadFonts } from "@/utils/media/fonts";
 import { toast } from "react-toastify";
-import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/store/slices/token/reducers";
+import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/redux/slices/token/reducers";
 import "../../components/Resizable/loading.css";
-import { REPLACE_font } from "@/store/slices/font/fontSlice";
+import { REPLACE_font } from "@/redux/slices/font/fontSlice";
 import "../../../src/views/DesignEditor/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
-import { REPLACE_TYPE_USER } from "@/store/slices/type/typeSlice";
-import { REPLACE_PRO_USER } from "@/store/slices/token/reducers";
+import { REPLACE_TYPE_USER } from "@/redux/slices/type/typeSlice";
+import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
 
 function GraphicEditor() {
   const dispatch = useAppDispatch();
@@ -605,8 +605,7 @@ function GraphicEditor() {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <img
               src="../../../assets/error.jpg"
               alt="lỗi"
@@ -616,8 +615,7 @@ function GraphicEditor() {
               style={{
                 color: "black",
                 fontFamily: "Arial, Helvetica, sans-serif",
-              }}
-            >
+              }}>
               Bạn không có quyền truy cập, hãy thử lại
             </h2>
           </div>
@@ -630,8 +628,7 @@ function GraphicEditor() {
               backgroundColor: "rgba(0,0,0,0.9)",
               position: "absolute",
               zIndex: 20000000000,
-            }}
-          >
+            }}>
             <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
               <div className="ldio-4qpid53rus92">
                 <div></div>
@@ -646,7 +643,7 @@ function GraphicEditor() {
                     width: 40,
                     height: 40,
                   }}
-                  src={ezpiclogo}
+                  src="./EZPICS.png"
                 />
               </div>
             </div>

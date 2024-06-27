@@ -27,7 +27,7 @@ import { useLocation } from "react-router-dom";
 import ezpiclogo from "./EZPICS (converted)-03.png";
 
 function GraphicEditor() {
-  const location = useLocation();
+  // const location = useLocation();
   const dispatch = useAppDispatch();
   const [fontURLInitial, setFontURLInitial] = React.useState<string>("");
   const [errorMessage, setError] = React.useState<boolean>(false);
@@ -56,7 +56,7 @@ function GraphicEditor() {
 
     // Kiểm tra nếu đã tìm thấy cookie "token"
     if (tokenCookie) {
-      console.log('Giá trị của cookie "token" là:', tokenCookie);
+      // console.log('Giá trị của cookie "token" là:', tokenCookie);
       return tokenCookie.replace(/^"|"$/g, "");
     } else {
       console.log('Không tìm thấy cookie có tên là "token"');
@@ -327,14 +327,19 @@ function GraphicEditor() {
 
   const urlParams = new URLSearchParams(queryString);
 
-  const { id, token } = location.state || {};
+  // const { id, token } = location.state || {};
 
-  useEffect(() => {
-    if (token && id) {
-      dispatch(REPLACE_TOKEN(token));
-      dispatch(REPLACE_ID_USER(id));
-    }
-  }, [token, id, dispatch]);
+  // useEffect(() => {
+  //   if (token && id) {
+  //     dispatch(REPLACE_TOKEN(token));
+  //     dispatch(REPLACE_ID_USER(id));
+  //   }
+  // }, [token, id, dispatch]);
+  const token = checkTokenCookie();
+  const id = useAppSelector((state) => state.token.id);
+
+  console.log(token);
+  console.log(id);
 
   const dataScenes = (data: any, dataBackground: any) => {
     const dataString = {
@@ -636,7 +641,7 @@ function GraphicEditor() {
     const fetchDataBanks = async () => {
       try {
         const data = {
-          idproduct: parseInt(id),
+          idproduct: id,
           token: checkTokenCookie(),
         };
 
@@ -768,7 +773,7 @@ function GraphicEditor() {
                     width: 40,
                     height: 40,
                   }}
-                  src="./EZPICS (converted)-03.png"
+                  src="./EZPICS.png"
                 />
               </div>
             </div>
