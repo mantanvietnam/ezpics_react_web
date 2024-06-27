@@ -162,8 +162,8 @@ console.log(news)
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {news?.map((article, index) => (
               <div key={index} className="bg-white rounded-md shadow flex flex-col overflow-hidden relative  pb-7">
-                <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110" />
                 <Link href={`/post/${article?.id}`} className="text-blue-500 mt-2 self-start">
+                <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110" />
                   <div className="flex flex-col justify-between flex-grow">
                     <div>
                       <h3 className="text-xl font-bold mb-2 text-black p-1">{article?.title}</h3>
@@ -175,7 +175,7 @@ console.log(news)
                   </div>
                 </Link>
               </div>
-            ))}
+              ))}
           </div>
         {loadingMore && (
           <div className="center text-center w-full">
