@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCookie, checkTokenCookie } from "@/utils";
-import { CHANGE_VALUE_USER } from "@/redux/slices/infoUser";
+import { CHANGE_VALUE_USER } from "../../redux/slices/user/userSlice";
 import { Form, Input } from "antd";
 import { toast } from "react-toastify";
 

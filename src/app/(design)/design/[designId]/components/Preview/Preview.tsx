@@ -10,8 +10,18 @@ interface ComponentProps {
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
 }
+type DesignType = "GRAPHIC" | "PRESENTATION" | "VIDEO" | "NONE";
 export default function Preview({ isOpen, setIsOpen }: ComponentProps) {
-  const editorType = useEditorType();
+  const editorType: DesignType = useEditorType();
+  const renderContent = (type: DesignType) => {
+    const components = {
+      GRAPHIC: <Graphic />,
+      PRESENTATION: <Presentation />,
+      VIDEO: <Video />,
+      NONE: <></>,
+    };
+    return components[type];
+  };
   return (
     <Modal
       onClose={() => setIsOpen(false)}
@@ -59,14 +69,7 @@ export default function Preview({ isOpen, setIsOpen }: ComponentProps) {
             width: "100%",
             display: "flex",
           }}>
-          {
-            {
-              GRAPHIC: <Graphic />,
-              PRESENTATION: <Presentation />,
-              VIDEO: <Video />,
-              NONE: <></>,
-            }[editorType]
-          }
+          {renderContent(editorType)}
         </Block>
       </ModalBody>
     </Modal>

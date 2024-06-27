@@ -12,7 +12,7 @@ export const infoSlice = createSlice({
   name: 'info',
   initialState,
   reducers: {
-    CHANGE_VALUE: (state, action: PayloadAction<string>) => {
+    CHANGE_VALUE_USER: (state, action: PayloadAction<string>) => {
       state.info = [...state.info, action.payload];
     },
     DELETE_ALL_VALUES: (state) => {
@@ -22,7 +22,7 @@ export const infoSlice = createSlice({
 });
 
 // Exporting actions
-export const { CHANGE_VALUE, DELETE_ALL_VALUES } = infoSlice.actions;
+export const { CHANGE_VALUE_USER, DELETE_ALL_VALUES } = infoSlice.actions;
 
 // Exporting reducer
 export default infoSlice.reducer;

@@ -298,7 +298,7 @@ export default function Layers() {
                     {object.text}
                   </Block>
                 ) : (
-                  <Image
+                  <img
                     src={object._element?.currentSrc}
                     alt="ảnh"
                     style={{
