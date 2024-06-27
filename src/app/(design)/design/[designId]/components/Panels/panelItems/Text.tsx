@@ -7,7 +7,6 @@ import { FontItem } from "@/interfaces/common";
 import { loadFonts } from "@/utils/media/fonts";
 import { Block } from "baseui/block";
 import AngleDoubleLeft from "@/components/Icons/AngleDoubleLeft";
-
 import Scrollable from "@/components/Scrollable";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
@@ -165,6 +164,7 @@ export default function Text() {
       }
     }
   };
+
   useEffect(() => {
     const fetchFonts = async () => {
       try {
@@ -187,11 +187,10 @@ export default function Text() {
   }, [network, token]);
 
   useEffect(() => {
-    if (fonts.length === 0) {
-      return;
-    }
-
     const fetchTextStyles = async () => {
+      if (fonts.length === 0) {
+        return;
+      }
       setLoading(true);
       try {
         const res = await axios.post(`${network}/listStyleTextAPI`, {
@@ -231,6 +230,14 @@ export default function Text() {
     fetchTextStyles();
   }, [fonts, network, token]);
 
+  useEffect(() => {
+    const loadFontsBeforeRender = async () => {
+      await loadFonts(fonts);
+    };
+
+    loadFontsBeforeRender();
+  }, [fonts]);
+
   return (
     <>
       <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -242,7 +249,8 @@ export default function Text() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}>
+          }}
+        >
           <Block>
             <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
               Kiểu chữ
@@ -251,7 +259,8 @@ export default function Text() {
 
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}>
+            $style={{ cursor: "pointer", display: "flex" }}
+          >
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -266,7 +275,8 @@ export default function Text() {
                     width: "100%",
                   },
                 },
-              }}>
+              }}
+            >
               Thêm chữ
             </Button>
 
@@ -276,7 +286,8 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}>
+              }}
+            >
               {allText.map((text) => (
                 <div
                   key={text.id}
@@ -288,7 +299,8 @@ export default function Text() {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}>
+                  onClick={() => handleAddText(text)}
+                >
                   <p
                     style={{
                       color: text.content.color,
@@ -297,7 +309,8 @@ export default function Text() {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}>
+                    }}
+                  >
                     {text.content.text}
                   </p>
                 </div>

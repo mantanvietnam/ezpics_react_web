@@ -1,4 +1,4 @@
-"uses client";
+"use client";
 import React from "react";
 import Canvas from "./components/Canvas";
 import EditorContainer from "./components/EditorContainer";

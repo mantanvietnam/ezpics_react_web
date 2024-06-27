@@ -301,7 +301,7 @@ export default function Layers() {
                     {object.text}
                   </Block>
                 ) : (
-                  <Image
+                  <img
                     src={object._element?.currentSrc}
                     alt="ảnh"
                     style={{
@@ -335,7 +335,7 @@ export default function Layers() {
                         },
                       }}
                     >
-                      <img
+                      <Image
                         src="./setting.png"
                         style={{
                           width: 18,
@@ -494,7 +494,7 @@ export default function Layers() {
                   paddingTop: "100%",
                 }}
               >
-                <Image alt="" src={empty} width={200} height={200} />
+                <img alt="" src={empty} width={200} height={200} />
                 <p
                   style={{
                     fontFamily: "Arial",
