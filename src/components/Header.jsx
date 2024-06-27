@@ -741,7 +741,7 @@ const Header = ({ toggleNavbar }) => {
       </div>
       {/* <div> */}
       <Modal
-        open={!modalLogoutDevice}
+        open={modalLogoutDevice}
         onClose={handleLogoutDevice}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
