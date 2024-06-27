@@ -170,14 +170,10 @@ const Header = ({ toggleNavbar }) => {
           setLoadingButtonModalCreate(false);
           setOpenModalCreating(false);
           document.body.style.overflowY = "auto";
+          toast.success("Tạo thiết kế thành công");
 
           setTimeout(function () {
-            router.push(`/design`, {
-              state: {
-                id: response.data.product_id,
-                token: checkTokenCookie(),
-              },
-            });
+            router.push(`/design/${response.data.product_id}`);
           }, 1500);
         } else {
           // Handle unexpected response structure or error code

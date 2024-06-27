@@ -3,8 +3,8 @@ import { createReducer, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface tokenState {
-  token: string | null;
-  id: string | null;
+  token: string;
+  id: string;
   proUser: boolean;
 }
 

@@ -1,5 +1,5 @@
 // import { AppContext } from "@/contexts/AppContext"
-import { AppContext } from "@/app/(design)/design/AppContext";
+import { AppContext } from "@/app/(design)/design/[designId]/AppContext";
 import { useContext } from "react";
 
 function useAppContext() {
