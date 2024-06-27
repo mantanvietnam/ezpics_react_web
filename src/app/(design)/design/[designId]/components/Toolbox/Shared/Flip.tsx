@@ -14,6 +14,7 @@ import { ILayer } from "@layerhub-io/types";
 import Image from "next/image";
 
 export default function Flip() {
+  console.log("In file Flip");
   const editor = useEditor();
   const objects = useObjects() as ILayer[];
 
@@ -514,7 +515,7 @@ export default function Flip() {
                   alt=""
                   src="../../../../../../assets/moveleft.png"
                   width="15"
-                  height= "15"
+                  height="15"
                 />
               </Button>
               <Button

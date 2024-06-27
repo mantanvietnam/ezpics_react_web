@@ -426,7 +426,12 @@ export default function Templates() {
                   onClick={() => addImageToCanvas(upload.url)}
                 >
                   <div>
-                    <img width="100%" src={upload.url} alt="preview" />
+                    <img
+                      width="100px"
+                      height="100px"
+                      src={upload.url}
+                      alt="preview"
+                    />
                   </div>
                 </div>
               ))}
@@ -519,9 +524,9 @@ export default function Templates() {
                 position: "absolute",
                 top: "12%",
                 left: "16%",
-                width: 40,
-                height: 40,
               }}
+              width={40}
+              height={40}
               src={ezlogo}
               alt=""
             />
@@ -594,7 +599,7 @@ function ImageItem({
             },
           })}
         ></div>
-        <Image
+        <img
           src={preview}
           alt=""
           className={css({

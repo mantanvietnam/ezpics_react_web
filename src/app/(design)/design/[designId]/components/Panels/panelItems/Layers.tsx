@@ -336,10 +336,10 @@ export default function Layers() {
                       }}
                     >
                       <Image
-                        src="./setting.png"
+                        src={Lighting}
+                        width={18}
+                        height={18}
                         style={{
-                          width: 18,
-                          height: 18,
                           paddingLeft: "4px",
                           paddingRight: "4px",
                           paddingTop: "2px",
@@ -494,7 +494,7 @@ export default function Layers() {
                   paddingTop: "100%",
                 }}
               >
-                <img alt="" src={empty} width={200} height={200} />
+                <Image alt="" src={empty} width={200} height={200} />
                 <p
                   style={{
                     fontFamily: "Arial",

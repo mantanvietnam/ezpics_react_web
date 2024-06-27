@@ -10,7 +10,7 @@ interface State {
   width: number;
 }
 
-export default function () {
+export default function DesignTitle() {
   const [state, setState] = React.useState<State>({
     name: "My first design.",
     width: 0,

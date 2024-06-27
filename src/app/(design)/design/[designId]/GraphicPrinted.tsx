@@ -1,9 +1,9 @@
-import Navbar from "./Navbar";
+import Navbar from "../[designId]/components/Navbar";
 import Panels from "./components/Panels";
-import Canvas from "./Canvas";
+import Canvas from "../[designId]/components/Canvas";
 import Footer from "./components/Footer";
 import Toolbox from "./components/Toolbox";
-import EditorContainer from "./EditorContainer";
+import EditorContainer from "../[designId]/components/EditorContainer";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/hooks/hook";
@@ -13,7 +13,7 @@ import { IScene } from "@layerhub-io/types";
 import { loadVideoEditorAssets } from "@/utils/media/video";
 import { v4 as uuidv4 } from "uuid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/store/slices/token/reducers";
+import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/redux/slices/token/reducers";
 import "@/app/(main)/design/components/Resizable/loading.css";
 import "@/app/(main)/design/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
@@ -552,8 +552,7 @@ function GraphicPrinted() {
               paddingTop: "6%",
               paddingRight: "2%",
               paddingLeft: "18%",
-            }}
-          >
+            }}>
             <div
               style={{
                 width: "100%",
@@ -561,8 +560,7 @@ function GraphicPrinted() {
                 alignItems: "center",
                 justifyContent: "center",
                 paddingTop: "2%",
-              }}
-            >
+              }}>
               <button
                 onClick={(e) => handleDownloadImage(e)}
                 style={{
@@ -580,8 +578,7 @@ function GraphicPrinted() {
                   fontWeight: "500",
                   borderRadius: 5,
                   cursor: "pointer",
-                }}
-              >
+                }}>
                 Tải ảnh
               </button>
               <button
@@ -601,8 +598,7 @@ function GraphicPrinted() {
                   fontWeight: "500",
                   borderRadius: 5,
                   cursor: "pointer",
-                }}
-              >
+                }}>
                 Nhập lại thông tin
               </button>
             </div>
@@ -613,8 +609,7 @@ function GraphicPrinted() {
                 display: "flex",
                 alignSelf: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               {imageData ? (
                 <img
                   style={{

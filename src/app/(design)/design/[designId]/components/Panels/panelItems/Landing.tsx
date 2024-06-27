@@ -29,6 +29,7 @@ interface Tab {
   content: string;
 }
 export default function Landing() {
+  console.log("come here");
   const {
     setDisplayPreview,
     setScenes,

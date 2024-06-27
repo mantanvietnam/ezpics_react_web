@@ -1,3 +1,4 @@
+"use client";
 import Navbar from "./components/Navbar";
 import Panels from "./components/Panels";
 import Canvas from "./components/Canvas";
@@ -15,16 +16,13 @@ import { v4 as uuidv4 } from "uuid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import { loadFonts } from "@/utils/media/fonts";
 import { toast } from "react-toastify";
-import {
-  REPLACE_TOKEN,
-  REPLACE_ID_USER,
-} from "../../../redux/slices/token/reducers";
+import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/redux/slices/token/reducers";
 import "@/components/Resizable";
-import { REPLACE_font } from "../../../redux/slices/font/fontSlice";
+import { REPLACE_font } from "@/redux/slices/font/fontSlice";
 import "@/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
-import { REPLACE_TYPE_USER } from "../../../redux/slices/type/typeSlice";
-import { REPLACE_PRO_USER } from "../../../redux/slices/token/reducers";
+import { REPLACE_TYPE_USER } from "@/redux/slices/type/typeSlice";
+import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
 import { useLocation } from "react-router-dom";
 import ezpiclogo from "./EZPICS (converted)-03.png";
 import Image from "next/image";
@@ -330,12 +328,14 @@ function GraphicEditor() {
 
   const urlParams = new URLSearchParams(queryString);
 
-  const { id, token } = location.state;
+  const { id, token } = location.state || {};
 
-  if (token && id) {
-    dispatch(REPLACE_TOKEN(token));
-    dispatch(REPLACE_ID_USER(id));
-  }
+  useEffect(() => {
+    if (token && id) {
+      dispatch(REPLACE_TOKEN(token));
+      dispatch(REPLACE_ID_USER(id));
+    }
+  }, [token, id, dispatch]);
 
   const dataScenes = (data: any, dataBackground: any) => {
     const dataString = {
@@ -731,7 +731,8 @@ function GraphicEditor() {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-            }}>
+            }}
+          >
             <img
               src="../../../assets/error.jpg"
               alt="lỗi"
@@ -741,7 +742,8 @@ function GraphicEditor() {
               style={{
                 color: "black",
                 fontFamily: "Arial, Helvetica, sans-serif",
-              }}>
+              }}
+            >
               Bạn không có quyền truy cập, hãy thử lại
             </h2>
           </div>
@@ -754,23 +756,24 @@ function GraphicEditor() {
               backgroundColor: "rgba(0,0,0,0.9)",
               position: "absolute",
               zIndex: 20000000000,
-            }}>
+            }}
+          >
             <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
               <div className="ldio-4qpid53rus92">
                 <div></div>
                 <div>
                   <div></div>
                 </div>
-                <Image
+                <img
                   style={{
                     position: "absolute",
                     top: "12%",
                     left: "16%",
                   }}
-                  width={40}
-                  height={40}
+                  // width={}
+                  // height={ }
                   alt=""
-                  src={ezpiclogo}
+                  src="./EZPICS (converted)-03.png"
                 />
               </div>
             </div>

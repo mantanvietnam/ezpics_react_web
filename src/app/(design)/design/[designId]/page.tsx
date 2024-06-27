@@ -9,7 +9,13 @@ import { REPLACE_ID_USER } from "@/redux/slices/token/reducers";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
-function PresentationEditor({ params }) {
+interface PresentationEditorProps {
+  params: {
+    designId: string;
+  };
+}
+
+function PresentationEditor({ params }: PresentationEditorProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
