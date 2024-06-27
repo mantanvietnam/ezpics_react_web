@@ -72,11 +72,12 @@ const Sign_up = () => {
         .then(response => {
           console.log(response)
           if (response?.code === 0) {
-            dispatch(CHANGE_STATUS_AUTH(true));
-            dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
-            setCookie("user_login", repon?.info_member, expirationHours);
-            setCookie("token", response?.info_member?.token_web, expirationHours);
             toast.success('thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại')
+            dispatch(CHANGE_STATUS_AUTH(true));
+            dispatch(CHANGE_VALUE_TOKEN(response?.info_member?.token_web));
+            setCookie("token", response?.info_member?.token_web, expirationHours);
+            setCookie("user_login", response?.info_member, expirationHours);
+            // alert('thành công')
             setTimeout(() => {
               router.push('/OtpVerification')
             }, 3000)

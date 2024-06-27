@@ -19,7 +19,6 @@ const OtpVerification = ({ phone }) => {
     const { data: session } = useSession();
     const router = useRouter();
     const token = checkTokenCookie()
-    // console.log(token)
     // Lấy data user
     let dataInforUser;
     if (getCookie("user_login")) {
@@ -29,7 +28,6 @@ const OtpVerification = ({ phone }) => {
     } else {
         dataInforUser = null;
     }
-    // console.log(dataInforUser)
     const handleResendOtp = async () => {
         setIsLoading(true);
         try {
@@ -69,8 +67,6 @@ const OtpVerification = ({ phone }) => {
             setIsLoading(false);
         }
     };
-
-
     const handleOtpChange = (e, index) => {
         const value = e.target.value;
         if (/^[0-9]$/.test(value) || value === '') {
@@ -107,7 +103,6 @@ const OtpVerification = ({ phone }) => {
             toast.error('Vui lòng nhập đầy đủ mã OTP.');
         }
     };
-
     return (
         <div className={styles.formOtpVerification}>
             <div className={styles.backgroundform}>

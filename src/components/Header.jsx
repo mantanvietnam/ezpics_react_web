@@ -50,7 +50,7 @@ const Header = ({ toggleNavbar }) => {
       setShow(true);
     }
   }, [isOnline]);
-// check sign-double
+  // check sign-double
   const handleLogoutDevice = () => {
     document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -105,6 +105,7 @@ const Header = ({ toggleNavbar }) => {
   } else {
     dataInforUser = null;
   }
+
 
   const handleLogout = async (e) => {
     const response = await logoutService({
@@ -707,58 +708,6 @@ const Header = ({ toggleNavbar }) => {
           </div>
         )}
       </div>
-      <Modal
-        open={modalLogoutDevice}
-        onClose={handleLogoutDevice}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styleModalBuyingFree}>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 22,
-              fontWeight: "bold",
-              paddingBottom: "10px",
-            }}
-          >
-            Cảnh báo
-          </p>
-          {/* <img
-            src={warning}
-            alt=""
-            style={{ width: "20%", height: "30%", marginBottom: "10px" }}
-          /> */}
-          <p
-            style={{
-              margin: 0,
-              fontSize: 17,
-              fontWeight: "500",
-              paddingTop: "10px",
-            }}
-          >
-            Tài khoản đã bị đăng nhập ở thiết bị khác
-          </p>
-          <div style={{ display: "flex" }}>
-            <Button
-              variant="contained"
-              size="medium"
-              style={{
-                height: 40,
-                alignSelf: "center",
-                textTransform: "none",
-                color: "white",
-                backgroundColor: "rgb(255, 66, 78)",
-                marginTop: "40px",
-                width: "100%",
-              }}
-              onClick={() => handleLogout()}
-            >
-              Đăng xuất
-            </Button>
-          </div>
-        </Box>
-      </Modal>
       <div
         className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline ? 'bg-green-500 text-white opacity-0' : 'bg-red-500 text-white opacity-100'
           } ${show ? 'opacity-100' : 'opacity-0'}`}
