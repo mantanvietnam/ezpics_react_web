@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { useAppSelector, useAppDispatch } from "../../../../../../hooks/hook";
 import { REPLACE_font } from "../../../../../../redux/slices/font/fontSlice";
 import Image from "next/image";
-import { logo } from "../../../../../../../public/images/logo.png";
+import images from "../../../../../../../public/images/index2";
 
 export default function FontSelector() {
   const [query, setQuery] = React.useState("");
@@ -180,7 +180,6 @@ export default function FontSelector() {
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
-
         <Block $style={{ padding: "0 1.5rem 1rem" }}>
           <Input
             overrides={{
@@ -197,7 +196,6 @@ export default function FontSelector() {
             startEnhancer={<Search size={16} />}
           />
         </Block>
-
         <Scrollable>
           <div style={{ padding: "0 1.5rem", display: "grid", gap: "0.2rem" }}>
             {commonFonts.map((font, index) => {
@@ -262,7 +260,7 @@ export default function FontSelector() {
               width={40}
               height={40}
               alt=""
-              src={logo}
+              src={images.logo}
             />
           </div>
         </div>

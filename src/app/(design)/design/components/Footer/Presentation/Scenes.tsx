@@ -14,7 +14,7 @@ const Container = styled<"div", {}, Theme>("div", ({ $theme }) => ({
   padding: "0.25rem 0.75rem",
 }));
 
-export default function () {
+export default function Scenes() {
   const scenes = useDesignEditorPages();
   const {
     setScenes,

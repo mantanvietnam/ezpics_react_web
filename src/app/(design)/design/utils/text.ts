@@ -43,34 +43,39 @@ export const getTextPropertiesClone = (
 ) => {
   const color = object.fill;
   const family = object.fontFamily;
-  const selectedFont = fonts.filter((sampleFont) =>
+  const selectedFonts = fonts.filter((sampleFont) =>
     sampleFont.name.includes(family)
   );
-  console.log(family)
-  console.log( selectedFont )
-  console.log(fonts)
-  // const groupedFonts = groupBy(fonts, "name");
-  // // const selectedFamily = groupedFonts[selectedFont.name]
-  // const hasBold = selectedFont.find((font) => font.name.includes(`Bold`));
-  // const hasItalic = selectedFont.find((font) => font.name.includes(`Italic`));
-  // const styleOptions = {
-  //   hasBold: !!selectedFont.includes("Bold"),
-  //   hasItalic: !!selectedFont.includes("Italic"),
-  //   options: [],
-  // };
-  // return {
-  //   color,
-  //   family: family,
-  //   bold: selectedFont.includes("Bold"),
-  //   italic: selectedFont.includes("Italic"),
-  //   underline: object.underline,
-  //   styleOptions,
-  //   selectedFont: object,
-  //   BoldURL: {
-  //     URL: fonts.filter((sampleFont) => sampleFont.name.includes(family)),
 
-  //     name: fonts.filter((sampleFont) => sampleFont.name.includes(family)),
-  //   },
-  //   font: fonts
-  // };
+  // Logging for debugging purposes
+  console.log(family);
+  console.log(selectedFonts);
+  console.log(fonts);
+
+  // Group fonts by family
+  const groupedFonts = groupBy(fonts, "name");
+  const selectedFamily = groupedFonts[family] || [];
+  const hasBold = selectedFamily.find((font) => font.name.includes("Bold"));
+  const hasItalic = selectedFamily.find((font) => font.name.includes("Italic"));
+  const styleOptions = {
+    hasBold: !!hasBold,
+    hasItalic: !!hasItalic,
+    options: selectedFamily,
+  };
+
+  return {
+    color,
+    family: family,
+    bold: family.includes("Bold"),
+    italic: family.includes("Italic"),
+    underline: object.underline,
+    styleOptions,
+    selectedFont: selectedFonts,
+    boldURL: {
+      URL: selectedFonts.find((font) => font.name.includes("Bold"))?.url || "",
+      name:
+        selectedFonts.find((font) => font.name.includes("Bold"))?.name || "",
+    },
+    font: fonts,
+  };
 };

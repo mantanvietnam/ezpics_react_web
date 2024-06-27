@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, SIZE } from "baseui/button";
 import { useStyletron } from "styletron-react";
 import { useEditor } from "@layerhub-io/react";
@@ -7,14 +7,12 @@ import { FontItem } from "@/interfaces/common";
 import { loadFonts } from "@/utils/media/fonts";
 import { Block } from "baseui/block";
 import AngleDoubleLeft from "@/components/Icons/AngleDoubleLeft";
-import ezlogo from "./EZPICS (converted)-03.png";
 
 import Scrollable from "@/components/Scrollable";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import Image from "next/image";
 
 export default function Text() {
   const editor = useEditor();
@@ -24,20 +22,22 @@ export default function Text() {
   const token = useAppSelector((state) => state.token.token);
   const [allText, setAllText] = useState<any[]>([]);
   const [css] = useStyletron();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fonts, setFonts] = useState<any[]>([]);
   const { currentDesign, scenes } = useDesignEditorContext();
-  function findIndexById(arr: any, targetId: any) {
+  const textLayerRef = useRef<any>(null);
+
+  const findIndexById = (arr: any, targetId: any) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].id === targetId) {
         return i;
       }
     }
-    return -1; // Trả về -1 nếu không tìm thấy
-  }
+    return -1;
+  };
+
   const parseGraphicJSON = () => {
     const currentScene = editor.scene.exportToJSON();
-
-    console.log(currentScene);
     const updatedScenes = scenes.map((scn) => {
       if (scn.id === currentScene.id) {
         return {
@@ -46,11 +46,7 @@ export default function Text() {
           name: currentScene.name,
         };
       }
-      return {
-        id: scn.id,
-        layers: scn.layers,
-        name: scn.name,
-      };
+      return scn;
     });
 
     if (currentDesign) {
@@ -64,30 +60,32 @@ export default function Text() {
         preview: "",
       };
 
-      let resultIndex = findIndexById(graphicTemplate.scenes, currentScene.id);
-      console.log(resultIndex);
-      console.log(graphicTemplate.scenes);
-      console.log(currentScene.id);
-      return resultIndex;
-
-      // makeDownload(graphicTemplate);
-      // const allLayers = graphicTemplate.scenes.map((scene:any) => scene.layers);
-      // console.log(graphicTemplate)
-      // const newDesign = generateToServer(allLayers);
-      // console.log(newDesign)
-      // let newArr : any=[];
-      // console.log(newArr)
+      const resultIndex = findIndexById(
+        graphicTemplate.scenes,
+        currentScene.id
+      );
+      return { page: resultIndex, updatedScenes };
     } else {
       console.log("NO CURRENT DESIGN");
     }
   };
+
   const addObject = async () => {
     if (editor) {
+      const { page, updatedScenes } = parseGraphicJSON();
+
+      const fontURL =
+        updatedScenes[page]?.layers.find((layer) => layer.type === "StaticText")
+          ?.fontURL ||
+        "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff";
+
       const font: FontItem = {
         name: "Helve",
-        url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
+        url: fontURL,
       };
+
       await loadFonts([font]);
+
       const res = await axios.post(`${network}/addLayerText`, {
         idproduct: idProduct,
         token: token,
@@ -95,10 +93,10 @@ export default function Text() {
         color: "#333333",
         size: 92,
         font: font.name,
-        page: Number(parseGraphicJSON()),
+        page,
       });
+
       if (res.data.code === 1) {
-        console.log(res.data);
         const options = {
           id: res.data.data.id,
           type: "StaticText",
@@ -113,27 +111,30 @@ export default function Text() {
           metadata: {
             idBackground: 0,
             lock: false,
-            page: Number(parseGraphicJSON()),
-
-            // sort: 1,
-            srcBackground: "",
-            uppercase: "",
-            variable: "",
-            variableLabel: "",
+            page,
           },
         };
-        editor.objects.add<any>(options);
+        const newTextLayer = editor.objects.add<any>(options);
+        textLayerRef.current = newTextLayer;
       }
     }
   };
+
   const handleAddText = async (item: any) => {
     if (editor) {
+      const { page, updatedScenes } = parseGraphicJSON();
+
+      const fontURL =
+        item.content.fontURL ||
+        "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff";
+
       const font: FontItem = {
-        name: "Helve",
-        url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
+        name: item.content.font,
+        url: fontURL,
       };
+
       await loadFonts([font]);
-      console.log(item);
+
       const response = await axios.post(`${network}/addLayerText`, {
         idproduct: idProduct,
         token: token,
@@ -141,8 +142,9 @@ export default function Text() {
         color: item.content.color,
         size: 200,
         font: item.content.font,
-        page: Number(parseGraphicJSON()),
+        page,
       });
+
       if (response && response.data) {
         const options = {
           id: response.data.data?.id,
@@ -153,70 +155,82 @@ export default function Text() {
           fontFamily: item.content.font,
           textAlign: "center",
           fontStyle: item.content.indam === "normal" ? "bold" : "400",
-          // fontURL: font.url,
           fill: item.content.color,
           metadata: {
-            page: Number(parseGraphicJSON()),
+            page,
           },
         };
-        editor.objects.add<any>(options);
+        const newTextLayer = editor.objects.add<any>(options);
+        textLayerRef.current = newTextLayer;
       }
     }
   };
   useEffect(() => {
-    setLoading(true);
-    const getAllText = async () => {
+    const fetchFonts = async () => {
+      try {
+        const response = await axios.post(`${network}/listFont`, {
+          token: token,
+        });
+
+        const fontList = response.data.data.map((font: any) => ({
+          name: font.name,
+          url: font.font,
+        }));
+
+        setFonts(fontList);
+      } catch (error) {
+        console.error("Error fetching fonts:", error);
+      }
+    };
+
+    fetchFonts();
+  }, [network, token]);
+
+  useEffect(() => {
+    if (fonts.length === 0) {
+      return;
+    }
+
+    const fetchTextStyles = async () => {
+      setLoading(true);
       try {
         const res = await axios.post(`${network}/listStyleTextAPI`, {
           token: token,
           page: 1,
           limit: 100,
         });
-        console.log(res.data);
 
-        if (res.data && res) {
-          setAllText(res.data.data);
-          setLoading(false);
-        } else {
+        if (res.data && res.data.data) {
+          const allText = res.data.data;
+
+          const updatedAllText = allText.map((text: any) => {
+            const matchedFont = fonts.find(
+              (font) => font.name === text.content.font
+            );
+            const fontURL = matchedFont
+              ? matchedFont.url
+              : "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff";
+            return {
+              ...text,
+              content: {
+                ...text.content,
+                fontURL: fontURL || text.content.fontURL,
+              },
+            };
+          });
+
+          setAllText(updatedAllText);
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching text styles:", error);
+      } finally {
         setLoading(false);
       }
-      console.log(allText);
     };
-    getAllText();
-  }, []);
 
-  // const addComponent = async (component: any) => {
-  //   if (editor) {
-  //     const fontItemsList: FontItem[] = [];
-  //     if (component.objects) {
-  //       component.objects.forEach((object: any) => {
-  //         if (object.type === "StaticText" || object.type === "DynamicText") {
-  //           fontItemsList.push({
-  //             name: object.fontFamily,
-  //             url: object.fontURL,
-  //           });
-  //         }
-  //       });
-  //       const filteredFonts = fontItemsList.filter((f) => !!f.url);
-  //       await loadFonts(filteredFonts);
-  //     } else {
-  //       if (
-  //         component.type === "StaticText" ||
-  //         component.type === "DynamicText"
-  //       ) {
-  //         fontItemsList.push({
-  //           name: component.fontFamily,
-  //           url: component.fontURL,
-  //         });
-  //         await loadFonts(fontItemsList);
-  //       }
-  //     }
-  //     editor.objects.add(component);
-  //   }
-  // };
+    fetchTextStyles();
+  }, [fonts, network, token]);
+
   return (
     <>
       <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -247,7 +261,6 @@ export default function Text() {
           <Block padding={"0 1.5rem"}>
             <Button
               onClick={addObject}
-              // onClick={() => console.log(allText)}
               size={SIZE.compact}
               overrides={{
                 Root: {
@@ -268,7 +281,7 @@ export default function Text() {
                 width: "100%",
               }}
             >
-              {allText.map((text, index) => (
+              {allText.map((text) => (
                 <div
                   key={text.id}
                   style={{
@@ -284,7 +297,7 @@ export default function Text() {
                   <p
                     style={{
                       color: text.content.color,
-                      fontFamily: text.content.font,
+                      fontFamily: `"${text.content.font}", Arial, sans-serif`,
                       textAlign: "center",
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
@@ -299,115 +312,6 @@ export default function Text() {
           </Block>
         </Scrollable>
       </Block>
-      {loading && (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.7)",
-            position: "absolute",
-            zIndex: 20000000000,
-          }}
-        >
-          <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
-            <div className="ldio-4qpid53rus9">
-              <div></div>
-              <div>
-                <div></div>
-              </div>
-            </div>
-            <Image
-              style={{
-                position: "absolute",
-                top: "12%",
-                left: "16%",
-              }}
-              width={40}
-              height={40}
-              src={ezlogo}
-              alt=""
-            />
-          </div>
-        </div>
-      )}
     </>
-  );
-}
-
-interface TextComponent {
-  id: string;
-  metadata: {
-    preview: string;
-  };
-}
-function TextComponentItem({
-  component,
-  onClick,
-}: {
-  component: any;
-  onClick: (option: any) => void;
-}) {
-  const [css] = useStyletron();
-  return (
-    <div
-      onClick={() => onClick(component.layers[0])}
-      className={css({
-        position: "relative",
-        height: "84px",
-        background: "#f8f8fb",
-        cursor: "pointer",
-        padding: "12px",
-        borderRadius: "8px",
-        overflow: "hidden",
-        "::before:hover": {
-          opacity: 1,
-        },
-      })}
-    >
-      <div
-        className={css({
-          backgroundImage: `linear-gradient(to bottom,
-          rgba(0, 0, 0, 0) 0,
-          rgba(0, 0, 0, 0.006) 8.1%,
-          rgba(0, 0, 0, 0.022) 15.5%,
-          rgba(0, 0, 0, 0.047) 22.5%,
-          rgba(0, 0, 0, 0.079) 29%,
-          rgba(0, 0, 0, 0.117) 35.3%,
-          rgba(0, 0, 0, 0.158) 41.2%,
-          rgba(0, 0, 0, 0.203) 47.1%,
-          rgba(0, 0, 0, 0.247) 52.9%,
-          rgba(0, 0, 0, 0.292) 58.8%,
-          rgba(0, 0, 0, 0.333) 64.7%,
-          rgba(0, 0, 0, 0.371) 71%,
-          rgba(0, 0, 0, 0.403) 77.5%,
-          rgba(0, 0, 0, 0.428) 84.5%,
-          rgba(0, 0, 0, 0.444) 91.9%,
-          rgba(0, 0, 0, 0.45) 100%)`,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 0,
-          transition: "opacity 0.3s ease-in-out",
-          height: "100%",
-          width: "100%",
-          ":hover": {
-            opacity: 1,
-          },
-        })}
-      ></div>
-      <Image
-        alt=""
-        src={component.preview}
-        className={css({
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-          pointerEvents: "none",
-          verticalAlign: "middle",
-        })}
-      />
-    </div>
   );
 }

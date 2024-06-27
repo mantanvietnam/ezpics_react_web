@@ -1,4 +1,5 @@
-"use client";
+"uses client";
+import React from "react";
 import Canvas from "./components/Canvas";
 import EditorContainer from "./components/EditorContainer";
 import Footer from "./components/Footer";
@@ -6,7 +7,6 @@ import Navbar from "./components/Navbar";
 import Panels from "./components/Panels";
 
 function PresentationEditor() {
-  console.log(123);
   return (
     <>
       <EditorContainer>

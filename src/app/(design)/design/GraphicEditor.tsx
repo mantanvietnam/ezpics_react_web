@@ -602,7 +602,7 @@ function GraphicEditor() {
   );
 
   let convertData;
-  const currentListFont = useAppSelector((state) => state?.newFont?.font);
+  const currentListFont = useAppSelector((state) => state.newFont.font);
   useEffect(() => {
     const fetchProUser = async () => {
       try {

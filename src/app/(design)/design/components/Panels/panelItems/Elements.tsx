@@ -8,7 +8,7 @@ import Scrollable from "@/components/Scrollable";
 import { graphics } from "@/constants/mock-data";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 
-export default function () {
+export default function Element() {
   const editor = useEditor();
   const setIsSidebarOpen = useSetIsSidebarOpen();
 

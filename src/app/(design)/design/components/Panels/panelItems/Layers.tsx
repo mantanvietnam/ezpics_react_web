@@ -43,6 +43,7 @@ export default function Layers() {
         url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
       };
       await loadFonts([font]);
+      console.log(font);
       const res = await axios.post(`${network}/addLayerText`, {
         idproduct: idProduct,
         token: token,
@@ -52,8 +53,8 @@ export default function Layers() {
         font: font.name,
         page: Number(parseGraphicJSON()),
       });
+      console.log(res.data);
       if (res.data.code === 1) {
-        console.log(res.data);
         const options = {
           id: res.data.data.id,
           type: "StaticText",

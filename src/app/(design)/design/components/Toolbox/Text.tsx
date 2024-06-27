@@ -34,8 +34,6 @@ import { HexColorPicker } from "react-colorful";
 import { Canvas } from "@layerhub-io/react";
 import { Checkbox } from "baseui/checkbox";
 import gradientIcon from "./gradient.png";
-
-import "@/components/Loading/Initial.css";
 interface TextState {
   color: string;
   bold: boolean;
@@ -79,6 +77,7 @@ const initialOptions: TextState = {
   },
 };
 export default function Text() {
+  console.log("come here");
   const [state, setState] = React.useState<TextState>(initialOptions);
   const activeObject = useActiveObject() as Required<IStaticText>;
   const { setActiveSubMenu } = useAppContext();

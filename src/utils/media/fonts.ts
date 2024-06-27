@@ -39,7 +39,6 @@ export const loadFonts = (fonts: FontItem[]) => {
         res.forEach((uniqueFont: any) => {
           if (uniqueFont) {
             console.log(uniqueFont);
-            //  && uniqueFont.name
             document.fonts.add(uniqueFont);
             resolve(true);
           }
@@ -61,8 +60,6 @@ export const loadFontsSelector = (fonts: FontItem[]) => {
         res.forEach((uniqueFont: any) => {
           if (uniqueFont) {
             console.log(uniqueFont);
-            //  && uniqueFont.name
-            // document.fonts.add(uniqueFont)
             resolve(true);
           }
         });
@@ -70,3 +67,24 @@ export const loadFontsSelector = (fonts: FontItem[]) => {
       .catch((err) => reject(err));
   });
 };
+//  export const loadFonts = (fonts: FontItem[]) => {
+//    const promisesList = fonts.map(async (font) => {
+//      try {
+//        const fontFace = new FontFace(font.name, `url(${font.url})`);
+//        await fontFace.load();
+//        document.fonts.add(fontFace);
+//        return fontFace;
+//      } catch (err) {
+//        console.error(`Failed to load font: ${font.name}`, err);
+//        return null;
+//      }
+//    });
+
+//    return new Promise((resolve, reject) => {
+//      Promise.all(promisesList)
+//        .then((res) => {
+//          resolve(res.filter(Boolean)); // Filter out null values
+//        })
+//        .catch((err) => reject(err));
+//    });
+//  };

@@ -605,7 +605,7 @@ function ImageItem({
             },
           })}
         ></div>
-        <img
+        <Image
           src={preview}
           alt=""
           className={css({

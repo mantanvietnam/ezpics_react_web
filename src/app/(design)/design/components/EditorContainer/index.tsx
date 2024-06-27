@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { Block } from "baseui/block";
 import axios from "axios";
@@ -6,12 +7,12 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { toast } from "react-toastify";
 import { useEditor } from "@layerhub-io/react";
 import { useAppSelector } from "@/hooks/hook";
-import { generateToServerSaving } from "@/api/gererateToServer";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import "./loading.css";
 import { generateToServer } from "@/api/gererateToServer";
 import { useActiveObject } from "@layerhub-io/react";
 import { useDebouncedCallback } from "use-debounce";
+import { checkTokenCookie } from "@/utils";
 
 // window.addEventListener("online", () => getValueOnline());
 // window.addEventListener("offline", () => handleOffline());
