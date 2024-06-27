@@ -11,13 +11,13 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { setCookie } from '@/utils';
-// import { useRouter } from 'next/router';
-
-// import { useMutation } from '@tanstack/react-query';
+import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from '@/redux/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Sign_up = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
   const expirationHours = 3;
 
   const {
@@ -71,9 +71,13 @@ const Sign_up = () => {
       register(values)
         .then(response => {
           console.log(response)
-          if (response.code === 0) {
-            setCookie("token", response?.info_member?.token_web, expirationHours);
+          if (response?.code === 0) {
             toast.success('thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại')
+            dispatch(CHANGE_STATUS_AUTH(true));
+            dispatch(CHANGE_VALUE_TOKEN(response?.info_member?.token_web));
+            setCookie("token", response?.info_member?.token_web, expirationHours);
+            setCookie("user_login", response?.info_member, expirationHours);
+            // alert('thành công')
             setTimeout(() => {
               router.push('/OtpVerification')
             }, 3000)
