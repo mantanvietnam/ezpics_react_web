@@ -290,11 +290,13 @@ export default function ProductInfo(props) {
             <div className="line-through text-slate-400 rounded-sm">
               {data?.price ? VND.format(data?.price) : ""}
             </div>
-            <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
-              {data?.sale_price
-                ? `Giảm ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
-                : "Miễn Phí"}
-            </div>
+            {
+              data?.sale_price ?
+                <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+                  {`Giảm ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`}
+                </div> :
+                ""
+            }
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm product-details-e">Khuyến mãi</div>
