@@ -14,7 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
-import { Button, Divider, Dropdown, Modal, Space } from "antd";
+import { Button, Dropdown, Modal, Space } from "antd";
 import images, { designIcon ,contactInfo} from "../../public/images/index2";
 import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
@@ -35,8 +35,6 @@ const Header = ({ toggleNavbar }) => {
   const [modalLogoutDevice, setModalLogoutDevice] = useState(false);
   const [token, setToken] = useState();
   const cookie = checkTokenCookie()
-  // console.log('token' ,token)
-
   // check online
   const isOnline = useCheckInternet();
   const [show, setShow] = useState(true);
@@ -741,7 +739,7 @@ const Header = ({ toggleNavbar }) => {
         )}
         {/* <ScrollToTopButton/> */}
       </div>
-      <div>
+      {/* <div> */}
       <Modal
         open={modalLogoutDevice}
         onClose={handleLogoutDevice}
@@ -795,7 +793,7 @@ const Header = ({ toggleNavbar }) => {
           </div>
         </Box>
       </Modal>
-      </div>
+      {/* </div> */}
     </div>
   );
 };
