@@ -266,7 +266,7 @@ const ProductInfo = (props) => {
                   {Array.isArray(collection) && collection.length > 0 ? (
                     collection.map((item) => (
                       <Link
-                        href={`/collection-buying/${item.id}`}
+                        href={`/category/${item.id}`}
                         className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
                         key={item.id}
                       >
