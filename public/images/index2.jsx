@@ -41,6 +41,7 @@ export const designAction = {
   edit: require("./edit.png").default,
   copy: require("./copy.png"),
   delete: require("./delete.png"),
+  printer: require("./printer.png"),
   eye: require("./eye.png"),
   share: require("./share.png"),
   download: require("./download.png"),
