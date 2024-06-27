@@ -7,7 +7,7 @@ import { Skeleton } from 'antd';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-export default function DefaultPage({ getData,searchValue }) {
+export default function DefaultPage({ getData, searchValue }) {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,24 +28,24 @@ export default function DefaultPage({ getData,searchValue }) {
     };
     fetchData();
   }, [getData]);
-// console.log(searchValue)
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.post('https://apis.ezpics.vn/apis/getMyProductAPI',{
-//           token: checkTokenCookie(),
-//           name: searchValue?.name
-//         });
-//         setProducts(response?.listData || response?.data?.listData);
-//         setLoading(false);
-//       } catch (error) {
-//         console.error("Error fetching data:", error.message);
-//         setError(error.message);
-//         setLoading(false);
-//       }
-//     };
-//     fetchData();
-//   }, [searchValue]);
+  // console.log(searchValue)
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //       try {
+  //         const response = await axios.post('https://apis.ezpics.vn/apis/getMyProductAPI',{
+  //           token: checkTokenCookie(),
+  //           name: searchValue?.name
+  //         });
+  //         setProducts(response?.listData || response?.data?.listData);
+  //         setLoading(false);
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error.message);
+  //         setError(error.message);
+  //         setLoading(false);
+  //       }
+  //     };
+  //     fetchData();
+  //   }, [searchValue]);
 
 
   const onDeleteProduct = async (productId) => {
@@ -65,13 +65,13 @@ export default function DefaultPage({ getData,searchValue }) {
   };
   const onDuplicateProduct = async (productId) => {
     try {
-      const newProduct = await duplicateProductAPI({
+      const response = await duplicateProductAPI({
         token: checkTokenCookie(),
         id: productId,
       });
-      const updatedProducts = [newProduct, ...products];
+      const updatedProducts = [response.data, ...products];
       setProducts(updatedProducts);
-      toast.success("Nhân bản thành công !!!");
+      toast.success("Nhân bản thành công");
     } catch (error) {
       console.error("Error duplicating product:", error.message);
     }
