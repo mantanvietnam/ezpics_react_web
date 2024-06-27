@@ -147,10 +147,10 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                           {/* {product.sale_price === 0
                             ? "Miễn phí"
                             : VND.format(product.sale_price)} */}
-                            {product.sale_price === 0 || (dataInforUser?.member_pro === 1 && product?.free_pro) ? "Miễn phí" : VND.format(product.sale_price)}
+                          {product.sale_price === 0 || (dataInforUser?.member_pro === 1 && product?.free_pro) ? "Miễn phí" : VND.format(product.sale_price)}
                         </span>
                         <span className="text-gray-500 line-through">
-                          {VND.format(product.price)}
+                          {product?.price === 0 ? "" : VND.format(product?.price)}
                         </span>
                       </div>
                     </div>
