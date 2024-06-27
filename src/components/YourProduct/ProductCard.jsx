@@ -35,16 +35,15 @@ export default function ProductCard({
 
   return (
     <div
-      className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${
-        !onDuplicateProduct ? "gap-8" : "gap-4"
-      }`}>
+      className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${!onDuplicateProduct ? "gap-8" : "gap-4"
+        }`}>
       {products?.map((product) => {
         let buttonsData2 = [...buttonsData];
 
         if (onPrintedPhoto && product.status === 1) {
           buttonsData2.push({
             text: "In ảnh",
-            icon: designAction.copy,
+            icon: designAction.printer,
             action: onPrintedPhoto,
           });
         }

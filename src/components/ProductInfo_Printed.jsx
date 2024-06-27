@@ -1,10 +1,13 @@
-import { createImageSeriesAPI } from "@/api/product";
+import { checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from "@/api/product";
+import { checkAvailableLogin, checkTokenCookie } from "@/utils";
 import { capitalizeFirstLetter } from "@/utils/format";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Modal, Skeleton, Spin } from "antd";
-import React, { useState } from "react";
-import { SkeletonCustom } from "./Slide/CustomSlide";
+import { Button, Modal, Skeleton, Space, Spin } from "antd";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Share_Social from "./Share_Social";
+import { SkeletonCustom } from "./Slide/CustomSlide";
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
@@ -12,6 +15,7 @@ const VND = new Intl.NumberFormat("vi-VN", {
 
 export default function ProductInfoPrinted(props) {
   const { data, user, isLoading, dataLayer, id_param } = props;
+  const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dataFilter, setDataFilter] = useState([]);
   const [inputValues, setInputValues] = useState({});
@@ -83,12 +87,13 @@ export default function ProductInfoPrinted(props) {
       const filteredInputValues = Object.fromEntries(
         Object.entries(inputValues).filter(([_, value]) => value !== "")
       );
-      const response = await createImageSeriesAPI({ idProduct: id_param, full_name: filteredInputValues["Họ tên"], avatar: previews })
-      if (response) {
-        setPreviewsImageAfter(response.data?.dataImage);
-        setCheckModalContent(true)
-        setLoadingCreateImg(false)
-      }
+      console.log(filteredInputValues);
+      // const response = await createImageSeriesAPI({ idProduct: id_param, full_name: filteredInputValues["Họ tên"], avatar: previews })
+      // if (response) {
+      //   setPreviewsImageAfter(response.data?.dataImage);
+      //   setCheckModalContent(true)
+      //   setLoadingCreateImg(false)
+      // }
     } catch (error) {
       console.error("Error during processing:", error);
     } finally {
@@ -97,7 +102,68 @@ export default function ProductInfoPrinted(props) {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setInputValues({});
+    setPreviews({});
+    Object.values(previews).forEach(url => {
+      URL.revokeObjectURL(url);
+    });
   };
+  const isAuthenticated = checkAvailableLogin();
+
+  const [loadingFavorite, setLoadingFavorite] = useState(true)
+  const [isFavorited, setIsFavorited] = useState(0)
+  const handleFavorite = async () => {
+    if (!isAuthenticated) {
+      router.push('/sign-in')
+    } else {
+      if (isFavorited === 1) {
+        try {
+          setLoadingFavorite(true)
+          await deleteFavoriteAPI({
+            product_id: data.id,
+            token: checkTokenCookie()
+          })
+          setIsFavorited(0)
+          toast.success('Xóa khỏi danh sách yêu thích')
+          setLoadingFavorite(false)
+        } catch (error) {
+          console.log(error)
+          setLoadingFavorite(false)
+          toast.error('Vui lòng thử lại!')
+        }
+      } else {
+        try {
+          setLoadingFavorite(true)
+          await saveFavoriteAPI({
+            product_id: data.id,
+            token: checkTokenCookie()
+          })
+          toast.success('Thêm vào danh sách yêu thích')
+          setIsFavorited(1)
+          setLoadingFavorite(false)
+        } catch (error) {
+          console.log(error)
+          setLoadingFavorite(false)
+          toast.error('Vui lòng thử lại!')
+        }
+
+      }
+    }
+  }
+  useEffect(() => {
+    const checkFavorited = async () => {
+      setLoadingFavorite(true)
+      if (data && data.id) {
+        const response = await checkFavoriteAPI({
+          product_id: data.id,
+          token: checkTokenCookie()
+        })
+        setIsFavorited(response.code)
+        setLoadingFavorite(false)
+      }
+    }
+    checkFavorited()
+  }, [data])
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
@@ -231,17 +297,51 @@ export default function ProductInfoPrinted(props) {
                 animation:
                   "2s linear 0s infinite normal none running thumbs-up",
               }}
-              className="flex items-center justify-center py-2">
-              <svg
-                style={{
-                  color: "rgb(255, 66, 78)",
-                  width: "30px",
-                  height: "30px",
-                  fill: "currentColor",
-                }}>
-                <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
-              </svg>
-              <div>Thêm vào yêu thích</div>
+              className="flex items-center justify-center py-2"
+              onClick={handleFavorite}
+            >
+              {
+                isFavorited === 1 ? (
+                  <>
+                    {
+                      loadingFavorite ? <div><Space>
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 30, color: "rgb(255, 66, 78)" }} spin />} />
+                      </Space></div> :
+                        <>
+                          <svg
+                            style={{
+                              color: "rgb(255, 66, 78)",
+                              width: "30px",
+                              height: "30px",
+                              fill: "currentColor",
+                            }}>
+                            <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                          </svg>
+                          <div>Đã yêu thích</div>
+                        </>
+                    }
+                  </>
+                ) :
+                  (<>
+                    {
+                      loadingFavorite ? <div><Space>
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 30, color: "rgb(255, 66, 78)" }} spin />} />
+                      </Space></div> :
+                        <>
+                          <svg
+                            style={{
+                              color: "rgb(255, 66, 78)",
+                              width: "30px",
+                              height: "30px",
+                              fill: "currentColor",
+                            }}>
+                            <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                          </svg>
+                          <div>Thêm vào yêu thích</div>
+                        </>
+                    }
+                  </>)
+              }
             </button>
             <button
               onClick={showModal}
@@ -272,117 +372,113 @@ export default function ProductInfoPrinted(props) {
                   style={{
                     width: "100%",
                     display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "20px 50px",
+                    flexDirection: "column",
+                    alignItems: "stretch",
+                    padding: "20px",
                     gap: "20px",
                   }}
                 >
                   {dataFilter &&
                     dataFilter.map((data, index) => (
-                      <React.Fragment key={index}>
-                        <div style={{ flex: '0 1 45%', marginBottom: '20px' }}>
-                          <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>
-                            {capitalizeFirstLetter(data.content.variableLabel)}
-                          </p>
-                          {data.content.type === 'text' ? (
+                      <div key={index} style={{ marginBottom: '20px' }}>
+                        <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+                          {capitalizeFirstLetter(data.content.variableLabel)}
+                        </p>
+                        {data.content.type === 'text' ? (
+                          <input
+                            value={inputValues[data.content.variableLabel] || ''}
+                            onChange={(e) => handleInputChange(e, index)}
+                            style={{
+                              width: '100%',
+                              padding: '10px',
+                              borderRadius: '5px',
+                              border: '1px solid #ccc',
+                              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                              marginBottom: '10px',
+                            }}
+                          />
+                        ) : (
+                          <div>
                             <input
-                              value={inputValues[data.content.variableLabel] || ''}
-                              onChange={(e) => handleInputChange(e, index)}
-                              style={{
-                                width: '100%',
-                                padding: '10px',
-                                borderRadius: '5px',
-                                border: '1px solid #ccc',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                marginBottom: '10px',
-                              }}
+                              type="file"
+                              style={{ display: 'none' }}
+                              id={`fileInput-${index}`}
+                              accept="image/*"
+                              onChange={(e) => handleFileInputChange(e, index)}
                             />
-                          ) : (
-                            <div>
-                              <input
-                                type="file"
-                                style={{ display: 'none' }}
-                                id={`fileInput-${index}`}
-                                accept="image/*"
-                                onChange={(e) => handleFileInputChange(e, index)}
-                              />
-                              <label htmlFor={`fileInput-${index}`}>
-                                <button
-                                  type="button"
-                                  style={{
-                                    height: '40px',
-                                    width: '100%',
-                                    color: 'white',
-                                    backgroundColor: 'rgb(255, 66, 78)',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    fontSize: '14px',
-                                  }}
-                                  onClick={() => document.getElementById(`fileInput-${index}`).click()}
-                                >
-                                  Chọn ảnh
-                                </button>
-                              </label>
-                              <div
+                            <label htmlFor={`fileInput-${index}`}>
+                              <button
+                                type="button"
                                 style={{
-                                  marginTop: '10px',
+                                  height: '40px',
                                   width: '100%',
-                                  height: '200px',
-                                  border: '1px dashed #ccc',
+                                  color: 'white',
+                                  backgroundColor: 'rgb(255, 66, 78)',
+                                  border: 'none',
                                   borderRadius: '5px',
-                                  overflow: 'hidden',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                  position: 'relative',
+                                  cursor: 'pointer',
+                                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                  fontSize: '14px',
                                 }}
+                                onClick={() => document.getElementById(`fileInput-${index}`).click()}
                               >
-                                {previews[data.content.variableLabel] ? (
-                                  <>
-                                    <img
-                                      src={previews[data.content.variableLabel]}
-                                      alt="Preview"
-                                      style={{
-                                        maxWidth: '100%',
-                                        maxHeight: '100%',
-                                        objectFit: 'contain',
-                                      }}
-                                    />
-                                    <button
-                                      onClick={() => handleRemoveImage(data.content.variableLabel)}
-                                      style={{
-                                        position: 'absolute',
-                                        top: '5px',
-                                        right: '5px',
-                                        background: 'rgba(255, 255, 255, 0.7)',
-                                        border: 'none',
-                                        borderRadius: '50%',
-                                        width: '25px',
-                                        height: '25px',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                      }}
-                                    >
-                                      ×
-                                    </button>
-                                  </>
-                                ) : (
-                                  <p style={{ color: '#888', fontSize: '14px' }}>
-                                    Ảnh minh họa sẽ hiển thị ở đây
-                                  </p>
-                                )}
-                              </div>
+                                Chọn ảnh
+                              </button>
+                            </label>
+                            <div
+                              style={{
+                                marginTop: '10px',
+                                width: '100%',
+                                height: '200px',
+                                border: '1px dashed #ccc',
+                                borderRadius: '5px',
+                                overflow: 'hidden',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                position: 'relative',
+                              }}
+                            >
+                              {previews[data.content.variableLabel] ? (
+                                <>
+                                  <img
+                                    src={previews[data.content.variableLabel]}
+                                    alt="Preview"
+                                    style={{
+                                      maxWidth: '100%',
+                                      maxHeight: '100%',
+                                      objectFit: 'contain',
+                                    }}
+                                  />
+                                  <button
+                                    onClick={() => handleRemoveImage(data.content.variableLabel)}
+                                    style={{
+                                      position: 'absolute',
+                                      top: '5px',
+                                      right: '5px',
+                                      background: 'rgba(255, 255, 255, 0.7)',
+                                      border: 'none',
+                                      borderRadius: '50%',
+                                      width: '25px',
+                                      height: '25px',
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                    }}
+                                  >
+                                    ×
+                                  </button>
+                                </>
+                              ) : (
+                                <p style={{ color: '#888', fontSize: '14px' }}>
+                                  Ảnh minh họa sẽ hiển thị ở đây
+                                </p>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </React.Fragment>
+                          </div>
+                        )}
+                      </div>
                     ))}
                 </div>
                 <div style={{ display: "flex" }}>
