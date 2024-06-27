@@ -51,6 +51,8 @@ export const contactInfo = {
   gmail: require("./gmail.png"),
   phone: require("./phone-call.png"),
   bg: require("./bg-designer.png"),
+  warning: require("./warning.png"),
+
 };
 
 export default images;
