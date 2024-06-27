@@ -7,14 +7,12 @@ import { FontItem } from "@/interfaces/common";
 import { loadFonts } from "@/utils/media/fonts";
 import { Block } from "baseui/block";
 import AngleDoubleLeft from "@/components/Icons/AngleDoubleLeft";
-import ezlogo from "./EZPICS (converted)-03.png";
 
 import Scrollable from "@/components/Scrollable";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import Image from "next/image";
 
 export default function Text() {
   const editor = useEditor();
@@ -25,19 +23,18 @@ export default function Text() {
   const [allText, setAllText] = useState<any[]>([]);
   const [css] = useStyletron();
   const [loading, setLoading] = useState(false);
-  const [fonts, setFonts] = useState<any[]>([]); // Specify the type for fonts state
+  const [fonts, setFonts] = useState<any[]>([]);
   const { currentDesign, scenes } = useDesignEditorContext();
-  const textLayerRef = useRef<any>(null); // Ref to store text layer reference
+  const textLayerRef = useRef<any>(null);
 
-  // Function to find index by id in an array
-  function findIndexById(arr: any, targetId: any) {
+  const findIndexById = (arr: any, targetId: any) => {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].id === targetId) {
         return i;
       }
     }
-    return -1; // Return -1 if not found
-  }
+    return -1;
+  };
 
   const parseGraphicJSON = () => {
     const currentScene = editor.scene.exportToJSON();
@@ -51,8 +48,6 @@ export default function Text() {
       }
       return scn;
     });
-
-    console.log(updatedScenes);
 
     if (currentDesign) {
       const graphicTemplate: any = {
@@ -120,7 +115,7 @@ export default function Text() {
           },
         };
         const newTextLayer = editor.objects.add<any>(options);
-        textLayerRef.current = newTextLayer; // Store text layer in ref
+        textLayerRef.current = newTextLayer;
       }
     }
   };
@@ -170,20 +165,6 @@ export default function Text() {
       }
     }
   };
-
-  // Function to get font information from text object
-  const getTextFont = () => {
-    if (editor && textLayerRef.current) {
-      const textObject = editor.objects.getById(textLayerRef.current.id);
-      if (textObject && textObject.type === "StaticText") {
-        const fontFamily = textObject.fontFamily;
-        console.log("Font family:", fontFamily);
-        // Now you can use fontFamily as needed
-      }
-    }
-  };
-
-  // Effect to fetch fonts
   useEffect(() => {
     const fetchFonts = async () => {
       try {
@@ -205,7 +186,6 @@ export default function Text() {
     fetchFonts();
   }, [network, token]);
 
-  // Effect to fetch text styles after fonts are set
   useEffect(() => {
     if (fonts.length === 0) {
       return;
@@ -249,7 +229,7 @@ export default function Text() {
     };
 
     fetchTextStyles();
-  }, [fonts]);
+  }, [fonts, network, token]);
 
   return (
     <>
@@ -262,8 +242,7 @@ export default function Text() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
               Kiểu chữ
@@ -272,8 +251,7 @@ export default function Text() {
 
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
+            $style={{ cursor: "pointer", display: "flex" }}>
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -288,8 +266,7 @@ export default function Text() {
                     width: "100%",
                   },
                 },
-              }}
-            >
+              }}>
               Thêm chữ
             </Button>
 
@@ -299,8 +276,7 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}
-            >
+              }}>
               {allText.map((text) => (
                 <div
                   key={text.id}
@@ -312,8 +288,7 @@ export default function Text() {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}
-                >
+                  onClick={() => handleAddText(text)}>
                   <p
                     style={{
                       color: text.content.color,
@@ -322,9 +297,7 @@ export default function Text() {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}
-                  >
-                    {text.content.font}
+                    }}>
                     {text.content.text}
                   </p>
                 </div>

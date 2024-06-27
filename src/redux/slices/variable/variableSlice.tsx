@@ -1,7 +1,7 @@
 import { IFontFamily, Resource } from "@/interfaces/editor";
 import { createReducer, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
+import { RootState } from "../../store";
 
 export interface VariableState {
   metadataVariables: any[];

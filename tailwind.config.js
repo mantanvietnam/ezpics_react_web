@@ -11,6 +11,7 @@ module.exports = {
         poppins: ["Poppins", "sans-serif"],
       },
       backgroundImage: {
+        "modal-creating": "url('/images/coffee_1.jpg')",
         "custom-remove": "url('/images/remove/remove.svg')",
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

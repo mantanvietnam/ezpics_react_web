@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AppContext } from "../app/(main)/design/contexts/AppContext";
+import { AppContext } from "../app/(design)/design/[designId]/AppContext";
 
 function useIsMobile() {
   const { isMobile } = useContext(AppContext);
