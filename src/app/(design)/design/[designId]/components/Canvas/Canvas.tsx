@@ -17,7 +17,7 @@ export default function CanvasComponent() {
       return;
     }
   };
-  document.addEventListener("keydown", handleCtrlC);
+  // document.addEventListener("keydown", handleCtrlC);
   return (
     <div
       style={{
@@ -25,8 +25,7 @@ export default function CanvasComponent() {
         display: "flex",
         position: "relative",
         overflow: "auto",
-      }}
-    >
+      }}>
       {displayPlayback && <Playback />}
       <Canvas
         config={{

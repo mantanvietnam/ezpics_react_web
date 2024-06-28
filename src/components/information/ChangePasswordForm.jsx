@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 
 const ChangePasswordForm = (handleCloseModalPassword) => {
   const [showError, setShowError] = useState(false);
-  const network = useSelector((state) => state.ipv4.network);
+  const network = useSelector((state) => state.network.ipv4Address);
   const router = useRouter();
   const dispatch = useDispatch();
 

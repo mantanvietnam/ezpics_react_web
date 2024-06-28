@@ -9,7 +9,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/hooks/hook";
 import { useEditor } from "@layerhub-io/react";
-import ezpiclogo from "./EZPICS (converted)-03.png";
+import ezpiclogo from "./EZPICS.png";
 
 import { IScene } from "@layerhub-io/types";
 import { loadVideoEditorAssets } from "@/utils/media/video";
@@ -452,8 +452,8 @@ function GraphicEditor() {
   };
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const token = urlParams.get("token");
-  const id = urlParams.get("id");
+  const token = checkTokenCookie();
+  const id = useAppSelector((state) => state.token.id);
   if (token && id) {
     dispatch(REPLACE_TOKEN(token));
     dispatch(REPLACE_ID_USER(id));

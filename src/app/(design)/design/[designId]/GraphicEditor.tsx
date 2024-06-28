@@ -24,7 +24,7 @@ import useAppContext from "@/hooks/useAppContext";
 import { REPLACE_TYPE_USER } from "@/redux/slices/type/typeSlice";
 import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
 import { useLocation } from "react-router-dom";
-import ezpiclogo from "./EZPICS (converted)-03.png";
+import ezpiclogo from "./EZPICS.png";
 
 function GraphicEditor() {
   // const location = useLocation();
@@ -327,14 +327,6 @@ function GraphicEditor() {
 
   const urlParams = new URLSearchParams(queryString);
 
-  // const { id, token } = location.state || {};
-
-  // useEffect(() => {
-  //   if (token && id) {
-  //     dispatch(REPLACE_TOKEN(token));
-  //     dispatch(REPLACE_ID_USER(id));
-  //   }
-  // }, [token, id, dispatch]);
   const token = checkTokenCookie();
   const id = useAppSelector((state) => state.token.id);
 
@@ -716,9 +708,12 @@ function GraphicEditor() {
       <EditorContainer>
         <Navbar />
         <div style={{ display: "flex", flex: 1 }}>
+          {/* thanh cong cu ben trai */}
           <Panels />
           <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            {/* option layer */}
             <Toolbox />
+            {/* Hien thi khung preview */}
             <Canvas />
             <Footer />
           </div>

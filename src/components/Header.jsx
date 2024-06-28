@@ -105,24 +105,6 @@ const Header = ({ toggleNavbar }) => {
     }
   };
 
-  //Popup modal btn cỡ tùy chỉnh
-  const [openModalCreating, setOpenModalCreating] = useState(false);
-
-  const handleShowModalCreating = () => {
-    setOpenModalCreating(true);
-  };
-  const handleCanCelModalCreating = () => {
-    setOpenModalCreating(false);
-    document.body.style.overflowY = "auto";
-  };
-
-  //Loading spin
-  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
-    useState(false);
-
-  //Luu url file
-  const [urlSelectedFile, setUrlSelectedFile] = useState("");
-
   //Chon file tai len
   const [selectedFile, setSelectedFile] = useState(null);
   const handleFileChange = (event) => {
@@ -139,6 +121,25 @@ const Header = ({ toggleNavbar }) => {
       // Bạn có thể thực hiện các xử lý khác tại đây
     }
   };
+
+  //Popup modal btn cỡ tùy chỉnh
+  const [openModalCreating, setOpenModalCreating] = useState(false);
+
+  const handleShowModalCreating = () => {
+    setOpenModalCreating(true);
+  };
+  const handleCanCelModalCreating = () => {
+    setOpenModalCreating(false);
+    setSelectedFile(false);
+    document.body.style.overflowY = "auto";
+  };
+
+  //Loading spin
+  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
+    useState(false);
+
+  //Luu url file
+  const [urlSelectedFile, setUrlSelectedFile] = useState("");
 
   //Button tạo thiết kế tùy chỉnh
   const handleCreateCustom = async (e) => {

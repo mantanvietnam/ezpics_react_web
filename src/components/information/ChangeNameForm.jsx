@@ -13,7 +13,7 @@ const ChangeNameForm = ({ data, setData }) => {
   const [inputName, setInputName] = useState(false);
   const [loadingName, setLoadingName] = useState(false);
   const [showError, setShowError] = useState(false);
-  const network = useSelector((state) => state.ipv4.network);
+  const network = useSelector((state) => state.network.ipv4Address);
   const dispatch = useDispatch();
 
   const formik = useFormik({

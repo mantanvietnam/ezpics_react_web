@@ -32,7 +32,7 @@ function DesignEditor({ params }: DesignEditorProps) {
   const renderEditor = (type: DesignType) => {
     const editors = {
       NONE: <SelectEditor />,
-      PRESENTATION: <PresentationEditor params={params} />,
+      PRESENTATION: <PresentationEditor />,
       VIDEO: <SelectEditor />,
       GRAPHIC: <GraphicEditor />,
     };
