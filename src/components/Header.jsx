@@ -15,7 +15,7 @@ import Link from "next/link";
 import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
 import { Button, Dropdown, Modal, Space } from "antd";
-import images, { designIcon ,contactInfo} from "../../public/images/index2";
+import images, { designIcon, contactInfo } from "../../public/images/index2";
 import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import axios from "axios";
@@ -61,7 +61,7 @@ const Header = ({ toggleNavbar }) => {
         const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
           token: token
         });
-        if (response?.data?.code== 3) {
+        if (response?.data?.code == 3) {
           setModalLogoutDevice(true);
         } else {
         }
@@ -75,7 +75,7 @@ const Header = ({ toggleNavbar }) => {
     const intervalId = setInterval(fetchDataUsercheck, 30000);
     // Dọn dẹp interval khi component bị unmount hoặc khi effect bị gọi lại
     return () => clearInterval(intervalId);
-  },[token]);
+  }, [token]);
 
   //  check OTP
   useEffect(() => {
@@ -115,7 +115,7 @@ const Header = ({ toggleNavbar }) => {
     };
     // Gọi fetchDataFromStorage khi component được gắn vào
     fetchDataFromStorage();
-  }, []); 
+  }, []);
   console.log(token)
   // Lấy data user
   let dataInforUser;
@@ -414,9 +414,9 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div class="list-item ">
+        <Link href={'/information'} class="list-item ">
           <p className="item-text">Sửa thông tin cá nhân</p>
-        </div>
+        </Link>
       ),
       key: "1",
     },
