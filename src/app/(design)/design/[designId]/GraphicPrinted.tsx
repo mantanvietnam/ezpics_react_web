@@ -29,6 +29,7 @@ function GraphicPrinted() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const { setActiveSubMenu } = useAppContext();
   const editor = useEditor();
+  const [errorMessage, setError] = React.useState<boolean>(false);
 
   function checkTokenCookie() {
     var allCookies = document.cookie;
@@ -91,15 +92,15 @@ function GraphicPrinted() {
       try {
         const image = await new Promise((resolve, reject) => {
           const rendered = editor.renderer.render(template);
-          if (rendered !== null) {
-            resolve(rendered as string);
+          if (typeof rendered === "string") {
+            resolve(rendered);
           } else {
             reject("Error rendering image");
           }
         });
 
         console.log("Rendered image:", image);
-        setImageData(image);
+        setImageData(image as string);
         setLoading(false);
       } catch (error) {
         console.error("Error rendering image:", error);
@@ -121,24 +122,26 @@ function GraphicPrinted() {
 
         if (response && response.data.code === 1) {
           const promises = Object.entries(stateData).map(
-            async ([key, value]) => {
+            async ([key, value]: [string, unknown]) => {
               response.data?.data.productDetail.forEach(
                 (item: any, index: any) => {
-                  if (value.includes("http")) {
-                    if (item.content.variableLabel === key) {
-                      item.content.banner = value;
-                      console.log(item.content.banner);
-                    }
-                    console.log(value);
-                  } else {
-                    if (item.content.variableLabel === key) {
-                      item.content.text = value;
-                      console.log(item.content.text);
+                  if (typeof value === "string") {
+                    if (value.includes("http")) {
+                      if (item.content.variableLabel === key) {
+                        item.content.banner = value;
+                        console.log(item.content.banner);
+                      }
+                      console.log(value);
+                    } else {
+                      if (item.content.variableLabel === key) {
+                        item.content.text = value;
+                        console.log(item.content.text);
+                        console.log(value);
+                      }
                       console.log(value);
                     }
-                    console.log(value);
+                    console.log(item);
                   }
-                  console.log(item);
                 }
               );
             }
@@ -174,6 +177,8 @@ function GraphicPrinted() {
         }
       } catch (error) {
         setError(true);
+        setLoading(false);
+      } finally {
         setLoading(false);
       }
     };

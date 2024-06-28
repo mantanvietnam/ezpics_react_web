@@ -16,19 +16,15 @@ import { v4 as uuidv4 } from "uuid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import { loadFonts } from "@/utils/media/fonts";
 import { toast } from "react-toastify";
-import { REPLACE_TOKEN, REPLACE_ID_USER } from "@/redux/slices/token/reducers";
 import "@/components/Resizable";
 import { REPLACE_font } from "@/redux/slices/font/fontSlice";
 import "@/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
 import { REPLACE_TYPE_USER } from "@/redux/slices/type/typeSlice";
 import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
-import { useLocation } from "react-router-dom";
-import ezpiclogo from "./EZPICS (converted)-03.png";
-import Image from "next/image";
 
 function GraphicEditor() {
-  const location = useLocation();
+  // const location = useLocation();
   const dispatch = useAppDispatch();
   const [fontURLInitial, setFontURLInitial] = React.useState<string>("");
   const [errorMessage, setError] = React.useState<boolean>(false);
@@ -57,7 +53,7 @@ function GraphicEditor() {
 
     // Kiểm tra nếu đã tìm thấy cookie "token"
     if (tokenCookie) {
-      console.log('Giá trị của cookie "token" là:', tokenCookie);
+      // console.log('Giá trị của cookie "token" là:', tokenCookie);
       return tokenCookie.replace(/^"|"$/g, "");
     } else {
       console.log('Không tìm thấy cookie có tên là "token"');
@@ -190,7 +186,7 @@ function GraphicEditor() {
       //   @ts-ignore
       setCurrentDesign(template.design);
     },
-    [editor]
+    [loadGraphicTemplate, setCurrentDesign, setScenes]
   );
   const parseData = (data: any) => {
     return {
@@ -328,14 +324,19 @@ function GraphicEditor() {
 
   const urlParams = new URLSearchParams(queryString);
 
-  const { id, token } = location.state || {};
+  // const { id, token } = location.state || {};
 
-  useEffect(() => {
-    if (token && id) {
-      dispatch(REPLACE_TOKEN(token));
-      dispatch(REPLACE_ID_USER(id));
-    }
-  }, [token, id, dispatch]);
+  // useEffect(() => {
+  //   if (token && id) {
+  //     dispatch(REPLACE_TOKEN(token));
+  //     dispatch(REPLACE_ID_USER(id));
+  //   }
+  // }, [token, id, dispatch]);
+  const token = checkTokenCookie();
+  const id = useAppSelector((state) => state.token.id);
+
+  console.log(token);
+  console.log(id);
 
   const dataScenes = (data: any, dataBackground: any) => {
     const dataString = {
@@ -460,7 +461,6 @@ function GraphicEditor() {
 
       dataString.scenes = scenesArray.filter((scene) => scene !== null);
     } else {
-      console.log("chạy vào đây");
       const maxPage2 = 0;
 
       const scenesArray2: any[] = Array.from(
@@ -637,7 +637,7 @@ function GraphicEditor() {
     const fetchDataBanks = async () => {
       try {
         const data = {
-          idproduct: parseInt(id),
+          idproduct: id,
           token: checkTokenCookie(),
         };
 

@@ -77,7 +77,6 @@ const initialOptions: TextState = {
   },
 };
 export default function Text() {
-  console.log("come here");
   const [state, setState] = React.useState<TextState>(initialOptions);
   const activeObject = useActiveObject() as Required<IStaticText>;
   const { setActiveSubMenu } = useAppContext();

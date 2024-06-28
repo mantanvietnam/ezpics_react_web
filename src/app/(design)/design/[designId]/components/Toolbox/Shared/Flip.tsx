@@ -14,7 +14,6 @@ import { ILayer } from "@layerhub-io/types";
 import Image from "next/image";
 
 export default function Flip() {
-  console.log("In file Flip");
   const editor = useEditor();
   const objects = useObjects() as ILayer[];
 

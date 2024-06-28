@@ -1,8 +1,8 @@
-import { Block } from "baseui/block"
-import Common from "./Common"
-import Flip from "./Shared/Flip"
+import { Block } from "baseui/block";
+import Common from "./Common";
+import Flip from "./Shared/Flip";
 
-export default function () {
+export default function Image() {
   return (
     <Block
       $style={{
@@ -18,5 +18,5 @@ export default function () {
       </Block>
       <Common />
     </Block>
-  )
+  );
 }

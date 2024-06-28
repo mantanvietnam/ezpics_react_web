@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { Block } from "baseui/block";
 import { Button } from "baseui/button";
