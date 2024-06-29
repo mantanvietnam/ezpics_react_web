@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Dropdown, Modal, Space, Input, Radio, Menu, Skeleton, Pagination, Flex, Spin } from 'antd'
 import { ControlOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons'
 import { getProductCategoryAPI, searchProductAPI } from '@/api/product'
@@ -13,6 +13,7 @@ export default function Layout(props) {
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
+  const timeoutRef = useRef(null);
 
   const [searchValue, setSearchValue] = useState({
     limit: 20,
@@ -98,13 +99,20 @@ export default function Layout(props) {
 
   const handleOk = () => {
     setClosing(true);
-    setTimeout(() => {
+
+    // Clear previous timeout if exists
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
       setIsModalOpen(false);
     }, 500); // Thời gian trễ phải trùng với thời gian của animation
-  }
+  };
 
   const handleCancel = () => {
-    setClosing(true)
+    setClosing(true);
+
     setSearchValue((prev) => ({
       ...prev,
       limit: 20,
@@ -114,15 +122,21 @@ export default function Layout(props) {
       orderBy: '',
       orderType: '',
       category_id: '',
-      color: ''
-    }))
-    setOrderBy('')
+      color: '',
+    }));
+    setOrderBy('');
     setPrice('');
     setOrderType('');
-    setTimeout(() => {
+
+    // Clear previous timeout if exists
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
       setIsModalOpen(false);
     }, 500); // Thời gian trễ phải trùng với thời gian của animation
-  }
+  };
 
   const handleMenuClick = (e) => {
     setSelectedCategory({
@@ -215,7 +229,8 @@ export default function Layout(props) {
 
   return (
     <div className='flex flex-col w-[90%] gap-5'>
-      <div className='w-full pt-5 flex items-center gap-2'>
+      {/* <div className='w-full pt-5 flex items-center gap-2'> */}
+        <form action="" className='w-3/5 pt-5 flex items-center gap-2'>
         <input
           placeholder='Tim kiem san pham'
           type="text"
@@ -234,7 +249,8 @@ export default function Layout(props) {
           <Flex align="center" gap="middle">
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
-      </div>
+        </form>
+      {/* </div> */}
       <div className='flex items-center gap-3'>
         <Button onClick={showModal} className='h-[40px]' icon={<ControlOutlined />}>Nâng cao</Button>
         <Dropdown overlay={menuProps}>
@@ -308,7 +324,7 @@ export default function Layout(props) {
               </Flex>}
           </div>) : (<div className='mt-5 font-semibold text-lg'>Không tìm thấy kết quả</div>)
       }
-      <ScrollToTopButton/>
+      <ScrollToTopButton />
     </div >
   )
 }

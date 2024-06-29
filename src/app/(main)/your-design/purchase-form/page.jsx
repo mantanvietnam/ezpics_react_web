@@ -18,18 +18,6 @@ export default function Page() {
     name: searchTerm,
   })
 
-  // const getMyProductData = async () => {
-  //   return await getMyProductApi({
-  //     type: "user_edit",
-  //     // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
-  //     token: checkTokenCookie(),
-  //     limit: 100,
-  //     page: 1
-  //   });
-  // }; 
-  // const getMyProductData = async () => {
-  //   return await getMyProductApi(searchValue);
-  // }; 
   useEffect(() => {
     const fetchData = async () => {
         setLoading(true)
@@ -78,14 +66,6 @@ export default function Page() {
       }
     }
   };
-  // const handleSearchChange = (e) => {
-  //   const value = e.target.value;
-  //   setTimeout(() => {
-  //     setSearchTerm(value);
-  //     setSearchValue((prev) => ({ ...prev, name: value }));
-  //   }, 1000)
-  // };
-  
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);

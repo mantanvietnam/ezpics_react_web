@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getMyProductApi } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
 import { checkTokenCookie } from '@/utils/cookie';
@@ -12,6 +12,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
+  const timeoutRef = useRef(null);
   const [hasMoreData, setHasMoreData] = useState(true)
   // const getMyProductData = async () => {
   //   return await getMyProductApi({
@@ -82,9 +83,14 @@ export default function Page() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchValue((prev) => ({ ...prev, name: value }));
-  };
 
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setSearchValue((prev) => ({ ...prev, name: value }));
+    }, 2000); // 2000 milliseconds = 2 seconds
+  };
   const handleScroll = useCallback(_.debounce(() => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
       setLoading(true);
