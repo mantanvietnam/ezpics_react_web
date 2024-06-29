@@ -72,7 +72,7 @@ const Header = ({ toggleNavbar }) => {
     // Gọi hàm fetchDataUsercheck ngay lập tức
     fetchDataUsercheck();
     // Thiết lập interval để gọi lại hàm fetchDataUser mỗi 30 giây
-    const intervalId = setInterval(fetchDataUsercheck, 30000);
+    const intervalId = setInterval(fetchDataUsercheck, 45000);
     // Dọn dẹp interval khi component bị unmount hoặc khi effect bị gọi lại
     return () => clearInterval(intervalId);
   },[token]);

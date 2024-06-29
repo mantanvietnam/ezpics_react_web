@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import styles from '../../../../styles/auth/otp_verification.module.scss';
 import styles from './otp_verification.module.scss'
 import { acceptMemberAPI, SendOtp } from '@/api/auth';
@@ -14,7 +14,9 @@ import { useSession } from 'next-auth/react';
 const OtpVerification = ({ phone }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [isLoading, setIsLoading] = useState(false);
-    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [isOtpSent, setIsOtpSent] = useState(false); 
+    const [canResendOtp, setCanResendOtp] = useState(false);
+    const [countdown, setCountdown] = useState(60); // Đếm ngược 60 giây
     // const
     const { data: session } = useSession();
     const router = useRouter();
@@ -48,6 +50,25 @@ const OtpVerification = ({ phone }) => {
             setIsLoading(false);
         }
     };
+    useEffect(() => {
+        let timer;
+        if (isOtpSent) {
+            setCanResendOtp(false);
+            setCountdown(60);
+            timer = setInterval(() => {
+                setCountdown((prevCountdown) => {
+                    if (prevCountdown <= 1) {
+                        clearInterval(timer);
+                        setCanResendOtp(true);
+                        return 0;
+                    }
+                    return prevCountdown - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [isOtpSent]);
+
     const handleSendOtp = async () => {
         setIsLoading(true);
         try {
@@ -55,8 +76,9 @@ const OtpVerification = ({ phone }) => {
             if (response?.code == 0) {
                 console.log('respone: ', response)
                 toast.success('Đã gửi mã OTP!2');
-                setIsOtpSent(true); // Đã gửi mã OTP thành công
                 document.getElementById('otp-input-0').focus(); // Focus vào ô nhập OTP đầu tiên
+                setIsOtpSent(true); // Đã gửi mã OTP thành công
+                setCanResendOtp(false); // Đặt lại để chờ 1 phút
             } else {
                 toast.error('Không thể gửi mã OTP, vui lòng thử lại sau.');
             }
@@ -139,17 +161,19 @@ const OtpVerification = ({ phone }) => {
                         )}
                     </button>
                     {isOtpSent ? (
-                        <>
+                        canResendOtp ? (
                             <button type="button" onClick={handleResendOtp} className={`${styles.btnResendOtp} mt-2`}>
                                 Gửi Lại OTP
                             </button>
-                        </>
-                    ) : (
-                        <>
-                            <button type="button" onClick={handleSendOtp} className={`${styles.btnSendOtp} mt-2`}>
-                                Nhận OTP
+                        ) : (
+                            <button type="button" className={`${styles.btnResendOtp} mt-2`} disabled>
+                                Gửi Lại OTP ({countdown}s)
                             </button>
-                        </>
+                        )
+                    ) : (
+                        <button type="button" onClick={handleSendOtp} className={`${styles.btnSendOtp} mt-2`}>
+                            Nhận OTP
+                        </button>
                     )}
                 </form>
             </div>
