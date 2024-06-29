@@ -160,15 +160,16 @@ export default function Login() {
         setErrors("");
         const repon = await saveNewPassAPI({
           phone: phoneConfirm,
-          code: verificationCode,
+          code: codeForgotPassword,
           passNew: newPassword,
           passAgain: confirmNewPassword,
         });
         if (repon.code === 0) {
           setIsSavingPassword(false);
-          router.push("sign-in");
+          router.push("/sign-in");
         } else {
           setSavePasswordError(repon?.messages[0]?.text);
+          router.push('/')
         }
       }
     } catch (err) {

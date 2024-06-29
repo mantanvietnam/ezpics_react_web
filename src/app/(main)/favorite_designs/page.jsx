@@ -35,7 +35,7 @@ const YourDesign = () => {
         const getData = async () => {
             try {
                 setIsLoadingMore(true);
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 const response = await getMyProductFavoriteAPI({
                     token: checkTokenCookie(),
                     limit: limit * page
