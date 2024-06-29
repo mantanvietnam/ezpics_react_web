@@ -229,7 +229,8 @@ export default function Layout(props) {
 
   return (
     <div className='flex flex-col w-[90%] gap-5'>
-      <div className='w-full pt-5 flex items-center gap-2'>
+      {/* <div className='w-full pt-5 flex items-center gap-2'> */}
+        <form action="" className='w-3/5 pt-5 flex items-center gap-2'>
         <input
           placeholder='Tim kiem san pham'
           type="text"
@@ -248,7 +249,8 @@ export default function Layout(props) {
           <Flex align="center" gap="middle">
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
-      </div>
+        </form>
+      {/* </div> */}
       <div className='flex items-center gap-3'>
         <Button onClick={showModal} className='h-[40px]' icon={<ControlOutlined />}>Nâng cao</Button>
         <Dropdown overlay={menuProps}>
