@@ -1360,7 +1360,7 @@ function TransitionElement() {
             kind={KIND.tertiary}
             size={SIZE.mini}>
             <img
-              src="../../../../../assets/moveleft.png"
+              src="/assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
             />
           </Button>

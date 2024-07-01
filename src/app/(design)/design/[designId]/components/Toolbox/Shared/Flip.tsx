@@ -277,436 +277,412 @@ export default function Flip() {
     // editor.objects.update({ angle: newValue });
   };
   return (
-    <StatefulPopover placement={PLACEMENT.bottom}>
-      <Block>
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}
-        >
-          <Button
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            onClick={flipVertically}
-          >
-            Lật ảnh dọc
-          </Button>
-        </StatefulTooltip>
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}
-        >
-          <Button
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            onClick={flipHorizontally}
-          >
-            Lật ảnh ngang
-          </Button>
-        </StatefulTooltip>
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}
-        >
-          <Button
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            onClick={() => removeBackground("storageKey")}
-            style={{ paddingRight: 5 }}
-          >
-            Xóa nền
-            <img
-              src="../../../../../../assets/premium.png"
-              style={{
-                width: 15,
-                height: 15,
-                resize: "block",
-                marginBottom: "20%",
-                marginLeft: "3",
-              }}
-            />
-          </Button>
-        </StatefulTooltip>
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-              <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
-                <Block width={"52px"}>
-                  <Input
-                    overrides={{
-                      Input: {
-                        style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
-                        },
-                      },
-                      Root: {
-                        style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
-                        },
-                      },
-                      InputContainer: {},
-                    }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={Math.round(stated.opacity)}
-                  />
-                </Block>
-              </Block>
-
-              <Block>
-                <Slider
-                  overrides={{
-                    InnerThumb: () => null,
-                    ThumbValue: () => null,
-                    TickBar: () => null,
-                    Track: {
-                      style: {
-                        paddingRight: 0,
-                        paddingLeft: 0,
-                      },
-                    },
-                    Thumb: {
-                      style: {
-                        height: "12px",
-                        width: "12px",
-                      },
-                    },
-                  }}
-                  min={0}
-                  max={100}
-                  marks={false}
-                  value={[stated.opacity]}
-                  // @ts-ignore
-                  onChange={({ value }) => onChange(value)}
-                />
-              </Block>
-            </Block>
-          )}
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Bo góc
-          </Button>
-        </StatefulPopover>
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-              <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
-                <Block width={"52px"}>
-                  <Input
-                    overrides={{
-                      Input: {
-                        style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
-                        },
-                      },
-                      Root: {
-                        style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
-                        },
-                      },
-                      InputContainer: {},
-                    }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={Math.round(stated.opacity)}
-                  />
-                </Block>
-              </Block>
-
-              <Block>
-                <Slider
-                  overrides={{
-                    InnerThumb: () => null,
-                    ThumbValue: () => null,
-                    TickBar: () => null,
-                    Track: {
-                      style: {
-                        paddingRight: 0,
-                        paddingLeft: 0,
-                      },
-                    },
-                    Thumb: {
-                      style: {
-                        height: "12px",
-                        width: "12px",
-                      },
-                    },
-                  }}
-                  min={0}
-                  max={100}
-                  marks={false}
-                  value={[stated.opacity]}
-                  // @ts-ignore
-                  onChange={({ value }) => onChange(value)}
-                />
-              </Block>
-            </Block>
-          )}
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Độ sáng
-          </Button>
-        </StatefulPopover>
-        {/* <TransitionElement /> */}
-
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
+    <Block>
+      <StatefulTooltip
+        placement={PLACEMENT.bottom}
+        showArrow={true}
+        accessibilityType={"tooltip"}>
+        <Button
+          size={SIZE.compact}
+          kind={KIND.tertiary}
+          onClick={flipVertically}>
+          Lật ảnh dọc
+        </Button>
+      </StatefulTooltip>
+      <StatefulTooltip
+        placement={PLACEMENT.bottom}
+        showArrow={true}
+        accessibilityType={"tooltip"}>
+        <Button
+          size={SIZE.compact}
+          kind={KIND.tertiary}
+          onClick={flipHorizontally}>
+          Lật ảnh ngang
+        </Button>
+      </StatefulTooltip>
+      <StatefulTooltip
+        placement={PLACEMENT.bottom}
+        showArrow={true}
+        accessibilityType={"tooltip"}>
+        <Button
+          size={SIZE.compact}
+          kind={KIND.tertiary}
+          onClick={() => removeBackground("storageKey")}
+          style={{ paddingRight: 5 }}>
+          Xóa nền
+          <img
+            src="../../../../../../assets/premium.png"
+            style={{
+              width: 15,
+              height: 15,
+              resize: "block",
+              marginBottom: "20%",
+              marginLeft: "3",
+            }}
+          />
+        </Button>
+      </StatefulTooltip>
+      <StatefulPopover
+        placement={PLACEMENT.bottomLeft}
+        content={() => (
+          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
             <Block
-              padding={"12px"}
-              backgroundColor={"#ffffff"}
-              display={"grid"}
-              gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-              gridGap={"8px"}
-            >
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[0]}
-                // onClick={() => {
-                //   // @ts-ignore
-                //   editor.objects.update({ textAlign: TEXT_ALIGNS[0] });
-                //   setState({ align: TEXT_ALIGNS[0] });
-                // }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ left: distance.left - 5 });
-                  setDistance({ ...distance, left: distance.left - 5 });
-                }}
-              >
-                <Image
-                  alt=""
-                  src="../../../../../../assets/moveleft.png"
-                  width="15"
-                  height= "15"
-                />
-              </Button>
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[1]}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ left: distance.left + 5 });
-                  setDistance({ ...distance, left: distance.left + 5 });
-                }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-              >
-                <Image
-                  src="../../../../../../assets/moveright.png"
-                  alt=""
-                  style={{ width: "30px", height: "auto" }}
-                />
-              </Button>
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[2]}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ top: distance.top + 5 });
-                  setDistance({ ...distance, top: distance.top + 5 });
-                }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-              >
-                <Image
-                  alt=""
-                  src="../../../../../../assets/movebottom.png"
-                  style={{ width: "15px", height: "auto" }}
-                />
-              </Button>
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[3]}
-                // onClick={() => {
-                //   // @ts-ignore
-                //   editor.objects.update({ textAlign: TEXT_ALIGNS[3] });
-                //   setState({ align: TEXT_ALIGNS[3] });
-                // }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ top: distance.top - 5 });
-                  setDistance({ ...distance, top: distance.top - 5 });
-                }}
-              >
-                <img
-                  src="../../../../../../assets/movetop.png"
-                  style={{ width: "17px", height: "auto" }}
-                />
-              </Button>
-            </Block>
-          )}
-          returnFocus
-          autoFocus
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Di chuyển
-          </Button>
-        </StatefulPopover>
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-              <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Block $style={{ fontSize: "14px" }}>Kích thước</Block>
-                <Block width={"52px"}>
-                  <Input
-                    overrides={{
-                      Input: {
-                        style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
-                        },
+              $style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
+              <Block width={"52px"}>
+                <Input
+                  overrides={{
+                    Input: {
+                      style: {
+                        backgroundColor: "#ffffff",
+                        textAlign: "center",
                       },
-                      Root: {
-                        style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
-                        },
+                    },
+                    Root: {
+                      style: {
+                        borderBottomColor: "rgba(0,0,0,0.15)",
+                        borderTopColor: "rgba(0,0,0,0.15)",
+                        borderRightColor: "rgba(0,0,0,0.15)",
+                        borderLeftColor: "rgba(0,0,0,0.15)",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderLeftWidth: "1px",
+                        height: "26px",
                       },
-                      InputContainer: {},
-                    }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={sliderValue}
-                  />
-                </Block>
+                    },
+                    InputContainer: {},
+                  }}
+                  size={SIZE.mini}
+                  onChange={() => {}}
+                  value={Math.round(stated.opacity)}
+                />
               </Block>
+            </Block>
 
-              <Block>
-                <SliderBox
-                  aria-label="Volume"
-                  defaultValue={1}
-                  getAriaValueText={valuetext}
-                  step={0.01}
-                  marks
-                  min={0}
-                  max={10}
-                  onChangeCommitted={handleSliderChanged}
-                  valueLabelDisplay="auto"
-                />
-              </Block>
-            </Block>
-          )}
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Chỉnh kích thước
-          </Button>
-        </StatefulPopover>
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-              <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+            <Block>
+              <Slider
+                overrides={{
+                  InnerThumb: () => null,
+                  ThumbValue: () => null,
+                  TickBar: () => null,
+                  Track: {
+                    style: {
+                      paddingRight: 0,
+                      paddingLeft: 0,
+                    },
+                  },
+                  Thumb: {
+                    style: {
+                      height: "12px",
+                      width: "12px",
+                    },
+                  },
                 }}
-              >
-                <Block $style={{ fontSize: "14px" }}>Xoay góc</Block>
-                <Block width={"52px"}>
-                  <Input
-                    overrides={{
-                      Input: {
-                        style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
-                        },
+                min={0}
+                max={100}
+                marks={false}
+                value={[stated.opacity]}
+                // @ts-ignore
+                onChange={({ value }) => onChange(value)}
+              />
+            </Block>
+          </Block>
+        )}>
+        <Button kind={KIND.tertiary} size={SIZE.compact}>
+          Bo góc
+        </Button>
+      </StatefulPopover>
+      <StatefulPopover
+        placement={PLACEMENT.bottomLeft}
+        content={() => (
+          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+            <Block
+              $style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
+              <Block width={"52px"}>
+                <Input
+                  overrides={{
+                    Input: {
+                      style: {
+                        backgroundColor: "#ffffff",
+                        textAlign: "center",
                       },
-                      Root: {
-                        style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
-                        },
+                    },
+                    Root: {
+                      style: {
+                        borderBottomColor: "rgba(0,0,0,0.15)",
+                        borderTopColor: "rgba(0,0,0,0.15)",
+                        borderRightColor: "rgba(0,0,0,0.15)",
+                        borderLeftColor: "rgba(0,0,0,0.15)",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderLeftWidth: "1px",
+                        height: "26px",
                       },
-                      InputContainer: {},
-                    }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={sliderValued}
-                  />
-                </Block>
-              </Block>
-
-              <Block>
-                <SliderBox
-                  aria-label="Volume"
-                  defaultValue={1}
-                  // getAriaValueText={valuetext}
-                  step={1}
-                  marks
-                  min={0}
-                  max={360}
-                  onChangeCommitted={handleSliderChanged}
-                  valueLabelDisplay="auto"
-                  // value={}
+                    },
+                    InputContainer: {},
+                  }}
+                  size={SIZE.mini}
+                  onChange={() => {}}
+                  value={Math.round(stated.opacity)}
                 />
               </Block>
             </Block>
-          )}
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Xoay góc
-          </Button>
-        </StatefulPopover>
-      </Block>
-    </StatefulPopover>
+
+            <Block>
+              <Slider
+                overrides={{
+                  InnerThumb: () => null,
+                  ThumbValue: () => null,
+                  TickBar: () => null,
+                  Track: {
+                    style: {
+                      paddingRight: 0,
+                      paddingLeft: 0,
+                    },
+                  },
+                  Thumb: {
+                    style: {
+                      height: "12px",
+                      width: "12px",
+                    },
+                  },
+                }}
+                min={0}
+                max={100}
+                marks={false}
+                value={[stated.opacity]}
+                // @ts-ignore
+                onChange={({ value }) => onChange(value)}
+              />
+            </Block>
+          </Block>
+        )}>
+        <Button kind={KIND.tertiary} size={SIZE.compact}>
+          Độ sáng
+        </Button>
+      </StatefulPopover>
+      {/* <TransitionElement /> */}
+
+      <StatefulPopover
+        placement={PLACEMENT.bottomLeft}
+        content={() => (
+          <Block
+            padding={"12px"}
+            backgroundColor={"#ffffff"}
+            display={"grid"}
+            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+            gridGap={"8px"}>
+            <Button
+              // isSelected={state.align === TEXT_ALIGNS[0]}
+              // onClick={() => {
+              //   // @ts-ignore
+              //   editor.objects.update({ textAlign: TEXT_ALIGNS[0] });
+              //   setState({ align: TEXT_ALIGNS[0] });
+              // }}
+              kind={KIND.tertiary}
+              size={SIZE.mini}
+              onClick={() => {
+                // @ts-ignore
+                editor.objects.update({ left: distance.left - 5 });
+                setDistance({ ...distance, left: distance.left - 5 });
+              }}>
+              <img
+                src="/assets/moveleft.png"
+                style={{ width: "15px", height: "15px" }}
+              />
+            </Button>
+            <Button
+              // isSelected={state.align === TEXT_ALIGNS[1]}
+              onClick={() => {
+                // @ts-ignore
+                editor.objects.update({ left: distance.left + 5 });
+                setDistance({ ...distance, left: distance.left + 5 });
+              }}
+              kind={KIND.tertiary}
+              size={SIZE.mini}>
+              <Image
+                src="../../../../../../assets/moveright.png"
+                alt=""
+                style={{ width: "30px", height: "auto" }}
+              />
+            </Button>
+            <Button
+              // isSelected={state.align === TEXT_ALIGNS[2]}
+              onClick={() => {
+                // @ts-ignore
+                editor.objects.update({ top: distance.top + 5 });
+                setDistance({ ...distance, top: distance.top + 5 });
+              }}
+              kind={KIND.tertiary}
+              size={SIZE.mini}>
+              <Image
+                alt=""
+                src="../../../../../../assets/movebottom.png"
+                style={{ width: "15px", height: "auto" }}
+              />
+            </Button>
+            <Button
+              // isSelected={state.align === TEXT_ALIGNS[3]}
+              // onClick={() => {
+              //   // @ts-ignore
+              //   editor.objects.update({ textAlign: TEXT_ALIGNS[3] });
+              //   setState({ align: TEXT_ALIGNS[3] });
+              // }}
+              kind={KIND.tertiary}
+              size={SIZE.mini}
+              onClick={() => {
+                // @ts-ignore
+                editor.objects.update({ top: distance.top - 5 });
+                setDistance({ ...distance, top: distance.top - 5 });
+              }}>
+              <img
+                src="../../../../../../assets/movetop.png"
+                style={{ width: "17px", height: "auto" }}
+              />
+            </Button>
+          </Block>
+        )}
+        returnFocus
+        autoFocus>
+        <Button kind={KIND.tertiary} size={SIZE.compact}>
+          Di chuyển
+        </Button>
+      </StatefulPopover>
+      <StatefulPopover
+        placement={PLACEMENT.bottomLeft}
+        content={() => (
+          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+            <Block
+              $style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Block $style={{ fontSize: "14px" }}>Kích thước</Block>
+              <Block width={"52px"}>
+                <Input
+                  overrides={{
+                    Input: {
+                      style: {
+                        backgroundColor: "#ffffff",
+                        textAlign: "center",
+                      },
+                    },
+                    Root: {
+                      style: {
+                        borderBottomColor: "rgba(0,0,0,0.15)",
+                        borderTopColor: "rgba(0,0,0,0.15)",
+                        borderRightColor: "rgba(0,0,0,0.15)",
+                        borderLeftColor: "rgba(0,0,0,0.15)",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderLeftWidth: "1px",
+                        height: "26px",
+                      },
+                    },
+                    InputContainer: {},
+                  }}
+                  size={SIZE.mini}
+                  onChange={() => {}}
+                  value={sliderValue}
+                />
+              </Block>
+            </Block>
+
+            <Block>
+              <SliderBox
+                aria-label="Volume"
+                defaultValue={1}
+                getAriaValueText={valuetext}
+                step={0.01}
+                marks
+                min={0}
+                max={10}
+                onChangeCommitted={handleSliderChanged}
+                valueLabelDisplay="auto"
+              />
+            </Block>
+          </Block>
+        )}>
+        <Button kind={KIND.tertiary} size={SIZE.compact}>
+          Chỉnh kích thước
+        </Button>
+      </StatefulPopover>
+      <StatefulPopover
+        placement={PLACEMENT.bottomLeft}
+        content={() => (
+          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+            <Block
+              $style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Block $style={{ fontSize: "14px" }}>Xoay góc</Block>
+              <Block width={"52px"}>
+                <Input
+                  overrides={{
+                    Input: {
+                      style: {
+                        backgroundColor: "#ffffff",
+                        textAlign: "center",
+                      },
+                    },
+                    Root: {
+                      style: {
+                        borderBottomColor: "rgba(0,0,0,0.15)",
+                        borderTopColor: "rgba(0,0,0,0.15)",
+                        borderRightColor: "rgba(0,0,0,0.15)",
+                        borderLeftColor: "rgba(0,0,0,0.15)",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderLeftWidth: "1px",
+                        height: "26px",
+                      },
+                    },
+                    InputContainer: {},
+                  }}
+                  size={SIZE.mini}
+                  onChange={() => {}}
+                  value={sliderValued}
+                />
+              </Block>
+            </Block>
+
+            <Block>
+              <SliderBox
+                aria-label="Volume"
+                defaultValue={1}
+                // getAriaValueText={valuetext}
+                step={1}
+                marks
+                min={0}
+                max={360}
+                onChangeCommitted={handleSliderChanged}
+                valueLabelDisplay="auto"
+                // value={}
+              />
+            </Block>
+          </Block>
+        )}>
+        <Button kind={KIND.tertiary} size={SIZE.compact}>
+          Xoay góc
+        </Button>
+      </StatefulPopover>
+    </Block>
   );
 }
 
@@ -733,8 +709,7 @@ function TransitionElement() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-          gridGap={"8px"}
-        >
+          gridGap={"8px"}>
           <Button
             // isSelected={state.align === TEXT_ALIGNS[0]}
             // onClick={() => {
@@ -743,10 +718,9 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[0] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
-              src="../../../../../../assets/moveleft.png"
+              src="/assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
             />
           </Button>
@@ -758,8 +732,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[1] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/moveright.png"
               style={{ width: "30px", height: "auto" }}
@@ -773,8 +746,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[2] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/movebottom.png"
               style={{ width: "15px", height: "auto" }}
@@ -788,8 +760,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[3] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/movetop.png"
               style={{ width: "17px", height: "auto" }}
@@ -798,14 +769,12 @@ function TransitionElement() {
         </Block>
       )}
       returnFocus
-      autoFocus
-    >
+      autoFocus>
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}
-        >
+          accessibilityType={"tooltip"}>
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}

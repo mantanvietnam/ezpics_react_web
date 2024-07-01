@@ -13,7 +13,7 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useAppContext from "@/hooks/useAppContext";
 import "../../Preview/newloading.css";
-import Image from "next/image";
+// import Image from "next/image";
 
 export default function Graphic() {
   const [templates, setTemplates] = useState<any[]>([]);
@@ -272,8 +272,7 @@ export default function Graphic() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
               Thành phần
@@ -282,8 +281,7 @@ export default function Graphic() {
 
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
+            $style={{ cursor: "pointer", display: "flex" }}>
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -296,8 +294,7 @@ export default function Graphic() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-              }}
-            >
+              }}>
               {/* <div >Người mẫu</div> */}
 
               <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
@@ -313,8 +310,7 @@ export default function Graphic() {
                   color: "rgb(0, 95, 198)",
                   cursor: "pointer",
                 }}
-                onClick={() => setActiveSubMenu("Beauty")}
-              >
+                onClick={() => setActiveSubMenu("Beauty")}>
                 Xem thêm
               </button>
             </div>
@@ -323,8 +319,7 @@ export default function Graphic() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}
-            >
+              }}>
               {templates
                 ?.filter((item) => item.keyword === "Mẫu Beauty")
                 .slice(0, 3)
@@ -344,8 +339,7 @@ export default function Graphic() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
                 Khung ảnh
               </h4>
@@ -358,8 +352,7 @@ export default function Graphic() {
                   color: "rgb(0, 95, 198)",
                   cursor: "pointer",
                 }}
-                onClick={() => setActiveSubMenu("PictureFrame")}
-              >
+                onClick={() => setActiveSubMenu("PictureFrame")}>
                 Xem thêm
               </button>
             </div>
@@ -368,8 +361,7 @@ export default function Graphic() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}
-            >
+              }}>
               {templates
                 ?.filter((item) => item.keyword === "Khung ảnh đẹp")
                 .slice(0, 3)
@@ -389,8 +381,7 @@ export default function Graphic() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
                 Ảnh nền
               </h4>
@@ -403,8 +394,7 @@ export default function Graphic() {
                   color: "rgb(0, 95, 198)",
                   cursor: "pointer",
                 }}
-                onClick={() => setActiveSubMenu("BackgroundImage")}
-              >
+                onClick={() => setActiveSubMenu("BackgroundImage")}>
                 Xem thêm
               </button>
             </div>
@@ -413,8 +403,7 @@ export default function Graphic() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}
-            >
+              }}>
               {templates
                 ?.filter((item) => item.keyword.includes("Ảnh nền xanh đẹp"))
                 .slice(0, 3)
@@ -437,8 +426,7 @@ export default function Graphic() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -446,7 +434,7 @@ export default function Graphic() {
                 <div></div>
               </div>
             </div>
-            <Image
+            <img
               style={{
                 position: "absolute",
                 top: "12%",
@@ -454,7 +442,7 @@ export default function Graphic() {
               }}
               height={40}
               width={40}
-              src={ezlogo}
+              src="/images/EZPICS.png"
               alt=""
             />
           </div>
@@ -484,8 +472,7 @@ function ImageItem({
         "::before:hover": {
           opacity: 1,
         },
-      })}
-    >
+      })}>
       <div
         className={css({
           backgroundImage: `linear-gradient(to bottom,
@@ -517,8 +504,7 @@ function ImageItem({
           ":hover": {
             opacity: 1,
           },
-        })}
-      ></div>
+        })}></div>
       <img
         src={preview}
         className={css({

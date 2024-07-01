@@ -1,17 +1,17 @@
-import React from "react"
-import { Modal, ModalBody, SIZE, ROLE } from "baseui/modal"
-import useEditorType from "~/hooks/useEditorType"
-import { Block } from "baseui/block"
-import Video from "./Video"
-import Presentation from "./Presentation"
-import Graphic from "./Graphic"
+import React from "react";
+import { Modal, ModalBody, SIZE, ROLE } from "baseui/modal";
+import useEditorType from "@/hooks/useEditorType";
+import { Block } from "baseui/block";
+import Video from "./Video";
+import Presentation from "./Presentation";
+import Graphic from "./Graphic";
 
 interface ComponentProps {
-  isOpen: boolean
-  setIsOpen: (v: boolean) => void
+  isOpen: boolean;
+  setIsOpen: (v: boolean) => void;
 }
 export default function ({ isOpen, setIsOpen }: ComponentProps) {
-  const editorType = useEditorType()
+  const editorType = useEditorType();
   return (
     <Modal
       onClose={() => setIsOpen(false)}
@@ -39,8 +39,7 @@ export default function ({ isOpen, setIsOpen }: ComponentProps) {
             borderBottomRightRadius: 0,
           },
         },
-      }}
-    >
+      }}>
       <ModalBody
         $style={{
           display: "flex",
@@ -51,8 +50,7 @@ export default function ({ isOpen, setIsOpen }: ComponentProps) {
           marginBottom: 0,
           height: "100%",
           position: "relative",
-        }}
-      >
+        }}>
         <Block
           $style={{
             position: "absolute",
@@ -60,8 +58,7 @@ export default function ({ isOpen, setIsOpen }: ComponentProps) {
             height: "100%",
             width: "100%",
             display: "flex",
-          }}
-        >
+          }}>
           {
             {
               GRAPHIC: <Graphic />,
@@ -73,5 +70,5 @@ export default function ({ isOpen, setIsOpen }: ComponentProps) {
         </Block>
       </ModalBody>
     </Modal>
-  )
+  );
 }

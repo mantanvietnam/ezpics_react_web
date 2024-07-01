@@ -13,7 +13,32 @@ import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import { checkTokenCookie } from "@/utils";
+
+function checkTokenCookie() {
+  var allCookies = document.cookie;
+
+  var cookiesArray = allCookies.split("; ");
+
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  if (tokenCookie) {
+    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+    console.log('Không tìm thấy cookie có tên là "token"');
+  }
+}
 
 export default function Text() {
   const editor = useEditor();

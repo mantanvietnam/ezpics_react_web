@@ -192,6 +192,37 @@ const Header = ({ toggleNavbar }) => {
     }
   };
 
+  //Button tạo thiết kế theo kích thước tùy chỉnh
+  const handleCreate = async (data) => {
+    try {
+      const response = await axios.post(
+        `https://apis.ezpics.vn/apis/createProductAPI`,
+        {
+          background: data.image,
+          token: checkTokenCookie(),
+          type: "user_create",
+          category_id: 0,
+          sale_price: 0,
+          name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
+          // data.image
+        }
+      );
+
+      if (response && response.data && response.data.code === 0) {
+        setTimeout(function () {
+          router.push(`/design/${response.data.product_id}`);
+        }, 1500);
+        // console.log(response.data.product_id);
+      }
+
+      console.log(response.data);
+    } catch (error) {
+      // Xử lý lỗi ở đây
+      console.error("Error creating product:", error);
+      // Bạn có thể thêm thông báo cho người dùng ở đây nếu muốn
+    }
+  };
+
   const handleLogout = async (e) => {
     const response = await logoutService({
       token: checkTokenCookie(),
@@ -540,7 +571,7 @@ const Header = ({ toggleNavbar }) => {
                   Đề xuất
                 </p>
                 {dataSizeBox.map((item, index) => (
-                  <div key={index}>
+                  <div key={index} onClick={() => handleCreate(item)}>
                     <div className="list-item">
                       <Image src={item.icon} alt="" width={24} height={24} />
                       <p className="item-text">{item.name}</p>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useStyletron } from "baseui";
 import Add from "@/components/Icons/Add";
-import { DesignEditorContext } from "@/app/(main)/design/contexts/DesignEditor";
+import { DesignEditorContext } from "@/app/(design)/design/[designId]/DesignEditorContext";
 import { nanoid } from "nanoid";
 import { getDefaultTemplate } from "@/constants/design-editor";
 import { useEditor } from "@layerhub-io/react";
@@ -13,7 +13,7 @@ import TimeMarker from "./TimeMarker";
 import TimelineControl from "./TimelineControl";
 import TimelineContextMenu from "./TimelineContextMenu";
 import useContextMenuTimelineRequest from "@/hooks/useContextMenuTimelineRequest";
-import { findSceneIndexByTime } from "@/views/DesignEditor/utils/scenes";
+import { findSceneIndexByTime } from "@/app/(design)/design/[designId]/utils/scenes";
 
 export default function () {
   const { time, setTime, status } = useTimer();
@@ -177,8 +177,7 @@ export default function () {
               position: "relative",
               padding: "1rem 0",
               flex: 1,
-            }}
-          >
+            }}>
             {contextMenuTimelineRequest.visible && <TimelineContextMenu />}
             <TimeMarker />
             <TimelineItems />
@@ -193,8 +192,7 @@ export default function () {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-            }}
-          >
+            }}>
             <Add size={20} />
           </Block>
         </div>

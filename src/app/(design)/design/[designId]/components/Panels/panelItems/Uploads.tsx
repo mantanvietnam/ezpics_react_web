@@ -480,8 +480,7 @@ export default function Uploads() {
         display: "flex",
         flexDirection: "column",
         position: "relative",
-      }}
-    >
+      }}>
       <Block
         $style={{
           display: "flex",
@@ -490,8 +489,7 @@ export default function Uploads() {
           justifyContent: "space-between",
           paddingLeft: "1.5rem",
           paddingRight: "1.5rem",
-        }}
-      >
+        }}>
         <Block style={{}}>
           <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
             Mẫu in hàng loạt
@@ -500,8 +498,7 @@ export default function Uploads() {
 
         <Block
           onClick={() => setIsSidebarOpen(false)}
-          $style={{ cursor: "pointer", display: "flex" }}
-        >
+          $style={{ cursor: "pointer", display: "flex" }}>
           <AngleDoubleLeft size={18} />
         </Block>
       </Block>
@@ -514,16 +511,14 @@ export default function Uploads() {
                   display: "flex",
                   flexDirection: "row",
                   width: "100%",
-                }}
-              >
+                }}>
                 <Tab
                   style={{
                     flex: 1,
                     height: 50,
                     alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   <h4 style={{ fontFamily: "Arial", textAlign: "center" }}>
                     Biến chữ
                   </h4>
@@ -534,8 +529,7 @@ export default function Uploads() {
                     height: 50,
                     alignItems: "center",
                     justifyContent: "center",
-                  }}
-                >
+                  }}>
                   <h4 style={{ fontFamily: "Arial", textAlign: "center" }}>
                     Biến ảnh
                   </h4>
@@ -575,8 +569,7 @@ export default function Uploads() {
                   <select
                     value={selectedOption}
                     onChange={(e) => setSelectedOption(e.target.value)}
-                    style={{ width: "100%", height: "auto" }}
-                  >
+                    style={{ width: "100%", height: "auto" }}>
                     {options.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -595,8 +588,7 @@ export default function Uploads() {
                         marginBottom: "30px",
                       },
                     },
-                  }}
-                >
+                  }}>
                   Tạo biến chữ
                 </Button>
               </TabPanel>
@@ -630,8 +622,7 @@ export default function Uploads() {
                         marginBottom: "30px",
                       },
                     },
-                  }}
-                >
+                  }}>
                   Tạo biến ảnh
                 </Button>
               </TabPanel>
@@ -647,8 +638,7 @@ export default function Uploads() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -664,7 +654,7 @@ export default function Uploads() {
                 width: 40,
                 height: 40,
               }}
-              src={ezlogo}
+              src="/images/EZPICS.png"
             />
           </div>
         </div>

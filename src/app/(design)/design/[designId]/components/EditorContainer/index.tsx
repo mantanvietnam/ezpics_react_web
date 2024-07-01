@@ -13,10 +13,40 @@ import "./loading.css";
 import { generateToServer } from "@/api/gererateToServer";
 import { useActiveObject } from "@layerhub-io/react";
 import { useDebouncedCallback } from "use-debounce";
-import { checkTokenCookie } from "@/utils";
 
 // window.addEventListener("online", () => getValueOnline());
 // window.addEventListener("offline", () => handleOffline());
+
+function checkTokenCookie() {
+  // Lấy tất cả các cookies
+  var allCookies = document.cookie;
+
+  // Tách các cookies thành mảng các cặp key-value
+  var cookiesArray = allCookies.split("; ");
+
+  // Tìm cookie có tên là "token"
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  // Kiểm tra nếu đã tìm thấy cookie "token"
+  if (tokenCookie) {
+    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+    console.log('Không tìm thấy cookie có tên là "token"');
+  }
+}
+
 export default function EditorContainer({
   children,
 }: {
@@ -25,7 +55,7 @@ export default function EditorContainer({
   const editor = useEditor();
   const network = useAppSelector((state) => state?.network?.ipv4Address);
   const idProduct = useAppSelector((state) => state?.token?.id);
-  const token = useAppSelector((state) => state?.token?.token);
+  // const token = useAppSelector((state) => state?.token?.token);
 
   const activeObject = useActiveObject();
 

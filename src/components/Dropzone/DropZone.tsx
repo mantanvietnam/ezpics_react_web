@@ -1,65 +1,76 @@
-import React, { useEffect, useRef, useState } from "react"
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Props {
-  children: React.ReactNode
-  handleDropFiles: (files: FileList) => void
+  children: React.ReactNode;
+  handleDropFiles: (files: FileList) => void;
 }
 const DropZone = ({ children, handleDropFiles }: Props) => {
-  const [isDragging, setIsDragging] = useState(false)
-  let dragCounter = 0
-  const dropRef = useRef<HTMLDivElement | null>(null)
+  const [isDragging, setIsDragging] = useState(false);
+  let dragCounter = 0;
+  const dropRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    let div = dropRef.current
+    let div = dropRef.current;
     if (div) {
-      div.addEventListener("dragenter", handleDragIn)
-      div.addEventListener("dragleave", handleDragOut)
-      div.addEventListener("dragover", handleDrag)
-      div.addEventListener("drop", handleDrop)
+      div.addEventListener("dragenter", handleDragIn);
+      div.addEventListener("dragleave", handleDragOut);
+      div.addEventListener("dragover", handleDrag);
+      div.addEventListener("drop", handleDrop);
     }
     return () => {
       if (div) {
-        div.removeEventListener("dragenter", handleDragIn)
-        div.removeEventListener("dragleave", handleDragOut)
-        div.removeEventListener("dragover", handleDrag)
-        div.removeEventListener("drop", handleDrop)
+        div.removeEventListener("dragenter", handleDragIn);
+        div.removeEventListener("dragleave", handleDragOut);
+        div.removeEventListener("dragover", handleDrag);
+        div.removeEventListener("drop", handleDrop);
       }
-    }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
   const handleDrag = (e: DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
+    e.preventDefault();
+    e.stopPropagation();
+  };
   const handleDragIn = (e: DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    dragCounter++
-    if (e.dataTransfer && e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      setIsDragging(true)
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter++;
+    if (
+      e.dataTransfer &&
+      e.dataTransfer.items &&
+      e.dataTransfer.items.length > 0
+    ) {
+      setIsDragging(true);
     }
-  }
+  };
   const handleDragOut = (e: DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    dragCounter--
-    if (dragCounter > 0) return
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter--;
+    if (dragCounter > 0) return;
 
-    setIsDragging(false)
-  }
+    setIsDragging(false);
+  };
   const handleDrop = (e: DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleDropFiles(e.dataTransfer.files)
-      e.dataTransfer.clearData()
-      dragCounter = 0
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (
+      e.dataTransfer &&
+      e.dataTransfer.files &&
+      e.dataTransfer.files.length > 0
+    ) {
+      handleDropFiles(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      dragCounter = 0;
     }
-  }
+  };
 
   return (
-    <div style={{ display: "flex", height: "100%", position: "relative", flex: 1 }} ref={dropRef}>
+    <div
+      style={{ display: "flex", height: "100%", position: "relative", flex: 1 }}
+      ref={dropRef}>
       {isDragging && (
         <div
           style={{
@@ -73,14 +84,13 @@ const DropZone = ({ children, handleDropFiles }: Props) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           Đưa file vào để đẩy lên...
         </div>
       )}
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default DropZone
+export default DropZone;

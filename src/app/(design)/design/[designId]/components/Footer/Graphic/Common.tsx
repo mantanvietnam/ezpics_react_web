@@ -14,7 +14,13 @@ interface Options {
 interface State {
   panel: string;
 }
-export default function common({ setHide, hide }) {
+
+interface CommonProps {
+  setHide: (hide: boolean) => void;
+  hide: boolean;
+}
+
+const Common: React.FC<CommonProps> = ({ setHide, hide }) => {
   const zoomMin = 10;
   const zoomMax = 240;
   const editor = useEditor();
@@ -63,14 +69,12 @@ export default function common({ setHide, hide }) {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-      }}
-    >
+      }}>
       <div>
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => setHide(!hide)}
-        >
+          onClick={() => setHide(!hide)}>
           <Icons.Layers size={15} />
           <p style={{ paddingLeft: 5 }}>Trang</p>
         </Button>
@@ -80,27 +84,23 @@ export default function common({ setHide, hide }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => handleChange("zoomRatio", (options.zoomRatio = 100))}
-        >
+          onClick={() => handleChange("zoomRatio", (options.zoomRatio = 100))}>
           <Icons.Expand size={16} />
         </Button>
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => handleChange("zoomRatio", (options.zoomRatio = 20))}
-        >
+          onClick={() => handleChange("zoomRatio", (options.zoomRatio = 20))}>
           <Icons.Compress size={16} />
         </Button>
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => handleChange("zoomRatio", options.zoomRatio - 20)}
-        >
+          onClick={() => handleChange("zoomRatio", options.zoomRatio - 20)}>
           <Icons.RemoveCircleOutline size={24} />
         </Button>
         <Slider
@@ -135,8 +135,7 @@ export default function common({ setHide, hide }) {
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => handleChange("zoomRatio", options.zoomRatio + 20)}
-        >
+          onClick={() => handleChange("zoomRatio", options.zoomRatio + 20)}>
           <Icons.AddCircleOutline size={24} />
         </Button>
         <Input
@@ -157,8 +156,11 @@ export default function common({ setHide, hide }) {
         />
       </div>
       <div
-        style={{ display: "flex", alignItems: "center", justifyContent: "end" }}
-      >
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "end",
+        }}>
         <Button kind={KIND.tertiary} size={SIZE.compact}>
           <Icons.Refresh size={16} />
         </Button>
@@ -179,4 +181,6 @@ export default function common({ setHide, hide }) {
       </div>
     </Block>
   );
-}
+};
+
+export default Common;

@@ -448,8 +448,7 @@ export default function Landing() {
           display: "flex",
           flexDirection: "column",
           position: "relative",
-        }}
-      >
+        }}>
         <Block
           $style={{
             display: "flex",
@@ -458,12 +457,10 @@ export default function Landing() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block
             $style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            onClick={() => setActiveSubMenu("Layers")}
-          >
+            onClick={() => setActiveSubMenu("Layers")}>
             <ArrowBackOutline size={24} />
             <Block>
               <h3 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
@@ -473,8 +470,7 @@ export default function Landing() {
           </Block>
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
+            $style={{ cursor: "pointer", display: "flex" }}>
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -483,15 +479,13 @@ export default function Landing() {
             <div style={{}}>
               <Tabs
                 forceRenderTabPanel
-                defaultIndex={variable?.uppercase === undefined ? 1 : 0}
-              >
+                defaultIndex={variable?.uppercase === undefined ? 1 : 0}>
                 <TabList
                   style={{
                     display: "flex",
                     flexDirection: "row",
                     width: "100%",
-                  }}
-                >
+                  }}>
                   <Tab
                     style={{
                       flex: 1,
@@ -499,8 +493,7 @@ export default function Landing() {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
-                    disabled={variable?.uppercase === undefined}
-                  >
+                    disabled={variable?.uppercase === undefined}>
                     <h4 style={{ fontFamily: "Arial", textAlign: "center" }}>
                       Biến chữ
                     </h4>
@@ -512,8 +505,7 @@ export default function Landing() {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
-                    disabled={variable?.uppercase !== undefined}
-                  >
+                    disabled={variable?.uppercase !== undefined}>
                     <h4 style={{ fontFamily: "Arial", textAlign: "center" }}>
                       Biến ảnh
                     </h4>
@@ -566,8 +558,7 @@ export default function Landing() {
                     <select
                       value={selectedOption}
                       onChange={(e) => setSelectedOption(e.target.value)}
-                      style={{ width: "100%", height: "auto" }}
-                    >
+                      style={{ width: "100%", height: "auto" }}>
                       {options.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -586,8 +577,7 @@ export default function Landing() {
                           marginBottom: "30px",
                         },
                       },
-                    }}
-                  >
+                    }}>
                     Sửa biến chữ
                   </Button>
                 </TabPanel>
@@ -628,8 +618,7 @@ export default function Landing() {
                           marginBottom: "30px",
                         },
                       },
-                    }}
-                  >
+                    }}>
                     Sửa biến ảnh
                   </Button>
                 </TabPanel>
@@ -648,8 +637,7 @@ export default function Landing() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-            }}
-          >
+            }}>
             <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
               <div className="ldio-4qpid53rus9">
                 <div></div>
@@ -665,7 +653,7 @@ export default function Landing() {
                   width: 40,
                   height: 40,
                 }}
-                src={ezlogo}
+                src="/images/EZPICS.png"
               />
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
+import { IFrame, IScene } from "@layerhub-io/types"
 
-export const defaultTemplate = {
+export const defaultTemplate: IScene = {
   id: nanoid(),
   frame: {
     width: 1200,
@@ -22,7 +23,7 @@ export const defaultTemplate = {
   metadata: {},
 };
 
-export const getDefaultTemplate = ({ width, height }) => {
+export const getDefaultTemplate = ({ width, height }: IFrame) => {
   return {
     id: nanoid(),
     frame: {
