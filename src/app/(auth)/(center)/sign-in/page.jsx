@@ -169,7 +169,7 @@ export default function Login() {
           router.push("/sign-in");
         } else {
           setSavePasswordError(repon?.messages[0]?.text);
-          router.push('/')
+          router.push("/");
         }
       }
     } catch (err) {

@@ -103,7 +103,7 @@ const HeaderRemove = () => {
   };
 
   // Xây dựng Url cho api
-  const network = useSelector((state) => state.ipv4.network);
+  const network = useSelector((state) => state.network.ipv4Address);
 
   const handleDropFiles = async (files) => {
     // Đặt trạng thái đang tải lên là true
@@ -262,7 +262,8 @@ const HeaderRemove = () => {
         title=" Chi tiết ảnh"
         open={modalExtend}
         onCancel={handleCloseModalFreeExtend}
-        footer={null}>
+        footer={null}
+        width={"70%"}>
         <div className="flex flex-col items-center">
           <p className="m-0 text-base font-medium pt-[10px]">
             Bạn muốn dùng trong Editor Ezpics hay tải ảnh về ?

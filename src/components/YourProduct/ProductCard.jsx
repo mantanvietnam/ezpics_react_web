@@ -6,6 +6,7 @@ import "@/styles/home/header.scss";
 
 export default function ProductCard({
   products,
+  onEditProduct,
   onDeleteProduct,
   onDownloadProduct,
   onDuplicateProduct,
@@ -15,8 +16,7 @@ export default function ProductCard({
     {
       text: "Sửa",
       icon: designAction.edit,
-      action: (productId) =>
-        console.log("Edit action for product ID:", productId),
+      action: onEditProduct,
     },
     {
       text: "Xóa",

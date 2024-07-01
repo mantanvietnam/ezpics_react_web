@@ -120,7 +120,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
             </Slider>
           ) : (
             <Slider {...settings} className="w-full relative">
-              {products.map((product) => (
+              {products?.map((product) => (
                 <Link
                   href={`/category/${product.id}`}
                   className="slide-content pr-8"
@@ -147,10 +147,15 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                           {/* {product.sale_price === 0
                             ? "Miễn phí"
                             : VND.format(product.sale_price)} */}
-                          {product.sale_price === 0 || (dataInforUser?.member_pro === 1 && product?.free_pro) ? "Miễn phí" : VND.format(product.sale_price)}
+                          {product.sale_price === 0 ||
+                          (dataInforUser?.member_pro === 1 && product?.free_pro)
+                            ? "Miễn phí"
+                            : VND.format(product.sale_price)}
                         </span>
                         <span className="text-gray-500 line-through">
-                          {product?.price === 0 ? "" : VND.format(product?.price)}
+                          {product?.price === 0
+                            ? ""
+                            : VND.format(product?.price)}
                         </span>
                       </div>
                     </div>

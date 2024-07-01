@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setCookie, checkTokenCookie } from "@/utils";
-import { CHANGE_VALUE_USER } from "@/redux/slices/infoUser";
+import { CHANGE_VALUE_USER } from "../../redux/slices/user/userSlice";
 import { Spin, Input } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ const ChangeNameForm = ({ data, setData }) => {
   const [inputName, setInputName] = useState(false);
   const [loadingName, setLoadingName] = useState(false);
   const [showError, setShowError] = useState(false);
-  const network = useSelector((state) => state.ipv4.network);
+  const network = useSelector((state) => state.network.ipv4Address);
   const dispatch = useDispatch();
 
   const formik = useFormik({

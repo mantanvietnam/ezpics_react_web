@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import ProductCard from '@/components/YourProduct/ProductCard';
-import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
-import { checkTokenCookie } from '@/utils/cookie';
-import { toast } from 'react-toastify';
-import { Skeleton } from 'antd';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import ProductCard from "@/components/YourProduct/ProductCard";
+import { deleteProductAPI, duplicateProductAPI } from "@/api/product";
+import { checkTokenCookie } from "@/utils/cookie";
+import { toast } from "react-toastify";
+import { Skeleton } from "antd";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function DefaultPage({ getData, searchValue }) {
   const router = useRouter();
@@ -47,6 +47,9 @@ export default function DefaultPage({ getData, searchValue }) {
   //     fetchData();
   //   }, [searchValue]);
 
+  const onEditProduct = async (productId) => {
+    router.push(`/design/${productId}`);
+  };
 
   const onDeleteProduct = async (productId) => {
     try {
@@ -77,7 +80,8 @@ export default function DefaultPage({ getData, searchValue }) {
     }
   };
   const onPrintedPhoto = async (productId) => {
-    router.push(`/specified-printed/${productId}`)
+    // router.push(`/specified-printed/${productId}`);
+    console.log(productId);
   };
 
   const onDownloadProduct = async (imageUrl) => {
@@ -120,6 +124,7 @@ export default function DefaultPage({ getData, searchValue }) {
   return (
     <ProductCard
       products={products}
+      onEditProduct={onEditProduct}
       onDeleteProduct={onDeleteProduct}
       onDownloadProduct={onDownloadProduct}
       onDuplicateProduct={onDuplicateProduct}
