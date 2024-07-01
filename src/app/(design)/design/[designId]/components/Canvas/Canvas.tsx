@@ -30,7 +30,12 @@ export default function CanvasComponent() {
 
   return (
     <StyledCanvasContainer
-      style={{ flex: 1, display: "flex", position: "relative" }}>
+      style={{
+        flex: 1,
+        display: "flex",
+        position: "relative",
+        overflow: "auto",
+      }}>
       {displayPlayback && <Playback />}
       <Canvas
         config={{

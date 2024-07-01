@@ -342,7 +342,8 @@ export default function Layers() {
                     alignItems: "center",
                     justifyContent: "flex-end",
                   }}>
-                  {object?.metadata?.variable !== "" && (
+                  {/* option cai dat layer */}
+                  {/* {object?.metadata?.variable !== "" && (
                     <Button
                       kind={KIND.tertiary}
                       size={SIZE.mini}
@@ -368,7 +369,7 @@ export default function Layers() {
                         onClick={() => objectMetadata(object)}
                       />
                     </Button>
-                  )}
+                  )} */}
                   {object.locked ? (
                     <Button
                       kind={KIND.tertiary}

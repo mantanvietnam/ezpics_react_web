@@ -1360,7 +1360,7 @@ function TransitionElement() {
             kind={KIND.tertiary}
             size={SIZE.mini}>
             <img
-              src="/assets/moveleft.png"
+              src="../../../../../../assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
             />
           </Button>
@@ -1730,7 +1730,10 @@ function Gradient() {
           accessibilityType={"tooltip"}
           content="Gradient">
           <Button size={SIZE.mini} kind={KIND.tertiary}>
-            <img src={gradientIcon} style={{ width: "15px", height: "15px" }} />
+            <img
+              src="../../../../../assets/gradient.png"
+              style={{ width: "15px", height: "15px" }}
+            />
           </Button>
         </StatefulTooltip>
       </Block>

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import ProductCard from '@/components/YourProduct/ProductCard';
-import { deleteProductAPI, duplicateProductAPI } from '@/api/product';
-import { checkTokenCookie } from '@/utils/cookie';
-import { toast } from 'react-toastify';
-import { Skeleton } from 'antd';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import ProductCard from "@/components/YourProduct/ProductCard";
+import { deleteProductAPI, duplicateProductAPI } from "@/api/product";
+import { checkTokenCookie } from "@/utils/cookie";
+import { toast } from "react-toastify";
+import { Skeleton } from "antd";
+import { useRouter } from "next/navigation";
 
-export default function DefaultPage({ getData,searchValue }) {
+export default function DefaultPage({ getData, searchValue }) {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function DefaultPage({ getData,searchValue }) {
     };
     fetchData();
   }, [getData]);
-console.log(searchValue)
+  console.log(searchValue);
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -42,6 +42,9 @@ console.log(searchValue)
   //   fetchData();
   // }, [searchValue]);
 
+  const onEditProduct = async (productId) => {
+    router.push(`/design/${productId}`);
+  };
 
   const onDeleteProduct = async (productId) => {
     try {
@@ -72,7 +75,8 @@ console.log(searchValue)
     }
   };
   const onPrintedPhoto = async (productId) => {
-    router.push(`/specified-printed/${productId}`)
+    // router.push(`/specified-printed/${productId}`);
+    console.log(productId);
   };
 
   const onDownloadProduct = async (imageUrl) => {
@@ -115,6 +119,7 @@ console.log(searchValue)
   return (
     <ProductCard
       products={products}
+      onEditProduct={onEditProduct}
       onDeleteProduct={onDeleteProduct}
       onDownloadProduct={onDownloadProduct}
       onDuplicateProduct={onDuplicateProduct}

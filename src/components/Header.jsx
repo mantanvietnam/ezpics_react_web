@@ -93,6 +93,8 @@ const Header = ({ toggleNavbar }) => {
     getData();
   }, []);
 
+  console.log(dataSizeBox);
+
   //Ẩn hiện popup mẫu thiết kế
   const [creatingBucket, setCreatingBucket] = useState(false);
 

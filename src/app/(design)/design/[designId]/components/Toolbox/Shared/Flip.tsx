@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { useActiveObject, useEditor, useObjects } from "@layerhub-io/react";
 import { Block } from "baseui/block";
@@ -498,7 +499,7 @@ export default function Flip() {
                 setDistance({ ...distance, left: distance.left - 5 });
               }}>
               <img
-                src="/assets/moveleft.png"
+                src="../../../../../../assets/moveleft.png"
                 style={{ width: "15px", height: "15px" }}
               />
             </Button>
@@ -720,7 +721,7 @@ function TransitionElement() {
             kind={KIND.tertiary}
             size={SIZE.mini}>
             <img
-              src="/assets/moveleft.png"
+              src="../../../../../../assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
             />
           </Button>

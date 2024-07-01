@@ -64,7 +64,7 @@ export default function Navbar() {
   const [loading, setLoading] = React.useState(false);
   const network = useAppSelector((state) => state?.network?.ipv4Address);
   const idProduct = useAppSelector((state) => state?.token?.id);
-  const token = useAppSelector((state) => state?.token?.token);
+  const token = checkTokenCookie();
   const [modalBuyingFree, setModalBuyingFree] = React.useState(false);
   const generateToServer = (datas: any) => {
     // Remove the first two elements from the first sub-array
