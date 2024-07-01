@@ -7,7 +7,7 @@ import {
 import {
   CHANGE_STATUS_AUTH,
   CHANGE_VALUE_TOKEN,
-} from "@/redux/slices/authSlice";
+} from "../../../../redux/slices/auth";
 import styles from "@/styles/auth/sign_in.module.scss";
 import { setCookie } from "@/utils/cookie";
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
