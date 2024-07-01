@@ -19,7 +19,37 @@ import "./modal.css";
 import check from "./check.png";
 import remove from "./magic-wand (1).png";
 import Image from "next/image";
-import { checkTokenCookie } from "@/utils";
+
+function checkTokenCookie() {
+  var allCookies = document.cookie;
+
+  var cookiesArray = allCookies.split("; ");
+
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  if (tokenCookie) {
+    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+    console.log('Không tìm thấy cookie có tên là "token"');
+  }
+}
+
+type Position = {
+  top: number;
+  left: number;
+};
 
 export default function Templates() {
   const inputFileRef = React.useRef<HTMLInputElement>(null);

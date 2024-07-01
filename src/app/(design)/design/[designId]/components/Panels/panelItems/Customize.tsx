@@ -23,6 +23,33 @@ import axios from "axios";
 import "../../Preview/newloading.css";
 import { useAppSelector } from "@/hooks/hook";
 import { toast } from "react-toastify";
+
+function checkTokenCookie() {
+  var allCookies = document.cookie;
+
+  var cookiesArray = allCookies.split("; ");
+
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  if (tokenCookie) {
+    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+    console.log('Không tìm thấy cookie có tên là "token"');
+  }
+}
+
 const colors = [
   "#ffffff",
   "#9B9B9B",
@@ -67,7 +94,7 @@ export default function Customize() {
   const [display, setDisplay] = useState<any>(false);
 
   const [dataStorage, setDataStorage] = useState<any>([]);
-  const token = useAppSelector((state) => state.token.token);
+  const token = checkTokenCookie();
   const [checkedItems, setCheckedItems] = useState<any[]>([]);
 
   // Hàm xử lý sự kiện khi checkbox thay đổi trạng thái
@@ -452,8 +479,7 @@ export default function Customize() {
           justifyContent: "space-between",
           paddingLeft: "1.5rem",
           paddingRight: "1.5rem",
-        }}
-      >
+        }}>
         <Block>
           <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
             Chỉnh sửa
@@ -462,8 +488,7 @@ export default function Customize() {
 
         <Block
           onClick={() => setIsSidebarOpen(false)}
-          $style={{ cursor: "pointer", display: "flex" }}
-        >
+          $style={{ cursor: "pointer", display: "flex" }}>
           <AngleDoubleLeft size={18} />
         </Block>
       </Block>
@@ -476,8 +501,7 @@ export default function Customize() {
                 fontSize: "14px",
                 textAlign: "center",
                 paddingTop: "0.35rem",
-              }}
-            >
+              }}>
               1080 x 1920px
             </Block>
           </Block>
@@ -490,8 +514,7 @@ export default function Customize() {
                 border: "1px solid #ececf5",
                 padding: "0.45rem 1rem",
                 fontSize: "14px",
-              }}
-            >
+              }}>
               <div>Màu nền</div>
               <div
                 style={{
@@ -499,8 +522,7 @@ export default function Customize() {
                   gridTemplateColumns: "repeat(5, 1fr)",
                   gap: "0.5rem",
                   paddingTop: "0.25rem",
-                }}
-              >
+                }}>
                 {/* <StatefulPopover
                   placement={PLACEMENT.bottomLeft}
                   content={
@@ -577,8 +599,7 @@ export default function Customize() {
                       border: "1px solid #d7d8e3",
                       height: "34px",
                       cursor: "pointer",
-                    }}
-                  ></div>
+                    }}></div>
                 ))}
               </div>
             </div>
@@ -645,15 +666,13 @@ export default function Customize() {
 
                       <select
                         value={categoryId}
-                        onChange={(e) => handleSelectChange(e)}
-                      >
+                        onChange={(e) => handleSelectChange(e)}>
                         {categoryList &&
                           categoryList.map((category: any) => (
                             <option
                               key={category.id}
                               value={category.id}
-                              style={{ color: "black" }}
-                            >
+                              style={{ color: "black" }}>
                               {category.name}
                             </option>
                           ))}
@@ -688,8 +707,7 @@ export default function Customize() {
 
                       <select
                         value={selectedOption}
-                        onChange={handleSelectChangeStatus}
-                      >
+                        onChange={handleSelectChangeStatus}>
                         {options.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}
@@ -726,8 +744,7 @@ export default function Customize() {
                             />
                             <label
                               htmlFor={`${item.id}`}
-                              style={{ marginTop: "10px" }}
-                            >
+                              style={{ marginTop: "10px" }}>
                               {item.name}
                             </label>
                           </div>
@@ -747,8 +764,7 @@ export default function Customize() {
                         marginBottom: "30px",
                       },
                     },
-                  }}
-                >
+                  }}>
                   Lưu thông tin
                 </Button>
               </div>
@@ -764,8 +780,7 @@ export default function Customize() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -853,8 +868,7 @@ function ResizeTemplate() {
               width: "100%",
             },
           },
-        }}
-      >
+        }}>
         Chỉnh kích thước
       </Button>
       <Modal
@@ -875,16 +889,14 @@ function ResizeTemplate() {
               borderStartStartRadius: "8px",
             },
           },
-        }}
-      >
+        }}>
         <Block $style={{ padding: "0 1.5rem", width: "640px" }}>
           <Block
             $style={{
               padding: "2rem 1rem 1rem",
               textAlign: "center",
               fontWeight: 500,
-            }}
-          >
+            }}>
             Chọn kích thước bạn muốn chỉnh
           </Block>
           <Tabs
@@ -907,8 +919,7 @@ function ResizeTemplate() {
             activeKey={activeKey}
             onChange={({ activeKey }) => {
               setActiveKey(activeKey);
-            }}
-          >
+            }}>
             <Tab title="Kích thước chọn">
               <Block $style={{ width: "100%", height: "400px" }}>
                 <Scrollbar>
@@ -916,8 +927,7 @@ function ResizeTemplate() {
                     $style={{
                       display: "grid",
                       gridTemplateColumns: "1fr 1fr 1fr",
-                    }}
-                  >
+                    }}>
                     {sampleFrames.map((sampleFrame, index) => (
                       <Block
                         onClick={() => setSelectedFrame(sampleFrame)}
@@ -932,16 +942,14 @@ function ResizeTemplate() {
                             cursor: "pointer",
                           },
                         }}
-                        key={index}
-                      >
+                        key={index}>
                         <Block
                           $style={{
                             height: "120px",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                          }}
-                        >
+                          }}>
                           <img
                             src={sampleFrame.preview}
                             style={{
@@ -952,8 +960,7 @@ function ResizeTemplate() {
                           />
                         </Block>
                         <Block
-                          $style={{ fontSize: "13px", textAlign: "center" }}
-                        >
+                          $style={{ fontSize: "13px", textAlign: "center" }}>
                           <Block $style={{ fontWeight: 500 }}>
                             {sampleFrame.name}
                           </Block>
@@ -975,8 +982,7 @@ function ResizeTemplate() {
                     gridTemplateColumns: "1fr 50px 1fr",
                     alignItems: "end",
                     fontSize: "14px",
-                  }}
-                >
+                  }}>
                   <Input
                     onChange={(e: any) =>
                       setDesiredFrame({
@@ -1003,8 +1009,7 @@ function ResizeTemplate() {
                         height: desiredFrame.width,
                         width: desiredFrame.height,
                       })
-                    }
-                  >
+                    }>
                     <SwapHorizontal size={24} />
                   </Button>
                   <Input
@@ -1029,8 +1034,7 @@ function ResizeTemplate() {
             alignItems: "center",
             justifyContent: "center",
             paddingBottom: "2rem",
-          }}
-        >
+          }}>
           <Button onClick={applyResize} style={{ width: "190px" }}>
             Chọn
           </Button>

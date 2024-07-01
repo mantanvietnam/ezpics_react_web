@@ -1,6 +1,6 @@
 import React from "react";
 import { Block } from "baseui/block";
-import { DesignEditorContext } from "@/app/(main)/design/contexts/DesignEditor";
+import { DesignEditorContext } from "@/app/(design)/design/[designId]/DesignEditorContext";
 import TimelineItem from "./TimelineItem";
 import { useEditor, useFrame } from "@layerhub-io/react";
 

@@ -1,4 +1,3 @@
-"use client";
 import Canvas from "./components/Canvas";
 import EditorContainer from "./components/EditorContainer";
 import Footer from "./components/Footer";
@@ -9,18 +8,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import React from "react";
 
-interface PresentationEditorProps {
-  params: {
-    designId: string;
-  };
-}
-
-function PresentationEditor({ params }: PresentationEditorProps) {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(REPLACE_ID_USER(params.designId));
-  }, [dispatch, params]);
+function PresentationEditor() {
   return (
     <>
       <EditorContainer>

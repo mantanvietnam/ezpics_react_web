@@ -1,7 +1,7 @@
 import React from "react";
 import { useTimer } from "@layerhub-io/use-timer";
 import { Block } from "baseui/block";
-import { DesignEditorContext } from "@/app/(main)/design/contexts/DesignEditor";
+import { DesignEditorContext } from "@/app/(design)/design/[designId]/DesignEditorContext";
 
 const SCALE_FACTOR = 1;
 
@@ -80,8 +80,7 @@ export default function () {
           top: "-2px",
           width: "2px",
           bottom: "0px",
-        }}
-      >
+        }}>
         <Block
           id={"EditorPlayHead"}
           $style={{

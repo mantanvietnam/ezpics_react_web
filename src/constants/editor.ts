@@ -1,3 +1,5 @@
+import { ILayer } from "@layerhub-io/types"
+
 export const SecondLevelMenus = ["FontFamily"];
 export const FirstLevelMenus = ["Background"];
 
@@ -4024,7 +4026,7 @@ export const sampleFrames = [
   },
 ];
 
-const layers = [];
+const layers: ILayer[] = [];
 
 const graphicTemplate = {
   id: "",

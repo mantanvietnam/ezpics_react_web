@@ -105,24 +105,6 @@ const Header = ({ toggleNavbar }) => {
     }
   };
 
-  //Popup modal btn cỡ tùy chỉnh
-  const [openModalCreating, setOpenModalCreating] = useState(false);
-
-  const handleShowModalCreating = () => {
-    setOpenModalCreating(true);
-  };
-  const handleCanCelModalCreating = () => {
-    setOpenModalCreating(false);
-    document.body.style.overflowY = "auto";
-  };
-
-  //Loading spin
-  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
-    useState(false);
-
-  //Luu url file
-  const [urlSelectedFile, setUrlSelectedFile] = useState("");
-
   //Chon file tai len
   const [selectedFile, setSelectedFile] = useState(null);
   const handleFileChange = (event) => {
@@ -139,6 +121,25 @@ const Header = ({ toggleNavbar }) => {
       // Bạn có thể thực hiện các xử lý khác tại đây
     }
   };
+
+  //Popup modal btn cỡ tùy chỉnh
+  const [openModalCreating, setOpenModalCreating] = useState(false);
+
+  const handleShowModalCreating = () => {
+    setOpenModalCreating(true);
+  };
+  const handleCanCelModalCreating = () => {
+    setOpenModalCreating(false);
+    setSelectedFile(false);
+    document.body.style.overflowY = "auto";
+  };
+
+  //Loading spin
+  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
+    useState(false);
+
+  //Luu url file
+  const [urlSelectedFile, setUrlSelectedFile] = useState("");
 
   //Button tạo thiết kế tùy chỉnh
   const handleCreateCustom = async (e) => {
@@ -188,6 +189,37 @@ const Header = ({ toggleNavbar }) => {
       console.error("Error creating custom product:", error);
       // Handle error (e.g., show error message to the user)
       setLoadingButtonModalCreate(false);
+    }
+  };
+
+  //Button tạo thiết kế theo kích thước tùy chỉnh
+  const handleCreate = async (data) => {
+    try {
+      const response = await axios.post(
+        `https://apis.ezpics.vn/apis/createProductAPI`,
+        {
+          background: data.image,
+          token: checkTokenCookie(),
+          type: "user_create",
+          category_id: 0,
+          sale_price: 0,
+          name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
+          // data.image
+        }
+      );
+
+      if (response && response.data && response.data.code === 0) {
+        setTimeout(function () {
+          router.push(`/design/${response.data.product_id}`);
+        }, 1500);
+        // console.log(response.data.product_id);
+      }
+
+      console.log(response.data);
+    } catch (error) {
+      // Xử lý lỗi ở đây
+      console.error("Error creating product:", error);
+      // Bạn có thể thêm thông báo cho người dùng ở đây nếu muốn
     }
   };
 
@@ -539,7 +571,7 @@ const Header = ({ toggleNavbar }) => {
                   Đề xuất
                 </p>
                 {dataSizeBox.map((item, index) => (
-                  <div key={index}>
+                  <div key={index} onClick={() => handleCreate(item)}>
                     <div className="list-item">
                       <Image src={item.icon} alt="" width={24} height={24} />
                       <p className="item-text">{item.name}</p>

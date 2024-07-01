@@ -13,7 +13,7 @@ const ChangeMailForm = ({ data, setData }) => {
   const [inputMail, setInputMail] = useState(false);
   const [showError, setShowError] = useState(false);
   const [loadingMail, setLoadingMail] = useState(false);
-  const network = useSelector((state) => state.ipv4.network);
+  const network = useSelector((state) => state.network.ipv4Address);
   const dispatch = useDispatch();
 
   const formik = useFormik({

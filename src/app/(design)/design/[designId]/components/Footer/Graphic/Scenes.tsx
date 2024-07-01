@@ -13,10 +13,14 @@ import { loadVideoEditorAssets } from "@/utils/media/video";
 import "../../Preview/newloading.css";
 import { useAppSelector } from "@/hooks/hook";
 import axios from "axios";
-import logoE from "./EZPICS (converted)-03.png";
 import { DesignEditorContext } from "../../../DesignEditorContext";
 import { loadTemplateFonts } from "@/utils/media/fonts";
-export default function Scenes({ hide }) {
+
+interface ScenesProps {
+  hide: boolean;
+}
+
+const Scenes: React.FC<ScenesProps> = ({ hide }) => {
   const scenes = useDesignEditorPages();
   const {
     setScenes,
@@ -481,11 +485,13 @@ export default function Scenes({ hide }) {
                 width: 40,
                 height: 40,
               }}
-              src={logoE}
+              src="/images/EZPICS.png"
             />
           </div>
         </div>
       )}
     </>
   );
-}
+};
+
+export default Scenes;

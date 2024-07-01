@@ -922,7 +922,7 @@ export default function Navbar() {
               }}>
               {" "}
               {loadingBuyingFunc ? (
-                <span class="loaderNew"></span>
+                <span className="loaderNew"></span>
               ) : (
                 "Lưu mẫu thiết kế "
               )}

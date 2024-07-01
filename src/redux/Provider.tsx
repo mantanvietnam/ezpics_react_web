@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Provider as ScenifyProvider } from "@layerhub-io/react";
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
@@ -20,8 +20,6 @@ export default function ProviderApp({
 }: {
   children: React.ReactNode;
 }) {
-  const [openModal, setOpenModal] = useState(false);
-
   return (
     <>
       {/* {openModal && } */}

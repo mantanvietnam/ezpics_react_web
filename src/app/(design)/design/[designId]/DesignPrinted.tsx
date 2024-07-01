@@ -9,7 +9,9 @@ import Preview from "./components/Preview/index";
 type DesignType = "NONE" | "PRESENTATION" | "VIDEO" | "GRAPHIC";
 
 interface DesignEditorProps {
-  params: any; // Define the actual type of params if known
+  params: {
+    designId: string;
+  }; // Define the actual type of params if known
 }
 
 function DesignPrinted({ params }: DesignEditorProps) {
@@ -20,7 +22,7 @@ function DesignPrinted({ params }: DesignEditorProps) {
   const renderEditor = (type: DesignType) => {
     const editors = {
       NONE: <SelectEditor />,
-      PRESENTATION: <PresentationEditor params={params} />,
+      PRESENTATION: <PresentationEditor />,
       VIDEO: <SelectEditor />,
       GRAPHIC: <GraphicPrinted />,
     };

@@ -1,4 +1,4 @@
-import { RootState } from "@/store/rootReducer";
+import { RootState } from "@/redux/store";
 
 export const selectPixabayResources = (state: RootState) =>
   state.resources.pixabay;

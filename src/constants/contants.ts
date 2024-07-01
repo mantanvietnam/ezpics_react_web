@@ -1,6 +1,8 @@
+import { TextOptions } from "@/interfaces/editor";
+
 export const propertiesToInclude = ["id", "selectable"];
 
-export const defaultTextOptions = {
+export const defaultTextOptions: TextOptions = {
   underline: false,
   textAlign: "left",
   charSpacing: 0,
