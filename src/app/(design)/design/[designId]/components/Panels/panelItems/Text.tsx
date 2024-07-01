@@ -13,6 +13,7 @@ import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
+import { margin } from '@mui/system';
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
@@ -169,7 +170,7 @@ export default function Text() {
         token: token,
         text: item.content.text,
         color: item.content.color,
-        size: 200,
+        size: 24,
         font: item.content.font,
         page: Number(parseGraphicJSON()),
       });
@@ -177,9 +178,9 @@ export default function Text() {
         const options = {
           id: response.data.data.id,
           type: "StaticText",
-          width: 1000,
+          width: 200,
           text: item.content.text,
-          fontSize: 200,
+          fontSize: 24,
           fontFamily: item.content.font,
           textAlign: "center",
           fontStyle: item.content.indam === "normal" ? "bold" : "400",
@@ -260,7 +261,7 @@ export default function Text() {
             paddingRight: "1.5rem",
           }}>
           <Block>
-            <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
+            <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif", marginBottom: '10px', marginTop: '10px' }}>
               Kiểu chữ
             </h4>
           </Block>
@@ -275,6 +276,7 @@ export default function Text() {
           <Block padding={"0 1.5rem"}>
             <Button
               onClick={addObject}
+              style={{marginBottom: '5px'}}
               // onClick={() => console.log(allText)}
               size={SIZE.compact}
               overrides={{
