@@ -10,11 +10,11 @@ import {
   RightOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
+import { Divider, Dropdown, Modal, Space, Spin, Button } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import "@/styles/home/header.scss";
 import { useRouter } from "next/navigation";
-import { Button, Dropdown, Modal, Space } from "antd";
 import images, { designIcon, contactInfo } from "../../public/images/index2";
 import { useEffect, useRef, useState } from "react";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
@@ -25,6 +25,8 @@ import { logoutService } from "@/api/auth";
 import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 import useCheckInternet from "@/hooks/useCheckInternet ";
+import axios from "axios";
+
 const Header = ({ toggleNavbar }) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -33,7 +35,7 @@ const Header = ({ toggleNavbar }) => {
   const [dataInforUsercheck, setdataInforUsercheck] = useState(null);
   const [modalLogoutDevice, setModalLogoutDevice] = useState(false);
   const [token, setToken] = useState();
-  const cookie = checkTokenCookie()
+  const cookie = checkTokenCookie();
   // check online
   const isOnline = useCheckInternet();
   const [show, setShow] = useState(true);
@@ -57,9 +59,12 @@ const Header = ({ toggleNavbar }) => {
   useEffect(() => {
     const fetchDataUsercheck = async () => {
       try {
-        const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
-          token: token
-        });
+        const response = await axios.post(
+          "https://apis.ezpics.vn/apis/getInfoMemberAPI",
+          {
+            token: token,
+          }
+        );
         if (response?.data?.code == 3) {
           setModalLogoutDevice(true);
         } else {
@@ -119,7 +124,7 @@ const Header = ({ toggleNavbar }) => {
     // Gọi fetchDataFromStorage khi component được gắn vào
     fetchDataFromStorage();
   }, []);
-  console.log(token)
+  console.log(token);
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -129,6 +134,160 @@ const Header = ({ toggleNavbar }) => {
   } else {
     dataInforUser = null;
   }
+
+  //Lấy danh sách mẫu thiết kế
+  const [dataSizeBox, setDataSizeBox] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await axios.get(
+          `https://apis.ezpics.vn/apis/getSizeProductAPI`
+        );
+        if (response && response.data) {
+          setDataSizeBox(response.data);
+        } else {
+          console.error("Invalid response format");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    };
+
+    getData();
+  }, []);
+
+  console.log(dataSizeBox);
+
+  //Ẩn hiện popup mẫu thiết kế
+  const [creatingBucket, setCreatingBucket] = useState(false);
+
+  //Check auth khi ấn btn tạo thiết kế
+  const handleAddNewDesign = () => {
+    if (isAuth) {
+      setCreatingBucket(!creatingBucket);
+    } else {
+      router.push("/sign-in");
+    }
+  };
+
+  //Chon file tai len
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleFileChange = (event) => {
+    const fileInput = event.target;
+    const files = fileInput.files;
+
+    if (files.length > 0) {
+      const file = files[0];
+      console.log("Selected file:", file);
+
+      // Lưu trữ thông tin về tệp tin trong trạng thái của component
+      setSelectedFile(file);
+      setUrlSelectedFile(URL.createObjectURL(file));
+      // Bạn có thể thực hiện các xử lý khác tại đây
+    }
+  };
+
+  //Popup modal btn cỡ tùy chỉnh
+  const [openModalCreating, setOpenModalCreating] = useState(false);
+
+  const handleShowModalCreating = () => {
+    setOpenModalCreating(true);
+  };
+  const handleCanCelModalCreating = () => {
+    setOpenModalCreating(false);
+    setSelectedFile(false);
+    document.body.style.overflowY = "auto";
+  };
+
+  //Loading spin
+  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
+    useState(false);
+
+  //Luu url file
+  const [urlSelectedFile, setUrlSelectedFile] = useState("");
+
+  //Button tạo thiết kế tùy chỉnh
+  const handleCreateCustom = async (e) => {
+    e.preventDefault();
+    setLoadingButtonModalCreate(true);
+
+    try {
+      if (selectedFile) {
+        const response = await axios.post(
+          `https://apis.ezpics.vn/apis/createProductAPI`,
+          {
+            token: checkTokenCookie(),
+            type: "user_create",
+            category_id: 0,
+            sale_price: 0,
+            name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
+            background: selectedFile,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log(response);
+
+        if (response && response.data && response.data.code === 0) {
+          setLoadingButtonModalCreate(false);
+          setOpenModalCreating(false);
+          document.body.style.overflowY = "auto";
+          toast.success("Tạo thiết kế thành công");
+
+          setTimeout(function () {
+            router.push(`/design/${response.data.product_id}`);
+          }, 1500);
+        } else {
+          // Handle unexpected response structure or error code
+          console.error("Unexpected response:", response);
+          setLoadingButtonModalCreate(false);
+        }
+      } else {
+        console.log("Không thấy ảnh");
+        setLoadingButtonModalCreate(false);
+      }
+    } catch (error) {
+      console.error("Error creating custom product:", error);
+      // Handle error (e.g., show error message to the user)
+      setLoadingButtonModalCreate(false);
+    }
+  };
+
+  //Button tạo thiết kế theo kích thước tùy chỉnh
+  const handleCreate = async (data) => {
+    try {
+      const response = await axios.post(
+        `https://apis.ezpics.vn/apis/createProductAPI`,
+        {
+          background: data.image,
+          token: checkTokenCookie(),
+          type: "user_create",
+          category_id: 0,
+          sale_price: 0,
+          name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
+          // data.image
+        }
+      );
+
+      if (response && response.data && response.data.code === 0) {
+        setTimeout(function () {
+          router.push(`/design/${response.data.product_id}`);
+        }, 1500);
+        // console.log(response.data.product_id);
+      }
+
+      console.log(response.data);
+    } catch (error) {
+      // Xử lý lỗi ở đây
+      console.error("Error creating product:", error);
+      // Bạn có thể thêm thông báo cho người dùng ở đây nếu muốn
+    }
+  };
+
   const handleLogout = async (e) => {
     const response = await logoutService({
       token: checkTokenCookie(),
@@ -221,7 +380,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <Link href={'/information'} class="list-item ">
+        <Link href={"/information"} class="list-item ">
           <p className="item-text">Sửa thông tin cá nhân</p>
         </Link>
       ),
@@ -509,119 +668,258 @@ const Header = ({ toggleNavbar }) => {
             <div>
               {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
 
-            <Dropdown
-              trigger={["click"]}
-              placement="bottomRight"
-              arrow={true}
-              dropdownRender={() => (
-                <div
-                  style={{
-                    maxHeight: "400px",
-                    background: "white",
-                    overflowY: "overlay",
-                    borderRadius: "10px",
-                    scrollbarWidth: "thin",
-                    scrollbars: "false",
-                  }}>
-                  {itemsDropdowUser.map((item) => (
-                    <div key={item.key}>{item.label}</div>
-                  ))}
-                </div>
-              )}>
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                    <img
-                      className="w-full h-full object-cover rounded-full"
-                      alt="User Avatar"
-                      src={dataInforUser?.avatar}
-                    />
+              <Dropdown
+                trigger={["click"]}
+                placement="bottomRight"
+                arrow={true}
+                dropdownRender={() => (
+                  <div
+                    style={{
+                      maxHeight: "400px",
+                      background: "white",
+                      overflowY: "overlay",
+                      borderRadius: "10px",
+                      scrollbarWidth: "thin",
+                      scrollbars: "false",
+                    }}>
+                    {itemsDropdowUser.map((item) => (
+                      <div key={item.key}>{item.label}</div>
+                    ))}
                   </div>
-                </Space>
-              </a>
-            </Dropdown>
-          </div>
-        ) : (
-          <div>
-            <button
-              className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
-              onClick={() => {
-                router.push("/sign-in");
-              }}>
-              <UserOutlined />
-              <p className="pl-2">Đăng nhập</p>
-            </button>
-          </div>
-        )}
-      </div>
-      <div
-        className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline ? 'bg-green-500 text-white opacity-0' : 'bg-red-500 text-white opacity-100'
-          } ${show ? 'opacity-100' : 'opacity-0'}`}
-        style={{ transition: 'opacity 1s' }}
-      >
-        {isOnline ? (
-          <p>Bạn đang trực tuyến.</p>
-        ) : (
-          <p>Bạn đang ngoại tuyến. Vui lòng kiểm tra kết nối internet của bạn.</p>
-        )}
-        {/* <ScrollToTopButton/> */}
-      </div>
-      {/* <div> */}
-      <Modal
-        open={modalLogoutDevice}
-        onClose={handleLogoutDevice}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styleModalBuyingFree}>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 22,
-              fontWeight: "bold",
-              paddingBottom: "10px",
-            }}
-          >
-            Cảnh báo
-          </p>
-          <img
-            src={contactInfo.warning}
-            alt=""
-            style={{ width: "20%", height: "30%", marginBottom: "10px" }}
-          />
-          <p
-            style={{
-              margin: 0,
-              fontSize: 17,
-              fontWeight: "500",
-              paddingTop: "10px",
-            }}
-          >
-            Tài khoản đã bị đăng nhập ở thiết bị khác
-          </p>
-          <div style={{ display: "flex" }}>
-
-            <Button
-              variant="contained"
-              size="medium"
+                )}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <div className="w-10 h-10 rounded-full overflow-hidden m-5">
+                      <img
+                        className="w-full h-full object-cover rounded-full"
+                        alt="User Avatar"
+                        src={dataInforUser?.avatar}
+                      />
+                    </div>
+                  </Space>
+                </a>
+              </Dropdown>
+            </div>
+          ) : (
+            <div>
+              <button
+                className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
+                onClick={() => {
+                  router.push("/sign-in");
+                }}>
+                <UserOutlined />
+                <p className="pl-2">Đăng nhập</p>
+              </button>
+            </div>
+          )}
+        </div>
+        <div
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
+            isOnline
+              ? "bg-green-500 text-white opacity-0"
+              : "bg-red-500 text-white opacity-100"
+          } ${show ? "opacity-100" : "opacity-0"}`}
+          style={{ transition: "opacity 1s" }}>
+          {isOnline ? (
+            <p>Bạn đang trực tuyến.</p>
+          ) : (
+            <p>
+              Bạn đang ngoại tuyến. Vui lòng kiểm tra kết nối internet của bạn.
+            </p>
+          )}
+          {/* <ScrollToTopButton/> */}
+        </div>
+        {/* <div> */}
+        <Modal
+          open={modalLogoutDevice}
+          onClose={handleLogoutDevice}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description">
+          <Box sx={styleModalBuyingFree}>
+            <p
               style={{
-                height: 40,
-                alignSelf: "center",
-                textTransform: "none",
-                color: "white",
-                backgroundColor: "rgb(255, 66, 78)",
-                marginTop: "40px",
-                width: "100%",
-              }}
-              onClick={() => handleLogout()}
-            >
-              Đăng xuất
-            </Button>
+                margin: 0,
+                fontSize: 22,
+                fontWeight: "bold",
+                paddingBottom: "10px",
+              }}>
+              Cảnh báo
+            </p>
+            <img
+              src={contactInfo.warning}
+              alt=""
+              style={{ width: "20%", height: "30%", marginBottom: "10px" }}
+            />
+            <p
+              style={{
+                margin: 0,
+                fontSize: 17,
+                fontWeight: "500",
+                paddingTop: "10px",
+              }}>
+              Tài khoản đã bị đăng nhập ở thiết bị khác
+            </p>
+            <div style={{ display: "flex" }}>
+              <Button
+                variant="contained"
+                size="medium"
+                style={{
+                  height: 40,
+                  alignSelf: "center",
+                  textTransform: "none",
+                  color: "white",
+                  backgroundColor: "rgb(255, 66, 78)",
+                  marginTop: "40px",
+                  width: "100%",
+                }}
+                onClick={() => handleLogout()}>
+                Đăng xuất
+              </Button>
+            </div>
+          </Box>
+        </Modal>
+
+        <Modal
+          open={openModalCreating}
+          onCancel={handleCanCelModalCreating}
+          footer={null}
+          width={"30%"}>
+          <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
+            <h1 className="text-2xl font-bold text-[#735400] ml-[22px] mt-10">
+              Bắt đầu tạo mẫu thiết kế
+            </h1>
+            <br></br>
+            <h1 style={{ fontSize: 15 }} className="ml-[22px]">
+              Hãy điền đầy đủ thông tin trước khi tạo nhé
+            </h1>
           </div>
-        </Box>
-      </Modal>
-      {/* </div> */}
-    </div>
+          {selectedFile ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "24px",
+              }}>
+              <img
+                src={urlSelectedFile}
+                alt=""
+                style={{
+                  width: 200,
+                  height: "auto",
+                  alignSelf: "center",
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-col relative pt-4">
+              <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
+              <form
+                id="file-upload-form"
+                className="block clear-both mx-auto w-full max-w-600"
+                style={{ marginTop: 40 }}>
+                <input
+                  className="hidden"
+                  id="file-upload"
+                  type="file"
+                  name="fileUpload"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+
+                <label
+                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  htmlFor="file-upload"
+                  id="file-drag"
+                  style={{ height: 200, cursor: "pointer" }}>
+                  <img
+                    id="file-image"
+                    src="#"
+                    alt="Preview"
+                    className="hidden"
+                  />
+                  <div id="">
+                    <img
+                      src="/images/direct-download.png"
+                      alt=""
+                      style={{
+                        width: 30,
+                        height: 30,
+                        alignSelf: "center",
+                        margin: "0 auto",
+                        marginBottom: "2%",
+                      }}
+                    />
+                    <div id="notimage" className="hidden">
+                      Hãy chọn ảnh
+                    </div>
+                    <span id="file-upload-btn" className="">
+                      {selectedFile === null ? "Chọn ảnh" : "Chọn lại"}
+                    </span>
+                  </div>
+                  <div id="response" className="hidden">
+                    <div id="messages"></div>
+                    <progress className="progress" id="file-progress" value="0">
+                      <span>0</span>%
+                    </progress>
+                  </div>
+                </label>
+              </form>
+            </div>
+          )}
+          <div>
+            {selectedFile !== null ? (
+              <div>
+                <button
+                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  onClick={(e) => handleCreateCustom(e)}>
+                  {loadingButtonModalCreate ? (
+                    <span>
+                      <Spin
+                        indicator={
+                          <LoadingOutlined
+                            style={{
+                              fontSize: 24,
+                              color: "#fff",
+                            }}
+                            spin
+                          />
+                        }
+                      />
+                    </span>
+                  ) : (
+                    "Bắt đầu tạo mẫu"
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
+                  disabled>
+                  Bắt đầu tạo mẫu
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="px-4 text-center text-sm text-gray-500">
+            <p>
+              Nếu bạn chưa có thông tin, hãy tham khảo
+              <a href="#" className="block text-purple-600 no-underline">
+                Mẫu thiết kế có sẵn
+              </a>
+            </p>
+          </div>
+        </Modal>
+      </div>
+    </SessionProvider>
   );
 };
 
