@@ -36,8 +36,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
   } else {
     dataInforUser = null;
   }
-
-  // console.log("dataInforUser", dataInforUser);
+  // console.log('dataInforUser', dataInforUser)
   useEffect(() => {
     setLoading(true);
     const fetchProducts = async () => {
@@ -154,7 +153,9 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                             : VND.format(product.sale_price)}
                         </span>
                         <span className="text-gray-500 line-through">
-                          {VND.format(product.price)}
+                          {product?.price === 0
+                            ? ""
+                            : VND.format(product?.price)}
                         </span>
                       </div>
                     </div>

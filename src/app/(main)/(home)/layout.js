@@ -10,7 +10,7 @@ import CollectionProductSlider from "@/components/Slide/CollectionProductSlider"
 import ProductCard from "@/components/YourProduct/ProductCard";
 import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
-import { deleteProductAPI, getMyProductApi } from "../../../api/product";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 export default function HomeRoot(props) {
   const [products, setProducts] = useState([]);
@@ -71,6 +71,7 @@ export default function HomeRoot(props) {
           <button className="button-red relative z-10 px-4">Xem thêm</button>
         </Link>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

@@ -18,7 +18,7 @@ const ChangeMailForm = ({ data, setData }) => {
 
   const formik = useFormik({
     initialValues: {
-      email: data.email || "",
+      email: data?.email || "",
     },
     validationSchema: Yup.object({
       email: Yup.string()

@@ -212,3 +212,10 @@ export const getInfoWarehouseApi = async (data) => {
   );
   return response.data;
 };
+export const createImageSeriesAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/createImageSeriesAPI",
+    data
+  );
+  return response.data;
+};

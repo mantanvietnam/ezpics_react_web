@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Spin } from 'antd';
 import styles from '../styles.module.css'
 import Link from 'next/link';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 
 const NewsDetailPage = ({params}) => {
@@ -80,6 +81,7 @@ console.log(article)
               </div>
             ))}
           </div>
+          <ScrollToTopButton/>
 
     </div>
   );

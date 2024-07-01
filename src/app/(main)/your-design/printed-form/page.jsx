@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getMyProductSeriesAPI } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
 import { checkTokenCookie } from '@/utils/cookie';
@@ -10,28 +10,45 @@ export default function Page() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-
-  const getMyProductData = async () => {
-    return await getMyProductSeriesAPI({
-      token: checkTokenCookie(),
-      type: "user_series",
-      limit: 100
-    });
-  };
+  const timeoutRef = useRef(null);
   const [searchValue, setSearchValue] = useState({
-    limit: 20,
+    limit: 1000,
     page: 1,
-    name: '',
-    price: '',
-    orderBy: '',
-    orderType: '',
-    category_id: '',
+    token: checkTokenCookie(),
+    name: searchTerm,
+    type: "user_series",
     color: ''
   })
+  // const getMyProductData = async () => {
+  //   return await getMyProductSeriesAPI({
+  //     token: checkTokenCookie(),
+  //     type: "user_series",
+  //     limit: 100
+  //   });
+  // };
+  useEffect(() => {
+    const fetchData = async () => {
+        setLoading(true)
+        try {
+            const response = await getMyProductSeriesAPI(searchValue);
+            setLoading(false)
+            if (response?.listData?.length === 0) {
+                setHasMore(false); // No more products to load
+            } else {
+                setProducts(response?.listData);
+                console.log(products)
+            }
+        } catch (error) {
+            console.log(error);
+            setLoading(false)
+        }
+    }
+    fetchData()
+},[searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
-      const response = await searchProductAPI(searchValue)
+      const response = await getMyProductSeriesAPI(searchValue)
       setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
@@ -60,9 +77,14 @@ export default function Page() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchValue((prev) => ({ ...prev, name: value }));
-  };
 
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setSearchValue((prev) => ({ ...prev, name: value }));
+    }, 2000); // 2000 milliseconds = 2 seconds
+  };
   return (
     <>
       <div className='w-1/3 pt-1 flex items-center gap-2 mb-5'>
@@ -85,7 +107,9 @@ export default function Page() {
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
       </div>
-      <DefaultPage getData={getMyProductData} />
+      {/* <DefaultPage getData={getMyProductData} />  */}
+      <DefaultPage getData={products} /> 
+
     </>
   );
 }

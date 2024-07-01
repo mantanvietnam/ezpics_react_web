@@ -9,6 +9,10 @@ import ModalRecharge from "./ModelRecharge";
 import { checkAvailableLogin, getCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+const VND = new Intl.NumberFormat("vi-VN", {
+  style: "currency",
+  currency: "VND",
+})
 
 const Nav = ({ isOpen, closeNavbar }) => {
   const [openPro, setOpenPro] = useState(false);
@@ -102,9 +106,8 @@ const Nav = ({ isOpen, closeNavbar }) => {
 
   return (
     <div
-      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-10 transition-transform duration-300 ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      }`}>
+      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-10 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}>
       {isAuthenticated ? (
         <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
           <div className="relative flex justify-around items-center">
@@ -136,7 +139,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
                   height={20}
                   className="rounded-full pr-1"
                 />{" "}
-                <p>: {dataInforUser?.account_balance} ₫</p>
+                <p>: {VND.format(dataInforUser?.account_balance)}</p>
               </div>
               <div className="flex items-center text-slate-500">
                 <Image

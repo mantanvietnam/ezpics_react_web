@@ -10,6 +10,7 @@ import styles from './styles.module.css'
 import Link from 'next/link';
 import 'swiper/css';
 import { getPost } from '@/api/post';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -161,8 +162,8 @@ console.log(news)
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {news?.map((article, index) => (
               <div key={index} className="bg-white rounded-md shadow flex flex-col overflow-hidden relative  pb-7">
-                <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110" />
                 <Link href={`/post/${article?.id}`} className="text-blue-500 mt-2 self-start">
+                <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110" />
                   <div className="flex flex-col justify-between flex-grow">
                     <div>
                       <h3 className="text-xl font-bold mb-2 text-black p-1">{article?.title}</h3>
@@ -174,7 +175,7 @@ console.log(news)
                   </div>
                 </Link>
               </div>
-            ))}
+              ))}
           </div>
         {loadingMore && (
           <div className="center text-center w-full">
@@ -184,6 +185,7 @@ console.log(news)
           </div>
         )}
         </div>
+        <ScrollToTopButton/>
 
         {/* <aside className="w-full lg:w-64 ml-0 lg:ml-8 mt-8 lg:mt-0">
           <div className="bg-white p-4 rounded shadow">

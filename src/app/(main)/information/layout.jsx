@@ -193,7 +193,7 @@ const Page = () => {
 
   const ChangePasswordForm = () => {
     const [showError, setShowError] = useState(false);
-    const network = useSelector((state) => state.network.ipv4Address);
+    const network = useSelector((state) => state.ipv4.network);
     const router = useRouter();
     const dispatch = useDispatch();
 

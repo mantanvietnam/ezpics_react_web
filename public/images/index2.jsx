@@ -41,6 +41,7 @@ export const designAction = {
   edit: require("./edit.png").default,
   copy: require("./copy.png"),
   delete: require("./delete.png"),
+  printer: require("./printer.png"),
   eye: require("./eye.png"),
   share: require("./share.png"),
   download: require("./download.png"),
@@ -51,6 +52,8 @@ export const contactInfo = {
   gmail: require("./gmail.png"),
   phone: require("./phone-call.png"),
   bg: require("./bg-designer.png"),
+  warning: require("./warning.png"),
+
 };
 
 export default images;

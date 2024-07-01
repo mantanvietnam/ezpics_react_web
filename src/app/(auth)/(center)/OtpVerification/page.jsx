@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import styles from '../../../../styles/auth/otp_verification.module.scss';
 import styles from './otp_verification.module.scss'
 import { acceptMemberAPI, SendOtp } from '@/api/auth';
@@ -9,14 +9,18 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { checkTokenCookie, getCookie } from '@/utils';
+import { useSession } from 'next-auth/react';
 
 const OtpVerification = ({ phone }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [isLoading, setIsLoading] = useState(false);
-    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [isOtpSent, setIsOtpSent] = useState(false); 
+    const [canResendOtp, setCanResendOtp] = useState(false);
+    const [countdown, setCountdown] = useState(60); // Đếm ngược 60 giây
+    // const
+    const { data: session } = useSession();
     const router = useRouter();
     const token = checkTokenCookie()
-    console.log(token)
     // Lấy data user
     let dataInforUser;
     if (getCookie("user_login")) {
@@ -26,13 +30,12 @@ const OtpVerification = ({ phone }) => {
     } else {
         dataInforUser = null;
     }
-    console.log(dataInforUser)
     const handleResendOtp = async () => {
         setIsLoading(true);
         try {
             const response = await SendOtp({ phone: dataInforUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
             if (response?.code == 0) {
-                console.log('response::',response);
+                console.log('response::', response);
                 toast.success('Mã OTP đã được gửi lại !');
                 setOtp(['', '', '', '', '', '']); // Reset lại các ô nhập OTP
                 setIsOtpSent(true); // Đã gửi mã OTP thành công
@@ -47,6 +50,25 @@ const OtpVerification = ({ phone }) => {
             setIsLoading(false);
         }
     };
+    useEffect(() => {
+        let timer;
+        if (isOtpSent) {
+            setCanResendOtp(false);
+            setCountdown(60);
+            timer = setInterval(() => {
+                setCountdown((prevCountdown) => {
+                    if (prevCountdown <= 1) {
+                        clearInterval(timer);
+                        setCanResendOtp(true);
+                        return 0;
+                    }
+                    return prevCountdown - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [isOtpSent]);
+
     const handleSendOtp = async () => {
         setIsLoading(true);
         try {
@@ -54,8 +76,9 @@ const OtpVerification = ({ phone }) => {
             if (response?.code == 0) {
                 console.log('respone: ', response)
                 toast.success('Đã gửi mã OTP!2');
-                setIsOtpSent(true); // Đã gửi mã OTP thành công
                 document.getElementById('otp-input-0').focus(); // Focus vào ô nhập OTP đầu tiên
+                setIsOtpSent(true); // Đã gửi mã OTP thành công
+                setCanResendOtp(false); // Đặt lại để chờ 1 phút
             } else {
                 toast.error('Không thể gửi mã OTP, vui lòng thử lại sau.');
             }
@@ -66,8 +89,6 @@ const OtpVerification = ({ phone }) => {
             setIsLoading(false);
         }
     };
-
-
     const handleOtpChange = (e, index) => {
         const value = e.target.value;
         if (/^[0-9]$/.test(value) || value === '') {
@@ -104,56 +125,57 @@ const OtpVerification = ({ phone }) => {
             toast.error('Vui lòng nhập đầy đủ mã OTP.');
         }
     };
-
     return (
         <div className={styles.formOtpVerification}>
             <div className={styles.backgroundform}>
                 <h2 className="text-2xl font-bold mb-4">Xác Thực OTP điện thoại</h2>
-                        <form onSubmit={handleOtpSubmit} className={styles.formSubmit}>
-                            <div className={styles.groupInput}>
-                                {otp.map((digit, index) => (
-                                    <input
-                                        key={index}
-                                        id={`otp-input-${index}`}
-                                        type="text"
-                                        maxLength="1"
-                                        className={styles.otpInput}
-                                        value={digit}
-                                        onChange={(e) => handleOtpChange(e, index)}
+                <form onSubmit={handleOtpSubmit} className={styles.formSubmit}>
+                    <div className={styles.groupInput}>
+                        {otp.map((digit, index) => (
+                            <input
+                                key={index}
+                                id={`otp-input-${index}`}
+                                type="text"
+                                maxLength="1"
+                                className={styles.otpInput}
+                                value={digit}
+                                onChange={(e) => handleOtpChange(e, index)}
+                            />
+                        ))}
+                    </div>
+                    <button type="submit" className={`${styles.btnVerifyOtp} mt-4`}>
+                        {isLoading ? (
+                            <Spin
+                                indicator={
+                                    <LoadingOutlined
+                                        style={{
+                                            fontSize: 24,
+                                            color: 'white',
+                                        }}
+                                        spin
                                     />
-                                ))}
-                            </div>
-                            <button type="submit" className={`${styles.btnVerifyOtp} mt-4`}>
-                                {isLoading ? (
-                                    <Spin
-                                        indicator={
-                                            <LoadingOutlined
-                                                style={{
-                                                    fontSize: 24,
-                                                    color: 'white',
-                                                }}
-                                                spin
-                                            />
-                                        }
-                                    />
-                                ) : (
-                                    'Xác Thực'
-                                )}
-                            </button>
-                {isOtpSent ? (
-                    <>
+                                }
+                            />
+                        ) : (
+                            'Xác Thực'
+                        )}
+                    </button>
+                    {isOtpSent ? (
+                        canResendOtp ? (
                             <button type="button" onClick={handleResendOtp} className={`${styles.btnResendOtp} mt-2`}>
                                 Gửi Lại OTP
                             </button>
-                    </>
-                ) : (
-                    <>
+                        ) : (
+                            <button type="button" className={`${styles.btnResendOtp} mt-2`} disabled>
+                                Gửi Lại OTP ({countdown}s)
+                            </button>
+                        )
+                    ) : (
                         <button type="button" onClick={handleSendOtp} className={`${styles.btnSendOtp} mt-2`}>
                             Nhận OTP
                         </button>
-                    </>
-                )}
-                        </form>
+                    )}
+                </form>
             </div>
 
         </div>
