@@ -14,7 +14,7 @@ const LogoProductSlider = () => {
         return products; // Return the fetched products
       }}
       title="Logo thương hiêu cá nhân"
-      pathString="/"
+      pathString="/dashboard-search"
     />
   );
 };

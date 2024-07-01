@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { Canvas } from "@layerhub-io/react";
 import Playback from "../Playback";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
@@ -16,21 +16,26 @@ export default function CanvasComponent() {
   const activeObject = useActiveObject();
   const { displayPlayback } = useDesignEditorContext();
 
-  // const handleCtrlC = (event: any) => {
-  //   if ((event.ctrlKey || event.metaKey) && event.key === "c") {
-  //     // Thực hiện các hành động khi người dùng nhấn "Ctrl + C"
-  //     console.log(activeObject);
-  //     return;
-  //   } else if ((event.ctrlKey || event.metaKey) && event.key === "v") {
-  //     console.log(activeObject);
-  //     return;
-  //   }
-  // };
-  // document.addEventListener("keydown", handleCtrlC);
+  const handleCtrlC = (event: any) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "c") {
+      // Thực hiện các hành động khi người dùng nhấn "Ctrl + C"
+      console.log(activeObject);
+      return;
+    } else if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+      console.log(activeObject);
+      return;
+    }
+  };
+  document.addEventListener("keydown", handleCtrlC);
 
   return (
     <StyledCanvasContainer
-      style={{ flex: 1, display: "flex", position: "relative" }}>
+      style={{
+        flex: 1,
+        display: "flex",
+        position: "relative",
+        overflow: "auto",
+      }}>
       {displayPlayback && <Playback />}
       <Canvas
         config={{

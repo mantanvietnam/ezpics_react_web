@@ -69,6 +69,7 @@ export default function Page({ params }) {
           user={user}
           isLoading={isLoading}
           dataLayer={dataLayer}
+          id_param={params.product_id}
         />
         {isLoading ? (
           <Skeleton

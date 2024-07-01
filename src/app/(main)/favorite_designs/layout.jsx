@@ -14,13 +14,13 @@ export default function DashboardLayout(props) {
             <div className='w-full pt-5'>
                 <YourProductBanner />
             </div>
-            <div className="pb-4">
+            {/* <div className="pb-4">
                 <div className='flex items-center gap-3'>
                     <Link href="/favorite_designs" className={getTabClass('/favorite_designs')}>
                         Thiết kế
                     </Link>
                 </div>
-            </div>
+            </div> */}
             {props.children}
         </div>
     )

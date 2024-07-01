@@ -1,40 +1,60 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getMyProductApi } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
 import { checkTokenCookie } from '@/utils/cookie';
 import { Button, Flex, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import _ from 'lodash'
 
 export default function Page() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-
-  const getMyProductData = async () => {
-    return await getMyProductApi({
-      type: "user_create",
-      // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
-      token: checkTokenCookie(),
-      limit: 12,
-      page: 1
-    });
-
-  };
+  const [page, setPage] = useState(1)
+  const timeoutRef = useRef(null);
+  const [hasMoreData, setHasMoreData] = useState(true)
+  // const getMyProductData = async () => {
+  //   return await getMyProductApi({
+  //     type: "user_create",
+  //     // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
+  //     token: checkTokenCookie(),
+  //     limit: 12,
+  //     page: 1
+  //   });
+  // };
   const [searchValue, setSearchValue] = useState({
     limit: 20,
     page: 1,
-    name: '',
-    price: '',
-    orderBy: '',
-    orderType: '',
-    category_id: '',
-    color: ''
+    name: searchTerm,
+    token: checkTokenCookie(),
+    color: '',
+    type: "user_create",
   })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const response = await getMyProductApi(searchValue);
+        setLoading(false)
+        if (response?.listData?.length === 0) {
+          setHasMore(false); // No more products to load
+        } else {
+          setProducts(response?.listData);
+          console.log(products)
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
-      const response = await searchProductAPI(searchValue)
+      const response = await getMyProductApi(searchValue)
       setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
@@ -49,7 +69,7 @@ export default function Page() {
       setLoading(true)
       try {
         setLoading(true)
-        const response = await searchProductAPI(searchValue)
+        const response = await getMyProductApi(searchValue)
         setHasMoreData(true)
         setPage(1)
         setProducts(response.listData)
@@ -63,8 +83,51 @@ export default function Page() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchValue((prev) => ({ ...prev, name: value }));
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setSearchValue((prev) => ({ ...prev, name: value }));
+    }, 2000); // 2000 milliseconds = 2 seconds
   };
+  const handleScroll = useCallback(_.debounce(() => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
+      setLoading(true);
+      setPage(prevPage => prevPage + 1);
+    }
+  }, 200), [loading, hasMoreData]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  useEffect(() => {
+    if (!hasMoreData) {
+      setLoading(false);
+      return
+    } else {
+      const fetchData = async () => {
+        if (page > 1) {
+          try {
+            const response = await getMyProductApi({ ...searchValue, page });
+            if (response.listData.length > 0) {
+              setProducts(prevProducts => [...prevProducts, ...response.listData]);
+              setHasMoreData(true)
+            } else {
+              setHasMoreData(false)
+            }
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setLoading(false);
+          }
+        }
+      };
+      fetchData();
+    }
+  }, [page]);
 
   return (
     <>
@@ -88,7 +151,12 @@ export default function Page() {
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
       </div>
-      <DefaultPage getData={getMyProductData} />
+      <DefaultPage getData={products} />
+      {loading &&
+        <Flex align="center" gap="middle">
+          <Spin size="large" />
+        </Flex>
+      }
     </>
   );
 }

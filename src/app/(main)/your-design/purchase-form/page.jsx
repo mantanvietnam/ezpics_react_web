@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getMyProductApi } from '@/api/product';
 import DefaultPage from '@/components/YourProduct/DefaultPage';
 import { checkTokenCookie } from '@/utils/cookie';
@@ -10,37 +10,25 @@ export default function Page() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-
+  const timeoutRef = useRef(null);
   const [searchValue, setSearchValue] = useState({
     token: checkTokenCookie(),
     limit: 20,
     page: 1,
     name: searchTerm,
-
   })
 
-  // const getMyProductData = async () => {
-  //   return await getMyProductApi({
-  //     type: "user_edit",
-  //     // token: "U2rZ4thBHT9ImJf5qidsxGjbDEewF31718088855",
-  //     token: checkTokenCookie(),
-  //     limit: 100,
-  //     page: 1
-  //   });
-  // }; 
-  const getMyProductData = async () => {
-    return await getMyProductApi(searchValue);
-  }; 
   useEffect(() => {
     const fetchData = async () => {
-        // setLoading(true)
+        setLoading(true)
         try {
-            const response = await getMyProductData(searchValue);
+            const response = await getMyProductApi(searchValue);
             setLoading(false)
-            if (response.listData.length === 0) {
+            if (response?.listData?.length === 0) {
                 setHasMore(false); // No more products to load
             } else {
-                setProducts((prevProducts) => [...prevProducts, ...response.listData]);
+                setProducts(response?.listData);
+                console.log(products)
             }
         } catch (error) {
             console.log(error);
@@ -48,28 +36,11 @@ export default function Page() {
         }
     }
     fetchData()
-})
-  useEffect(() => {
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('https://apis.ezpics.vn/apis/getProductCategoryAPI');
-            if (response?.data?.listData) {
-                setCategories(response.data.listData);
-            } else {
-                console.error("Invalid response format for categories");
-            }
-        } catch (error) {
-            console.error("Error fetching categories:", error.message);
-        }
-    };
-    fetchCategories()
-
-}, []);
-
+},[searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
-      const response = await searchProductAPI(searchValue)
+      const response = await getMyProductApi(searchValue)
       setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
@@ -98,10 +69,16 @@ export default function Page() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchValue((prev) => ({ ...prev, name: value }));
-  };
 
-  return (
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setSearchValue((prev) => ({ ...prev, name: value }));
+    }, 2000); // 2000 milliseconds = 2 seconds
+  };
+  return ( 
     <>
       <div className='w-1/3 pt-1 flex items-center gap-2 mb-5'>
         <input
@@ -123,7 +100,8 @@ export default function Page() {
             <Spin size="small" />
           </Flex> : 'Search'}</Button>
       </div>
-      <DefaultPage getData={getMyProductData} searchValue={products} />
+      <DefaultPage getData={products} searchValue={searchValue} />
+      {/* <DefaultPage getData={getMyProductData} searchValue={searchValue} /> */}
     </>
   );
 }

@@ -15,7 +15,7 @@ const EventProductSlider = () => {
         return products;
       }}
       title="Banner event"
-      pathString="/"
+      pathString="/dashboard-search"
     />
   );
 };

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react"
 import { Button, Modal, Radio, Skeleton, Space, Spin, Table, Tag } from "antd"
 import { SkeletonCustom } from "./Slide/CustomSlide"
 import { useRouter } from 'next/navigation'
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 import { buyProductAPI, checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from '@/api/product'
 import { toast } from 'react-toastify'
 import { LoadingOutlined } from '@ant-design/icons'
 import Image from 'next/image'
 import images from '../../public/images/index2'
+import { getInfoMemberAPI } from '@/api/user'
+import { setCookie } from '@/utils';
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
@@ -54,6 +56,14 @@ export default function ProductInfo(props) {
       })
       if (response.code === 0) {
         toast.success('Bạn đã mua thiết kế thành công')
+        try {
+          const response = await getInfoMemberAPI({ token: token })
+          if (response.code === 0) {
+            setCookie("user_login", response.data, 3)
+          }
+        } catch (error) {
+          console.log(error)
+        }
       } else {
         toast.error(response.messages[0].text)
       }
@@ -280,11 +290,13 @@ export default function ProductInfo(props) {
             <div className="line-through text-slate-400 rounded-sm">
               {data?.price ? VND.format(data?.price) : ""}
             </div>
-            <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
-              {data?.sale_price
-                ? `Giảm ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
-                : "Miễn Phí"}
-            </div>
+            {
+              data?.sale_price ?
+                <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+                  {`Giảm ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`}
+                </div> :
+                ""
+            }
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm product-details-e">Khuyến mãi</div>
@@ -414,36 +426,33 @@ export default function ProductInfo(props) {
         className='buy-product-modal'
       >
         <div>
+          <div className='flex gap-2 mb-[20px]'>
+            <div className="flex items-center text-slate-500">
+              <Image
+                src={images.balance}
+                alt=""
+                width={20}
+                height={20}
+                className="rounded-full pr-1"
+              />{" "}
+              <p className='text-sm font-semibold'>: {VND.format(userLogin?.account_balance)}</p>
+            </div>
+            <div className="flex items-center text-slate-500">
+              <Image
+                src={images.eCoin}
+                alt=""
+                width={20}
+                height={20}
+                className="rounded-full pr-1"
+              />{" "}
+              <p className='text-sm font-semibold'>: {userLogin?.ecoin} eCoin</p>
+            </div>
+          </div>
           <Table columns={columns} dataSource={dataTable} pagination={false} className='mb-[20px]' />
           <Radio.Group name="radiogroup" defaultValue={type} onChange={handleChangeRadio} className='mb-[20px]'>
             <Radio value=''>Mua bằng tiền tài khoản</Radio>
             <Radio value='ecoin'>Mua bằng ecoin</Radio>
           </Radio.Group>
-          <div className='flex gap-3 justify-end'>
-            <div className='text-sm'>Số dư:</div>
-            <div className='flex flex-col gap-1'>
-              <div className="flex items-center text-slate-500">
-                <Image
-                  src={images.balance}
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="rounded-full pr-1"
-                />{" "}
-                <p>: {VND.format(userLogin?.account_balance)}</p>
-              </div>
-              <div className="flex items-center text-slate-500">
-                <Image
-                  src={images.eCoin}
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="rounded-full pr-1"
-                />{" "}
-                <p>: {userLogin?.ecoin} eCoin</p>
-              </div>
-            </div>
-          </div>
           <div className='flex gap-2 justify-end mb-[20px] items-center'>
             <div className='text-lg font-semibold'>Tổng tiền:</div>
             <div className='text-lg font-semibold'>{type === 'ecoin' ? `${data?.ecoin} eCoin` : VND.format(data?.sale_price)}</div>
