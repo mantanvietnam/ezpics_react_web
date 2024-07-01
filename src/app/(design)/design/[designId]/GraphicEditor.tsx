@@ -768,7 +768,7 @@ function GraphicEditor() {
                     width: 40,
                     height: 40,
                   }}
-                  src="./EZPICS.png"
+                  src="/images/EZPICS.png"
                 />
               </div>
             </div>

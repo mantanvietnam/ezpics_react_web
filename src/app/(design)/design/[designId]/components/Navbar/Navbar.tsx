@@ -553,7 +553,7 @@ export default function Navbar() {
 
     formData.append("file", base64toFile(image, "preview.png"));
     formData.append("idProduct", idProduct);
-    formData.append("token", token);
+    formData.append("token", checkTokenCookie());
 
     try {
       // Make an Axios POST request with the FormData
@@ -790,7 +790,7 @@ export default function Navbar() {
           </Button> */}
             <Button
               size="compact"
-              onClick={makePreview}
+              onClick={() => makePreview()}
               kind={KIND.tertiary}
               overrides={{
                 StartEnhancer: {
