@@ -444,14 +444,12 @@ export default function Layers() {
                     size={SIZE.mini}
                     onClick={async() => {
                       editor.objects.remove(object.id)
-                      console.log('--------------------------------------------------------', editor.objects);
                       try {
                         const response = await axios.post('https://apis.ezpics.vn/apis/deleteLayerAPI', {
                           idproduct: idProduct,
                           token: token,
                           idlayer: object.id
                         })
-                        console.log('🚀 ~ onClick={async ~ response:', response)
                       } catch (error) {
                         console.log(error);
                       }
