@@ -228,7 +228,6 @@ function GraphicPrinted() {
     srcBackground: any,
     idBackground: any
   ) => {
-    console.log(width, height);
     const dataString = {
       frame: { initialWidth: width, initialHeight: height },
       content: [] as any,
@@ -557,7 +556,8 @@ function GraphicPrinted() {
               paddingTop: "6%",
               paddingRight: "2%",
               paddingLeft: "18%",
-            }}>
+            }}
+          >
             <div
               style={{
                 width: "100%",
@@ -565,7 +565,8 @@ function GraphicPrinted() {
                 alignItems: "center",
                 justifyContent: "center",
                 paddingTop: "2%",
-              }}>
+              }}
+            >
               <button
                 onClick={(e) => handleDownloadImage(e)}
                 style={{
@@ -583,7 +584,8 @@ function GraphicPrinted() {
                   fontWeight: "500",
                   borderRadius: 5,
                   cursor: "pointer",
-                }}>
+                }}
+              >
                 Tải ảnh
               </button>
               <button
@@ -603,7 +605,8 @@ function GraphicPrinted() {
                   fontWeight: "500",
                   borderRadius: 5,
                   cursor: "pointer",
-                }}>
+                }}
+              >
                 Nhập lại thông tin
               </button>
             </div>
@@ -614,7 +617,8 @@ function GraphicPrinted() {
                 display: "flex",
                 alignSelf: "center",
                 justifyContent: "center",
-              }}>
+              }}
+            >
               {imageData ? (
                 <img
                   style={{

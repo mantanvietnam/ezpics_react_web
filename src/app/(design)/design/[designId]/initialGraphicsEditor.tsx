@@ -643,7 +643,7 @@ function GraphicEditor() {
                     top: "12%",
                     left: "16%",
                   }}
-                  src="./EZPICS.png"
+                  src="/images/EZPICS.png"
                 />
               </div>
             </div>

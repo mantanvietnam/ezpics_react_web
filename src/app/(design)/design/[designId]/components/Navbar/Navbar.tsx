@@ -38,7 +38,6 @@ const Container = styled<"div", {}, Theme>("div", ({ $theme }) => ({
 export default function Navbar() {
   const router = useRouter();
   const parseData = (data: any) => {
-    console.log(data);
     let dataReal = [] as any[];
 
     data.colorStops.map((stop: any, index: number) => {
@@ -70,7 +69,6 @@ export default function Navbar() {
     // Remove the first two elements from the first sub-array
     datas.data[0].splice(0, 2);
 
-    console.log(datas);
     // Remove elements with id 'background' from each sub-array
     datas.data.forEach((data: any) => {
       const indexToRemove = data.findIndex(
@@ -137,7 +135,6 @@ export default function Navbar() {
           sort: index + 1,
         });
       } else if (data.type === "StaticText") {
-        // console.log(data, index);
         initialData.push({
           id: data?.id,
           content: {
@@ -181,7 +178,6 @@ export default function Navbar() {
 
           sort: index + 1,
         });
-        console.log(data);
       }
     });
 
@@ -189,7 +185,6 @@ export default function Navbar() {
   };
   const parseGraphicJSON = () => {
     const currentScene = editor.scene.exportToJSON();
-    console.log(currentScene);
     const updatedScenes = scenes.map((scn) => {
       if (scn.id === currentScene.id) {
         return {
@@ -214,11 +209,8 @@ export default function Navbar() {
       metadata: {},
       preview: "",
     };
-    console.log(updatedScenes);
 
     const allLayers = graphicTemplate.scenes.map((scene: any) => scene.layers);
-    // console.log(graphicTemplate);
-    console.log(currentDesign.frame, allLayers);
     const newDesign = generateToServer({
       frame: currentDesign.frame,
       data: allLayers,
@@ -226,7 +218,6 @@ export default function Navbar() {
     newDesign.forEach(async (item: any, index: any) => {
       // Kiểm tra nếu id là chuỗi
       if (typeof item.id === "string") {
-        console.log(item);
         if (item.content.type === "image") {
           const response = await axios.post(`${network}/addLayerImageUrlAPI`, {
             idproduct: idProduct,
@@ -236,7 +227,6 @@ export default function Navbar() {
           });
           if (response && response.data) {
             item.id = response.data?.data?.id;
-            console.log(response.data);
           }
         } else if (item.content.type === "text") {
           const response = await axios.post(`${network}/addLayerText`, {
@@ -250,12 +240,10 @@ export default function Navbar() {
           });
           if (response && response.data) {
             item.id = response.data?.data?.id;
-            console.log(response.data);
           }
         }
       }
     });
-    // console.log()
     return newDesign;
   };
   const styleModalBuyingFree = {
@@ -553,7 +541,7 @@ export default function Navbar() {
 
     formData.append("file", base64toFile(image, "preview.png"));
     formData.append("idProduct", idProduct);
-    formData.append("token", token);
+    formData.append("token", checkTokenCookie());
 
     try {
       // Make an Axios POST request with the FormData
@@ -740,7 +728,8 @@ export default function Navbar() {
               gap: "0.5rem",
               alignItems: "center",
               paddingBottom: "10px",
-            }}>
+            }}
+          >
             <input
               multiple={false}
               onChange={handleFileInput}
@@ -759,7 +748,8 @@ export default function Navbar() {
                     marginRight: "4px",
                   },
                 },
-              }}>
+              }}
+            >
               Nhập dữ liệu JSON
             </Button>
 
@@ -773,7 +763,8 @@ export default function Navbar() {
                     marginRight: "4px",
                   },
                 },
-              }}>
+              }}
+            >
               Xuất dữ liệu JSON
             </Button>
             {/* <Button
@@ -790,7 +781,7 @@ export default function Navbar() {
           </Button> */}
             <Button
               size="compact"
-              onClick={makePreview}
+              onClick={() => makePreview()}
               kind={KIND.tertiary}
               overrides={{
                 StartEnhancer: {
@@ -801,7 +792,8 @@ export default function Navbar() {
                     // marginBottom: "10px",
                   },
                 },
-              }}>
+              }}
+            >
               <Image
                 src={imageIcon}
                 alt=""
@@ -820,7 +812,8 @@ export default function Navbar() {
                     paddingBottom: "10px",
                   },
                 },
-              }}>
+              }}
+            >
               <Image
                 alt=""
                 src={exportIcon}
@@ -839,7 +832,8 @@ export default function Navbar() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}>
+          }}
+        >
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
             <div className="ldio-4qpid53rus92">
               <div></div>
@@ -867,7 +861,8 @@ export default function Navbar() {
         open={modalBuyingFree}
         onClose={handleCloseModalFree}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={styleModalBuyingFree}>
           <p
             style={{
@@ -876,7 +871,8 @@ export default function Navbar() {
               fontWeight: "bold",
               paddingBottom: "10px",
               fontFamily: "Helvetica, Arial, sans-serif",
-            }}>
+            }}
+          >
             Cảnh báo
           </p>
           <Image
@@ -891,7 +887,8 @@ export default function Navbar() {
               fontWeight: "500",
               paddingTop: "10px",
               fontFamily: "Helvetica, Arial, sans-serif",
-            }}>
+            }}
+          >
             Bạn muốn lưu mẫu thiết kế này trước khi rời đi chứ ?
           </p>
 
@@ -902,7 +899,8 @@ export default function Navbar() {
               width: "100%",
               paddingRight: "5%",
               paddingLeft: "5%",
-            }}>
+            }}
+          >
             <Button
               variant="contained"
               size="default"
@@ -919,7 +917,8 @@ export default function Navbar() {
               }}
               onClick={() => {
                 handleSaveIcon();
-              }}>
+              }}
+            >
               {" "}
               {loadingBuyingFunc ? (
                 <span className="loaderNew"></span>
@@ -942,7 +941,8 @@ export default function Navbar() {
               }}
               onClick={() => {
                 handleNotSave();
-              }}>
+              }}
+            >
               {" "}
               {loadingBuyingFunc ? (
                 <span className="loaderNew"></span>
