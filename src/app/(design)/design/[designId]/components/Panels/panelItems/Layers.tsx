@@ -343,7 +343,7 @@ export default function Layers() {
                     justifyContent: "flex-end",
                   }}>
                   {/* option cai dat layer */}
-                  {/* {object?.metadata?.variable !== "" && (
+                  {object?.metadata?.variable !== "" && (
                     <Button
                       kind={KIND.tertiary}
                       size={SIZE.mini}
@@ -357,19 +357,19 @@ export default function Layers() {
                         },
                       }}>
                       <img
-                        src="./setting.png"
+                        src="/images/setting.png"
                         style={{
-                          width: 18,
-                          height: 18,
-                          paddingLeft: "4px",
-                          paddingRight: "4px",
+                          width: 20,
+                          height: 20,
+
                           paddingTop: "2px",
+                          maxWidth: 18,
                         }}
                         alt=""
                         onClick={() => objectMetadata(object)}
                       />
                     </Button>
-                  )} */}
+                  )}
                   {object.locked ? (
                     <Button
                       kind={KIND.tertiary}

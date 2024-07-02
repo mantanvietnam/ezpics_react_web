@@ -199,7 +199,7 @@ function CommonLayers() {
   const handleSendToBack = () => {
     if (activeObject) {
       console.log(activeObject);
-      if (activeObject?.metadata.sort <= 1) {
+      if (activeObject?.metadata?.sort <= 1) {
         toast.error("Đã dưới nền ảnh, không thể chuyển xuống", {
           position: "top-right",
           autoClose: 2000,
@@ -435,10 +435,7 @@ function VariableLayer() {
           onClick={() => objectMetadata(activeObject)}
           size={SIZE.mini}
           kind={KIND.tertiary}>
-          <img
-            src="../Panels/panelItems/setting.png"
-            style={{ width: 20, height: 20 }}
-          />
+          <img src="/images/setting.png" style={{ width: 20, height: 20 }} />
         </Button>
       </StatefulTooltip>
     </>

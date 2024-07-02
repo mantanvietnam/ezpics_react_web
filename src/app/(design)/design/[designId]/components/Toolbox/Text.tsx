@@ -35,6 +35,7 @@ import { HexColorPicker } from "react-colorful";
 import { Canvas } from "@layerhub-io/react";
 import { Checkbox } from "baseui/checkbox";
 import gradientIcon from "./gradient.png";
+import { FontItem } from "@/interfaces/common";
 
 interface TextState {
   color: string;
@@ -156,133 +157,89 @@ export default function Text() {
   }, [editor, activeObject]);
 
   const makeBold = React.useCallback(async () => {
-    if (state.bold) {
-      let desiredFont;
+    console.log(state);
 
+    let font: FontItem;
+    if (state.bold) {
       if (state.italic) {
         // look for regular italic
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(
-            /^Italic$/
-          );
-        });
+        font = {
+          name: "Open Sans Italic",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkaVcUwaERZjA.ttf",
+        };
       } else {
         // look for  regular
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(
-            /^Regular$/
-          );
-        });
+        font = {
+          name: "Open Sans",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.ttf",
+        };
       }
-
-      const font = {
-        name: desiredFont.postscript_name,
-        url: desiredFont.url,
-      };
-      await loadFonts([font]);
-
-      editor.objects.update({
-        fontFamily: desiredFont.postscript_name,
-        fontURL: font.url,
-      });
-      setState({ ...state, bold: false });
     } else {
-      let desiredFont;
       if (state.italic) {
-        // look for bold italic
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(
-            /^BoldItalic$/
-          );
-        });
+        // look for regular italic
+        font = {
+          name: "Open Sans Bold Italic",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjaVcUwaERZjA.ttf",
+        };
       } else {
-        // look for bold
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(/^Bold$/);
-        });
+        // look for  regular
+        font = {
+          name: "Open Sans Bold",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1y4nY1M2xLER.ttf",
+        };
       }
-
-      const font = {
-        name: desiredFont.postscript_name,
-        url: desiredFont.url,
-      };
-      await loadFonts([font]);
-
-      editor.objects.update({
-        fontFamily: desiredFont.postscript_name,
-        fontURL: font.url,
-      });
-      setState({ ...state, bold: true });
     }
+
+    await loadFonts([font]);
+
+    editor.objects.update({
+      fontFamily: font.name,
+      fontURL: font.url,
+    });
+    setState({ ...state, bold: !state.bold });
   }, [editor, state]);
 
   const makeItalic = React.useCallback(async () => {
+    console.log(state);
+
+    let font: FontItem;
     if (state.italic) {
-      let desiredFont;
       if (state.bold) {
-        // Search bold regular
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(/^Bold$/);
-        });
+        // look for regular italic
+        font = {
+          name: "Open Sans Bold",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1y4nY1M2xLER.ttf",
+        };
       } else {
-        // Search regular
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(
-            /^Regular$/
-          );
-        });
+        // look for  regular
+        font = {
+          name: "Open Sans",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.ttf",
+        };
       }
-
-      const font = {
-        name: desiredFont.postscript_name,
-        url: desiredFont.url,
-      };
-      await loadFonts([font]);
-
-      editor.objects.update({
-        fontFamily: desiredFont.postscript_name,
-        fontURL: font.url,
-      });
-      setState({ ...state, italic: false });
     } else {
-      let desiredFont;
-
       if (state.bold) {
-        // search italic bold
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(
-            /^BoldItalic$/
-          );
-        });
+        // look for regular italic
+        font = {
+          name: "Open Sans Bold Italic",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjaVcUwaERZjA.ttf",
+        };
       } else {
-        // search regular italic
-        desiredFont = state.styleOptions.options.find((option) => {
-          const postscript_names = option.postscript_name.split("-");
-          return postscript_names[postscript_names.length - 1].match(
-            /^Italic$/
-          );
-        });
+        // look for  regular
+        font = {
+          name: "Open Sans Italic",
+          url: "https://fonts.gstatic.com/s/opensans/v27/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkaVcUwaERZjA.ttf",
+        };
       }
-
-      const font = {
-        name: desiredFont.postscript_name,
-        url: desiredFont.url,
-      };
-      await loadFonts([font]);
-
-      editor.objects.update({
-        fontFamily: desiredFont.postscript_name,
-        fontURL: font.url,
-      });
-      setState({ ...state, italic: true });
     }
+
+    await loadFonts([font]);
+
+    editor.objects.update({
+      fontFamily: font.name,
+      fontURL: font.url,
+    });
+    setState({ ...state, italic: !state.italic });
   }, [editor, state]);
 
   const makeUnderline = React.useCallback(() => {
@@ -346,6 +303,7 @@ export default function Text() {
                 $style={{ ...(!state.bold && { color: "rgb(169,169,169)" }) }}
                 // disabled={!state.styleOptions.hasBold}
                 onClick={makeBold}
+                disabled={!state.family.includes("Open Sans")}
                 size={SIZE.mini}
                 kind={KIND.tertiary}>
                 <Bold size={20} />
@@ -361,6 +319,7 @@ export default function Text() {
                 $style={{ ...(!state.italic && { color: "rgb(169,169,169)" }) }}
                 // disabled={!state.styleOptions.hasItalic}
                 onClick={makeItalic}
+                disabled={!state.family.includes("Open Sans")}
                 size={SIZE.mini}
                 kind={KIND.tertiary}>
                 <Italic size={20} />
