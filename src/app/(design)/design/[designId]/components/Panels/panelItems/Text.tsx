@@ -34,10 +34,8 @@ function checkTokenCookie() {
   }
 
   if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
-    console.log('Không tìm thấy cookie có tên là "token"');
   }
 }
 
@@ -96,9 +94,6 @@ export default function Text() {
       };
 
       let resultIndex = findIndexById(graphicTemplate.scenes, currentScene.id);
-      console.log(resultIndex);
-      console.log(graphicTemplate.scenes);
-      console.log(currentScene.id);
       return resultIndex;
 
       // makeDownload(graphicTemplate);
@@ -170,8 +165,9 @@ export default function Text() {
         token: token,
         text: item.content.text,
         color: item.content.color,
-        size: 24,
+        size: 8,
         font: item.content.font,
+        width: 20,
         page: Number(parseGraphicJSON()),
       });
       if (response && response.data) {
