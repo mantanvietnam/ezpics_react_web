@@ -271,6 +271,7 @@ export default function Layers() {
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleDropFiles(e.target.files!);
   };
+
   return (
     <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Block
@@ -441,7 +442,18 @@ export default function Layers() {
                   <Button
                     kind={KIND.tertiary}
                     size={SIZE.mini}
-                    onClick={() => editor.objects.remove(object.id)}
+                    onClick={async() => {
+                      editor.objects.remove(object.id)
+                      try {
+                        const response = await axios.post('https://apis.ezpics.vn/apis/deleteLayerAPI', {
+                          idproduct: idProduct,
+                          token: token,
+                          idlayer: object.id
+                        })
+                      } catch (error) {
+                        console.log(error);
+                      }
+                    }}
                     overrides={{
                       Root: {
                         style: {

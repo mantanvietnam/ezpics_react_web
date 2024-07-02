@@ -13,6 +13,7 @@ import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
+import { margin } from '@mui/system';
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
@@ -33,10 +34,8 @@ function checkTokenCookie() {
   }
 
   if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
-    console.log('Không tìm thấy cookie có tên là "token"');
   }
 }
 
@@ -95,9 +94,6 @@ export default function Text() {
       };
 
       let resultIndex = findIndexById(graphicTemplate.scenes, currentScene.id);
-      console.log(resultIndex);
-      console.log(graphicTemplate.scenes);
-      console.log(currentScene.id);
       return resultIndex;
 
       // makeDownload(graphicTemplate);
@@ -169,17 +165,18 @@ export default function Text() {
         token: token,
         text: item.content.text,
         color: item.content.color,
-        size: 200,
+        size: 8,
         font: item.content.font,
+        width: 20,
         page: Number(parseGraphicJSON()),
       });
       if (response && response.data) {
         const options = {
           id: response.data.data.id,
           type: "StaticText",
-          width: 1000,
+          width: 200,
           text: item.content.text,
-          fontSize: 200,
+          fontSize: 24,
           fontFamily: item.content.font,
           textAlign: "center",
           fontStyle: item.content.indam === "normal" ? "bold" : "400",
@@ -260,7 +257,7 @@ export default function Text() {
             paddingRight: "1.5rem",
           }}>
           <Block>
-            <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
+            <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif", marginBottom: '10px', marginTop: '10px' }}>
               Kiểu chữ
             </h4>
           </Block>
@@ -275,6 +272,7 @@ export default function Text() {
           <Block padding={"0 1.5rem"}>
             <Button
               onClick={addObject}
+              style={{marginBottom: '5px'}}
               // onClick={() => console.log(allText)}
               size={SIZE.compact}
               overrides={{
