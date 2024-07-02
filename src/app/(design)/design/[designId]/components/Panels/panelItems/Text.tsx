@@ -110,8 +110,8 @@ export default function Text() {
   const addObject = async () => {
     if (editor) {
       const font: FontItem = {
-        name: "Helve",
-        url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
+        name: "Open Sans",
+        url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
       };
       await loadFonts([font]);
       const res = await axios.post(`${network}/addLayerText`, {
