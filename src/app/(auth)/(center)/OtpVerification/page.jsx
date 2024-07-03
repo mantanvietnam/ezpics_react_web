@@ -5,11 +5,12 @@ import styles from './otp_verification.module.scss'
 import { acceptMemberAPI, SendOtp } from '@/api/auth';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Spin } from 'antd';
+import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { checkTokenCookie, getCookie } from '@/utils';
 import { useSession } from 'next-auth/react';
+import { clearAllCookies } from '../../../../utils/cookie';
 
 const OtpVerification = ({ phone }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -125,9 +126,23 @@ const OtpVerification = ({ phone }) => {
             toast.error('Vui lòng nhập đầy đủ mã OTP.');
         }
     };
+
+    const handleBack = () => {
+        clearAllCookies()
+        router.push('/')
+    }
     return (
         <div className={styles.formOtpVerification}>
             <div className={styles.backgroundform}>
+                <Button
+                    type="primary"
+                    className='left-[-185px] top-[-34px]'
+                    danger
+                    size='small'
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleBack}
+                >
+                </Button>
                 <h2 className="text-2xl font-bold mb-4">Xác Thực OTP điện thoại</h2>
                 <form onSubmit={handleOtpSubmit} className={styles.formSubmit}>
                     <div className={styles.groupInput}>

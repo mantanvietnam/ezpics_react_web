@@ -95,7 +95,7 @@ const Header = ({ toggleNavbar }) => {
           setdataInforUsercheck(response?.data?.data);
           if (response?.data?.data?.otp != null) {
             toast.warning(
-              "Tài khoản chưa được xác thực, Vui lòng xác thực tài khoản!"
+              "Tài khoản chưa được xác thực, Bạn sẽ được chuyển hướng sang trang xác thực!"
             );
             router.push("/OtpVerification");
           }
@@ -122,7 +122,6 @@ const Header = ({ toggleNavbar }) => {
     // Gọi fetchDataFromStorage khi component được gắn vào
     fetchDataFromStorage();
   }, []);
-  console.log(token);
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -131,6 +130,17 @@ const Header = ({ toggleNavbar }) => {
     dataInforUser = session?.user_login;
   } else {
     dataInforUser = null;
+  }
+
+  function clearAllCookies() {
+    const cookies = document.cookie.split(";");
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
   }
 
   //Lấy danh sách mẫu thiết kế
