@@ -35,10 +35,8 @@ function checkTokenCookie() {
   }
 
   if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
-    console.log('Không tìm thấy cookie có tên là "token"');
   }
 }
 
@@ -97,9 +95,6 @@ export default function Text() {
       };
 
       let resultIndex = findIndexById(graphicTemplate.scenes, currentScene.id);
-      console.log(resultIndex);
-      console.log(graphicTemplate.scenes);
-      console.log(currentScene.id);
       return resultIndex;
 
       // makeDownload(graphicTemplate);
@@ -116,8 +111,8 @@ export default function Text() {
   const addObject = async () => {
     if (editor) {
       const font: FontItem = {
-        name: "Helve",
-        url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
+        name: "Open Sans",
+        url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
       };
       await loadFonts([font]);
       const res = await axios.post(`${network}/addLayerText`, {
@@ -171,8 +166,9 @@ export default function Text() {
         token: token,
         text: item.content.text,
         color: item.content.color,
-        size: 24,
+        size: 8,
         font: item.content.font,
+        width: 20,
         page: Number(parseGraphicJSON()),
       });
       if (response && response.data) {

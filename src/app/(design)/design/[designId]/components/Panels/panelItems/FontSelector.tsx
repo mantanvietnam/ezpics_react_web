@@ -83,9 +83,6 @@ export default function FontSelector() {
 
     fetchFonts();
   }, []);
-  // useEffect(() => {
-
-  // }, [commonFonts]);
 
   const handleFontFamilyChange = async (x: any) => {
     if (editor) {

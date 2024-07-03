@@ -205,7 +205,7 @@ function CommonLayers() {
   const handleSendToBack = () => {
     if (activeObject) {
       console.log(activeObject);
-      if (activeObject?.metadata.sort <= 1) {
+      if (activeObject?.metadata?.sort <= 1) {
         toast.error("Đã dưới nền ảnh, không thể chuyển xuống", {
           position: "top-right",
           autoClose: 2000,
