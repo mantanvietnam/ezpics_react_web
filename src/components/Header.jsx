@@ -93,6 +93,12 @@ const Header = ({ toggleNavbar }) => {
         );
         if (response) {
           setdataInforUsercheck(response?.data?.data);
+          if (response?.data?.data?.otp != null) {
+            toast.warning(
+              "Tài khoản chưa được xác thực, Bạn sẽ được chuyển hướng sang trang xác thực!"
+            );
+            router.push("/OtpVerification");
+          }
         } else {
           console.error("Invalid response format for categories");
         }
@@ -102,14 +108,6 @@ const Header = ({ toggleNavbar }) => {
     };
     fetchDataUser();
   }, [cookie]);
-  if (dataInforUsercheck?.otp != null) {
-    setTimeout(() => {
-      toast.warning(
-        "Bạn chưa xác thực số điện thoại chúng tôi sẽ chuyển hướng tới xác thực"
-      );
-      router.push("/OtpVerification"); // Redirect to a welcome page or dashboard after successful verification
-    }, 10000);
-  }
   // lấy token 2 bên đăng nhập
   useEffect(() => {
     const fetchDataFromStorage = () => {
@@ -124,7 +122,6 @@ const Header = ({ toggleNavbar }) => {
     // Gọi fetchDataFromStorage khi component được gắn vào
     fetchDataFromStorage();
   }, []);
-  console.log(token);
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {
@@ -133,6 +130,17 @@ const Header = ({ toggleNavbar }) => {
     dataInforUser = session?.user_login;
   } else {
     dataInforUser = null;
+  }
+
+  function clearAllCookies() {
+    const cookies = document.cookie.split(";");
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
   }
 
   //Lấy danh sách mẫu thiết kế
@@ -714,11 +722,10 @@ const Header = ({ toggleNavbar }) => {
           )}
         </div>
         <div
-          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
-            isOnline
-              ? "bg-green-500 text-white opacity-0"
-              : "bg-red-500 text-white opacity-100"
-          } ${show ? "opacity-100" : "opacity-0"}`}
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline
+            ? "bg-green-500 text-white opacity-0"
+            : "bg-red-500 text-white opacity-100"
+            } ${show ? "opacity-100" : "opacity-0"}`}
           style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>
