@@ -22,6 +22,7 @@ export const getCookie = (name) => {
 
   return decodeURI(dc.substring(begin + prefix.length, end));
 };
+
 export function checkTokenCookie() {
   // Lấy tất cả các cookies
   var allCookies = document.cookie;
@@ -49,5 +50,16 @@ export function checkTokenCookie() {
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
     console.log('Không tìm thấy cookie có tên là "token"');
+  }
+}
+
+export function clearAllCookies() {
+  const cookies = document.cookie.split(";");
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i];
+    const eqPos = cookie.indexOf("=");
+    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
   }
 }
