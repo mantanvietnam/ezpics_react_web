@@ -14,11 +14,11 @@ import { useSession } from 'next-auth/react';
 const OtpVerification = ({ phone }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [isLoading, setIsLoading] = useState(false);
-    const [isOtpSent, setIsOtpSent] = useState(false); 
+    const [isOtpSent, setIsOtpSent] = useState(false);
     const [canResendOtp, setCanResendOtp] = useState(false);
     const [countdown, setCountdown] = useState(60); // Đếm ngược 60 giây
     // const
-    const { data: session } = useSession();
+    // const { data: session } = useSession();
     const router = useRouter();
     const token = checkTokenCookie()
     // Lấy data user
