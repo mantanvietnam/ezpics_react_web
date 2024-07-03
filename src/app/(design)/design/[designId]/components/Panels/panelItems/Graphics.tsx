@@ -12,9 +12,22 @@ import { useAppSelector } from "@/hooks/hook";
 import useAppContext from "@/hooks/useAppContext";
 import "../../Preview/newloading.css";
 import { checkTokenCookie } from "@/utils";
+import Image from "next/image";
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Item {
+  id: string;
+  category_id: string;
+  image: string;
+}
 
 export default function Graphic() {
-  const [templates, setTemplates] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const network = useAppSelector((state) => state.network.ipv4Address);
   const { setActiveSubMenu } = useAppContext();
@@ -32,23 +45,52 @@ export default function Graphic() {
   const idProduct = useAppSelector((state) => state.token.id);
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
+    async function fetchCategories() {
       try {
-        const response = await axios.post<any>(`${network}/listIngredientAPI`, {
-          token: checkTokenCookie(),
-          limit: 100,
-          page: 1,
-        });
-        setTemplates(response.data.data);
-        console.log("Fetched templates:", response.data.data);
+        const response = await axios.get<any>(
+          `${network}/categoryIngredientAPI`
+        );
+        setCategories(response.data.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
+        console.error("Error fetching categories:", error);
       }
     }
-    fetchData();
+
+    async function fetchAllItems() {
+      setIsLoading(true);
+      let allItems: Item[] = [];
+      let page = 1;
+      let hasMoreData = true;
+
+      while (hasMoreData) {
+        try {
+          const response = await axios.post<any>(
+            `${network}/listIngredientAPI`,
+            {
+              token: checkTokenCookie(),
+              limit: 100,
+              page: page,
+            }
+          );
+          const fetchedItems = response.data.data;
+          if (fetchedItems.length > 0) {
+            allItems = [...allItems, ...fetchedItems];
+            page++;
+          } else {
+            hasMoreData = false;
+          }
+        } catch (error) {
+          console.error("Error fetching items:", error);
+          hasMoreData = false;
+        }
+      }
+
+      setItems(allItems);
+      setIsLoading(false);
+    }
+
+    fetchCategories();
+    fetchAllItems();
   }, [network]);
 
   const addObject = useCallback(
@@ -89,7 +131,7 @@ export default function Graphic() {
     }
   };
 
-  const handleImage = async (item: any) => {
+  const handleImage = async (item: Item) => {
     try {
       const response = await axios.post(`${network}/addLayerImageUrlAPI`, {
         idproduct: idProduct,
@@ -146,11 +188,12 @@ export default function Graphic() {
         </Block>
         <Scrollable>
           <div style={{ padding: "0 1.5rem" }}>
-            {["Người mẫu", "Khung ảnh", "Ảnh nền"].map((category) => (
+            {categories.map((category) => (
               <CategorySection
-                key={category}
-                title={category}
-                templates={templates}
+                key={category.id}
+                title={category.name}
+                categoryId={category.id}
+                items={items}
                 handleImage={handleImage}
                 setActiveSubMenu={setActiveSubMenu}
               />
@@ -163,25 +206,25 @@ export default function Graphic() {
   );
 }
 
-function CategorySection({ title, templates, handleImage, setActiveSubMenu }) {
+interface CategorySectionProps {
+  title: string;
+  categoryId: string;
+  items: Item[];
+  handleImage: (item: Item) => void;
+  setActiveSubMenu: (title: string) => void;
+}
+
+function CategorySection({
+  title,
+  categoryId,
+  items,
+  handleImage,
+  setActiveSubMenu,
+}: CategorySectionProps) {
   const [showAll, setShowAll] = useState(false);
-  const categoryMapping = {
-    "Người mẫu": "Mẫu Beauty",
-    "Khung ảnh": "khung ảnh,khung viền, border, đường viền,bo góc,",
-    "Ảnh nền": "nền gradient màu cam,nền gradient,nều màu",
-  };
-  const keywords = categoryMapping[title].split(",");
-  const filteredTemplates = templates.filter((item) =>
-    keywords.some((keyword) => item.keyword.includes(keyword))
-  );
+  const filteredItems = items.filter((item) => item.category_id === categoryId);
 
-  console.log(`Category: ${title}`);
-  console.log(`Keywords: ${keywords}`);
-  console.log(`Filtered templates:`, filteredTemplates);
-
-  const displayTemplates = showAll
-    ? filteredTemplates
-    : filteredTemplates.slice(0, 5);
+  const displayItems = showAll ? filteredItems : filteredItems.slice(0, 5);
 
   return (
     <div>
@@ -213,7 +256,7 @@ function CategorySection({ title, templates, handleImage, setActiveSubMenu }) {
           gridTemplateColumns: "1fr 1fr",
         }}
       >
-        {displayTemplates.map((item, index) => (
+        {displayItems.map((item, index) => (
           <ImageItem
             key={index}
             preview={item.image}
@@ -225,7 +268,12 @@ function CategorySection({ title, templates, handleImage, setActiveSubMenu }) {
   );
 }
 
-function ImageItem({ preview, onClick }) {
+interface ImageItemProps {
+  preview: string;
+  onClick: () => void;
+}
+
+function ImageItem({ preview, onClick }: ImageItemProps) {
   const [css] = useStyletron();
   return (
     <div
@@ -278,7 +326,7 @@ function LoadingOverlay() {
             <div></div>
           </div>
         </div>
-        <img
+        <Image
           style={{ position: "absolute", top: "12%", left: "16%" }}
           height={40}
           width={40}

@@ -762,7 +762,7 @@ const Header = ({ toggleNavbar }) => {
                 size="medium"
                 className="button-red"
                 onClick={() => handleLogout()}>
-                Đăng xuất
+                Đăng nhập lại
               </Button>
             </div>
           </Box>

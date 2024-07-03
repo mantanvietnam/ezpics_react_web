@@ -13,6 +13,7 @@ import { useAppSelector } from "@/hooks/hook";
 import { toast } from "react-toastify";
 import { ILayer } from "@layerhub-io/types";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 export default function Flip() {
   const editor = useEditor();
@@ -38,13 +39,42 @@ export default function Flip() {
     scaleX: 0,
     scaleY: 0,
   });
+
+  function checkTokenCookie() {
+    var allCookies = document.cookie;
+
+    var cookiesArray = allCookies.split("; ");
+
+    var tokenCookie;
+    for (var i = 0; i < cookiesArray.length; i++) {
+      var cookie = cookiesArray[i];
+      var cookieParts = cookie.split("=");
+      var cookieName = cookieParts[0];
+      var cookieValue = cookieParts[1];
+
+      if (cookieName === "token") {
+        tokenCookie = cookieValue;
+        break;
+      }
+    }
+
+    // Kiểm tra nếu đã tìm thấy cookie "token"
+    if (tokenCookie) {
+      console.log('Giá trị của cookie "token" là:', tokenCookie);
+      return tokenCookie.replace(/^"|"$/g, "");
+    } else {
+      console.log('Không tìm thấy cookie có tên là "token"');
+    }
+  }
+
   React.useEffect(() => {
     if (objects) {
       setLayerObjects(objects);
       console.log(objects);
     }
   }, [objects]);
-  const token = useAppSelector((state) => state.token.token);
+  // const token = useAppSelector((state) => state.token.token);
+  const token = checkTokenCookie();
   React.useEffect(() => {
     if (activeObject) {
       setState({
@@ -87,7 +117,6 @@ export default function Flip() {
   // var storageKey = 'ten_khoa_luu';
   // saveBlobImageToLocal(imageUrl, storageKey);
   const proUser = useAppSelector((state) => state.token.proUser);
-
   const flipHorizontally = React.useCallback(() => {
     editor.objects.update({ flipX: !state.flipX });
     setState({ ...state, flipX: !state.flipX });
@@ -106,6 +135,7 @@ export default function Flip() {
     }
   }
   const removeBackground = async (storageKey: string) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     if (proUser) {
       const srcAttributeValue =
         activeObject._element.getAttribute("src") === ""
@@ -134,6 +164,7 @@ export default function Flip() {
               formData,
               config
             );
+            console.log("response", response);
             const newOptions = {
               id: activeObject.id,
               name: "StaticImage",
@@ -207,39 +238,6 @@ export default function Flip() {
         }
       );
     }
-    //    try {
-    //   // Read the file into a FormData object
-    //   const formData = new FormData();
-    //   // formData.append('image', await fs.readFile(filePath));
-    //   formData.append("token", token);
-
-    //   // Create the Fetch request
-    //   fetch(`${networkAPI}/removeBackgroundImageAPI`, {
-    //     method: "POST",
-    //     // 'Content-Type': 'multipart/form-data' is set automatically by FormData
-    //     // 'Access-Control-Allow-Origin': 'POST', // This should be set on the server, not here
-    //     body: formData,
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data;application/x-www-form-urlencoded;application/json',
-    //       // 'Content-Type': ''
-    //     }
-    //     // mode: "no-cors", // Set the mode to 'no-cors' if needed
-    //   })
-    //     .then((response) => {
-    //       if (response.ok || response.status === 0) {
-    //         // You won't be able to log the response details directly in 'no-cors' mode
-    //         console.log("Request sent successfully");
-    //       } else {
-    //         console.error("Request failed");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       // Handle errors
-    //       console.error("Error:", error);
-    //     });
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
   const [sliderValue, setSliderValue] = React.useState(0.00000005);
 
@@ -318,15 +316,16 @@ export default function Flip() {
             style={{ paddingRight: 5 }}
           >
             Xóa nền
-            <img
-              src="../../../../../../assets/premium.png"
+            <Image
+              src="/assets/premium.png"
+              width={15}
+              height={15}
               style={{
-                width: 15,
-                height: 15,
                 resize: "block",
                 marginBottom: "20%",
                 marginLeft: "3",
               }}
+              alt=""
             />
           </Button>
         </StatefulTooltip>

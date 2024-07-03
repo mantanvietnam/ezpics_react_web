@@ -882,26 +882,23 @@ const Modal = ({
     >
       {/* */}
       <div className="my-div" onClick={onClick}>
-        <img src="./check.png" alt="" style={{ width: 15, height: 15 }} />
+        <Image src="./check.png" alt="" width={15} height={15} />
         {"\u00A0"}Sử dụng
       </div>
       {/*  */}
       <div className="my-div" onClick={() => removeBackground("storageKey")}>
-        <img
-          src="./magic-wand (1).png"
-          alt=""
-          style={{ width: 15, height: 15 }}
-        />
+        <Image src="./magic-wand (1).png" alt="" width={15} height={15} />
         {"\u00A0"}Xóa nền
-        <img
+        <Image
           src="../../../../../../assets/premium.png"
+          width={15}
+          height={15}
           style={{
-            width: 15,
-            height: 15,
             resize: "block",
             marginBottom: "10%",
             marginLeft: "3",
           }}
+          alt={""}
         />
       </div>
       {/* onClick={() => downloadImage("download.png")} */}
