@@ -36,26 +36,28 @@ export default function TextFill() {
   const activeObject = useActiveObject();
   const editor = useEditor();
   const colorList = useAppSelector((state) => state.color.colorList);
-  const updateObjectFill = (e: any, color: any) => {
+
+  const updateObjectFill = (color: string) => {
     setColor(color);
-    addObjectFill(e);
+    addObjectFill(color);
   };
-  const addObjectFill = throttle((e: any) => {
+
+  const addObjectFill = throttle((color: string) => {
     if (activeObject) {
-      editor.objects.update({ fill: e.target.value });
+      editor.objects.update({ fill: color });
     }
-    dispatch(ADD_COLOR(e.target.value));
+    dispatch(ADD_COLOR(color));
   }, 1);
+
   useEffect(() => {
     const getColorCurrentActive = () => {
       if (activeObject) {
-        // editor.objects.
         setColor(activeObject.fill);
         console.log(activeObject.fill);
       }
     };
     getColorCurrentActive();
-  }, []);
+  }, [activeObject]);
 
   return (
     <Block $style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -67,12 +69,14 @@ export default function TextFill() {
           justifyContent: "space-between",
           paddingRight: "1.5rem",
           paddingLeft: "1.5rem",
-        }}>
+        }}
+      >
         <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>Màu</h4>
 
         <Block
           $style={{ cursor: "pointer", display: "flex" }}
-          onClick={() => setActiveSubMenu("Graphics")}>
+          onClick={() => setActiveSubMenu("Graphics")}
+        >
           <Delete size={24} />
         </Block>
       </Block>
@@ -88,7 +92,8 @@ export default function TextFill() {
               width: "100%",
               height: 50,
               backgroundColor: color,
-            }}>
+            }}
+          >
             <h4>Chọn màu</h4>
             <input
               type="color"
@@ -96,16 +101,13 @@ export default function TextFill() {
                 width: 30,
                 height: 30,
                 appearance: "none",
-
                 background: "none",
                 border: 0,
                 cursor: "pointer",
-                // height: "15em",
                 padding: 0,
               }}
-              // value={color}
-              // onChange={(e) => updateObjectFill(e)}
-              onBlur={(e) => updateObjectFill(e, e.target.value)}
+              value={color}
+              onChange={(e) => updateObjectFill(e.target.value)}
             />
           </Button>
           <Block
@@ -114,35 +116,31 @@ export default function TextFill() {
               fontWeight: "600",
               fontSize: "14px",
               fontFamily: "Arial",
-            }}>
+            }}
+          >
             Màu đã dùng
           </Block>
-          {/* <HexColorInput color={color} onChange={updateObjectFill} style={{marginTop: '1rem'}}/> */}
           <Block padding={"1rem 0rem"}>
             <Block
               $style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
                 gap: "0.25rem",
-              }}>
+              }}
+            >
               {colorList.length > 0 &&
-                colorList
-                  .slice(-3)
-                  .map(
-                    (
-                      color: Responsive<string> | undefined,
-                      index: React.Key | null | undefined
-                    ) => (
-                      <Block
-                        $style={{
-                          cursor: "pointer",
-                        }}
-                        onClick={() => updateObjectFill(color, color)}
-                        backgroundColor={color}
-                        height={"38px"}
-                        key={index}></Block>
-                    )
-                  )}
+                colorList.slice(-3).map((color, index) => (
+                  <Block
+                    $style={{
+                      cursor: "pointer",
+                      borderRadius: "50px",
+                    }}
+                    onClick={() => updateObjectFill(color)}
+                    backgroundColor={color}
+                    height={"38px"}
+                    key={index}
+                  ></Block>
+                ))}
             </Block>
           </Block>
           <Block>
@@ -153,7 +151,8 @@ export default function TextFill() {
                 fontWeight: "600",
                 fontSize: "14px",
                 fontFamily: "Arial",
-              }}>
+              }}
+            >
               Màu cơ bản
             </Block>
 
@@ -162,16 +161,19 @@ export default function TextFill() {
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
                 gap: "0.25rem",
-              }}>
+              }}
+            >
               {PRESET_COLORS.map((color, index) => (
                 <Block
                   $style={{
                     cursor: "pointer",
+                    borderRadius: "50px",
                   }}
-                  onClick={() => updateObjectFill(color, color)}
+                  onClick={() => updateObjectFill(color)}
                   backgroundColor={color}
                   height={"38px"}
-                  key={index}></Block>
+                  key={index}
+                ></Block>
               ))}
             </Block>
           </Block>

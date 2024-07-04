@@ -22,6 +22,8 @@ import "@/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
 import { REPLACE_TYPE_USER } from "@/redux/slices/type/typeSlice";
 import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
+import Image from "next/image";
+import ezlogo from "../../../../../public/images/EZPICS.png";
 
 function GraphicEditor() {
   // const location = useLocation();
@@ -764,16 +766,16 @@ function GraphicEditor() {
                 <div>
                   <div></div>
                 </div>
-                <img
+                <Image
                   style={{
                     position: "absolute",
                     top: "12%",
                     left: "16%",
                   }}
-                  // width={}
-                  // height={ }
+                  width={40}
+                  height={40}
                   alt=""
-                  src="./EZPICS (converted)-03.png"
+                  src={ezlogo}
                 />
               </div>
             </div>

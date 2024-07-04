@@ -272,8 +272,8 @@ export default function Flip() {
     console.log(sliderValue);
     setAngle(newValue);
 
-    editor.objects.update({ scaleX: newValue, scaleY: newValue });
-    // editor.objects.update({ angle: newValue });
+    // editor.objects.update({ angle });
+    editor.objects.update({ angle: newValue });
   };
   return (
     <StatefulPopover placement={PLACEMENT.bottom}>
