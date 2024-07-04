@@ -48,7 +48,6 @@ function checkTokenCookie() {
   }
 
   if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
     console.log('Không tìm thấy cookie có tên là "token"');
@@ -68,8 +67,8 @@ export default function Layers() {
   const addObject = async () => {
     if (editor) {
       const font: FontItem = {
-        name: "Helve",
-        url: "https://apis.ezpics.vn/upload/admin/fonts/UTMHelve.woff",
+        name: "OpenSans-Regular",
+        url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0C4nY1M2xLER.ttf",
       };
       await loadFonts([font]);
       console.log(font);

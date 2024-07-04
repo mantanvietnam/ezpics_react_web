@@ -244,7 +244,7 @@ const Header = ({ toggleNavbar }) => {
           setLoadingButtonModalCreate(false);
           setOpenModalCreating(false);
           document.body.style.overflowY = "auto";
-          toast.success("Tạo thiết kế thành công");
+          toast.success("Tạo thiết kế thành công, xin chờ giây lát");
 
           setTimeout(function () {
             router.push(`/design/${response.data.product_id}`);
@@ -282,6 +282,7 @@ const Header = ({ toggleNavbar }) => {
       );
 
       if (response && response.data && response.data.code === 0) {
+        toast.success("Tạo thiết kế thành công, xin chờ giây lát");
         setTimeout(function () {
           router.push(`/design/${response.data.product_id}`);
         }, 1500);
