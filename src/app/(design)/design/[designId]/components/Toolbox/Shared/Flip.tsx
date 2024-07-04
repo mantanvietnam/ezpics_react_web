@@ -14,13 +14,40 @@ import { toast } from "react-toastify";
 import { ILayer } from "@layerhub-io/types";
 import Image from "next/image";
 
+function checkTokenCookie() {
+  var allCookies = document.cookie;
+
+  var cookiesArray = allCookies.split("; ");
+
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  if (tokenCookie) {
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+  }
+}
+
 export default function Flip() {
   const editor = useEditor();
   const objects = useObjects() as ILayer[];
 
   const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
-
+  const idProduct = useAppSelector((state) => state.token.id);
+  const token1 = checkTokenCookie();
+  console.log('🚀 ~ Flip ~ token1:', token1)
   const activeObject = useActiveObject() as any;
+  console.log('🚀 ~ Flip ~ activeObject:', activeObject)
   const [state, setState] = React.useState({ flipX: false, flipY: false });
   const [stated, setStated] = React.useState({ opacity: 1 });
   const networkAPI = useAppSelector((state) => state.network.ipv4Address);
@@ -64,7 +91,6 @@ export default function Flip() {
         scaleX: Math.abs(activeObject.scaleX),
         scaleY: Math.abs(activeObject.scaleX),
       });
-      console.log(distance, sizeInitial);
     }
   }, [activeObject]);
   React.useEffect(() => {
@@ -88,9 +114,21 @@ export default function Flip() {
   // saveBlobImageToLocal(imageUrl, storageKey);
   const proUser = useAppSelector((state) => state.token.proUser);
 
-  const flipHorizontally = React.useCallback(() => {
+  const flipHorizontally = React.useCallback(async() => {
     editor.objects.update({ flipX: !state.flipX });
     setState({ ...state, flipX: !state.flipX });
+    // try {
+    //   const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
+    //     idProduct: idProduct,
+    //     token: token1,
+    //     field: 'lat_anh',
+    //     value: !state.flipX ? "1" : "0",
+    //     idLayer: "496619"
+    //   })
+    //   console.log('🚀 ~ flipHorizontally ~ response:', response.data)
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }, [editor, state]);
   async function urlToImageFile(imageUrl: string, fileName: string) {
     try {
@@ -173,9 +211,6 @@ export default function Flip() {
                 sort: activeObject.metadata.sort,
               },
             };
-            console.log(srcAttributeValue);
-            console.log(activeObject);
-            console.log(response.data?.linkOnline);
             editor.objects.remove();
             editor.objects.add(newOptions);
             layerObjects.map((layer, index) => {
