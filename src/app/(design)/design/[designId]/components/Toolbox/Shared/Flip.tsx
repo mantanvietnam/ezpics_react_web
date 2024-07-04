@@ -277,6 +277,50 @@ export default function Flip() {
     editor.objects.update({ scaleX: newValue, scaleY: newValue });
     // editor.objects.update({ angle: newValue });
   };
+
+  //Cắt ảnh
+  let maxWidth = null;
+  let maxHeight = null;
+
+  try {
+    if (
+      activeObject &&
+      activeObject.width !== undefined &&
+      activeObject.height !== undefined
+    ) {
+      maxWidth = activeObject.width;
+      maxHeight = activeObject.height;
+    } else {
+      throw new Error(
+        "activeObject is null or does not have required properties."
+      );
+    }
+  } catch (error) {
+    console.error("Error");
+  }
+
+  const [cropX, setCropX] = React.useState({ cropX: 0 });
+
+  const handleSetCropX = React.useCallback(
+    (value: number) => {
+      const newCropX = (value / 100) * maxWidth;
+      setCropX({ cropX: newCropX });
+      editor.objects.update({ cropX: newCropX });
+    },
+    [editor, maxWidth]
+  );
+
+  const [cropY, setCropY] = React.useState({ cropY: 0 });
+
+  const handleSetCropY = React.useCallback(
+    (value: number) => {
+      const newCropY = (value / 100) * maxHeight;
+      setCropY({ cropY: newCropY });
+      editor.objects.update({ cropY: newCropY });
+    },
+    [editor, maxHeight]
+  );
+
   return (
     <Block>
       <StatefulTooltip
@@ -478,6 +522,146 @@ export default function Flip() {
       <StatefulPopover
         placement={PLACEMENT.bottomLeft}
         content={() => (
+          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+            <Block
+              $style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Block $style={{ fontSize: "14px" }}>Chiều ngang</Block>
+              <Block width={"52px"}>
+                <Input
+                  overrides={{
+                    Input: {
+                      style: {
+                        backgroundColor: "#ffffff",
+                        textAlign: "center",
+                      },
+                    },
+                    Root: {
+                      style: {
+                        borderBottomColor: "rgba(0,0,0,0.15)",
+                        borderTopColor: "rgba(0,0,0,0.15)",
+                        borderRightColor: "rgba(0,0,0,0.15)",
+                        borderLeftColor: "rgba(0,0,0,0.15)",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderLeftWidth: "1px",
+                        height: "26px",
+                      },
+                    },
+                    InputContainer: {},
+                  }}
+                  size={SIZE.mini}
+                  onChange={() => {}}
+                  value={Math.round((cropX.cropX / maxWidth) * 100)}
+                />
+              </Block>
+            </Block>
+
+            <Block>
+              <Slider
+                overrides={{
+                  InnerThumb: () => null,
+                  ThumbValue: () => null,
+                  TickBar: () => null,
+                  Track: {
+                    style: {
+                      paddingRight: 0,
+                      paddingLeft: 0,
+                    },
+                  },
+                  Thumb: {
+                    style: {
+                      height: "12px",
+                      width: "12px",
+                    },
+                  },
+                }}
+                min={0}
+                max={100}
+                marks={false}
+                value={[Math.round((cropX.cropX / maxWidth) * 100)]}
+                onChange={({ value }) => handleSetCropX(value)}
+              />
+            </Block>
+
+            <Block
+              $style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Block $style={{ fontSize: "14px" }}>Chiều dọc</Block>
+              <Block width={"52px"}>
+                <Input
+                  overrides={{
+                    Input: {
+                      style: {
+                        backgroundColor: "#ffffff",
+                        textAlign: "center",
+                      },
+                    },
+                    Root: {
+                      style: {
+                        borderBottomColor: "rgba(0,0,0,0.15)",
+                        borderTopColor: "rgba(0,0,0,0.15)",
+                        borderRightColor: "rgba(0,0,0,0.15)",
+                        borderLeftColor: "rgba(0,0,0,0.15)",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderLeftWidth: "1px",
+                        height: "26px",
+                      },
+                    },
+                    InputContainer: {},
+                  }}
+                  size={SIZE.mini}
+                  onChange={() => {}}
+                  value={Math.round((cropY.cropY / maxHeight) * 100)}
+                />
+              </Block>
+            </Block>
+
+            <Block>
+              <Slider
+                overrides={{
+                  InnerThumb: () => null,
+                  ThumbValue: () => null,
+                  TickBar: () => null,
+                  Track: {
+                    style: {
+                      paddingRight: 0,
+                      paddingLeft: 0,
+                    },
+                  },
+                  Thumb: {
+                    style: {
+                      height: "12px",
+                      width: "12px",
+                    },
+                  },
+                }}
+                min={0}
+                max={100}
+                marks={false}
+                value={[Math.round((cropY.cropY / maxHeight) * 100)]}
+                onChange={({ value }) => handleSetCropY(value)}
+              />
+            </Block>
+          </Block>
+        )}>
+        <Button kind={KIND.tertiary} size={SIZE.compact}>
+          Cắt ảnh
+        </Button>
+      </StatefulPopover>
+
+      <StatefulPopover
+        placement={PLACEMENT.bottomLeft}
+        content={() => (
           <Block
             padding={"12px"}
             backgroundColor={"#ffffff"}
@@ -611,7 +795,7 @@ export default function Flip() {
                 marks
                 min={0}
                 max={10}
-                onChangeCommitted={handleSliderChanged}
+                onChangeCommitted={() => handleSliderChanged()}
                 valueLabelDisplay="auto"
               />
             </Block>
@@ -672,7 +856,7 @@ export default function Flip() {
                 marks
                 min={0}
                 max={360}
-                onChangeCommitted={handleSliderChanged}
+                onChangeCommitted={() => handleSliderChanged()}
                 valueLabelDisplay="auto"
                 // value={}
               />

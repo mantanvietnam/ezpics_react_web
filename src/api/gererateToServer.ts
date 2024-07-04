@@ -64,10 +64,9 @@ export const generateToServer = async (datas: any) => {
           banner: data?.src, //
           gianchu: "normal",
           giandong: "normal",
-          width: `${
-            (data?.scaleX * 100 * data?.metadata?.naturalWidth) /
+          width: `${(data?.scaleX * 100 * data?.metadata?.naturalWidth) /
             datas?.frame?.width
-          }vw`, //
+            }vw`, //
           height: data?.metadata?.initialHeight, //
           gradient: 0,
           gradient_color: [],
@@ -182,10 +181,9 @@ export const generateToServerInternet = (datas: any) => {
           banner: data.src, //
           gianchu: "normal",
           giandong: "normal",
-          width: `${
-            (data.scaleX * 100 * data.metadata.naturalWidth) /
+          width: `${(data.scaleX * 100 * data.metadata.naturalWidth) /
             datas?.frame?.width
-          }vw`, //
+            }vw`, //
           height: data.metadata.initialHeight, //
           gradient: 0,
           gradient_color: [],
