@@ -12,16 +12,79 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import { toast } from "react-toastify";
 import { ILayer } from "@layerhub-io/types";
-import Image from "next/image";
+// import Image from "next/image";
 import { useSelector } from "react-redux";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+  ROLE,
+} from "baseui/modal";
+import Cropper from "react-easy-crop";
+
+function checkTokenCookie() {
+  var allCookies = document.cookie;
+
+  var cookiesArray = allCookies.split("; ");
+
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  // Kiểm tra nếu đã tìm thấy cookie "token"
+  if (tokenCookie) {
+    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+    console.log('Không tìm thấy cookie có tên là "token"');
+  }
+}
+
+function checkTokenCookie() {
+  var allCookies = document.cookie;
+
+  var cookiesArray = allCookies.split("; ");
+
+  var tokenCookie;
+  for (var i = 0; i < cookiesArray.length; i++) {
+    var cookie = cookiesArray[i];
+    var cookieParts = cookie.split("=");
+    var cookieName = cookieParts[0];
+    var cookieValue = cookieParts[1];
+
+    if (cookieName === "token") {
+      tokenCookie = cookieValue;
+      break;
+    }
+  }
+
+  if (tokenCookie) {
+    return tokenCookie.replace(/^"|"$/g, "");
+  } else {
+  }
+}
 
 export default function Flip() {
   const editor = useEditor();
   const objects = useObjects() as ILayer[];
 
   const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
-
+  console.log('🚀 ~ Flip ~ layerObjects:', layerObjects)
+  const idProduct = useAppSelector((state) => state.token.id);
+  const token1 = checkTokenCookie();
   const activeObject = useActiveObject() as any;
+  console.log('🚀 ~ Flip ~ activeObject:', activeObject)
   const [state, setState] = React.useState({ flipX: false, flipY: false });
   const [stated, setStated] = React.useState({ opacity: 1 });
   const networkAPI = useAppSelector((state) => state.network.ipv4Address);
@@ -39,33 +102,6 @@ export default function Flip() {
     scaleX: 0,
     scaleY: 0,
   });
-
-  function checkTokenCookie() {
-    var allCookies = document.cookie;
-
-    var cookiesArray = allCookies.split("; ");
-
-    var tokenCookie;
-    for (var i = 0; i < cookiesArray.length; i++) {
-      var cookie = cookiesArray[i];
-      var cookieParts = cookie.split("=");
-      var cookieName = cookieParts[0];
-      var cookieValue = cookieParts[1];
-
-      if (cookieName === "token") {
-        tokenCookie = cookieValue;
-        break;
-      }
-    }
-
-    // Kiểm tra nếu đã tìm thấy cookie "token"
-    if (tokenCookie) {
-      console.log('Giá trị của cookie "token" là:', tokenCookie);
-      return tokenCookie.replace(/^"|"$/g, "");
-    } else {
-      console.log('Không tìm thấy cookie có tên là "token"');
-    }
-  }
 
   React.useEffect(() => {
     if (objects) {
@@ -94,7 +130,6 @@ export default function Flip() {
         scaleX: Math.abs(activeObject.scaleX),
         scaleY: Math.abs(activeObject.scaleX),
       });
-      console.log(distance, sizeInitial);
     }
   }, [activeObject]);
   React.useEffect(() => {
@@ -117,9 +152,21 @@ export default function Flip() {
   // var storageKey = 'ten_khoa_luu';
   // saveBlobImageToLocal(imageUrl, storageKey);
   const proUser = useAppSelector((state) => state.token.proUser);
-  const flipHorizontally = React.useCallback(() => {
+
+  const flipHorizontally = React.useCallback(async() => {
     editor.objects.update({ flipX: !state.flipX });
     setState({ ...state, flipX: !state.flipX });
+    try {
+      const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
+        idproduct: idProduct,
+        token: token1,
+        field: 'lat_anh',
+        value: !state.flipX ? 1 : 0,
+        idlayer: `${activeObject.id}`
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }, [editor, state]);
   async function urlToImageFile(imageUrl: string, fileName: string) {
     try {
@@ -204,9 +251,6 @@ export default function Flip() {
                 sort: activeObject.metadata.sort,
               },
             };
-            console.log(srcAttributeValue);
-            console.log(activeObject);
-            console.log(response.data?.linkOnline);
             editor.objects.remove();
             editor.objects.add(newOptions);
             layerObjects.map((layer, index) => {
@@ -246,9 +290,20 @@ export default function Flip() {
   //   console.log(newValue);
   //   editor.objects.update({ scaleX: newValue, scaleY: newValue });
   // };
-  const flipVertically = React.useCallback(() => {
+  const flipVertically = React.useCallback(async() => {
     editor.objects.update({ flipY: !state.flipY });
     setState({ ...state, flipY: !state.flipY });
+    // try {
+    //   const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
+    //     idproduct: idProduct,
+    //     token: token1,
+    //     field: 'lat_anh',
+    //     value: !state.flipY ? 1 : 0,
+    //     idlayer: `${activeObject.id}`
+    //   })
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }, [editor, state]);
 
   const changingBrightness = React.useCallback(() => {
@@ -275,60 +330,111 @@ export default function Flip() {
     // editor.objects.update({ angle });
     editor.objects.update({ angle: newValue });
   };
+
+  //Cắt ảnh
+  let maxWidth = null;
+  let maxHeight = null;
+
+  try {
+    if (
+      activeObject &&
+      activeObject.width !== undefined &&
+      activeObject.height !== undefined
+    ) {
+      maxWidth = activeObject.width;
+      maxHeight = activeObject.height;
+    } else {
+      throw new Error(
+        "activeObject is null or does not have required properties."
+      );
+    }
+  } catch (error) {
+    console.error("Error");
+  }
+
+  const [cropX, setCropX] = React.useState({ cropX: 0 });
+
+  const handleSetCropX = React.useCallback(
+    (value: number) => {
+      const newCropX = (value / 100) * maxWidth;
+      setCropX({ cropX: newCropX });
+      editor.objects.update({ cropX: newCropX });
+    },
+    [editor, maxWidth]
+  );
+
+  const [cropY, setCropY] = React.useState({ cropY: 0 });
+
+  const handleSetCropY = React.useCallback(
+    (value: number) => {
+      const newCropY = (value / 100) * maxHeight;
+      setCropY({ cropY: newCropY });
+      editor.objects.update({ cropY: newCropY });
+    },
+    [editor, maxHeight]
+  );
+
+  //Crop image modal
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <StatefulPopover placement={PLACEMENT.bottom}>
+    <StatefulPopover placement={PLACEMENT.bottom} content={undefined}>
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}
-        >
+          accessibilityType={"tooltip"}>
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}
-            onClick={flipVertically}
-          >
+            onClick={flipVertically}>
             Lật ảnh dọc
           </Button>
         </StatefulTooltip>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}
-        >
+          accessibilityType={"tooltip"}>
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}
-            onClick={flipHorizontally}
-          >
+            onClick={flipHorizontally}>
             Lật ảnh ngang
           </Button>
         </StatefulTooltip>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}
-        >
+          accessibilityType={"tooltip"}>
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}
             onClick={() => removeBackground("storageKey")}
-            style={{ paddingRight: 5 }}
-          >
+            style={{ paddingRight: 5 }}>
             Xóa nền
-            <Image
+            <img
               src="/assets/premium.png"
-              width={15}
-              height={15}
               style={{
                 resize: "block",
                 marginBottom: "20%",
                 marginLeft: "3",
+                width: "15px",
+                height: "15px",
               }}
               alt=""
             />
           </Button>
         </StatefulTooltip>
+
+        {/* Bo goc */}
         <StatefulPopover
           placement={PLACEMENT.bottomLeft}
           content={() => (
@@ -338,8 +444,7 @@ export default function Flip() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
                 <Block width={"52px"}>
                   <Input
@@ -400,12 +505,13 @@ export default function Flip() {
                 />
               </Block>
             </Block>
-          )}
-        >
+          )}>
           <Button kind={KIND.tertiary} size={SIZE.compact}>
             Bo góc
           </Button>
         </StatefulPopover>
+
+        {/* Do sang */}
         <StatefulPopover
           placement={PLACEMENT.bottomLeft}
           content={() => (
@@ -415,8 +521,7 @@ export default function Flip() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
                 <Block width={"52px"}>
                   <Input
@@ -477,107 +582,14 @@ export default function Flip() {
                 />
               </Block>
             </Block>
-          )}
-        >
+          )}>
           <Button kind={KIND.tertiary} size={SIZE.compact}>
             Độ sáng
           </Button>
         </StatefulPopover>
         {/* <TransitionElement /> */}
 
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block
-              padding={"12px"}
-              backgroundColor={"#ffffff"}
-              display={"grid"}
-              gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-              gridGap={"8px"}
-            >
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[0]}
-                // onClick={() => {
-                //   // @ts-ignore
-                //   editor.objects.update({ textAlign: TEXT_ALIGNS[0] });
-                //   setState({ align: TEXT_ALIGNS[0] });
-                // }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ left: distance.left - 5 });
-                  setDistance({ ...distance, left: distance.left - 5 });
-                }}
-              >
-                <Image
-                  alt=""
-                  src="../../../../../../assets/moveleft.png"
-                  width="15"
-                  height="15"
-                />
-              </Button>
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[1]}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ left: distance.left + 5 });
-                  setDistance({ ...distance, left: distance.left + 5 });
-                }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-              >
-                <Image
-                  src="../../../../../../assets/moveright.png"
-                  alt=""
-                  style={{ width: "30px", height: "auto" }}
-                />
-              </Button>
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[2]}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ top: distance.top + 5 });
-                  setDistance({ ...distance, top: distance.top + 5 });
-                }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-              >
-                <Image
-                  alt=""
-                  src="../../../../../../assets/movebottom.png"
-                  style={{ width: "15px", height: "auto" }}
-                />
-              </Button>
-              <Button
-                // isSelected={state.align === TEXT_ALIGNS[3]}
-                // onClick={() => {
-                //   // @ts-ignore
-                //   editor.objects.update({ textAlign: TEXT_ALIGNS[3] });
-                //   setState({ align: TEXT_ALIGNS[3] });
-                // }}
-                kind={KIND.tertiary}
-                size={SIZE.mini}
-                onClick={() => {
-                  // @ts-ignore
-                  editor.objects.update({ top: distance.top - 5 });
-                  setDistance({ ...distance, top: distance.top - 5 });
-                }}
-              >
-                <img
-                  src="../../../../../../assets/movetop.png"
-                  style={{ width: "17px", height: "auto" }}
-                />
-              </Button>
-            </Block>
-          )}
-          returnFocus
-          autoFocus
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Di chuyển
-          </Button>
-        </StatefulPopover>
+        {/* cat anh ngang doc */}
         <StatefulPopover
           placement={PLACEMENT.bottomLeft}
           content={() => (
@@ -587,9 +599,8 @@ export default function Flip() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}
-              >
-                <Block $style={{ fontSize: "14px" }}>Kích thước</Block>
+                }}>
+                <Block $style={{ fontSize: "14px" }}>Chiều ngang</Block>
                 <Block width={"52px"}>
                   <Input
                     overrides={{
@@ -616,43 +627,45 @@ export default function Flip() {
                     }}
                     size={SIZE.mini}
                     onChange={() => {}}
-                    value={sliderValue}
+                    value={Math.round((cropX.cropX / maxWidth) * 100)}
                   />
                 </Block>
               </Block>
 
               <Block>
-                <SliderBox
-                  aria-label="Volume"
-                  defaultValue={1}
-                  getAriaValueText={valuetext}
-                  step={0.01}
-                  marks
+                <Slider
+                  overrides={{
+                    InnerThumb: () => null,
+                    ThumbValue: () => null,
+                    TickBar: () => null,
+                    Track: {
+                      style: {
+                        paddingRight: 0,
+                        paddingLeft: 0,
+                      },
+                    },
+                    Thumb: {
+                      style: {
+                        height: "12px",
+                        width: "12px",
+                      },
+                    },
+                  }}
                   min={0}
-                  max={10}
-                  onChangeCommitted={handleSliderChanged}
-                  valueLabelDisplay="auto"
+                  max={100}
+                  marks={false}
+                  value={[Math.round((cropX.cropX / maxWidth) * 100)]}
+                  onChange={({ value }) => handleSetCropX(value)}
                 />
               </Block>
-            </Block>
-          )}
-        >
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Chỉnh kích thước
-          </Button>
-        </StatefulPopover>
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+
               <Block
                 $style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}
-              >
-                <Block $style={{ fontSize: "14px" }}>Xoay góc</Block>
+                }}>
+                <Block $style={{ fontSize: "14px" }}>Chiều dọc</Block>
                 <Block width={"52px"}>
                   <Input
                     overrides={{
@@ -679,38 +692,300 @@ export default function Flip() {
                     }}
                     size={SIZE.mini}
                     onChange={() => {}}
-                    value={sliderValued}
+                    value={Math.round((cropY.cropY / maxHeight) * 100)}
                   />
                 </Block>
               </Block>
 
               <Block>
-                <SliderBox
-                  aria-label="Volume"
-                  defaultValue={1}
-                  // getAriaValueText={valuetext}
-                  step={1}
-                  marks
+                <Slider
+                  overrides={{
+                    InnerThumb: () => null,
+                    ThumbValue: () => null,
+                    TickBar: () => null,
+                    Track: {
+                      style: {
+                        paddingRight: 0,
+                        paddingLeft: 0,
+                      },
+                    },
+                    Thumb: {
+                      style: {
+                        height: "12px",
+                        width: "12px",
+                      },
+                    },
+                  }}
                   min={0}
-                  max={360}
-                  onChangeCommitted={handleSliderChanged}
-                  valueLabelDisplay="auto"
-                  // value={}
+                  max={100}
+                  marks={false}
+                  value={[Math.round((cropY.cropY / maxHeight) * 100)]}
+                  onChange={({ value }) => handleSetCropY(value)}
                 />
               </Block>
             </Block>
-          )}
-        >
+          )}>
           <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Xoay góc
+            Cắt ảnh
           </Button>
         </StatefulPopover>
+
+        {/* test crop image */}
+        <StatefulTooltip
+          placement={PLACEMENT.bottom}
+          showArrow={true}
+          accessibilityType={"tooltip"}>
+          <Button size={SIZE.compact} kind={KIND.tertiary} onClick={openModal}>
+            Crop image
+          </Button>
+        </StatefulTooltip>
+
+        <ModalCropImage isOpen={isModalOpen} onClose={closeModal} />
       </Block>
     </StatefulPopover>
   );
 }
 
-function TransitionElement() {
+function dataURLToBlob(dataURL) {
+  const parts = dataURL.split(",");
+  const mime = parts[0].match(/:(.*?);/)[1];
+  const bstr = atob(parts[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
+
+export function ModalCropImage({ isOpen, onClose }) {
+  const editor = useEditor();
+  const activeObject = useActiveObject() as any;
+  const [image, setImage] = React.useState("");
+  const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
+  const objects = useObjects() as ILayer[];
+
+  React.useEffect(() => {
+    if (objects) {
+      setLayerObjects(objects);
+      console.log(objects);
+    }
+  }, [objects]);
+
+  React.useEffect(() => {
+    let watcher = async () => {
+      if (objects) {
+        setLayerObjects([...objects]);
+      }
+    };
+    if (editor) {
+      editor.on("history:changed", watcher);
+    }
+    return () => {
+      if (editor) {
+        editor.off("history:changed", watcher);
+      }
+    };
+  }, [editor, objects]);
+
+  React.useEffect(() => {
+    if (activeObject) {
+      console.log(activeObject);
+      const srcAttributeValue =
+        activeObject._element.getAttribute("src") === ""
+          ? activeObject._element.getAttribute("currentSrc")
+          : activeObject._element.getAttribute("src");
+      setImage(srcAttributeValue);
+    }
+  }, [activeObject]);
+
+  const [crop, setCrop] = React.useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = React.useState(1);
+
+  const [croppedArea, setCroppedArea] = React.useState(null);
+  const [ratio, setRatio] = React.useState(4 / 3);
+
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedArea(croppedAreaPixels);
+  };
+
+  const onRatioChange = (e) => {
+    setRatio(e.target.value);
+  };
+
+  const [imageAfterCrop, setImageAfterCrop] = React.useState("");
+
+  const idProduct = useAppSelector((state) => state?.token?.id);
+
+  const onCropDone = (imgcroppedArea) => {
+    const canvasFile = document.createElement("canvas");
+    canvasFile.width = imgcroppedArea.width;
+    canvasFile.height = imgcroppedArea.height;
+
+    const context = canvasFile.getContext("2d");
+    var imageObj = new Image();
+    imageObj.crossOrigin = "Anonymous";
+    imageObj.src = image;
+    imageObj.onload = async function () {
+      context?.drawImage(
+        imageObj,
+        imgcroppedArea.x,
+        imgcroppedArea.y,
+        imgcroppedArea.width,
+        imgcroppedArea.height,
+        0,
+        0,
+        imgcroppedArea.width,
+        imgcroppedArea.height
+      );
+
+      const dataUrl = canvasFile.toDataURL("image/png");
+      const imageBlob: Blob = dataURLToBlob(dataUrl);
+      const token = checkTokenCookie();
+      const formData = new FormData();
+      formData.append("idproduct", idProduct);
+      formData.append("token", token);
+      formData.append("idlayer", activeObject.id);
+      formData.append("file", imageBlob);
+      console.log(formData);
+
+      //Chuyen thay doi anh api
+      const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Content-Type": "multipart/form-data",
+        // Add any other headers if needed
+      };
+
+      const config = {
+        headers: headers,
+      };
+
+      const response = await axios.post(
+        "https://apis.ezpics.vn/apis/changeLayerImageNew",
+        formData,
+        config
+      );
+      console.log(response);
+      if (response && response?.data?.code === 1) {
+        const newOptions = {
+          id: activeObject.id,
+          name: "StaticImage",
+          angle: activeObject.angle,
+          stroke: activeObject.stroke,
+          strokeWidth: activeObject.strokeWidth,
+          left: activeObject.left,
+          top: activeObject.top,
+          opacity: activeObject.opacity,
+          originX: activeObject.originX,
+          originY: activeObject.originY,
+          scaleX: activeObject.scaleX,
+          // img.naturalWidth,
+          scaleY: activeObject.scaleY,
+          // img.naturalWidth,
+          // data.width,
+          type: "StaticImage",
+          flipX: activeObject.flipX,
+          flipY: activeObject.flipY,
+          skewX: activeObject.skewX,
+          skewY: activeObject.skewY,
+          visible: activeObject.visible,
+          shadow: activeObject.shadow,
+          src: response.data?.link,
+          cropX: activeObject.cropX,
+          cropY: activeObject.cropY,
+          image_svg: "",
+          metadata: {
+            naturalWidth: imgcroppedArea.width,
+            naturalHeight: imgcroppedArea.height,
+            initialHeight: imgcroppedArea.height,
+            initialWidth: imgcroppedArea.width,
+            lock: activeObject.metadata.lock,
+            variable: activeObject.metadata.variable,
+            variableLabel: activeObject.metadata.variableLabel,
+            brightness: activeObject.metadata.brightness,
+            sort: activeObject.metadata.sort,
+          },
+        };
+
+        editor.objects.remove();
+        editor.objects.add(newOptions);
+
+        layerObjects.map((layer, index) => {
+          // Nếu số thứ tự của object không bằng với sort, tiếp tục đẩy về phía sau
+          if (index !== activeObject.metadata.sort) {
+            editor.objects.sendToBack();
+            // Cập nhật lại số thứ tự của object sau khi đẩy về phía sau
+            index = layerObjects.findIndex((obj) => obj === layer);
+          }
+          console.log(activeObject.metadata.sort); // In ra sort khi nó đúng với số thứ tự của object
+        });
+      }
+    };
+  };
+
+  return (
+    <Modal
+      onClose={onClose}
+      closeable
+      isOpen={isOpen}
+      animate
+      autoFocus
+      size={SIZE.default}
+      role={ROLE.dialog}
+      overrides={{
+        Root: {
+          style: {
+            zIndex: 5,
+          },
+        },
+        Dialog: {
+          style: {
+            marginTop: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            marginBottom: 0,
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            width: "500px",
+            height: "400px",
+          },
+        },
+      }}>
+      <ModalBody>
+        <Cropper
+          image={image}
+          crop={crop}
+          zoom={zoom}
+          aspect={ratio}
+          onCropChange={setCrop}
+          onCropComplete={onCropComplete}
+          onZoomChange={setZoom}
+          style={{
+            containerStyle: {
+              width: "90%",
+              height: "80%",
+              backgroundColor: "#fff",
+              marginRight: "auto",
+              marginLeft: "auto",
+              marginTop: "10px",
+            },
+          }}
+        />
+
+        <Button
+          style={{ position: "absolute", bottom: "0", margin: "10px 0px" }}
+          onClick={() => onCropDone(croppedArea)}>
+          Crop
+        </Button>
+      </ModalBody>
+    </Modal>
+  );
+}
+
+export function TransitionElement() {
   const editor = useEditor();
   const activeObject = useActiveObject();
   const [state, setState] = React.useState<{ align: string }>({
@@ -733,8 +1008,7 @@ function TransitionElement() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-          gridGap={"8px"}
-        >
+          gridGap={"8px"}>
           <Button
             // isSelected={state.align === TEXT_ALIGNS[0]}
             // onClick={() => {
@@ -743,8 +1017,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[0] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
@@ -758,8 +1031,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[1] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/moveright.png"
               style={{ width: "30px", height: "auto" }}
@@ -773,8 +1045,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[2] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/movebottom.png"
               style={{ width: "15px", height: "auto" }}
@@ -788,8 +1059,7 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[3] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <img
               src="../../../../../../assets/movetop.png"
               style={{ width: "17px", height: "auto" }}
@@ -798,14 +1068,12 @@ function TransitionElement() {
         </Block>
       )}
       returnFocus
-      autoFocus
-    >
+      autoFocus>
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}
-        >
+          accessibilityType={"tooltip"}>
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}
