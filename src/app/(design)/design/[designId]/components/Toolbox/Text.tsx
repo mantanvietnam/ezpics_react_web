@@ -1,6 +1,5 @@
 import React from "react";
 import { useActiveObject, useEditor } from "@layerhub-io/react";
-// import getSelectionType from "@/utils/media/get-selection-type"
 import { Input } from "baseui/input";
 import { Block } from "baseui/block";
 import { ChevronDown } from "baseui/icon";
@@ -257,7 +256,8 @@ export default function Text() {
           alignItems: "center",
           padding: "0 12px",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         <Block display={"flex"} gridGap="0.5rem" alignItems={"center"}>
           <Block
             onClick={() => setActiveSubMenu("FontSelector")}
@@ -272,7 +272,8 @@ export default function Text() {
             }}
             height={"24px"}
             display={"flex"}
-            alignItems={"center"}>
+            alignItems={"center"}
+          >
             <Block>{state.family}</Block>
             <Block display={"flex"}>
               <ChevronDown size={22} />
@@ -285,11 +286,13 @@ export default function Text() {
               placement={PLACEMENT.bottom}
               showArrow={true}
               accessibilityType={"tooltip"}
-              content="Text color">
+              content="Text color"
+            >
               <Button
                 onClick={() => setActiveSubMenu("TextFill")}
                 size={SIZE.mini}
-                kind={KIND.tertiary}>
+                kind={KIND.tertiary}
+              >
                 <TextColor color={state.color} size={22} />
               </Button>
             </StatefulTooltip>
@@ -298,14 +301,16 @@ export default function Text() {
               placement={PLACEMENT.bottom}
               showArrow={true}
               accessibilityType={"tooltip"}
-              content="In đậm">
+              content="In đậm"
+            >
               <Button
                 $style={{ ...(!state.bold && { color: "rgb(169,169,169)" }) }}
                 // disabled={!state.styleOptions.hasBold}
                 onClick={makeBold}
                 disabled={!state.family.includes("Open Sans")}
                 size={SIZE.mini}
-                kind={KIND.tertiary}>
+                kind={KIND.tertiary}
+              >
                 <Bold size={20} />
               </Button>
             </StatefulTooltip>
@@ -314,14 +319,16 @@ export default function Text() {
               placement={PLACEMENT.bottom}
               showArrow={true}
               accessibilityType={"tooltip"}
-              content="In nghiêng">
+              content="In nghiêng"
+            >
               <Button
                 $style={{ ...(!state.italic && { color: "rgb(169,169,169)" }) }}
                 // disabled={!state.styleOptions.hasItalic}
                 onClick={makeItalic}
                 disabled={!state.family.includes("Open Sans")}
                 size={SIZE.mini}
-                kind={KIND.tertiary}>
+                kind={KIND.tertiary}
+              >
                 <Italic size={20} />
               </Button>
             </StatefulTooltip>
@@ -330,14 +337,16 @@ export default function Text() {
               placement={PLACEMENT.bottom}
               showArrow={true}
               accessibilityType={"tooltip"}
-              content="Gạch dòng">
+              content="Gạch dòng"
+            >
               <Button
                 $style={{
                   ...(!state.underline && { color: "rgb(169,169,169)" }),
                 }}
                 onClick={makeUnderline}
                 size={SIZE.mini}
-                kind={KIND.tertiary}>
+                kind={KIND.tertiary}
+              >
                 <Underline size={24} />
               </Button>
             </StatefulTooltip>
@@ -474,13 +483,15 @@ function TextFontSize() {
                     background: "rgb(243,243,243)",
                   },
                 }}
-                key={index}>
+                key={index}
+              >
                 {size}
               </Block>
             ))}
           </Block>
         </Scrollbar>
-      )}>
+      )}
+    >
       <Block width={"80px"}>
         <Input
           value={value}
@@ -540,7 +551,8 @@ function Rotate() {
       placement={PLACEMENT.bottom}
       showArrow={true}
       accessibilityType={"tooltip"}
-      content="Định dạng chữ">
+      content="Định dạng chữ"
+    >
       <Button
         onClick={() => {
           if (!state.upper) {
@@ -552,7 +564,8 @@ function Rotate() {
           }
         }}
         size={SIZE.mini}
-        kind={KIND.tertiary}>
+        kind={KIND.tertiary}
+      >
         <img
           src="../../../../../assets/rotating.png"
           style={{ width: "15px", height: "15px" }}
@@ -588,7 +601,8 @@ function TextLetterCase() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Button
             onClick={() => {
               // @ts-ignore
@@ -596,7 +610,8 @@ function TextLetterCase() {
               editor.objects.toUppercase();
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../assets/upper.png"
               style={{ width: "18px", height: "auto" }}
@@ -609,7 +624,8 @@ function TextLetterCase() {
               editor.objects.toLowerCase();
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../assets/lower.png"
               style={{ width: "18px", height: "auto" }}
@@ -621,7 +637,8 @@ function TextLetterCase() {
               editor.objects.update({ text: initialText });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../assets/initialtext.png"
               style={{ width: "18px", height: "auto" }}
@@ -630,13 +647,15 @@ function TextLetterCase() {
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Định dạng chữ">
+          content="Định dạng chữ"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <LetterCase size={24} />
           </Button>
@@ -655,7 +674,8 @@ function rotateAngle() {
       placement={PLACEMENT.bottom}
       showArrow={true}
       accessibilityType={"tooltip"}
-      content="Định dạng chữ">
+      content="Định dạng chữ"
+    >
       <Button
         onClick={() => {
           if (!state.upper) {
@@ -667,7 +687,8 @@ function rotateAngle() {
           }
         }}
         size={SIZE.mini}
-        kind={KIND.tertiary}>
+        kind={KIND.tertiary}
+      >
         <LetterCase size={24} />
       </Button>
     </StatefulTooltip>
@@ -723,14 +744,16 @@ function TextSpacing() {
           width={"200px"}
           backgroundColor={"#ffffff"}
           display={"grid"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Block>
             <Block
               $style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-              }}>
+              }}
+            >
               <Block $style={{ fontSize: "14px" }}>Chiều cao dòng chữ</Block>
               <Block width={"52px"}>
                 <Input
@@ -797,7 +820,8 @@ function TextSpacing() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-              }}>
+              }}
+            >
               <Block $style={{ fontSize: "14px" }}>Kí tự cách nhau</Block>
               <Block width={"52px"}>
                 <Input
@@ -858,13 +882,15 @@ function TextSpacing() {
             </Block>
           </Block>
         </Block>
-      )}>
+      )}
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Chỉnh chiều cao/ Cách đều">
+          content="Chỉnh chiều cao/ Cách đều"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <Spacing size={24} />
           </Button>
@@ -899,7 +925,8 @@ function TextAlign() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Button
             isSelected={state.align === TEXT_ALIGNS[0]}
             onClick={() => {
@@ -908,7 +935,8 @@ function TextAlign() {
               setState({ align: TEXT_ALIGNS[0] });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <TextAlignLeft size={24} />
           </Button>
           <Button
@@ -919,7 +947,8 @@ function TextAlign() {
               setState({ align: TEXT_ALIGNS[1] });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <TextAlignCenter size={24} />
           </Button>
           <Button
@@ -930,7 +959,8 @@ function TextAlign() {
               setState({ align: TEXT_ALIGNS[2] });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <TextAlignRight size={24} />
           </Button>
           <Button
@@ -941,19 +971,22 @@ function TextAlign() {
               setState({ align: TEXT_ALIGNS[3] });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <TextAlignJustify size={24} />
           </Button>
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Căn lề">
+          content="Căn lề"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <TextAlignCenter size={24} />
           </Button>
@@ -1022,14 +1055,16 @@ function Rotating() {
           width={"200px"}
           backgroundColor={"#ffffff"}
           display={"grid"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Block>
             <Block
               $style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-              }}>
+              }}
+            >
               <Block $style={{ fontSize: "14px" }}>Xoay góc</Block>
               <Block width={"52px"}>
                 <Input
@@ -1106,13 +1141,15 @@ function Rotating() {
             </Block>
           </Block>
         </Block>
-      )}>
+      )}
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Xoay góc">
+          content="Xoay góc"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <img
               src="../../../../../assets/rotating.png"
@@ -1178,14 +1215,16 @@ function EditWord() {
           width={"200px"}
           backgroundColor={"#ffffff"}
           display={"grid"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Block>
             <Block
               $style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-              }}>
+              }}
+            >
               <Block $style={{ fontSize: "14px" }}>Sửa chữ</Block>
             </Block>
 
@@ -1234,19 +1273,22 @@ function EditWord() {
                 }}
                 onClick={() => {
                   editor.objects.update({ text: textInput });
-                }}>
+                }}
+              >
                 Tiếp tục
               </Button>
             </Block>
           </Block>
         </Block>
-      )}>
+      )}
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Sửa chữ">
+          content="Sửa chữ"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <img
               src="../../../../../assets/text.png"
@@ -1312,7 +1354,8 @@ function TransitionElement() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Button
             onClick={() => {
               // @ts-ignore
@@ -1320,7 +1363,8 @@ function TransitionElement() {
               setDistance({ ...distance, left: distance.left - 5 });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../../assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
@@ -1333,7 +1377,8 @@ function TransitionElement() {
               setDistance({ ...distance, left: distance.left + 5 });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../assets/moveright.png"
               style={{ width: "30px", height: "auto" }}
@@ -1346,7 +1391,8 @@ function TransitionElement() {
               setDistance({ ...distance, top: distance.top + 5 });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../assets/movebottom.png"
               style={{ width: "15px", height: "auto" }}
@@ -1359,7 +1405,8 @@ function TransitionElement() {
               setDistance({ ...distance, top: distance.top - 5 });
             }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../assets/movetop.png"
               style={{ width: "17px", height: "auto" }}
@@ -1368,13 +1415,15 @@ function TransitionElement() {
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Di chuyển">
+          content="Di chuyển"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <img
               src="../../../../../assets/move.png"
@@ -1463,13 +1512,15 @@ function Gradient() {
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "8px 0px",
-              }}>
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Checkbox
                   checked={options.enabled}
                   onChange={(e) =>
                     handleChange("enabled", (e.target as any).checked)
-                  }></Checkbox>
+                  }
+                ></Checkbox>
                 &nbsp;&nbsp;
                 <p style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
                   Chọn để dùng gradient
@@ -1487,7 +1538,8 @@ function Gradient() {
                     background: `linear-gradient(${options.angle + 90}deg, ${
                       options.colors[0]
                     }, ${options.colors[1]})`,
-                  }}></div>
+                  }}
+                ></div>
               </div>
             </div>
           </div>
@@ -1497,12 +1549,14 @@ function Gradient() {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-            }}>
+            }}
+          >
             <div
               style={{
                 fontSize: "14px",
                 fontFamily: "Helvetica, Arial, sans-serif",
-              }}>
+              }}
+            >
               Chỉnh màu
             </div>
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -1518,7 +1572,8 @@ function Gradient() {
                       flexDirection: "column",
                       gap: "1rem",
                       textAlign: "center",
-                    }}>
+                    }}
+                  >
                     <HexColorPicker
                       onChange={(color) => handleGradientColorChange(0, color)}
                     />
@@ -1530,7 +1585,8 @@ function Gradient() {
                     />
                   </div>
                 }
-                accessibilityType={"tooltip"}>
+                accessibilityType={"tooltip"}
+              >
                 <div>
                   <div
                     style={{
@@ -1542,7 +1598,8 @@ function Gradient() {
                       justifyContent: "center",
                       cursor: "pointer",
                       backgroundColor: options.colors[0],
-                    }}></div>
+                    }}
+                  ></div>
                 </div>
               </StatefulPopover>
               <StatefulPopover
@@ -1557,7 +1614,8 @@ function Gradient() {
                       flexDirection: "column",
                       gap: "1rem",
                       textAlign: "center",
-                    }}>
+                    }}
+                  >
                     <HexColorPicker
                       onChange={(color) => handleGradientColorChange(1, color)}
                     />
@@ -1572,7 +1630,8 @@ function Gradient() {
                     />
                   </div>
                 }
-                accessibilityType={"tooltip"}>
+                accessibilityType={"tooltip"}
+              >
                 <div>
                   <div
                     style={{
@@ -1584,7 +1643,8 @@ function Gradient() {
                       justifyContent: "center",
                       cursor: "pointer",
                       backgroundColor: options.colors[1],
-                    }}></div>
+                    }}
+                  ></div>
                 </div>
               </StatefulPopover>
             </div>
@@ -1599,12 +1659,14 @@ function Gradient() {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <p
                   style={{
                     fontFamily: "Helvetica, Arial, sans-serif",
                     fontSize: "14px",
-                  }}>
+                  }}
+                >
                   Chỉnh tọa độ
                 </p>
                 {/* <Block width={"52px"} height={'26px'}style={{display:'flex',justifyContent:'flex-end'}}> */}
@@ -1684,13 +1746,15 @@ function Gradient() {
             </div>
           </div>
         </div>
-      )}>
+      )}
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Gradient">
+          content="Gradient"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <img
               src="../../../../../assets/gradient.png"
@@ -1768,14 +1832,16 @@ function ModifyLength() {
             width={"200px"}
             backgroundColor={"#ffffff"}
             display={"grid"}
-            gridGap={"8px"}>
+            gridGap={"8px"}
+          >
             <Block>
               <Block
                 $style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                }}>
+                }}
+              >
                 <Block $style={{ fontSize: "14px" }}>Chỉnh kích thước</Block>
                 <Block width={"52px"}>
                   <Input
@@ -1823,13 +1889,15 @@ function ModifyLength() {
               </Block>
             </Block>
           </Block>
-        )}>
+        )}
+      >
         <Block>
           <StatefulTooltip
             placement={PLACEMENT.bottom}
             showArrow={true}
             accessibilityType={"tooltip"}
-            content="Chỉnh kích thước">
+            content="Chỉnh kích thước"
+          >
             <Button size={SIZE.mini} kind={KIND.tertiary}>
               <img
                 src="../../../../../assets/changing-length.png"

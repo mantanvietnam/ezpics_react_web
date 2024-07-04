@@ -28,7 +28,7 @@ import axios from "axios";
 import { ILayer } from "@layerhub-io/types";
 import { toast } from "react-toastify";
 
-export default function () {
+export default function Common() {
   const [state, setState] = React.useState({
     isGroup: false,
     isMultiple: false,
@@ -136,7 +136,8 @@ export default function () {
             setState({ ...state, isGroup: false });
           }}
           size={SIZE.compact}
-          kind={KIND.tertiary}>
+          kind={KIND.tertiary}
+        >
           Hợp nhóm
         </Button>
       ) : state.isMultiple ? (
@@ -146,7 +147,8 @@ export default function () {
             // setState({ ...state, isGroup: true })
           }}
           size={SIZE.compact}
-          kind={KIND.tertiary}>
+          kind={KIND.tertiary}
+        >
           Nhóm
         </Button>
       ) : null}
@@ -159,11 +161,13 @@ export default function () {
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Nhân bản Layers đã chọn">
+        content="Nhân bản Layers đã chọn"
+      >
         <Button
           onClick={() => handleCopy()}
           size={SIZE.mini}
-          kind={KIND.tertiary}>
+          kind={KIND.tertiary}
+        >
           <DuplicateIcon size={22} />
         </Button>
       </StatefulTooltip>
@@ -171,11 +175,13 @@ export default function () {
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Xóa Layers đã chọn">
+        content="Xóa Layers đã chọn"
+      >
         <Button
           onClick={() => editor.objects.remove()}
           size={SIZE.mini}
-          kind={KIND.tertiary}>
+          kind={KIND.tertiary}
+        >
           <DeleteIcon size={24} />
         </Button>
       </StatefulTooltip>
@@ -223,19 +229,22 @@ function CommonLayers() {
           <Block
             display={"grid"}
             gridTemplateColumns={"1fr 1fr"}
-            gridGap={"8px"}>
+            gridGap={"8px"}
+          >
             <Button
               startEnhancer={<BringToFront size={24} />}
               onClick={() => editor.objects.bringToFront()}
               kind={KIND.tertiary}
-              size={SIZE.mini}>
+              size={SIZE.mini}
+            >
               Chuyển Layer đã chọn ra trước
             </Button>
             <Button
               startEnhancer={<SendToBack size={24} />}
               onClick={() => handleSendToBack()}
               kind={KIND.tertiary}
-              size={SIZE.mini}>
+              size={SIZE.mini}
+            >
               Chuyển Layer đã chọn ra sau
             </Button>
           </Block>
@@ -275,13 +284,15 @@ function CommonLayers() {
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Chỉnh thứ tự Layers">
+          content="Chỉnh thứ tự Layers"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <LayersIcon size={19} />
           </Button>
@@ -302,53 +313,62 @@ function CommonAlign() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Button
             onClick={() => editor.objects.alignLeft()}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <AlignLeft size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignCenter()}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <AlignCenter size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignRight()}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <AlignRight size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignTop()}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <AlignTop size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignMiddle()}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <AlignMiddle size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignBottom()}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <AlignBottom size={24} />
           </Button>
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Chỉnh vị trí">
+          content="Chỉnh vị trí"
+        >
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <AlignCenter size={24} />
           </Button>
@@ -379,14 +399,16 @@ function LockUnlock() {
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Khóa Layers">
+          content="Khóa Layers"
+        >
           <Button
             onClick={() => {
               editor.objects.unlock();
               setState({ locked: false });
             }}
             size={SIZE.mini}
-            kind={KIND.tertiary}>
+            kind={KIND.tertiary}
+          >
             <UnlockedIcon size={24} />
           </Button>
         </StatefulTooltip>
@@ -395,14 +417,16 @@ function LockUnlock() {
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Khóa Layers">
+          content="Khóa Layers"
+        >
           <Button
             onClick={() => {
               editor.objects.lock();
               setState({ locked: true });
             }}
             size={SIZE.mini}
-            kind={KIND.tertiary}>
+            kind={KIND.tertiary}
+          >
             <LockedIcon size={24} />
           </Button>
         </StatefulTooltip>
@@ -430,12 +454,17 @@ function VariableLayer() {
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Sửa biến">
+        content="Sửa biến"
+      >
         <Button
           onClick={() => objectMetadata(activeObject)}
           size={SIZE.mini}
-          kind={KIND.tertiary}>
-          <img src="/images/setting.png" style={{ width: 20, height: 20 }} />
+          kind={KIND.tertiary}
+        >
+          <img
+            src="../Panels/panelItems/setting.png"
+            style={{ width: 20, height: 20 }}
+          />
         </Button>
       </StatefulTooltip>
     </>

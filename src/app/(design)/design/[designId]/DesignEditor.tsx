@@ -8,6 +8,7 @@ import Preview from "./components/Preview";
 import { REPLACE_ID_USER } from "@/redux/slices/token/reducers";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import React from "react";
 
 type DesignType = "NONE" | "PRESENTATION" | "VIDEO" | "GRAPHIC";
 
@@ -25,7 +26,6 @@ function DesignEditor({ params }: DesignEditorProps) {
   }, [dispatch, params]);
 
   const editorType: DesignType = useEditorType();
-  console.log(editorType);
 
   const { displayPreview, setDisplayPreview } = useDesignEditorContext();
 

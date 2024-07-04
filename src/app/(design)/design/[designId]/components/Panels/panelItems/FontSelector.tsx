@@ -86,7 +86,7 @@ export default function FontSelector() {
 
   const handleFontFamilyChange = async (x: any) => {
     if (editor) {
-      let selectedFont = null;
+      let selectedFont;
 
       if (x.font) {
         selectedFont = x.font;
@@ -177,7 +177,6 @@ export default function FontSelector() {
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
-
         <Block $style={{ padding: "0 1.5rem 1rem" }}>
           <Input
             overrides={{
@@ -194,7 +193,6 @@ export default function FontSelector() {
             startEnhancer={<Search size={16} />}
           />
         </Block>
-
         <Scrollable>
           <div style={{ padding: "0 1.5rem", display: "grid", gap: "0.2rem" }}>
             {commonFonts.map((font, index) => {

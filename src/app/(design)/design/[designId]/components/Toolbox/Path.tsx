@@ -5,7 +5,8 @@ import Flip from "./Shared/Flip";
 import useAppContext from "@/hooks/useAppContext";
 import { useActiveObject, useEditor } from "@layerhub-io/react";
 
-export default function () {
+export default function Path() {
+  console.log("im in file path");
   const [state, setState] = React.useState({ fill: "#000000" });
   const { setActiveSubMenu } = useAppContext();
   const editor = useEditor();

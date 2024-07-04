@@ -35,7 +35,7 @@ export default function TextFill() {
   const [color, setColor] = React.useState("");
   const activeObject = useActiveObject();
   const editor = useEditor();
-  const colorList = useAppSelector((state) => state?.color?.colorList);
+  const colorList = useAppSelector((state) => state.color.colorList);
   const updateObjectFill = (e: any, color: any) => {
     setColor(color);
     addObjectFill(e);
@@ -50,8 +50,8 @@ export default function TextFill() {
     const getColorCurrentActive = () => {
       if (activeObject) {
         // editor.objects.
-        setColor(activeObject?.fill);
-        console.log(activeObject?.fill);
+        setColor(activeObject.fill);
+        console.log(activeObject.fill);
       }
     };
     getColorCurrentActive();
@@ -137,7 +137,7 @@ export default function TextFill() {
                         $style={{
                           cursor: "pointer",
                         }}
-                        onClick={() => updateObjectFill(color)}
+                        onClick={() => updateObjectFill(color, color)}
                         backgroundColor={color}
                         height={"38px"}
                         key={index}></Block>
@@ -168,7 +168,7 @@ export default function TextFill() {
                   $style={{
                     cursor: "pointer",
                   }}
-                  onClick={() => updateObjectFill(color)}
+                  onClick={() => updateObjectFill(color, color)}
                   backgroundColor={color}
                   height={"38px"}
                   key={index}></Block>

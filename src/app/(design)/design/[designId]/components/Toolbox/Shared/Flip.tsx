@@ -13,6 +13,7 @@ import { useAppSelector } from "@/hooks/hook";
 import { toast } from "react-toastify";
 import { ILayer } from "@layerhub-io/types";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
@@ -43,9 +44,9 @@ export default function Flip() {
   const objects = useObjects() as ILayer[];
 
   const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
+  console.log('🚀 ~ Flip ~ layerObjects:', layerObjects)
   const idProduct = useAppSelector((state) => state.token.id);
   const token1 = checkTokenCookie();
-  console.log('🚀 ~ Flip ~ token1:', token1)
   const activeObject = useActiveObject() as any;
   console.log('🚀 ~ Flip ~ activeObject:', activeObject)
   const [state, setState] = React.useState({ flipX: false, flipY: false });
@@ -65,13 +66,42 @@ export default function Flip() {
     scaleX: 0,
     scaleY: 0,
   });
+
+  function checkTokenCookie() {
+    var allCookies = document.cookie;
+
+    var cookiesArray = allCookies.split("; ");
+
+    var tokenCookie;
+    for (var i = 0; i < cookiesArray.length; i++) {
+      var cookie = cookiesArray[i];
+      var cookieParts = cookie.split("=");
+      var cookieName = cookieParts[0];
+      var cookieValue = cookieParts[1];
+
+      if (cookieName === "token") {
+        tokenCookie = cookieValue;
+        break;
+      }
+    }
+
+    // Kiểm tra nếu đã tìm thấy cookie "token"
+    if (tokenCookie) {
+      console.log('Giá trị của cookie "token" là:', tokenCookie);
+      return tokenCookie.replace(/^"|"$/g, "");
+    } else {
+      console.log('Không tìm thấy cookie có tên là "token"');
+    }
+  }
+
   React.useEffect(() => {
     if (objects) {
       setLayerObjects(objects);
       console.log(objects);
     }
   }, [objects]);
-  const token = useAppSelector((state) => state.token.token);
+  // const token = useAppSelector((state) => state.token.token);
+  const token = checkTokenCookie();
   React.useEffect(() => {
     if (activeObject) {
       setState({
@@ -117,18 +147,17 @@ export default function Flip() {
   const flipHorizontally = React.useCallback(async() => {
     editor.objects.update({ flipX: !state.flipX });
     setState({ ...state, flipX: !state.flipX });
-    // try {
-    //   const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
-    //     idProduct: idProduct,
-    //     token: token1,
-    //     field: 'lat_anh',
-    //     value: !state.flipX ? "1" : "0",
-    //     idLayer: "496619"
-    //   })
-    //   console.log('🚀 ~ flipHorizontally ~ response:', response.data)
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
+        idproduct: idProduct,
+        token: token1,
+        field: 'lat_anh',
+        value: !state.flipX ? 1 : 0,
+        idlayer: `${activeObject.id}`
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }, [editor, state]);
   async function urlToImageFile(imageUrl: string, fileName: string) {
     try {
@@ -144,6 +173,7 @@ export default function Flip() {
     }
   }
   const removeBackground = async (storageKey: string) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     if (proUser) {
       const srcAttributeValue =
         activeObject._element.getAttribute("src") === ""
@@ -172,6 +202,7 @@ export default function Flip() {
               formData,
               config
             );
+            console.log("response", response);
             const newOptions = {
               id: activeObject.id,
               name: "StaticImage",
@@ -242,39 +273,6 @@ export default function Flip() {
         }
       );
     }
-    //    try {
-    //   // Read the file into a FormData object
-    //   const formData = new FormData();
-    //   // formData.append('image', await fs.readFile(filePath));
-    //   formData.append("token", token);
-
-    //   // Create the Fetch request
-    //   fetch(`${networkAPI}/removeBackgroundImageAPI`, {
-    //     method: "POST",
-    //     // 'Content-Type': 'multipart/form-data' is set automatically by FormData
-    //     // 'Access-Control-Allow-Origin': 'POST', // This should be set on the server, not here
-    //     body: formData,
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data;application/x-www-form-urlencoded;application/json',
-    //       // 'Content-Type': ''
-    //     }
-    //     // mode: "no-cors", // Set the mode to 'no-cors' if needed
-    //   })
-    //     .then((response) => {
-    //       if (response.ok || response.status === 0) {
-    //         // You won't be able to log the response details directly in 'no-cors' mode
-    //         console.log("Request sent successfully");
-    //       } else {
-    //         console.error("Request failed");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       // Handle errors
-    //       console.error("Error:", error);
-    //     });
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
   const [sliderValue, setSliderValue] = React.useState(0.00000005);
 
@@ -283,9 +281,20 @@ export default function Flip() {
   //   console.log(newValue);
   //   editor.objects.update({ scaleX: newValue, scaleY: newValue });
   // };
-  const flipVertically = React.useCallback(() => {
+  const flipVertically = React.useCallback(async() => {
     editor.objects.update({ flipY: !state.flipY });
     setState({ ...state, flipY: !state.flipY });
+    // try {
+    //   const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
+    //     idproduct: idProduct,
+    //     token: token1,
+    //     field: 'lat_anh',
+    //     value: !state.flipY ? 1 : 0,
+    //     idlayer: `${activeObject.id}`
+    //   })
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }, [editor, state]);
 
   const changingBrightness = React.useCallback(() => {
@@ -313,412 +322,437 @@ export default function Flip() {
     // editor.objects.update({ angle: newValue });
   };
   return (
-    <Block>
-      <StatefulTooltip
-        placement={PLACEMENT.bottom}
-        showArrow={true}
-        accessibilityType={"tooltip"}>
-        <Button
-          size={SIZE.compact}
-          kind={KIND.tertiary}
-          onClick={flipVertically}>
-          Lật ảnh dọc
-        </Button>
-      </StatefulTooltip>
-      <StatefulTooltip
-        placement={PLACEMENT.bottom}
-        showArrow={true}
-        accessibilityType={"tooltip"}>
-        <Button
-          size={SIZE.compact}
-          kind={KIND.tertiary}
-          onClick={flipHorizontally}>
-          Lật ảnh ngang
-        </Button>
-      </StatefulTooltip>
-      <StatefulTooltip
-        placement={PLACEMENT.bottom}
-        showArrow={true}
-        accessibilityType={"tooltip"}>
-        <Button
-          size={SIZE.compact}
-          kind={KIND.tertiary}
-          onClick={() => removeBackground("storageKey")}
-          style={{ paddingRight: 5 }}>
-          Xóa nền
-          <img
-            src="../../../../../../assets/premium.png"
-            style={{
-              width: 15,
-              height: 15,
-              resize: "block",
-              marginBottom: "20%",
-              marginLeft: "3",
-            }}
-          />
-        </Button>
-      </StatefulTooltip>
-      <StatefulPopover
-        placement={PLACEMENT.bottomLeft}
-        content={() => (
-          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-            <Block
-              $style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}>
-              <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
-              <Block width={"52px"}>
-                <Input
-                  overrides={{
-                    Input: {
-                      style: {
-                        backgroundColor: "#ffffff",
-                        textAlign: "center",
-                      },
-                    },
-                    Root: {
-                      style: {
-                        borderBottomColor: "rgba(0,0,0,0.15)",
-                        borderTopColor: "rgba(0,0,0,0.15)",
-                        borderRightColor: "rgba(0,0,0,0.15)",
-                        borderLeftColor: "rgba(0,0,0,0.15)",
-                        borderTopWidth: "1px",
-                        borderBottomWidth: "1px",
-                        borderRightWidth: "1px",
-                        borderLeftWidth: "1px",
-                        height: "26px",
-                      },
-                    },
-                    InputContainer: {},
-                  }}
-                  size={SIZE.mini}
-                  onChange={() => {}}
-                  value={Math.round(stated.opacity)}
-                />
-              </Block>
-            </Block>
-
-            <Block>
-              <Slider
-                overrides={{
-                  InnerThumb: () => null,
-                  ThumbValue: () => null,
-                  TickBar: () => null,
-                  Track: {
-                    style: {
-                      paddingRight: 0,
-                      paddingLeft: 0,
-                    },
-                  },
-                  Thumb: {
-                    style: {
-                      height: "12px",
-                      width: "12px",
-                    },
-                  },
-                }}
-                min={0}
-                max={100}
-                marks={false}
-                value={[stated.opacity]}
-                // @ts-ignore
-                onChange={({ value }) => onChange(value)}
-              />
-            </Block>
-          </Block>
-        )}>
-        <Button kind={KIND.tertiary} size={SIZE.compact}>
-          Bo góc
-        </Button>
-      </StatefulPopover>
-      <StatefulPopover
-        placement={PLACEMENT.bottomLeft}
-        content={() => (
-          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-            <Block
-              $style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}>
-              <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
-              <Block width={"52px"}>
-                <Input
-                  overrides={{
-                    Input: {
-                      style: {
-                        backgroundColor: "#ffffff",
-                        textAlign: "center",
-                      },
-                    },
-                    Root: {
-                      style: {
-                        borderBottomColor: "rgba(0,0,0,0.15)",
-                        borderTopColor: "rgba(0,0,0,0.15)",
-                        borderRightColor: "rgba(0,0,0,0.15)",
-                        borderLeftColor: "rgba(0,0,0,0.15)",
-                        borderTopWidth: "1px",
-                        borderBottomWidth: "1px",
-                        borderRightWidth: "1px",
-                        borderLeftWidth: "1px",
-                        height: "26px",
-                      },
-                    },
-                    InputContainer: {},
-                  }}
-                  size={SIZE.mini}
-                  onChange={() => {}}
-                  value={Math.round(stated.opacity)}
-                />
-              </Block>
-            </Block>
-
-            <Block>
-              <Slider
-                overrides={{
-                  InnerThumb: () => null,
-                  ThumbValue: () => null,
-                  TickBar: () => null,
-                  Track: {
-                    style: {
-                      paddingRight: 0,
-                      paddingLeft: 0,
-                    },
-                  },
-                  Thumb: {
-                    style: {
-                      height: "12px",
-                      width: "12px",
-                    },
-                  },
-                }}
-                min={0}
-                max={100}
-                marks={false}
-                value={[stated.opacity]}
-                // @ts-ignore
-                onChange={({ value }) => onChange(value)}
-              />
-            </Block>
-          </Block>
-        )}>
-        <Button kind={KIND.tertiary} size={SIZE.compact}>
-          Độ sáng
-        </Button>
-      </StatefulPopover>
-      {/* <TransitionElement /> */}
-
-      <StatefulPopover
-        placement={PLACEMENT.bottomLeft}
-        content={() => (
-          <Block
-            padding={"12px"}
-            backgroundColor={"#ffffff"}
-            display={"grid"}
-            gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-            gridGap={"8px"}>
-            <Button
-              // isSelected={state.align === TEXT_ALIGNS[0]}
-              // onClick={() => {
-              //   // @ts-ignore
-              //   editor.objects.update({ textAlign: TEXT_ALIGNS[0] });
-              //   setState({ align: TEXT_ALIGNS[0] });
-              // }}
-              kind={KIND.tertiary}
-              size={SIZE.mini}
-              onClick={() => {
-                // @ts-ignore
-                editor.objects.update({ left: distance.left - 5 });
-                setDistance({ ...distance, left: distance.left - 5 });
-              }}>
-              <img
-                src="../../../../../../assets/moveleft.png"
-                style={{ width: "15px", height: "15px" }}
-              />
-            </Button>
-            <Button
-              // isSelected={state.align === TEXT_ALIGNS[1]}
-              onClick={() => {
-                // @ts-ignore
-                editor.objects.update({ left: distance.left + 5 });
-                setDistance({ ...distance, left: distance.left + 5 });
+    <StatefulPopover placement={PLACEMENT.bottom}>
+      <Block>
+        <StatefulTooltip
+          placement={PLACEMENT.bottom}
+          showArrow={true}
+          accessibilityType={"tooltip"}
+        >
+          <Button
+            size={SIZE.compact}
+            kind={KIND.tertiary}
+            onClick={flipVertically}
+          >
+            Lật ảnh dọc
+          </Button>
+        </StatefulTooltip>
+        <StatefulTooltip
+          placement={PLACEMENT.bottom}
+          showArrow={true}
+          accessibilityType={"tooltip"}
+        >
+          <Button
+            size={SIZE.compact}
+            kind={KIND.tertiary}
+            onClick={flipHorizontally}
+          >
+            Lật ảnh ngang
+          </Button>
+        </StatefulTooltip>
+        <StatefulTooltip
+          placement={PLACEMENT.bottom}
+          showArrow={true}
+          accessibilityType={"tooltip"}
+        >
+          <Button
+            size={SIZE.compact}
+            kind={KIND.tertiary}
+            onClick={() => removeBackground("storageKey")}
+            style={{ paddingRight: 5 }}
+          >
+            Xóa nền
+            <Image
+              src="/assets/premium.png"
+              width={15}
+              height={15}
+              style={{
+                resize: "block",
+                marginBottom: "20%",
+                marginLeft: "3",
               }}
-              kind={KIND.tertiary}
-              size={SIZE.mini}>
-              <Image
-                src="../../../../../../assets/moveright.png"
-                alt=""
-                style={{ width: "30px", height: "auto" }}
-              />
-            </Button>
-            <Button
-              // isSelected={state.align === TEXT_ALIGNS[2]}
-              onClick={() => {
-                // @ts-ignore
-                editor.objects.update({ top: distance.top + 5 });
-                setDistance({ ...distance, top: distance.top + 5 });
-              }}
-              kind={KIND.tertiary}
-              size={SIZE.mini}>
-              <Image
-                alt=""
-                src="../../../../../../assets/movebottom.png"
-                style={{ width: "15px", height: "auto" }}
-              />
-            </Button>
-            <Button
-              // isSelected={state.align === TEXT_ALIGNS[3]}
-              // onClick={() => {
-              //   // @ts-ignore
-              //   editor.objects.update({ textAlign: TEXT_ALIGNS[3] });
-              //   setState({ align: TEXT_ALIGNS[3] });
-              // }}
-              kind={KIND.tertiary}
-              size={SIZE.mini}
-              onClick={() => {
-                // @ts-ignore
-                editor.objects.update({ top: distance.top - 5 });
-                setDistance({ ...distance, top: distance.top - 5 });
-              }}>
-              <img
-                src="../../../../../../assets/movetop.png"
-                style={{ width: "17px", height: "auto" }}
-              />
-            </Button>
-          </Block>
-        )}
-        returnFocus
-        autoFocus>
-        <Button kind={KIND.tertiary} size={SIZE.compact}>
-          Di chuyển
-        </Button>
-      </StatefulPopover>
-      <StatefulPopover
-        placement={PLACEMENT.bottomLeft}
-        content={() => (
-          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-            <Block
-              $style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}>
-              <Block $style={{ fontSize: "14px" }}>Kích thước</Block>
-              <Block width={"52px"}>
-                <Input
+              alt=""
+            />
+          </Button>
+        </StatefulTooltip>
+        <StatefulPopover
+          placement={PLACEMENT.bottomLeft}
+          content={() => (
+            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+              <Block
+                $style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
+                <Block width={"52px"}>
+                  <Input
+                    overrides={{
+                      Input: {
+                        style: {
+                          backgroundColor: "#ffffff",
+                          textAlign: "center",
+                        },
+                      },
+                      Root: {
+                        style: {
+                          borderBottomColor: "rgba(0,0,0,0.15)",
+                          borderTopColor: "rgba(0,0,0,0.15)",
+                          borderRightColor: "rgba(0,0,0,0.15)",
+                          borderLeftColor: "rgba(0,0,0,0.15)",
+                          borderTopWidth: "1px",
+                          borderBottomWidth: "1px",
+                          borderRightWidth: "1px",
+                          borderLeftWidth: "1px",
+                          height: "26px",
+                        },
+                      },
+                      InputContainer: {},
+                    }}
+                    size={SIZE.mini}
+                    onChange={() => {}}
+                    value={Math.round(stated.opacity)}
+                  />
+                </Block>
+              </Block>
+
+              <Block>
+                <Slider
                   overrides={{
-                    Input: {
+                    InnerThumb: () => null,
+                    ThumbValue: () => null,
+                    TickBar: () => null,
+                    Track: {
                       style: {
-                        backgroundColor: "#ffffff",
-                        textAlign: "center",
+                        paddingRight: 0,
+                        paddingLeft: 0,
                       },
                     },
-                    Root: {
+                    Thumb: {
                       style: {
-                        borderBottomColor: "rgba(0,0,0,0.15)",
-                        borderTopColor: "rgba(0,0,0,0.15)",
-                        borderRightColor: "rgba(0,0,0,0.15)",
-                        borderLeftColor: "rgba(0,0,0,0.15)",
-                        borderTopWidth: "1px",
-                        borderBottomWidth: "1px",
-                        borderRightWidth: "1px",
-                        borderLeftWidth: "1px",
-                        height: "26px",
+                        height: "12px",
+                        width: "12px",
                       },
                     },
-                    InputContainer: {},
                   }}
-                  size={SIZE.mini}
-                  onChange={() => {}}
-                  value={sliderValue}
+                  min={0}
+                  max={100}
+                  marks={false}
+                  value={[stated.opacity]}
+                  // @ts-ignore
+                  onChange={({ value }) => onChange(value)}
                 />
               </Block>
             </Block>
+          )}
+        >
+          <Button kind={KIND.tertiary} size={SIZE.compact}>
+            Bo góc
+          </Button>
+        </StatefulPopover>
+        <StatefulPopover
+          placement={PLACEMENT.bottomLeft}
+          content={() => (
+            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+              <Block
+                $style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
+                <Block width={"52px"}>
+                  <Input
+                    overrides={{
+                      Input: {
+                        style: {
+                          backgroundColor: "#ffffff",
+                          textAlign: "center",
+                        },
+                      },
+                      Root: {
+                        style: {
+                          borderBottomColor: "rgba(0,0,0,0.15)",
+                          borderTopColor: "rgba(0,0,0,0.15)",
+                          borderRightColor: "rgba(0,0,0,0.15)",
+                          borderLeftColor: "rgba(0,0,0,0.15)",
+                          borderTopWidth: "1px",
+                          borderBottomWidth: "1px",
+                          borderRightWidth: "1px",
+                          borderLeftWidth: "1px",
+                          height: "26px",
+                        },
+                      },
+                      InputContainer: {},
+                    }}
+                    size={SIZE.mini}
+                    onChange={() => {}}
+                    value={Math.round(stated.opacity)}
+                  />
+                </Block>
+              </Block>
 
-            <Block>
-              <SliderBox
-                aria-label="Volume"
-                defaultValue={1}
-                getAriaValueText={valuetext}
-                step={0.01}
-                marks
-                min={0}
-                max={10}
-                onChangeCommitted={handleSliderChanged}
-                valueLabelDisplay="auto"
-              />
-            </Block>
-          </Block>
-        )}>
-        <Button kind={KIND.tertiary} size={SIZE.compact}>
-          Chỉnh kích thước
-        </Button>
-      </StatefulPopover>
-      <StatefulPopover
-        placement={PLACEMENT.bottomLeft}
-        content={() => (
-          <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-            <Block
-              $style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}>
-              <Block $style={{ fontSize: "14px" }}>Xoay góc</Block>
-              <Block width={"52px"}>
-                <Input
+              <Block>
+                <Slider
                   overrides={{
-                    Input: {
+                    InnerThumb: () => null,
+                    ThumbValue: () => null,
+                    TickBar: () => null,
+                    Track: {
                       style: {
-                        backgroundColor: "#ffffff",
-                        textAlign: "center",
+                        paddingRight: 0,
+                        paddingLeft: 0,
                       },
                     },
-                    Root: {
+                    Thumb: {
                       style: {
-                        borderBottomColor: "rgba(0,0,0,0.15)",
-                        borderTopColor: "rgba(0,0,0,0.15)",
-                        borderRightColor: "rgba(0,0,0,0.15)",
-                        borderLeftColor: "rgba(0,0,0,0.15)",
-                        borderTopWidth: "1px",
-                        borderBottomWidth: "1px",
-                        borderRightWidth: "1px",
-                        borderLeftWidth: "1px",
-                        height: "26px",
+                        height: "12px",
+                        width: "12px",
                       },
                     },
-                    InputContainer: {},
                   }}
-                  size={SIZE.mini}
-                  onChange={() => {}}
-                  value={sliderValued}
+                  min={0}
+                  max={100}
+                  marks={false}
+                  value={[stated.opacity]}
+                  // @ts-ignore
+                  onChange={({ value }) => onChange(value)}
                 />
               </Block>
             </Block>
+          )}
+        >
+          <Button kind={KIND.tertiary} size={SIZE.compact}>
+            Độ sáng
+          </Button>
+        </StatefulPopover>
+        {/* <TransitionElement /> */}
 
-            <Block>
-              <SliderBox
-                aria-label="Volume"
-                defaultValue={1}
-                // getAriaValueText={valuetext}
-                step={1}
-                marks
-                min={0}
-                max={360}
-                onChangeCommitted={handleSliderChanged}
-                valueLabelDisplay="auto"
-                // value={}
-              />
+        <StatefulPopover
+          placement={PLACEMENT.bottomLeft}
+          content={() => (
+            <Block
+              padding={"12px"}
+              backgroundColor={"#ffffff"}
+              display={"grid"}
+              gridTemplateColumns={"1fr 1fr 1fr 1fr"}
+              gridGap={"8px"}
+            >
+              <Button
+                // isSelected={state.align === TEXT_ALIGNS[0]}
+                // onClick={() => {
+                //   // @ts-ignore
+                //   editor.objects.update({ textAlign: TEXT_ALIGNS[0] });
+                //   setState({ align: TEXT_ALIGNS[0] });
+                // }}
+                kind={KIND.tertiary}
+                size={SIZE.mini}
+                onClick={() => {
+                  // @ts-ignore
+                  editor.objects.update({ left: distance.left - 5 });
+                  setDistance({ ...distance, left: distance.left - 5 });
+                }}
+              >
+                <Image
+                  alt=""
+                  src="../../../../../../assets/moveleft.png"
+                  width="15"
+                  height="15"
+                />
+              </Button>
+              <Button
+                // isSelected={state.align === TEXT_ALIGNS[1]}
+                onClick={() => {
+                  // @ts-ignore
+                  editor.objects.update({ left: distance.left + 5 });
+                  setDistance({ ...distance, left: distance.left + 5 });
+                }}
+                kind={KIND.tertiary}
+                size={SIZE.mini}
+              >
+                <Image
+                  src="../../../../../../assets/moveright.png"
+                  alt=""
+                  style={{ width: "30px", height: "auto" }}
+                />
+              </Button>
+              <Button
+                // isSelected={state.align === TEXT_ALIGNS[2]}
+                onClick={() => {
+                  // @ts-ignore
+                  editor.objects.update({ top: distance.top + 5 });
+                  setDistance({ ...distance, top: distance.top + 5 });
+                }}
+                kind={KIND.tertiary}
+                size={SIZE.mini}
+              >
+                <Image
+                  alt=""
+                  src="../../../../../../assets/movebottom.png"
+                  style={{ width: "15px", height: "auto" }}
+                />
+              </Button>
+              <Button
+                // isSelected={state.align === TEXT_ALIGNS[3]}
+                // onClick={() => {
+                //   // @ts-ignore
+                //   editor.objects.update({ textAlign: TEXT_ALIGNS[3] });
+                //   setState({ align: TEXT_ALIGNS[3] });
+                // }}
+                kind={KIND.tertiary}
+                size={SIZE.mini}
+                onClick={() => {
+                  // @ts-ignore
+                  editor.objects.update({ top: distance.top - 5 });
+                  setDistance({ ...distance, top: distance.top - 5 });
+                }}
+              >
+                <img
+                  src="../../../../../../assets/movetop.png"
+                  style={{ width: "17px", height: "auto" }}
+                />
+              </Button>
             </Block>
-          </Block>
-        )}>
-        <Button kind={KIND.tertiary} size={SIZE.compact}>
-          Xoay góc
-        </Button>
-      </StatefulPopover>
-    </Block>
+          )}
+          returnFocus
+          autoFocus
+        >
+          <Button kind={KIND.tertiary} size={SIZE.compact}>
+            Di chuyển
+          </Button>
+        </StatefulPopover>
+        <StatefulPopover
+          placement={PLACEMENT.bottomLeft}
+          content={() => (
+            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+              <Block
+                $style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Block $style={{ fontSize: "14px" }}>Kích thước</Block>
+                <Block width={"52px"}>
+                  <Input
+                    overrides={{
+                      Input: {
+                        style: {
+                          backgroundColor: "#ffffff",
+                          textAlign: "center",
+                        },
+                      },
+                      Root: {
+                        style: {
+                          borderBottomColor: "rgba(0,0,0,0.15)",
+                          borderTopColor: "rgba(0,0,0,0.15)",
+                          borderRightColor: "rgba(0,0,0,0.15)",
+                          borderLeftColor: "rgba(0,0,0,0.15)",
+                          borderTopWidth: "1px",
+                          borderBottomWidth: "1px",
+                          borderRightWidth: "1px",
+                          borderLeftWidth: "1px",
+                          height: "26px",
+                        },
+                      },
+                      InputContainer: {},
+                    }}
+                    size={SIZE.mini}
+                    onChange={() => {}}
+                    value={sliderValue}
+                  />
+                </Block>
+              </Block>
+
+              <Block>
+                <SliderBox
+                  aria-label="Volume"
+                  defaultValue={1}
+                  getAriaValueText={valuetext}
+                  step={0.01}
+                  marks
+                  min={0}
+                  max={10}
+                  onChangeCommitted={handleSliderChanged}
+                  valueLabelDisplay="auto"
+                />
+              </Block>
+            </Block>
+          )}
+        >
+          <Button kind={KIND.tertiary} size={SIZE.compact}>
+            Chỉnh kích thước
+          </Button>
+        </StatefulPopover>
+        <StatefulPopover
+          placement={PLACEMENT.bottomLeft}
+          content={() => (
+            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+              <Block
+                $style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Block $style={{ fontSize: "14px" }}>Xoay góc</Block>
+                <Block width={"52px"}>
+                  <Input
+                    overrides={{
+                      Input: {
+                        style: {
+                          backgroundColor: "#ffffff",
+                          textAlign: "center",
+                        },
+                      },
+                      Root: {
+                        style: {
+                          borderBottomColor: "rgba(0,0,0,0.15)",
+                          borderTopColor: "rgba(0,0,0,0.15)",
+                          borderRightColor: "rgba(0,0,0,0.15)",
+                          borderLeftColor: "rgba(0,0,0,0.15)",
+                          borderTopWidth: "1px",
+                          borderBottomWidth: "1px",
+                          borderRightWidth: "1px",
+                          borderLeftWidth: "1px",
+                          height: "26px",
+                        },
+                      },
+                      InputContainer: {},
+                    }}
+                    size={SIZE.mini}
+                    onChange={() => {}}
+                    value={sliderValued}
+                  />
+                </Block>
+              </Block>
+
+              <Block>
+                <SliderBox
+                  aria-label="Volume"
+                  defaultValue={1}
+                  // getAriaValueText={valuetext}
+                  step={1}
+                  marks
+                  min={0}
+                  max={360}
+                  onChangeCommitted={handleSliderChanged}
+                  valueLabelDisplay="auto"
+                  // value={}
+                />
+              </Block>
+            </Block>
+          )}
+        >
+          <Button kind={KIND.tertiary} size={SIZE.compact}>
+            Xoay góc
+          </Button>
+        </StatefulPopover>
+      </Block>
+    </StatefulPopover>
   );
 }
 
@@ -745,7 +779,8 @@ function TransitionElement() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-          gridGap={"8px"}>
+          gridGap={"8px"}
+        >
           <Button
             // isSelected={state.align === TEXT_ALIGNS[0]}
             // onClick={() => {
@@ -754,7 +789,8 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[0] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../../assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
@@ -768,7 +804,8 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[1] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../../assets/moveright.png"
               style={{ width: "30px", height: "auto" }}
@@ -782,7 +819,8 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[2] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../../assets/movebottom.png"
               style={{ width: "15px", height: "auto" }}
@@ -796,7 +834,8 @@ function TransitionElement() {
             //   setState({ align: TEXT_ALIGNS[3] });
             // }}
             kind={KIND.tertiary}
-            size={SIZE.mini}>
+            size={SIZE.mini}
+          >
             <img
               src="../../../../../../assets/movetop.png"
               style={{ width: "17px", height: "auto" }}
@@ -805,12 +844,14 @@ function TransitionElement() {
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}>
+          accessibilityType={"tooltip"}
+        >
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}

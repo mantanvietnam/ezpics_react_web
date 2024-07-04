@@ -15,6 +15,7 @@ import ezlogo from "./EZPICS (converted)-03.png";
 import Image from "next/image";
 
 export default function Beauty() {
+  console.log("Im in file beauty");
   const [data, setData] = useState<any>(null);
   const [templates, setTemplates] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,8 +54,11 @@ export default function Beauty() {
       try {
         const response = await axios.post<any>(`${network}/listIngredientAPI`, {
           token: checkTokenCookie(),
+          page: 1,
+          limit: 5,
         });
         setTemplates(response.data.data);
+        console.log(response.data.data);
         setIsLoading(false);
       } catch (error) {
         console.error("Lỗi khi gửi yêu cầu GET:", error);

@@ -29,9 +29,6 @@ import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
 function GraphicEditor() {
   const dispatch = useAppDispatch();
   const [commonFonts, setCommonFonts] = React.useState<any[]>([]);
-  const [loadedFonts, setLoadedFonts] = React.useState<any[]>([]);
-  const [widthSrc, setWidthSrc] = useState<number>(0);
-  const [heightSrc, setHeightSrc] = useState<number>(0);
   const [fontURLInitial, setFontURLInitial] = React.useState<string>("");
   const [errorMessage, setError] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -605,17 +602,21 @@ function GraphicEditor() {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-            }}>
+            }}
+          >
             <img
               src="../../../assets/error.jpg"
               alt="lỗi"
-              style={{ width: 300, height: 300, alignSelf: "center" }}
+              width={300}
+              height={300}
+              style={{ alignSelf: "center" }}
             />
             <h2
               style={{
                 color: "black",
                 fontFamily: "Arial, Helvetica, sans-serif",
-              }}>
+              }}
+            >
               Bạn không có quyền truy cập, hãy thử lại
             </h2>
           </div>
@@ -628,7 +629,8 @@ function GraphicEditor() {
               backgroundColor: "rgba(0,0,0,0.9)",
               position: "absolute",
               zIndex: 20000000000,
-            }}>
+            }}
+          >
             <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
               <div className="ldio-4qpid53rus92">
                 <div></div>
@@ -640,8 +642,6 @@ function GraphicEditor() {
                     position: "absolute",
                     top: "12%",
                     left: "16%",
-                    width: 40,
-                    height: 40,
                   }}
                   src="/images/EZPICS.png"
                 />
