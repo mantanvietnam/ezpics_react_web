@@ -3,6 +3,10 @@ import EditorContainer from "./components/EditorContainer";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Panels from "./components/Panels";
+import { REPLACE_ID_USER } from "@/redux/slices/token/reducers";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import React from "react";
 
 function PresentationEditor() {
   return (

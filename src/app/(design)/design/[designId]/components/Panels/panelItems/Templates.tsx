@@ -1,19 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
+import axios from "axios";
 import { useEditor, useActiveObject } from "@layerhub-io/react";
 import { Block } from "baseui/block";
-import { loadFonts } from "@/utils/media/fonts";
 import Scrollable from "@/components/Scrollable";
 import AngleDoubleLeft from "@/components/Icons/AngleDoubleLeft";
 import { useStyletron } from "baseui";
-import { SAMPLE_TEMPLATES } from "@/constants/editor";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import useEditorType from "@/hooks/useEditorType";
 import ezlogo from "./EZPICS (converted)-03.png";
-
-import { loadVideoEditorAssets } from "@/utils/media/video";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/hooks/hook";
 import { Button, SIZE } from "baseui/button";
@@ -403,7 +399,8 @@ export default function Templates() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}>
+          }}
+        >
           <Block>
             <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
               Tải ảnh lên
@@ -412,7 +409,8 @@ export default function Templates() {
 
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}>
+            $style={{ cursor: "pointer", display: "flex" }}
+          >
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -427,7 +425,8 @@ export default function Templates() {
                     width: "100%",
                   },
                 },
-              }}>
+              }}
+            >
               Chọn từ máy tính
             </Button>
             <input
@@ -444,7 +443,8 @@ export default function Templates() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}>
+              }}
+            >
               {uploads.map((upload) => (
                 <div
                   key={upload.id}
@@ -453,9 +453,15 @@ export default function Templates() {
                     alignItems: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => addImageToCanvas(upload.url)}>
+                  onClick={() => addImageToCanvas(upload.url)}
+                >
                   <div>
-                    <img width="100%" src={upload.url} alt="preview" />
+                    <img
+                      width="100px"
+                      height="100px"
+                      src={upload.url}
+                      alt="preview"
+                    />
                   </div>
                 </div>
               ))}
@@ -469,7 +475,8 @@ export default function Templates() {
               justifyContent: "space-between",
               paddingLeft: "1.5rem",
               paddingRight: "1.5rem",
-            }}>
+            }}
+          >
             <Block>
               <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
                 Ảnh bạn đã tải
@@ -482,7 +489,8 @@ export default function Templates() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}>
+              }}
+            >
               {/* {templates.map((item, index) => {
               return (
                 <ImageItem
@@ -532,7 +540,8 @@ export default function Templates() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}>
+          }}
+        >
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -540,15 +549,16 @@ export default function Templates() {
                 <div></div>
               </div>
             </div>
-            <img
+            <Image
               style={{
                 position: "absolute",
                 top: "12%",
                 left: "16%",
-                width: 40,
-                height: 40,
               }}
-              src="/images/EZPICS.png"
+              width={40}
+              height={40}
+              src={ezlogo}
+              alt=""
             />
           </div>
         </div>
@@ -584,7 +594,8 @@ function ImageItem({
           "::before:hover": {
             opacity: 1,
           },
-        })}>
+        })}
+      >
         <div
           className={css({
             backgroundImage: `linear-gradient(to bottom,
@@ -616,9 +627,11 @@ function ImageItem({
             ":hover": {
               opacity: 1,
             },
-          })}></div>
+          })}
+        ></div>
         <img
           src={preview}
+          alt=""
           className={css({
             width: "100%",
             height: "100%",
@@ -633,13 +646,13 @@ function ImageItem({
 }
 
 const Modal = ({
-  onClose = () => {},
-  position = () => {},
-  currentItem = () => {},
-  onClick = () => {},
-  loadingTrue = () => {},
-  loadingFalse = () => {},
-  pageId = () => {},
+  onClose,
+  position,
+  currentItem,
+  onClick,
+  loadingTrue,
+  loadingFalse,
+  pageId,
 }) => {
   // const [css] = useStyletron();
   // const editor = useEditor();
@@ -865,29 +878,27 @@ const Modal = ({
         boxSizing: "border-box", // Thêm box-sizing để tính toán kích thước đúng
         display: "flex",
         flexDirection: "column",
-      }}>
+      }}
+    >
       {/* */}
       <div className="my-div" onClick={onClick}>
-        <img src="./check.png" alt="" style={{ width: 15, height: 15 }} />
+        <Image src="./check.png" alt="" width={15} height={15} />
         {"\u00A0"}Sử dụng
       </div>
       {/*  */}
       <div className="my-div" onClick={() => removeBackground("storageKey")}>
-        <img
-          src="./magic-wand (1).png"
-          alt=""
-          style={{ width: 15, height: 15 }}
-        />
+        <Image src="./magic-wand (1).png" alt="" width={15} height={15} />
         {"\u00A0"}Xóa nền
-        <img
+        <Image
           src="../../../../../../assets/premium.png"
+          width={15}
+          height={15}
           style={{
-            width: 15,
-            height: 15,
             resize: "block",
             marginBottom: "10%",
             marginLeft: "3",
           }}
+          alt={""}
         />
       </div>
       {/* onClick={() => downloadImage("download.png")} */}

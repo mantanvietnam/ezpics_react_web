@@ -7,7 +7,6 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { toast } from "react-toastify";
 import { useEditor } from "@layerhub-io/react";
 import { useAppSelector } from "@/hooks/hook";
-import { generateToServerSaving } from "@/api/gererateToServer";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import "./loading.css";
 import { generateToServer } from "@/api/gererateToServer";

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import useAppContext from "@/hooks/useAppContext";
 import panelItems from "./panelItems";

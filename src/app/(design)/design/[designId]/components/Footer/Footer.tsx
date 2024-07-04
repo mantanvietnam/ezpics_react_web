@@ -3,7 +3,7 @@ import Presentation from "./Presentation";
 import Video from "./Video";
 import useEditorType from "@/hooks/useEditorType";
 
-export default function () {
+export default function Footer() {
   const editorType = useEditorType();
 
   return (

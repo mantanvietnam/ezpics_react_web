@@ -738,11 +738,13 @@ const Header = ({ toggleNavbar }) => {
         </div>
         {/* <div> */}
         <Modal
+          footer={null}
           open={modalLogoutDevice}
           onClose={handleLogoutDevice}
           aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
-          <Box sx={styleModalBuyingFree}>
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="flex flex-col items-center justify-center">
             <p
               style={{
                 margin: 0,
@@ -752,35 +754,22 @@ const Header = ({ toggleNavbar }) => {
               }}>
               Cảnh báo
             </p>
-            <img
+            <Image
               src={contactInfo.warning}
               alt=""
-              style={{ width: "20%", height: "30%", marginBottom: "10px" }}
+              width={150}
+              height={150}
             />
-            <p
-              style={{
-                margin: 0,
-                fontSize: 17,
-                fontWeight: "500",
-                paddingTop: "10px",
-              }}>
+            <p className="py-6 text-sm font-semibold">
               Tài khoản đã bị đăng nhập ở thiết bị khác
             </p>
-            <div style={{ display: "flex" }}>
+            <div className="flex items-center justify-center">
               <Button
                 variant="contained"
                 size="medium"
-                style={{
-                  height: 40,
-                  alignSelf: "center",
-                  textTransform: "none",
-                  color: "white",
-                  backgroundColor: "rgb(255, 66, 78)",
-                  marginTop: "40px",
-                  width: "100%",
-                }}
+                className="button-red"
                 onClick={() => handleLogout()}>
-                Đăng xuất
+                Đăng nhập lại
               </Button>
             </div>
           </Box>

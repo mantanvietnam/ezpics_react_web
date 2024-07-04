@@ -20,7 +20,7 @@ interface Options {
   zoomRatio: number;
 }
 
-export default function () {
+export default function Common() {
   const { time } = useTimer();
   const { maxTime } = useDesignEditorContext();
   const [options, setOptions] = React.useState<Options>({
