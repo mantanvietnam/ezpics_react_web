@@ -22,7 +22,7 @@ const PRESET_COLORS = [
   "#d9d9d9",
 ];
 
-export default function () {
+export default function PathFill() {
   const [color, setColor] = React.useState("#b32aa9");
   const activeObject = useActiveObject();
   const editor = useEditor();

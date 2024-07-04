@@ -94,7 +94,7 @@ export default function Scenes() {
       const updatedPreview = (await editor.renderer.render(design)) as string;
       setCurrentPreview(updatedPreview);
     },
-    [editor, currentScene]
+    [editor]
   );
 
   const addScene = React.useCallback(async () => {
@@ -119,7 +119,14 @@ export default function Scenes() {
     const newPages = [...updatedPages, newPage] as any[];
     setScenes(newPages);
     setCurrentScene(newPage);
-  }, [scenes, currentDesign]);
+  }, [
+    editor.scene,
+    editor.renderer,
+    scenes,
+    currentDesign.frame,
+    setScenes,
+    setCurrentScene,
+  ]);
 
   const changePage = React.useCallback(
     async (page: any) => {
@@ -139,12 +146,12 @@ export default function Scenes() {
         setCurrentScene(page);
       }
     },
-    [editor, scenes, currentScene]
+    [editor, scenes, setScenes, setCurrentScene]
   );
 
   return (
     <Container>
-      <div className={css({ display: "flex", alignItems: "center" })}>
+      {/* <div className={css({ display: "flex", alignItems: "center" })}>
         {scenes.map((page, index) => (
           <div
             style={{
@@ -152,7 +159,8 @@ export default function Scenes() {
                 page.id === currentScene?.id ? "rgb(243,244,246)" : "#ffffff",
               padding: "1rem 0.5rem",
             }}
-            key={index}>
+            key={index}
+          >
             <div
               onClick={() => changePage(page)}
               className={css({
@@ -162,7 +170,8 @@ export default function Scenes() {
                   page.id === currentScene?.id
                     ? "2px solid #7158e2"
                     : "2px solid rgba(0,0,0,.15)",
-              })}>
+              })}
+            >
               <img
                 style={{ maxWidth: "90px", maxHeight: "80px", display: "flex" }}
                 src={
@@ -185,7 +194,8 @@ export default function Scenes() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                })}>
+                })}
+              >
                 {index + 1}
               </div>
             </div>
@@ -195,7 +205,8 @@ export default function Scenes() {
           style={{
             background: "#ffffff",
             padding: "1rem 1rem 1rem 0.5rem",
-          }}>
+          }}
+        >
           <div
             onClick={addScene}
             className={css({
@@ -206,11 +217,12 @@ export default function Scenes() {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-            })}>
+            })}
+          >
             <Add size={20} />
           </div>
         </div>
-      </div>
+      </div> */}
     </Container>
   );
 }

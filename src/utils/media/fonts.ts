@@ -30,7 +30,10 @@ export const loadTemplateFonts = async (design: IScene) => {
 export const loadFonts = (fonts: FontItem[]) => {
   const promisesList = fonts.map(async (font) => {
     try {
-      const loadedFont = await new FontFace(font.name, `url(${font.url})`).load();
+      const loadedFont = await new FontFace(
+        font.name,
+        `url(${font.url})`
+      ).load();
       return loadedFont;
     } catch (err) {
       console.error(`Failed to load font ${font.name}:`, err);
@@ -55,7 +58,10 @@ export const loadFonts = (fonts: FontItem[]) => {
 export const loadFontsSelector = (fonts: FontItem[]) => {
   const promisesList = fonts.map(async (font) => {
     try {
-      const loadedFont = await new FontFace(font.name, `url(${font.url})`).load();
+      const loadedFont = await new FontFace(
+        font.name,
+        `url(${font.url})`
+      ).load();
       return loadedFont;
     } catch (err) {
       console.error(`Failed to load font ${font.name}:`, err);
@@ -76,3 +82,24 @@ export const loadFontsSelector = (fonts: FontItem[]) => {
       .catch((err) => reject(err));
   });
 };
+//  export const loadFonts = (fonts: FontItem[]) => {
+//    const promisesList = fonts.map(async (font) => {
+//      try {
+//        const fontFace = new FontFace(font.name, `url(${font.url})`);
+//        await fontFace.load();
+//        document.fonts.add(fontFace);
+//        return fontFace;
+//      } catch (err) {
+//        console.error(`Failed to load font: ${font.name}`, err);
+//        return null;
+//      }
+//    });
+
+//    return new Promise((resolve, reject) => {
+//      Promise.all(promisesList)
+//        .then((res) => {
+//          resolve(res.filter(Boolean)); // Filter out null values
+//        })
+//        .catch((err) => reject(err));
+//    });
+//  };

@@ -281,14 +281,16 @@ export default function Layers() {
           justifyContent: "space-between",
           paddingLeft: "1.5rem",
           paddingRight: "1.5rem",
-        }}>
+        }}
+      >
         <Block>
           <h3 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>Layers</h3>
         </Block>
 
         <Block
           onClick={() => setIsSidebarOpen(false)}
-          $style={{ cursor: "pointer", display: "flex" }}>
+          $style={{ cursor: "pointer", display: "flex" }}
+        >
           <AngleDoubleLeft size={18} />
         </Block>
       </Block>
@@ -319,7 +321,8 @@ export default function Layers() {
                       fontFamily: "Helvetica, Arial, sans-serif",
                       fontWeight: "500",
                     }}
-                    onClick={() => editor.objects.select(object.id)}>
+                    onClick={() => editor.objects.select(object.id)}
+                  >
                     {object.text}
                   </Block>
                 ) : (
@@ -341,7 +344,8 @@ export default function Layers() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "flex-end",
-                  }}>
+                  }}
+                >
                   {/* option cai dat layer */}
                   {object?.metadata?.variable !== "" && (
                     <Button
@@ -355,13 +359,15 @@ export default function Layers() {
                             paddingRight: "4px",
                           },
                         },
-                      }}>
-                      <img
-                        src="/images/setting.png"
+                      }}
+                    >
+                      <Image
+                        src={Lighting}
+                        width={18}
+                        height={18}
                         style={{
-                          width: 20,
-                          height: 20,
-
+                          paddingLeft: "4px",
+                          paddingRight: "4px",
                           paddingTop: "2px",
                           maxWidth: 18,
                         }}
@@ -382,7 +388,8 @@ export default function Layers() {
                             paddingRight: "4px",
                           },
                         },
-                      }}>
+                      }}
+                    >
                       <Locked size={24} />
                     </Button>
                   ) : (
@@ -397,7 +404,8 @@ export default function Layers() {
                             paddingRight: "4px",
                           },
                         },
-                      }}>
+                      }}
+                    >
                       <Unlocked size={24} />
                     </Button>
                   )}
@@ -416,7 +424,8 @@ export default function Layers() {
                             paddingRight: "4px",
                           },
                         },
-                      }}>
+                      }}
+                    >
                       <Eye size={24} />
                     </Button>
                   ) : (
@@ -433,7 +442,8 @@ export default function Layers() {
                             paddingRight: "4px",
                           },
                         },
-                      }}>
+                      }}
+                    >
                       <EyeCrossed size={24} />
                     </Button>
                   )}
@@ -463,7 +473,8 @@ export default function Layers() {
                           paddingRight: "4px",
                         },
                       },
-                    }}>
+                    }}
+                  >
                     <Delete size={24} />
                   </Button>
                 </Block>
@@ -476,7 +487,8 @@ export default function Layers() {
                   display: "flex",
                   justifyContent: "space-between",
                   paddingTop: "5%",
-                }}>
+                }}
+              >
                 <Button
                   onClick={addObject}
                   // onClick={() => console.log(allText)}
@@ -488,7 +500,8 @@ export default function Layers() {
                         marginRight: "5px",
                       },
                     },
-                  }}>
+                  }}
+                >
                   Thêm chữ
                 </Button>
                 <Button
@@ -500,7 +513,8 @@ export default function Layers() {
                         width: "100%",
                       },
                     },
-                  }}>
+                  }}
+                >
                   Chọn từ máy tính
                 </Button>
                 <input
@@ -519,14 +533,16 @@ export default function Layers() {
                   textAlign: "center",
                   justifyContent: "center",
                   paddingTop: "100%",
-                }}>
+                }}
+              >
                 <Image alt="" src={empty} width={200} height={200} />
                 <p
                   style={{
                     fontFamily: "Arial",
                     fontSize: "20px",
                     fontWeight: "bold",
-                  }}>
+                  }}
+                >
                   Layer trống
                 </p>
               </Block>

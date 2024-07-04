@@ -1,3 +1,4 @@
+"use client";
 import { useContext } from "react";
 import { DesignEditorContext } from "@/app/(design)/design/[designId]/DesignEditorContext";
 

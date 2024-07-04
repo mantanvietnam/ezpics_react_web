@@ -46,9 +46,9 @@ export const getTextPropertiesClone = (
   const selectedFonts = fonts.filter((sampleFont) =>
     sampleFont.name.includes(family)
   );
-  console.log(family)
-  console.log(selectedFonts)
-  console.log(fonts)
+  console.log(family);
+  console.log(selectedFonts);
+  console.log(fonts);
   // Group fonts by family
   const groupedFonts = groupBy(fonts, "name");
   const selectedFamily = groupedFonts[family] || [];
