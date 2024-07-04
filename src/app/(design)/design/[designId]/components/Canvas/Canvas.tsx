@@ -14,7 +14,6 @@ const StyledCanvasContainer = styled.div`
 export default function CanvasComponent() {
   const activeObject = useActiveObject();
   const { displayPlayback } = useDesignEditorContext();
-
   const handleCtrlC = (event: any) => {
     if ((event.ctrlKey || event.metaKey) && event.key === "c") {
       // Thực hiện các hành động khi người dùng nhấn "Ctrl + C"
@@ -26,7 +25,6 @@ export default function CanvasComponent() {
     }
   };
   document.addEventListener("keydown", handleCtrlC);
-
   return (
     <StyledCanvasContainer
       style={{
