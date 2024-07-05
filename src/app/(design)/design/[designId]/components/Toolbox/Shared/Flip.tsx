@@ -42,33 +42,6 @@ function checkTokenCookie() {
     }
   }
 
-  // Kiểm tra nếu đã tìm thấy cookie "token"
-  if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
-    return tokenCookie.replace(/^"|"$/g, "");
-  } else {
-    console.log('Không tìm thấy cookie có tên là "token"');
-  }
-}
-
-function checkTokenCookie() {
-  var allCookies = document.cookie;
-
-  var cookiesArray = allCookies.split("; ");
-
-  var tokenCookie;
-  for (var i = 0; i < cookiesArray.length; i++) {
-    var cookie = cookiesArray[i];
-    var cookieParts = cookie.split("=");
-    var cookieName = cookieParts[0];
-    var cookieValue = cookieParts[1];
-
-    if (cookieName === "token") {
-      tokenCookie = cookieValue;
-      break;
-    }
-  }
-
   if (tokenCookie) {
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
@@ -84,7 +57,6 @@ export default function Flip() {
   const idProduct = useAppSelector((state) => state.token.id);
   const token1 = checkTokenCookie();
   const activeObject = useActiveObject() as any;
-  console.log('🚀 ~ Flip ~ activeObject:', activeObject)
   const [state, setState] = React.useState({ flipX: false, flipY: false });
   const [stated, setStated] = React.useState({ opacity: 1 });
   const networkAPI = useAppSelector((state) => state.network.ipv4Address);
@@ -106,7 +78,6 @@ export default function Flip() {
   React.useEffect(() => {
     if (objects) {
       setLayerObjects(objects);
-      console.log(objects);
     }
   }, [objects]);
   // const token = useAppSelector((state) => state.token.token);
@@ -792,9 +763,9 @@ export function ModalCropImage({ isOpen, onClose }) {
     if (activeObject) {
       console.log(activeObject);
       const srcAttributeValue =
-        activeObject._element.getAttribute("src") === ""
-          ? activeObject._element.getAttribute("currentSrc")
-          : activeObject._element.getAttribute("src");
+        activeObject._element?.getAttribute("src") === ""
+          ? activeObject._element?.getAttribute("currentSrc")
+          : activeObject._element?.getAttribute("src");
       setImage(srcAttributeValue);
     }
   }, [activeObject]);
