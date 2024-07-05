@@ -204,9 +204,12 @@ function CommonLayers() {
   }, [activeObject]);
   const handleSendToBack = () => {
     if (activeObject) {
-      console.log(activeObject);
-      if (activeObject?.metadata?.sort <= 1) {
-        toast.error("Đã dưới nền ảnh, không thể chuyển xuống", {
+      if (activeObject?.metadata?.backgroundLayer) {
+        toast.info('Bạn không thể di chuyển background layer!')
+      }
+      else if (activeObject?.metadata?.sort <= 1 ) {
+        console.log('🚀 ~ handleSendToBack ~ activeObject:', activeObject)
+        toast.info("Đã dưới nền ảnh, không thể chuyển xuống!", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -217,7 +220,7 @@ function CommonLayers() {
           theme: "dark",
         });
       } else {
-        editor.objects.sendToBack();
+        editor.objects.sendBackwards();
       }
     }
   };
@@ -233,7 +236,9 @@ function CommonLayers() {
           >
             <Button
               startEnhancer={<BringToFront size={24} />}
-              onClick={() => editor.objects.bringToFront()}
+              onClick={() => 
+                { editor.objects.bringForward()
+                }}
               kind={KIND.tertiary}
               size={SIZE.mini}
             >
@@ -241,7 +246,10 @@ function CommonLayers() {
             </Button>
             <Button
               startEnhancer={<SendToBack size={24} />}
-              onClick={() => handleSendToBack()}
+              onClick={() => {
+                handleSendToBack()
+                console.log('🚀 ~ CommonLayers ~ editor.objects:', editor.objects)
+              }}
               kind={KIND.tertiary}
               size={SIZE.mini}
             >
