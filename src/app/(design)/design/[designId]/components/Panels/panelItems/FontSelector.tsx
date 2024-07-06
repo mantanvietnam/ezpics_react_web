@@ -22,6 +22,7 @@ import {
 import { REPLACE_font } from "../../../../../../../redux/slices/font/fontSlice";
 import Image from "next/image";
 import logo from "../../../../../../../../public/images/logo.png";
+import { FontItem } from "@/interfaces/common";
 
 export default function FontSelector() {
   const [query, setQuery] = React.useState("");
@@ -114,7 +115,7 @@ export default function FontSelector() {
   };
   const handleLoadFont = async (x: any) => {
     if (editor) {
-      let selectedFont = {};
+      let selectedFont: FontItem | undefined;
 
       if (x.font) {
         selectedFont = {
@@ -142,14 +143,8 @@ export default function FontSelector() {
           url: x.font_ttf,
         };
       }
-      // console.log(selectedFont);
       if (selectedFont) {
         await loadFonts([selectedFont]);
-        // @ts-ignore
-        // editor.objects.update<IStaticText>({
-        //   fontFamily: x.name,
-        //   fontURL: selectedFont.url,
-        // });
       }
     }
   };

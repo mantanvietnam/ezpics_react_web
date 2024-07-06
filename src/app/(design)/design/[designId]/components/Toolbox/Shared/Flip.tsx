@@ -24,32 +24,14 @@ import {
 } from "baseui/modal";
 import Cropper from "react-easy-crop";
 
-function checkTokenCookie() {
-  var allCookies = document.cookie;
-
-  var cookiesArray = allCookies.split("; ");
-
-  var tokenCookie;
-  for (var i = 0; i < cookiesArray.length; i++) {
-    var cookie = cookiesArray[i];
-    var cookieParts = cookie.split("=");
-    var cookieName = cookieParts[0];
-    var cookieValue = cookieParts[1];
-
-    if (cookieName === "token") {
-      tokenCookie = cookieValue;
-      break;
-    }
-  }
-
-  // Kiểm tra nếu đã tìm thấy cookie "token"
-  if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
-    return tokenCookie.replace(/^"|"$/g, "");
-  } else {
-    console.log('Không tìm thấy cookie có tên là "token"');
-  }
-}
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  Crop,
+  PixelCrop,
+  convertToPixelCrop,
+} from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
@@ -80,11 +62,11 @@ export default function Flip() {
   const objects = useObjects() as ILayer[];
 
   const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
-  console.log('🚀 ~ Flip ~ layerObjects:', layerObjects)
+  console.log("🚀 ~ Flip ~ layerObjects:", layerObjects);
   const idProduct = useAppSelector((state) => state.token.id);
   const token1 = checkTokenCookie();
   const activeObject = useActiveObject() as any;
-  console.log('🚀 ~ Flip ~ activeObject:', activeObject)
+  console.log("🚀 ~ Flip ~ activeObject:", activeObject);
   const [state, setState] = React.useState({ flipX: false, flipY: false });
   const [stated, setStated] = React.useState({ opacity: 1 });
   const networkAPI = useAppSelector((state) => state.network.ipv4Address);
@@ -153,17 +135,20 @@ export default function Flip() {
   // saveBlobImageToLocal(imageUrl, storageKey);
   const proUser = useAppSelector((state) => state.token.proUser);
 
-  const flipHorizontally = React.useCallback(async() => {
+  const flipHorizontally = React.useCallback(async () => {
     editor.objects.update({ flipX: !state.flipX });
     setState({ ...state, flipX: !state.flipX });
     try {
-      const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
-        idproduct: idProduct,
-        token: token1,
-        field: 'lat_anh',
-        value: !state.flipX ? 1 : 0,
-        idlayer: `${activeObject.id}`
-      })
+      const response = await axios.post(
+        "https://apis.ezpics.vn/apis/updateLayerAPI",
+        {
+          idproduct: idProduct,
+          token: token1,
+          field: "lat_anh",
+          value: !state.flipX ? 1 : 0,
+          idlayer: `${activeObject.id}`,
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -290,7 +275,7 @@ export default function Flip() {
   //   console.log(newValue);
   //   editor.objects.update({ scaleX: newValue, scaleY: newValue });
   // };
-  const flipVertically = React.useCallback(async() => {
+  const flipVertically = React.useCallback(async () => {
     editor.objects.update({ flipY: !state.flipY });
     setState({ ...state, flipY: !state.flipY });
     // try {
@@ -325,7 +310,7 @@ export default function Flip() {
   const handleSliderChanged = (event: Event, newValue: number | number[]) => {
     setSliderValued(newValue as number);
     console.log(sliderValue);
-    setAngle(newValue);
+    setAngle(newValue as number);
 
     editor.objects.update({ scaleX: newValue, scaleY: newValue });
     // editor.objects.update({ angle: newValue });
@@ -386,384 +371,316 @@ export default function Flip() {
   };
 
   return (
-    <StatefulPopover placement={PLACEMENT.bottom} content={undefined}>
-      <Block>
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}>
-          <Button
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            onClick={flipVertically}>
-            Lật ảnh dọc
-          </Button>
-        </StatefulTooltip>
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}>
-          <Button
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            onClick={flipHorizontally}>
-            Lật ảnh ngang
-          </Button>
-        </StatefulTooltip>
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}>
-          <Button
-            size={SIZE.compact}
-            kind={KIND.tertiary}
-            onClick={() => removeBackground("storageKey")}
-            style={{ paddingRight: 5 }}>
-            Xóa nền
-            <img
-              src="/assets/premium.png"
-              style={{
-                resize: "block",
-                marginBottom: "20%",
-                marginLeft: "3",
-                width: "15px",
-                height: "15px",
-              }}
-              alt=""
-            />
-          </Button>
-        </StatefulTooltip>
+    <>
+      <StatefulPopover placement={PLACEMENT.bottom} content={undefined}>
+        <Block>
+          <StatefulTooltip
+            placement={PLACEMENT.bottom}
+            showArrow={true}
+            accessibilityType={"tooltip"}>
+            <Button
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              onClick={flipVertically}>
+              Lật ảnh dọc
+            </Button>
+          </StatefulTooltip>
+          <StatefulTooltip
+            placement={PLACEMENT.bottom}
+            showArrow={true}
+            accessibilityType={"tooltip"}>
+            <Button
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              onClick={flipHorizontally}>
+              Lật ảnh ngang
+            </Button>
+          </StatefulTooltip>
+          <StatefulTooltip
+            placement={PLACEMENT.bottom}
+            showArrow={true}
+            accessibilityType={"tooltip"}>
+            <Button
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              onClick={() => removeBackground("storageKey")}
+              style={{ paddingRight: 5 }}>
+              Xóa nền
+              <img
+                src="/assets/premium.png"
+                style={{
+                  resize: "block",
+                  marginBottom: "20%",
+                  marginLeft: "3",
+                  width: "15px",
+                  height: "15px",
+                }}
+                alt=""
+              />
+            </Button>
+          </StatefulTooltip>
 
-        {/* Bo goc */}
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+          {/* Bo goc */}
+          <StatefulPopover
+            placement={PLACEMENT.bottomLeft}
+            content={() => (
               <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
-                <Block width={"52px"}>
-                  <Input
+                width={"200px"}
+                backgroundColor={"#ffffff"}
+                padding={"20px"}>
+                <Block
+                  $style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}>
+                  <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
+                  <Block width={"52px"}>
+                    <Input
+                      overrides={{
+                        Input: {
+                          style: {
+                            backgroundColor: "#ffffff",
+                            textAlign: "center",
+                          },
+                        },
+                        Root: {
+                          style: {
+                            borderBottomColor: "rgba(0,0,0,0.15)",
+                            borderTopColor: "rgba(0,0,0,0.15)",
+                            borderRightColor: "rgba(0,0,0,0.15)",
+                            borderLeftColor: "rgba(0,0,0,0.15)",
+                            borderTopWidth: "1px",
+                            borderBottomWidth: "1px",
+                            borderRightWidth: "1px",
+                            borderLeftWidth: "1px",
+                            height: "26px",
+                          },
+                        },
+                        InputContainer: {},
+                      }}
+                      size={SIZE.mini}
+                      onChange={() => {}}
+                      value={Math.round(stated.opacity)}
+                    />
+                  </Block>
+                </Block>
+
+                <Block>
+                  <Slider
                     overrides={{
-                      Input: {
+                      InnerThumb: () => null,
+                      ThumbValue: () => null,
+                      TickBar: () => null,
+                      Track: {
                         style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
+                          paddingRight: 0,
+                          paddingLeft: 0,
                         },
                       },
-                      Root: {
+                      Thumb: {
                         style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
+                          height: "12px",
+                          width: "12px",
                         },
                       },
-                      InputContainer: {},
                     }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={Math.round(stated.opacity)}
+                    min={0}
+                    max={100}
+                    marks={false}
+                    value={[stated.opacity]}
+                    // @ts-ignore
+                    onChange={({ value }) => onChange(value)}
                   />
                 </Block>
               </Block>
+            )}>
+            <Button kind={KIND.tertiary} size={SIZE.compact}>
+              Bo góc
+            </Button>
+          </StatefulPopover>
 
-              <Block>
-                <Slider
-                  overrides={{
-                    InnerThumb: () => null,
-                    ThumbValue: () => null,
-                    TickBar: () => null,
-                    Track: {
-                      style: {
-                        paddingRight: 0,
-                        paddingLeft: 0,
-                      },
-                    },
-                    Thumb: {
-                      style: {
-                        height: "12px",
-                        width: "12px",
-                      },
-                    },
-                  }}
-                  min={0}
-                  max={100}
-                  marks={false}
-                  value={[stated.opacity]}
-                  // @ts-ignore
-                  onChange={({ value }) => onChange(value)}
-                />
-              </Block>
-            </Block>
-          )}>
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Bo góc
-          </Button>
-        </StatefulPopover>
-
-        {/* Do sang */}
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
+          {/* Do sang */}
+          <StatefulPopover
+            placement={PLACEMENT.bottomLeft}
+            content={() => (
               <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
-                <Block width={"52px"}>
-                  <Input
+                width={"200px"}
+                backgroundColor={"#ffffff"}
+                padding={"20px"}>
+                <Block
+                  $style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}>
+                  <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
+                  <Block width={"52px"}>
+                    <Input
+                      overrides={{
+                        Input: {
+                          style: {
+                            backgroundColor: "#ffffff",
+                            textAlign: "center",
+                          },
+                        },
+                        Root: {
+                          style: {
+                            borderBottomColor: "rgba(0,0,0,0.15)",
+                            borderTopColor: "rgba(0,0,0,0.15)",
+                            borderRightColor: "rgba(0,0,0,0.15)",
+                            borderLeftColor: "rgba(0,0,0,0.15)",
+                            borderTopWidth: "1px",
+                            borderBottomWidth: "1px",
+                            borderRightWidth: "1px",
+                            borderLeftWidth: "1px",
+                            height: "26px",
+                          },
+                        },
+                        InputContainer: {},
+                      }}
+                      size={SIZE.mini}
+                      onChange={() => {}}
+                      value={Math.round(stated.opacity)}
+                    />
+                  </Block>
+                </Block>
+
+                <Block>
+                  <Slider
                     overrides={{
-                      Input: {
+                      InnerThumb: () => null,
+                      ThumbValue: () => null,
+                      TickBar: () => null,
+                      Track: {
                         style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
+                          paddingRight: 0,
+                          paddingLeft: 0,
                         },
                       },
-                      Root: {
+                      Thumb: {
                         style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
+                          height: "12px",
+                          width: "12px",
                         },
                       },
-                      InputContainer: {},
                     }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={Math.round(stated.opacity)}
+                    min={0}
+                    max={100}
+                    marks={false}
+                    value={[stated.opacity]}
+                    // @ts-ignore
+                    onChange={({ value }) => onChange(value)}
                   />
                 </Block>
               </Block>
+            )}>
+            <Button kind={KIND.tertiary} size={SIZE.compact}>
+              Độ sáng
+            </Button>
+          </StatefulPopover>
+          {/* <TransitionElement /> */}
 
-              <Block>
-                <Slider
-                  overrides={{
-                    InnerThumb: () => null,
-                    ThumbValue: () => null,
-                    TickBar: () => null,
-                    Track: {
-                      style: {
-                        paddingRight: 0,
-                        paddingLeft: 0,
-                      },
-                    },
-                    Thumb: {
-                      style: {
-                        height: "12px",
-                        width: "12px",
-                      },
-                    },
-                  }}
-                  min={0}
-                  max={100}
-                  marks={false}
-                  value={[stated.opacity]}
-                  // @ts-ignore
-                  onChange={({ value }) => onChange(value)}
-                />
-              </Block>
-            </Block>
-          )}>
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Độ sáng
-          </Button>
-        </StatefulPopover>
-        {/* <TransitionElement /> */}
+          {/*crop image */}
+          <StatefulTooltip
+            placement={PLACEMENT.bottom}
+            showArrow={true}
+            accessibilityType={"tooltip"}>
+            <Button
+              size={SIZE.compact}
+              kind={KIND.tertiary}
+              onClick={openModal}>
+              Cắt ảnh
+            </Button>
+          </StatefulTooltip>
 
-        {/* cat anh ngang doc */}
-        <StatefulPopover
-          placement={PLACEMENT.bottomLeft}
-          content={() => (
-            <Block width={"200px"} backgroundColor={"#ffffff"} padding={"20px"}>
-              <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Block $style={{ fontSize: "14px" }}>Chiều ngang</Block>
-                <Block width={"52px"}>
-                  <Input
-                    overrides={{
-                      Input: {
-                        style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
-                        },
-                      },
-                      Root: {
-                        style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
-                        },
-                      },
-                      InputContainer: {},
-                    }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={Math.round((cropX.cropX / maxWidth) * 100)}
-                  />
-                </Block>
-              </Block>
-
-              <Block>
-                <Slider
-                  overrides={{
-                    InnerThumb: () => null,
-                    ThumbValue: () => null,
-                    TickBar: () => null,
-                    Track: {
-                      style: {
-                        paddingRight: 0,
-                        paddingLeft: 0,
-                      },
-                    },
-                    Thumb: {
-                      style: {
-                        height: "12px",
-                        width: "12px",
-                      },
-                    },
-                  }}
-                  min={0}
-                  max={100}
-                  marks={false}
-                  value={[Math.round((cropX.cropX / maxWidth) * 100)]}
-                  onChange={({ value }) => handleSetCropX(value)}
-                />
-              </Block>
-
-              <Block
-                $style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Block $style={{ fontSize: "14px" }}>Chiều dọc</Block>
-                <Block width={"52px"}>
-                  <Input
-                    overrides={{
-                      Input: {
-                        style: {
-                          backgroundColor: "#ffffff",
-                          textAlign: "center",
-                        },
-                      },
-                      Root: {
-                        style: {
-                          borderBottomColor: "rgba(0,0,0,0.15)",
-                          borderTopColor: "rgba(0,0,0,0.15)",
-                          borderRightColor: "rgba(0,0,0,0.15)",
-                          borderLeftColor: "rgba(0,0,0,0.15)",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderLeftWidth: "1px",
-                          height: "26px",
-                        },
-                      },
-                      InputContainer: {},
-                    }}
-                    size={SIZE.mini}
-                    onChange={() => {}}
-                    value={Math.round((cropY.cropY / maxHeight) * 100)}
-                  />
-                </Block>
-              </Block>
-
-              <Block>
-                <Slider
-                  overrides={{
-                    InnerThumb: () => null,
-                    ThumbValue: () => null,
-                    TickBar: () => null,
-                    Track: {
-                      style: {
-                        paddingRight: 0,
-                        paddingLeft: 0,
-                      },
-                    },
-                    Thumb: {
-                      style: {
-                        height: "12px",
-                        width: "12px",
-                      },
-                    },
-                  }}
-                  min={0}
-                  max={100}
-                  marks={false}
-                  value={[Math.round((cropY.cropY / maxHeight) * 100)]}
-                  onChange={({ value }) => handleSetCropY(value)}
-                />
-              </Block>
-            </Block>
-          )}>
-          <Button kind={KIND.tertiary} size={SIZE.compact}>
-            Cắt ảnh
-          </Button>
-        </StatefulPopover>
-
-        {/* test crop image */}
-        <StatefulTooltip
-          placement={PLACEMENT.bottom}
-          showArrow={true}
-          accessibilityType={"tooltip"}>
-          <Button size={SIZE.compact} kind={KIND.tertiary} onClick={openModal}>
-            Crop image
-          </Button>
-        </StatefulTooltip>
-
-        <ModalCropImage isOpen={isModalOpen} onClose={closeModal} />
-      </Block>
-    </StatefulPopover>
+          <ModalImageCrop isOpen={isModalOpen} onClose={closeModal} />
+        </Block>
+      </StatefulPopover>
+    </>
   );
 }
 
-function dataURLToBlob(dataURL) {
+function dataURLToBlob(dataURL: string): Blob {
   const parts = dataURL.split(",");
-  const mime = parts[0].match(/:(.*?);/)[1];
+  const mimeMatch = parts[0].match(/:(.*?);/);
+
+  if (!mimeMatch) {
+    throw new Error("Invalid data URL");
+  }
+
+  const mime = mimeMatch[1];
   const bstr = atob(parts[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
+
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n);
   }
+
   return new Blob([u8arr], { type: mime });
 }
 
-export function ModalCropImage({ isOpen, onClose }) {
+function centerAspectCrop(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number
+) {
+  return centerCrop(
+    makeAspectCrop(
+      {
+        unit: "%",
+        width: 90,
+      },
+      aspect,
+      mediaWidth,
+      mediaHeight
+    ),
+    mediaWidth,
+    mediaHeight
+  );
+}
+
+interface ModalImageCropProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function ModalImageCrop({ isOpen, onClose }: ModalImageCropProps) {
   const editor = useEditor();
-  const activeObject = useActiveObject() as any;
-  const [image, setImage] = React.useState("");
-  const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
   const objects = useObjects() as ILayer[];
+  const [loading, setLoading] = React.useState(false);
+
+  const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
+
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const [imgSrc, setImgSrc] = React.useState("");
+  const previewCanvasRef = React.useRef<HTMLCanvasElement>(null);
+  const hiddenAnchorRef = React.useRef<HTMLAnchorElement>(null);
+  const blobUrlRef = React.useRef("");
+  const [crop, setCrop] = useState<Crop>({
+    unit: "%", // Can be 'px' or '%'
+    x: 25,
+    y: 25,
+    width: 50,
+    height: 50,
+  });
+  const [completedCrop, setCompletedCrop] = React.useState<PixelCrop>();
+  const [scale, setScale] = React.useState(1);
+  const [rotate, setRotate] = React.useState(0);
+  const [aspect, setAspect] = React.useState<number | undefined>(undefined);
+
+  const activeObject = useActiveObject() as any;
+
+  React.useEffect(() => {
+    if (activeObject) {
+      const srcAttributeValue =
+        activeObject?._element?.getAttribute("src") === ""
+          ? activeObject?._element?.getAttribute("currentSrc")
+          : activeObject?._element?.getAttribute("src");
+      setImgSrc(srcAttributeValue);
+    }
+  }, [activeObject]);
 
   React.useEffect(() => {
     if (objects) {
@@ -788,66 +705,59 @@ export function ModalCropImage({ isOpen, onClose }) {
     };
   }, [editor, objects]);
 
-  React.useEffect(() => {
-    if (activeObject) {
-      console.log(activeObject);
-      const srcAttributeValue =
-        activeObject._element.getAttribute("src") === ""
-          ? activeObject._element.getAttribute("currentSrc")
-          : activeObject._element.getAttribute("src");
-      setImage(srcAttributeValue);
-    }
-  }, [activeObject]);
-
-  const [crop, setCrop] = React.useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = React.useState(1);
-
-  const [croppedArea, setCroppedArea] = React.useState(null);
-  const [ratio, setRatio] = React.useState(4 / 3);
-
-  const onCropComplete = (croppedArea, croppedAreaPixels) => {
-    setCroppedArea(croppedAreaPixels);
-  };
-
-  const onRatioChange = (e) => {
-    setRatio(e.target.value);
-  };
-
-  const [imageAfterCrop, setImageAfterCrop] = React.useState("");
-
   const idProduct = useAppSelector((state) => state?.token?.id);
 
-  const onCropDone = (imgcroppedArea) => {
-    const canvasFile = document.createElement("canvas");
-    canvasFile.width = imgcroppedArea.width;
-    canvasFile.height = imgcroppedArea.height;
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    if (aspect) {
+      const { width, height } = e.currentTarget;
+      setCrop(centerAspectCrop(aspect, width, height));
+    }
+  }
 
+  function onCropComplete() {
+    setLoading(true);
+    const image = imgRef.current;
+    if (!completedCrop || !image) {
+      setLoading(false);
+      throw new Error("Crop canvas does not exist");
+    }
+
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+
+    const canvasFile = document.createElement("canvas");
+    const width = Math.round(completedCrop.width * scaleX);
+    const height = Math.round(completedCrop.height * scaleY);
+    canvasFile.width = width;
+    canvasFile.height = height;
     const context = canvasFile.getContext("2d");
     var imageObj = new Image();
     imageObj.crossOrigin = "Anonymous";
-    imageObj.src = image;
-    imageObj.onload = async function () {
-      context?.drawImage(
-        imageObj,
-        imgcroppedArea.x,
-        imgcroppedArea.y,
-        imgcroppedArea.width,
-        imgcroppedArea.height,
-        0,
-        0,
-        imgcroppedArea.width,
-        imgcroppedArea.height
-      );
+    imageObj.src = imgSrc;
 
+    imageObj.onload = async function () {
+      const x = Math.round(completedCrop.x * scaleX);
+      const y = Math.round(completedCrop.y * scaleY);
+
+      if (!context) {
+        throw new Error("No 2d context");
+      }
+
+      context?.drawImage(imageObj, x, y, width, height, 0, 0, width, height);
       const dataUrl = canvasFile.toDataURL("image/png");
+
       const imageBlob: Blob = dataURLToBlob(dataUrl);
       const token = checkTokenCookie();
+
       const formData = new FormData();
-      formData.append("idproduct", idProduct);
-      formData.append("token", token);
-      formData.append("idlayer", activeObject.id);
-      formData.append("file", imageBlob);
-      console.log(formData);
+
+      if (token) {
+        formData.append("idproduct", idProduct);
+        formData.append("token", token);
+        formData.append("idlayer", activeObject.id);
+        formData.append("file", imageBlob);
+        console.log(formData);
+      }
 
       //Chuyen thay doi anh api
       const headers = {
@@ -867,6 +777,7 @@ export function ModalCropImage({ isOpen, onClose }) {
         config
       );
       console.log(response);
+
       if (response && response?.data?.code === 1) {
         const newOptions = {
           id: activeObject.id,
@@ -896,10 +807,10 @@ export function ModalCropImage({ isOpen, onClose }) {
           cropY: activeObject.cropY,
           image_svg: "",
           metadata: {
-            naturalWidth: imgcroppedArea.width,
-            naturalHeight: imgcroppedArea.height,
-            initialHeight: imgcroppedArea.height,
-            initialWidth: imgcroppedArea.width,
+            naturalWidth: width,
+            naturalHeight: height,
+            initialHeight: height,
+            initialWidth: width,
             lock: activeObject.metadata.lock,
             variable: activeObject.metadata.variable,
             variableLabel: activeObject.metadata.variableLabel,
@@ -922,66 +833,68 @@ export function ModalCropImage({ isOpen, onClose }) {
         });
       }
     };
-  };
+  }
 
   return (
-    <Modal
-      onClose={onClose}
-      closeable
-      isOpen={isOpen}
-      animate
-      autoFocus
-      size={SIZE.default}
-      role={ROLE.dialog}
-      overrides={{
-        Root: {
-          style: {
-            zIndex: 5,
-          },
-        },
-        Dialog: {
-          style: {
-            marginTop: 0,
-            marginLeft: 0,
-            marginRight: 0,
-            marginBottom: 0,
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            width: "500px",
-            height: "400px",
-          },
-        },
-      }}>
-      <ModalBody>
-        <Cropper
-          image={image}
-          crop={crop}
-          zoom={zoom}
-          aspect={ratio}
-          onCropChange={setCrop}
-          onCropComplete={onCropComplete}
-          onZoomChange={setZoom}
-          style={{
-            containerStyle: {
-              width: "90%",
-              height: "80%",
-              backgroundColor: "#fff",
-              marginRight: "auto",
-              marginLeft: "auto",
-              marginTop: "10px",
+    <>
+      <Modal
+        onClose={onClose}
+        closeable
+        isOpen={isOpen}
+        animate
+        autoFocus
+        size={SIZE.default}
+        role={ROLE.dialog}
+        overrides={{
+          Root: {
+            style: {
+              zIndex: 5,
             },
-          }}
-        />
-
-        <Button
-          style={{ position: "absolute", bottom: "0", margin: "10px 0px" }}
-          onClick={() => onCropDone(croppedArea)}>
-          Crop
-        </Button>
-      </ModalBody>
-    </Modal>
+          },
+          Dialog: {
+            style: {
+              marginTop: 0,
+              marginLeft: 0,
+              marginRight: 0,
+              marginBottom: 0,
+              borderTopRightRadius: 0,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              width: "auto",
+              height: "auto",
+            },
+          },
+        }}>
+        <ModalBody>
+          <div className="w-[300px] md:w-[400px] lg:w-[600px]">
+            <ReactCrop
+              crop={crop}
+              onChange={(_, percentCrop) => setCrop(_)}
+              onComplete={(c) => setCompletedCrop(c)}
+              aspect={aspect}
+              // minWidth={400}
+              minHeight={50}
+              // circularCrop
+            >
+              <img
+                alt="Crop me"
+                src={imgSrc}
+                ref={imgRef}
+                onLoad={onImageLoad}
+              />
+            </ReactCrop>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          {loading ? (
+            <Button isLoading>Loading</Button>
+          ) : (
+            <Button onClick={() => onCropComplete()}>Cắt ảnh</Button>
+          )}
+        </ModalFooter>
+      </Modal>
+    </>
   );
 }
 
