@@ -198,14 +198,23 @@ function CommonLayers() {
   }, [activeObject]);
   const handleSendToBack = () => {
     if (activeObject) {
-      const metadata = activeObject as { metadata?: { sort?: number } };
+      const metadata = activeObject as {
+        metadata?: {
+          backgroundLayer: number | undefined;
+          sort?: number;
+        };
+      };
       if (
         metadata.metadata &&
         metadata.metadata.sort &&
         metadata.metadata.backgroundLayer
       ) {
         toast.info("Bạn không thể di chuyển background layer!");
-      } else if (activeObject?.metadata?.sort <= 1) {
+      } else if (
+        metadata.metadata &&
+        metadata.metadata.sort &&
+        metadata.metadata.sort <= 1
+      ) {
         console.log("🚀 ~ handleSendToBack ~ activeObject:", activeObject);
         toast.info("Đã dưới nền ảnh, không thể chuyển xuống!", {
           position: "top-right",
