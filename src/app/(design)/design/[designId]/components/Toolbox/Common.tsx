@@ -136,8 +136,7 @@ export default function Common() {
             setState({ ...state, isGroup: false });
           }}
           size={SIZE.compact}
-          kind={KIND.tertiary}
-        >
+          kind={KIND.tertiary}>
           Hợp nhóm
         </Button>
       ) : state.isMultiple ? (
@@ -147,8 +146,7 @@ export default function Common() {
             // setState({ ...state, isGroup: true })
           }}
           size={SIZE.compact}
-          kind={KIND.tertiary}
-        >
+          kind={KIND.tertiary}>
           Nhóm
         </Button>
       ) : null}
@@ -161,13 +159,11 @@ export default function Common() {
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Nhân bản Layers đã chọn"
-      >
+        content="Nhân bản Layers đã chọn">
         <Button
           onClick={() => handleCopy()}
           size={SIZE.mini}
-          kind={KIND.tertiary}
-        >
+          kind={KIND.tertiary}>
           <DuplicateIcon size={22} />
         </Button>
       </StatefulTooltip>
@@ -175,13 +171,11 @@ export default function Common() {
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Xóa Layers đã chọn"
-      >
+        content="Xóa Layers đã chọn">
         <Button
           onClick={() => editor.objects.remove()}
           size={SIZE.mini}
-          kind={KIND.tertiary}
-        >
+          kind={KIND.tertiary}>
           <DeleteIcon size={24} />
         </Button>
       </StatefulTooltip>
@@ -204,11 +198,24 @@ function CommonLayers() {
   }, [activeObject]);
   const handleSendToBack = () => {
     if (activeObject) {
-      if (activeObject?.metadata?.backgroundLayer) {
-        toast.info('Bạn không thể di chuyển background layer!')
-      }
-      else if (activeObject?.metadata?.sort <= 1 ) {
-        console.log('🚀 ~ handleSendToBack ~ activeObject:', activeObject)
+      const metadata = activeObject as {
+        metadata?: {
+          backgroundLayer: number | undefined;
+          sort?: number;
+        };
+      };
+      if (
+        metadata.metadata &&
+        metadata.metadata.sort &&
+        metadata.metadata.backgroundLayer
+      ) {
+        toast.info("Bạn không thể di chuyển background layer!");
+      } else if (
+        metadata.metadata &&
+        metadata.metadata.sort &&
+        metadata.metadata.sort <= 1
+      ) {
+        console.log("🚀 ~ handleSendToBack ~ activeObject:", activeObject);
         toast.info("Đã dưới nền ảnh, không thể chuyển xuống!", {
           position: "top-right",
           autoClose: 2000,
@@ -232,27 +239,27 @@ function CommonLayers() {
           <Block
             display={"grid"}
             gridTemplateColumns={"1fr 1fr"}
-            gridGap={"8px"}
-          >
+            gridGap={"8px"}>
             <Button
               startEnhancer={<BringToFront size={24} />}
-              onClick={() => 
-                { editor.objects.bringForward()
-                }}
+              onClick={() => {
+                editor.objects.bringForward();
+              }}
               kind={KIND.tertiary}
-              size={SIZE.mini}
-            >
+              size={SIZE.mini}>
               Chuyển Layer đã chọn ra trước
             </Button>
             <Button
               startEnhancer={<SendToBack size={24} />}
               onClick={() => {
-                handleSendToBack()
-                console.log('🚀 ~ CommonLayers ~ editor.objects:', editor.objects)
+                handleSendToBack();
+                console.log(
+                  "🚀 ~ CommonLayers ~ editor.objects:",
+                  editor.objects
+                );
               }}
               kind={KIND.tertiary}
-              size={SIZE.mini}
-            >
+              size={SIZE.mini}>
               Chuyển Layer đã chọn ra sau
             </Button>
           </Block>
@@ -292,15 +299,13 @@ function CommonLayers() {
         </Block>
       )}
       returnFocus
-      autoFocus
-    >
+      autoFocus>
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Chỉnh thứ tự Layers"
-        >
+          content="Chỉnh thứ tự Layers">
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <LayersIcon size={19} />
           </Button>
@@ -321,62 +326,53 @@ function CommonAlign() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr"}
-          gridGap={"8px"}
-        >
+          gridGap={"8px"}>
           <Button
             onClick={() => editor.objects.alignLeft()}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <AlignLeft size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignCenter()}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <AlignCenter size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignRight()}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <AlignRight size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignTop()}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <AlignTop size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignMiddle()}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <AlignMiddle size={24} />
           </Button>
           <Button
             onClick={() => editor.objects.alignBottom()}
             kind={KIND.tertiary}
-            size={SIZE.mini}
-          >
+            size={SIZE.mini}>
             <AlignBottom size={24} />
           </Button>
         </Block>
       )}
       returnFocus
-      autoFocus
-    >
+      autoFocus>
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Chỉnh vị trí"
-        >
+          content="Chỉnh vị trí">
           <Button size={SIZE.mini} kind={KIND.tertiary}>
             <AlignCenter size={24} />
           </Button>
@@ -407,16 +403,14 @@ function LockUnlock() {
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Khóa Layers"
-        >
+          content="Khóa Layers">
           <Button
             onClick={() => {
               editor.objects.unlock();
               setState({ locked: false });
             }}
             size={SIZE.mini}
-            kind={KIND.tertiary}
-          >
+            kind={KIND.tertiary}>
             <UnlockedIcon size={24} />
           </Button>
         </StatefulTooltip>
@@ -425,16 +419,14 @@ function LockUnlock() {
           placement={PLACEMENT.bottom}
           showArrow={true}
           accessibilityType={"tooltip"}
-          content="Khóa Layers"
-        >
+          content="Khóa Layers">
           <Button
             onClick={() => {
               editor.objects.lock();
               setState({ locked: true });
             }}
             size={SIZE.mini}
-            kind={KIND.tertiary}
-          >
+            kind={KIND.tertiary}>
             <LockedIcon size={24} />
           </Button>
         </StatefulTooltip>
@@ -462,13 +454,11 @@ function VariableLayer() {
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Sửa biến"
-      >
+        content="Sửa biến">
         <Button
           onClick={() => objectMetadata(activeObject)}
           size={SIZE.mini}
-          kind={KIND.tertiary}
-        >
+          kind={KIND.tertiary}>
           <img
             src="../Panels/panelItems/setting.png"
             style={{ width: 20, height: 20 }}
