@@ -198,14 +198,16 @@ function CommonLayers() {
   }, [activeObject]);
   const handleSendToBack = () => {
     if (activeObject) {
-      console.log(activeObject);
       const metadata = activeObject as { metadata?: { sort?: number } };
       if (
         metadata.metadata &&
         metadata.metadata.sort &&
-        metadata.metadata.sort <= 1
+        metadata.metadata.backgroundLayer
       ) {
-        toast.error("Đã dưới nền ảnh, không thể chuyển xuống", {
+        toast.info("Bạn không thể di chuyển background layer!");
+      } else if (activeObject?.metadata?.sort <= 1) {
+        console.log("🚀 ~ handleSendToBack ~ activeObject:", activeObject);
+        toast.info("Đã dưới nền ảnh, không thể chuyển xuống!", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -216,7 +218,7 @@ function CommonLayers() {
           theme: "dark",
         });
       } else {
-        editor.objects.sendToBack();
+        editor.objects.sendBackwards();
       }
     }
   };
@@ -231,14 +233,22 @@ function CommonLayers() {
             gridGap={"8px"}>
             <Button
               startEnhancer={<BringToFront size={24} />}
-              onClick={() => editor.objects.bringToFront()}
+              onClick={() => {
+                editor.objects.bringForward();
+              }}
               kind={KIND.tertiary}
               size={SIZE.mini}>
               Chuyển Layer đã chọn ra trước
             </Button>
             <Button
               startEnhancer={<SendToBack size={24} />}
-              onClick={() => handleSendToBack()}
+              onClick={() => {
+                handleSendToBack();
+                console.log(
+                  "🚀 ~ CommonLayers ~ editor.objects:",
+                  editor.objects
+                );
+              }}
               kind={KIND.tertiary}
               size={SIZE.mini}>
               Chuyển Layer đã chọn ra sau

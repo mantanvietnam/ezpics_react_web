@@ -22,7 +22,6 @@ import {
   ModalButton,
   ROLE,
 } from "baseui/modal";
-import Cropper from "react-easy-crop";
 
 import ReactCrop, {
   centerCrop,
@@ -88,7 +87,6 @@ export default function Flip() {
   React.useEffect(() => {
     if (objects) {
       setLayerObjects(objects);
-      console.log(objects);
     }
   }, [objects]);
   // const token = useAppSelector((state) => state.token.token);
