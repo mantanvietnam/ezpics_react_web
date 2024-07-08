@@ -664,7 +664,7 @@ function TextLetterCase() {
     </StatefulPopover>
   );
 }
-function rotateAngle() {
+function RotateAngle() {
   const [state, setState] = React.useState<{ upper: boolean }>({
     upper: false,
   });

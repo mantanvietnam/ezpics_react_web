@@ -1,7 +1,7 @@
 import { Block } from "baseui/block"
 import Common from "./Common"
 
-export default function () {
+export default function Multiple() {
   return (
     <Block
       $style={{

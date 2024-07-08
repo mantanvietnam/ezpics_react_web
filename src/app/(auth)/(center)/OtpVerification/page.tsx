@@ -12,7 +12,12 @@ import { checkTokenCookie, getCookie } from '@/utils';
 import { useSession } from 'next-auth/react';
 import { clearAllCookies } from '../../../../utils/cookie';
 
-const OtpVerification = ({ phone }) => {
+interface PageProps {
+    phone: string; // hoặc kiểu dữ liệu chính xác của bạn
+  }
+
+const OtpVerification: React.FC<PageProps> = (props) => {
+    const { phone } = props;
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [isLoading, setIsLoading] = useState(false);
     const [isOtpSent, setIsOtpSent] = useState(false);

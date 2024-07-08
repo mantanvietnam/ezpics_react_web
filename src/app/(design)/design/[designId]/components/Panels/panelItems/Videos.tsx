@@ -57,7 +57,7 @@ const captureDuration = (video: HTMLVideoElement): Promise<number> => {
   });
 };
 
-export default function () {
+export default function Videos() {
   const editor = useEditor();
   const setIsSidebarOpen = useSetIsSidebarOpen();
   const [videos, setVideos] = React.useState<any[]>([]);

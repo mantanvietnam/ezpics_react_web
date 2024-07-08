@@ -29,10 +29,6 @@ export default function useOnClickOutside(
   handler: Handler | null,
   { document = currentDocument } = {}
 ) {
-  if (typeof document === "undefined") {
-    return;
-  }
-
   const handlerRef = useLatest(handler);
 
   useEffect(() => {
@@ -53,13 +49,13 @@ export default function useOnClickOutside(
     };
 
     events.forEach((event) => {
-      document.addEventListener(event, listener, getAddOptions(event));
+      document?.addEventListener(event, listener, getAddOptions(event));
     });
 
     return () => {
       events.forEach((event) => {
-        document.removeEventListener(event, listener);
+        document?.removeEventListener(event, listener);
       });
     };
-  }, [!handler]);
+  }, [handler, document, handlerRef, ref]);
 }

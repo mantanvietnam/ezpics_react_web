@@ -8,7 +8,7 @@ import { useActiveObject, useEditor } from "@layerhub-io/react";
 import { Button, SIZE, KIND } from "baseui/button";
 import OpacityIcon from "@/components/Icons/Opacity.";
 
-export default function () {
+export default function Opacity() {
   const editor = useEditor();
   const [state, setState] = React.useState({ opacity: 1 });
   const activeObject = useActiveObject() as Required<ILayer>;

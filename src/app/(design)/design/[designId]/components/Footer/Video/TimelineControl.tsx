@@ -5,7 +5,7 @@ import Pause from "@/components/Icons/Pause";
 import PlaySolid from "@/components/Icons/PlaySolid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 
-export default function () {
+export default function TimelineControl() {
   const { pause, status } = useTimer();
   const { setDisplayPlayback } = useDesignEditorContext();
 

@@ -5,7 +5,7 @@ import { PLACEMENT, StatefulTooltip } from "baseui/tooltip";
 import { Button, SIZE, KIND } from "baseui/button";
 import UnlockedIcon from "@/components/Icons/Unlocked";
 
-export default function () {
+export default function Locked() {
   const editor = useEditor();
 
   return (

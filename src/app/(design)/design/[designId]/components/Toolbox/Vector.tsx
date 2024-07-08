@@ -7,7 +7,7 @@ import { groupBy } from "lodash"
 import { PLACEMENT, StatefulPopover } from "baseui/popover"
 import Flip from "./Shared/Flip"
 
-export default function () {
+export default function Vector() {
   const [state, setState] = React.useState<any>({ colors: [], colorMap: {} })
   const vectorPaths = React.useRef<any>({})
   const activeObject = useActiveObject() as any

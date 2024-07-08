@@ -19,7 +19,7 @@ interface Options {
   zoomRatio: number;
 }
 
-export default function () {
+export default function Common() {
   const zoomMin = 10;
   const zoomMax = 240;
   const [options, setOptions] = React.useState<Options>({

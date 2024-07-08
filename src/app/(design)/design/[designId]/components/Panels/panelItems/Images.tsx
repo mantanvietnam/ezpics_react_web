@@ -7,7 +7,7 @@ import { images } from "@/constants/mock-data";
 import { useEditor } from "@layerhub-io/react";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 
-export default function () {
+export default function Images() {
   const editor = useEditor();
   const setIsSidebarOpen = useSetIsSidebarOpen();
 

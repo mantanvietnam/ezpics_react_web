@@ -42,7 +42,7 @@ interface TimelineItemProps {
   isCurrentScene: boolean;
 }
 
-export default function ({
+export default function TimelineItem({
   id,
   preview,
   frame,
