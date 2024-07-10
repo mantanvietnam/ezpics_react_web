@@ -32,4 +32,5 @@ export interface IDesign {
   scenes: any[];
   preview: string;
   metadata: {};
+
 }

@@ -10,7 +10,7 @@ interface ComponentProps {
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
 }
-export default function ({ isOpen, setIsOpen }: ComponentProps) {
+export default function Preview({ isOpen, setIsOpen }: ComponentProps) {
   const editorType = useEditorType();
   return (
     <Modal

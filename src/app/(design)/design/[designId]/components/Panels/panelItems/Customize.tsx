@@ -85,9 +85,9 @@ export default function Customize() {
   const [selectedOptionDisplay, setSelectedOptionDisplay] = useState("");
 
   const [selectedFilesBackground, setSelectedFilesBackground] =
-    useState<FileList | null>(null);
+    useState<File | null>(null);
   const [selectedOptionStorage, setSelectedOptionStorage] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File | null>(null);
   const [selectedFilesSecond, setSelectedFilesSecond] =
     useState<FileList | null>(null);
   const [listWarehouse, setListWarehouse] = useState<any>([]);
@@ -180,8 +180,13 @@ export default function Customize() {
   }, []);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategoryId(event.target.value);
+    const value = parseInt(event.target.value, 10); // Chuyển đổi giá trị sang kiểu number với cơ số 10
+    if (!isNaN(value)) {
+      // Kiểm tra nếu giá trị chuyển đổi hợp lệ
+      setCategoryId(value);
+    }
   };
+
   const handleChange = (type: string, value: any) => {
     setState({ ...state, [type]: value });
     changeBackgroundColor(value);
@@ -231,7 +236,7 @@ export default function Customize() {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const files = event.target.files!;
-    const file = files[0];
+    const file: File = files[0];
 
     if (!file) {
       setSelectedFilesBackground(null);
@@ -248,7 +253,7 @@ export default function Customize() {
   };
   const handleChangeInputFile = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files!;
-    const file = files[0];
+    const file: File = files[0];
 
     if (!file) {
       setSelectedFiles(null);
@@ -285,11 +290,11 @@ export default function Customize() {
 
           try {
             const formData = new FormData();
-            if (selectedFiles) {
+            if (selectedFilesBackground) {
               formData.append("background", selectedFilesBackground);
             }
 
-            if (selectedFilesBackground) {
+            if (selectedFiles) {
               formData.append("thumbnail", selectedFiles);
             }
             formData.append("name", name);
@@ -297,10 +302,16 @@ export default function Customize() {
             formData.append("price", sessPrice.toString());
             formData.append("category_id", categoryId.toString());
             formData.append("warehouse_id", checkedItems.join(","));
-            formData.append("status", selectedOption === "1" ? 1 : 0);
-            formData.append("display", selectedOptionDisplay !== "1" ? 0 : 1);
+            formData.append("status", selectedOption === "1" ? "1" : "0");
+            formData.append(
+              "display",
+              selectedOptionDisplay !== "1" ? "0" : "1"
+            );
             formData.append("description", description);
-            formData.append("token", token);
+            if (token) {
+              formData.append("token", token);
+            }
+
             formData.append("idProduct", idProduct.toString());
 
             const response = await axios.post(
@@ -359,9 +370,11 @@ export default function Customize() {
             formData.append("price", sessPrice.toString());
             formData.append("category_id", categoryId.toString());
             formData.append("warehouse_id", checkedItems.join(","));
-            formData.append("status", selectedOption === "1" ? 1 : 0);
+            formData.append("status", selectedOption === "1" ? "1" : "0");
             formData.append("description", description);
-            formData.append("token", token);
+            if (token) {
+              formData.append("token", token);
+            }
             formData.append("idProduct", idProduct.toString());
 
             const response = await axios.post(
@@ -423,9 +436,11 @@ export default function Customize() {
         try {
           const formData = new FormData();
 
-          formData.append("name", name);
-          formData.append("description", description);
-          formData.append("token", token);
+          if (token) {
+            formData.append("name", name);
+            formData.append("description", description);
+            formData.append("token", token);
+          }
 
           const response = await axios.post(
             `${network}/updateProductAPI`,
@@ -796,7 +811,7 @@ export default function Customize() {
                 width: 40,
                 height: 40,
               }}
-              src={ezlogo}
+              src="/images/EZPICS.png"
             />
           </div>
         </div>
@@ -848,14 +863,14 @@ function ResizeTemplate() {
     }
     setIsOpen(false);
   };
-  const isEnabled =
-    // @ts-ignore
-    activeKey === "0" &&
-    selectedFrame.id !== 0 &&
-    // @ts-ignore
-    activeKey === "1" &&
-    !!parseInt(desiredFrame?.width) &&
-    !!parseInt(desiredFrame?.height);
+  // const isEnabled =
+  //   // @ts-ignore
+  //   activeKey === "0" &&
+  //   selectedFrame.id !== 0 &&
+  //   // @ts-ignore
+  //   activeKey === "1" &&
+  //   !!parseInt(desiredFrame?.width) &&
+  //   !!parseInt(desiredFrame?.height);
 
   return (
     <>
@@ -918,7 +933,7 @@ function ResizeTemplate() {
             }}
             activeKey={activeKey}
             onChange={({ activeKey }) => {
-              setActiveKey(activeKey);
+              setActiveKey(activeKey as string | number);
             }}>
             <Tab title="Kích thước chọn">
               <Block $style={{ width: "100%", height: "400px" }}>

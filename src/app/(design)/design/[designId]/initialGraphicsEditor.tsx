@@ -290,10 +290,10 @@ function GraphicEditor() {
           angle: 0,
           stroke: null,
           strokeWidth: 0,
-          // left: 0,
-          // top: 0,
-          // width: data.width,
-          // height: data.height,
+          left: 0,
+          top: 0,
+          width: data.width,
+          height: data.height,
           opacity: 1,
           originX: "left",
           originY: "top",
@@ -308,10 +308,16 @@ function GraphicEditor() {
           skewY: 0,
           visible: true,
           shadow: null,
+          charSpacing: 0,
           src: data.thumn,
           cropX: 0,
           cropY: 0,
           image_svg: "",
+          fontFamily: "",
+          fontSize: 0,
+          lineHeight: 0,
+          text: "",
+          textAlign: "",
           metadata: {
             brightness: 20,
             naturalWidth: 0,
@@ -367,7 +373,7 @@ function GraphicEditor() {
             width:
               (parseInt(detail.content.width.replace(/vw/g, "")) * data.width) /
               100,
-            // height: null,
+            height: null,
             // fontFamily: detail.content.font,
             fontFamily: detail.content.font,
             fontSize:
@@ -380,6 +386,11 @@ function GraphicEditor() {
             // fontURL: "https://apis.ezpics.vn/upload/admin/files/UTM%20AvoBold.ttf",
             // fontURLInitial
             metadata: {
+              brightness: detail.content.brightness,
+              naturalWidth: detail.content.naturalWidth,
+              naturalHeight: detail.content.naturalHeight,
+              initialHeight: detail.content.initialHeight,
+              initialWidth: detail.content.initialWidth,
               page: detail.content.page,
               lock: detail.content.lock === 0 ? false : true,
               variable: detail.content.variable,
@@ -387,11 +398,21 @@ function GraphicEditor() {
               uppercase: detail.content.typeShowTextVariable,
               sort: detail.content.sort,
             },
+            scaleX: 0,
+            scaleY: 0,
+            brightness: detail.content.brightness, // Bổ sung thêm thuộc tính brightness
+            borderRadius: 0, // Bổ sung thêm thuộc tính borderRadius
+            src: detail.content.src, // Bổ sung thêm thuộc tính src
+            cropX: 0, // Bổ sung thêm thuộc tính cropX
+            cropY: 0, // Bổ sung thêm thuộc tính cropY
+            image_svg: "",
           });
         } else if (detail.content.type == "image") {
           // getMeta(detail.content.banner).then((img) => {
           //   if (img.naturalHeight && img.naturalWidth) {
           // console.log(detail);
+          let stringMerged;
+          stringMerged = detail.content.text.replace(/<br\s*\/>/g, "\n");
 
           dataString.layers.push({
             id: detail.id,
@@ -428,7 +449,6 @@ function GraphicEditor() {
             image_svg: "",
             metadata: {
               page: detail.content.page,
-
               naturalWidth: detail.content.naturalWidth,
               naturalHeight: detail.content.naturalHeight,
               initialHeight: detail.content.height,
@@ -439,6 +459,21 @@ function GraphicEditor() {
               brightness: 0,
               sort: detail.sort,
             },
+            brightness: detail.content.brightness, // Bổ sung thêm thuộc tính brightness
+            borderRadius: 0, // Bổ sung thêm thuộc tính borderRadius
+
+            width:
+              (parseInt(detail.content.width.replace(/vw/g, "")) * data.width) /
+              100,
+            height: null,
+            charSpacing: 0,
+            fontFamily: detail.content.font,
+            fontSize:
+              (parseInt(detail.content.size.replace(/vw/g, "")) * data.width) /
+              100,
+            lineHeight: parseInt(detail.content.gianchu),
+            text: stringMerged,
+            textAlign: detail.content.text_align,
           });
         }
       });
@@ -602,8 +637,7 @@ function GraphicEditor() {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <img
               src="../../../assets/error.jpg"
               alt="lỗi"
@@ -615,8 +649,7 @@ function GraphicEditor() {
               style={{
                 color: "black",
                 fontFamily: "Arial, Helvetica, sans-serif",
-              }}
-            >
+              }}>
               Bạn không có quyền truy cập, hãy thử lại
             </h2>
           </div>
@@ -629,8 +662,7 @@ function GraphicEditor() {
               backgroundColor: "rgba(0,0,0,0.9)",
               position: "absolute",
               zIndex: 20000000000,
-            }}
-          >
+            }}>
             <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
               <div className="ldio-4qpid53rus92">
                 <div></div>

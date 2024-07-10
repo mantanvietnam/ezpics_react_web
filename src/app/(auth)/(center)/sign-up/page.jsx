@@ -121,7 +121,7 @@ const Sign_up = () => {
           <div className="box-right">
             <h2 className="title-sign">Ezpics - Dùng là thích! 👋</h2>
             <div className="group-input">
-              <p for="">Tên</p>
+              <p htmlFor="">Tên</p>
               <input
                 type="text"
                 placeholder="Tên"
@@ -134,7 +134,7 @@ const Sign_up = () => {
               )}
             </div>
             <div className="group-input">
-              <p for="">Số điện thoại</p>
+              <p htmlFor="">Số điện thoại</p>
               <input
                 type="text"
                 placeholder="Số điện thoại"
@@ -147,7 +147,7 @@ const Sign_up = () => {
               )}
             </div>
             <div className="group-input">
-              <p for="">Email</p>
+              <p htmlFor="">Email</p>
               <input
                 type="text"
                 placeholder="Email"
@@ -161,7 +161,7 @@ const Sign_up = () => {
             </div>
             <div className="group-input-pasword">
               <div className="group-input">
-                <p for="">Mật khẩu</p>
+                <p htmlFor="">Mật khẩu</p>
                 <input
                   type="password"
                   placeholder="Mật khẩu"
@@ -176,7 +176,7 @@ const Sign_up = () => {
                 )}
               </div>
               <div className="group-input">
-                <p for="">Nhập lại mật khẩu</p>
+                <p htmlFor="">Nhập lại mật khẩu</p>
                 <input
                   type="password"
                   placeholder="Nhập lại mật khẩu"
@@ -192,7 +192,7 @@ const Sign_up = () => {
               </div>
             </div>
             <div className="group-input">
-              <p for="">Mã giới thiệu</p>
+              <p htmlFor="">Mã giới thiệu</p>
               <input
                 type="text"
                 placeholder="Mã giới thiệu"

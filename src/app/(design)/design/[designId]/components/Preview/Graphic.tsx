@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Block } from "baseui/block";
 import { useEditor } from "@layerhub-io/react";

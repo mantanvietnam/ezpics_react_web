@@ -9,7 +9,7 @@ import {
 } from "@/app/(design)/design/[designId]/utils/scenes";
 import { useTimer } from "@layerhub-io/use-timer";
 
-export default function () {
+export default function TimelineContextMenu() {
   const { time, setTime } = useTimer();
   const {
     scenes,
