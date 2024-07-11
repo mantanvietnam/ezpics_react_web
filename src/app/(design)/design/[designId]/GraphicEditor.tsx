@@ -218,7 +218,7 @@ function GraphicEditor() {
         dataString.content.push({
           id: detail.id,
           name: "StaticText",
-          angle: 0,
+          angle: parseInt(detail.content.rotate),
           stroke: null,
           strokeWidth: 0,
           left: (detail.content.postion_left / 100) * data.width,
@@ -268,7 +268,7 @@ function GraphicEditor() {
         dataString.content.push({
           id: detail.id,
           name: "StaticImage",
-          angle: 0,
+          angle: parseInt(detail.content.rotate),
           stroke: null,
           strokeWidth: 0,
           left: (detail.content.postion_left / 100) * data.width,
