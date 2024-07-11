@@ -210,6 +210,8 @@ export default function Navbar() {
       preview: "",
     };
 
+    const converLayer = () => {};
+
     const allLayers = graphicTemplate.scenes.map((scene: any) => scene.layers);
     const newDesign = generateToServer({
       frame: currentDesign.frame,
@@ -264,41 +266,6 @@ export default function Navbar() {
 
     borderRadius: "15px",
   };
-  // const parsePresentationJSON = () => {
-  //   const currentScene = editor.scene.exportToJSON();
-  //   console.log(currentScene);
-  //   const updatedScenes = scenes.map((scn) => {
-  //     if (scn.id === currentScene.id) {
-  //       return {
-  //         id: currentScene.id,
-  //         duration: 5000,
-  //         layers: currentScene.layers,
-  //         name: currentScene.name,
-  //       };
-  //     }
-  //     return {
-  //       id: scn.id,
-  //       duration: 5000,
-  //       layers: scn.layers,
-  //       name: scn.name,
-  //     };
-  //   });
-
-  //   if (currentDesign) {
-  //     const presentationTemplate: IDesign = {
-  //       id: currentDesign.id,
-  //       type: "PRESENTATION",
-  //       name: currentDesign.name,
-  //       frame: currentDesign.frame,
-  //       scenes: updatedScenes,
-  //       metadata: {},
-  //       preview: "",
-  //     };
-  //     makeDownload(presentationTemplate);
-  //   } else {
-  //     console.log("NO CURRENT DESIGN");
-  //   }
-  // };
   function checkTokenCookie() {
     var allCookies = document.cookie;
 
@@ -356,8 +323,6 @@ export default function Navbar() {
         });
         setLoading(false);
       }
-      // console.log(res);
-      // console.log(generateToServer(template));
     } catch (error) {
       toast.error("Lưu mẫu thiết kế thất bại !! 🦄", {
         position: "top-left",
@@ -373,39 +338,6 @@ export default function Navbar() {
       setLoading(false);
     }
   };
-  // const parseVideoJSON = () => {
-  //   const currentScene = editor.scene.exportToJSON();
-  //   const updatedScenes = scenes.map((scn) => {
-  //     if (scn.id === currentScene.id) {
-  //       return {
-  //         id: scn.id,
-  //         duration: scn.duration,
-  //         layers: currentScene.layers,
-  //         name: currentScene.name ? currentScene.name : "",
-  //       };
-  //     }
-  //     return {
-  //       id: scn.id,
-  //       duration: scn.duration,
-  //       layers: scn.layers,
-  //       name: scn.name ? scn.name : "",
-  //     };
-  //   });
-  //   if (currentDesign) {
-  //     const videoTemplate: IDesign = {
-  //       id: currentDesign.id,
-  //       type: "VIDEO",
-  //       name: currentDesign.name,
-  //       frame: currentDesign.frame,
-  //       scenes: updatedScenes,
-  //       metadata: {},
-  //       preview: "",
-  //     };
-  //     makeDownload(videoTemplate);
-  //   } else {
-  //     console.log("NO CURRENT DESIGN");
-  //   }
-  // };
 
   const makeDownload = (data: Object) => {
     const dataStr =

@@ -12,7 +12,8 @@ import { useAppSelector } from "@/hooks/hook";
 import useAppContext from "@/hooks/useAppContext";
 import "../../Preview/newloading.css";
 import NextImage from "next/image";
-
+import ezlogo from "./EZPICS (converted)-03.png";
+import Image from "next/image";
 interface Category {
   id: string;
   name: string;
@@ -197,13 +198,15 @@ export default function Graphic() {
             fontWeight: 500,
             justifyContent: "space-between",
             padding: "0 1.5rem",
-          }}>
+          }}
+        >
           <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
             Thành phần
           </h4>
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}>
+            $style={{ cursor: "pointer", display: "flex" }}
+          >
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -255,7 +258,8 @@ function CategorySection({
           justifyContent: "space-between",
           alignItems: "center",
           padding: "10px 0",
-        }}>
+        }}
+      >
         <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>{title}</h4>
         <button
           style={{
@@ -264,7 +268,8 @@ function CategorySection({
             color: "rgb(0, 95, 198)",
             cursor: "pointer",
           }}
-          onClick={() => setShowAll(!showAll)}>
+          onClick={() => setShowAll(!showAll)}
+        >
           {showAll ? "Thu gọn" : "Xem thêm"}
         </button>
       </div>
@@ -273,7 +278,8 @@ function CategorySection({
           display: "grid",
           gap: "0.5rem",
           gridTemplateColumns: "1fr 1fr",
-        }}>
+        }}
+      >
         {displayItems.map((item, index) => (
           <ImageItem
             key={index}
@@ -302,7 +308,8 @@ function ImageItem({ preview, onClick }: ImageItemProps) {
         cursor: "pointer",
         borderRadius: "8px",
         overflow: "hidden",
-      })}>
+      })}
+    >
       <div
         className={css({
           position: "absolute",
@@ -334,7 +341,8 @@ function LoadingOverlay() {
         backgroundColor: "rgba(0,0,0,0.7)",
         position: "absolute",
         zIndex: 20000000000,
-      }}>
+      }}
+    >
       <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
         <div className="ldio-4qpid53rus9">
           <div></div>
@@ -342,11 +350,11 @@ function LoadingOverlay() {
             <div></div>
           </div>
         </div>
-        <NextImage
+        <Image
           style={{ position: "absolute", top: "12%", left: "16%" }}
           height={40}
           width={40}
-          src="/images/EZPICS.png"
+          src={ezlogo}
           alt=""
         />
       </div>

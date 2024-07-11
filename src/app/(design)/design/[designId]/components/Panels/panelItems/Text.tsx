@@ -13,6 +13,7 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 import { images2 } from "../../../../../../../../public/images";
+import Image from "next/image";
 // import { checkTokenCookie } from "@/utils";
 // import { margin } from '@mui/system';
 
@@ -351,14 +352,15 @@ export default function Text() {
                 <div></div>
               </div>
             </div>
-            <img
+            <Image
               style={{
                 position: "absolute",
                 top: "12%",
                 left: "16%",
-                width: 40,
-                height: 40,
               }}
+              alt=""
+              width={40}
+              height={40}
               src={images2.logo}
             />
           </div>

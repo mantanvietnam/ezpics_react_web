@@ -22,6 +22,8 @@ import "@/components/Preview/newestLoading.css";
 import useAppContext from "@/hooks/useAppContext";
 import { REPLACE_TYPE_USER } from "@/redux/slices/type/typeSlice";
 import { REPLACE_PRO_USER } from "@/redux/slices/token/reducers";
+import ezlogo from "./EZPICS.png";
+import Image from "next/image";
 
 function GraphicEditor() {
   // const location = useLocation();
@@ -32,7 +34,6 @@ function GraphicEditor() {
   const [commonFonts, setCommonFonts] = React.useState<any[]>([]);
   const { setActiveSubMenu } = useAppContext();
   const typeUser = useAppSelector((state) => state?.typeUser?.typeUser);
-  const [modalUserSeries, setModalUserSeries] = React.useState<boolean>(false);
   function checkTokenCookie() {
     var allCookies = document.cookie;
 
@@ -764,16 +765,17 @@ function GraphicEditor() {
                 <div>
                   <div></div>
                 </div>
-                <img
+                <Image
                   style={{
                     position: "absolute",
                     top: "12%",
                     left: "16%",
                   }}
-                  // width={}
-                  // height={ }
+                  priority={true}
+                  width={40}
+                  height={40}
                   alt=""
-                  src="./EZPICS (converted)-03.png"
+                  src={ezlogo}
                 />
               </div>
             </div>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useActiveObject, useEditor, useObjects } from "@layerhub-io/react";
 import { Block } from "baseui/block";
 import { Input } from "baseui/input";
@@ -31,6 +31,7 @@ import ReactCrop, {
   convertToPixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import NextImage from "next/image";
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
@@ -68,6 +69,7 @@ export default function Flip() {
   console.log("🚀 ~ Flip ~ activeObject:", activeObject);
   const [state, setState] = React.useState({ flipX: false, flipY: false });
   const [stated, setStated] = React.useState({ opacity: 1 });
+  const [border, setStatedBorder] = React.useState(0);
   const networkAPI = useAppSelector((state) => state.network.ipv4Address);
   const [angle, setAngle] = React.useState(0);
 
@@ -127,10 +129,7 @@ export default function Flip() {
       }
     };
   }, [editor, objects]);
-  // Gọi hàm với URL blob và tên khóa tùy chọn
-  // var imageUrl = 'URL_CUA_IMAGE_BLOB';
-  // var storageKey = 'ten_khoa_luu';
-  // saveBlobImageToLocal(imageUrl, storageKey);
+
   const proUser = useAppSelector((state) => state.token.proUser);
 
   const flipHorizontally = React.useCallback(async () => {
@@ -221,6 +220,7 @@ export default function Flip() {
               src: response.data?.linkOnline,
               cropX: activeObject.cropX,
               cropY: activeObject.cropY,
+              border: border,
               image_svg: "",
               metadata: {
                 naturalWidth: activeObject.metadata.naturalWidth,
@@ -268,25 +268,9 @@ export default function Flip() {
   };
   const [sliderValue, setSliderValue] = React.useState(0.00000005);
 
-  // const handleSliderChange = (event: Event, newValue: number | number[]) => {
-  //   setSliderValue(newValue as number);
-  //   console.log(newValue);
-  //   editor.objects.update({ scaleX: newValue, scaleY: newValue });
-  // };
   const flipVertically = React.useCallback(async () => {
     editor.objects.update({ flipY: !state.flipY });
     setState({ ...state, flipY: !state.flipY });
-    // try {
-    //   const response = await axios.post('https://apis.ezpics.vn/apis/updateLayerAPI', {
-    //     idproduct: idProduct,
-    //     token: token1,
-    //     field: 'lat_anh',
-    //     value: !state.flipY ? 1 : 0,
-    //     idlayer: `${activeObject.id}`
-    //   })
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }, [editor, state]);
 
   const changingBrightness = React.useCallback(() => {
@@ -297,6 +281,14 @@ export default function Flip() {
     (value: number) => {
       setStated({ opacity: value });
       editor.objects.update({ opacity: value / 100 });
+    },
+    [editor]
+  );
+  const onChangeBorder = React.useCallback(
+    (value: number) => {
+      setStatedBorder(value);
+      editor.objects.update({ opacity: value / 100 });
+      setState({ ...state, flipY: !state.flipY });
     },
     [editor]
   );
@@ -359,6 +351,15 @@ export default function Flip() {
 
   //Crop image modal
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalRadiusOpen, setIsModalRadiusOpen] = React.useState(false);
+
+  const openModalRadius = () => {
+    setIsModalRadiusOpen(true);
+  };
+
+  const closeModalRadius = () => {
+    setIsModalRadiusOpen(false);
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -375,44 +376,50 @@ export default function Flip() {
           <StatefulTooltip
             placement={PLACEMENT.bottom}
             showArrow={true}
-            accessibilityType={"tooltip"}>
+            accessibilityType={"tooltip"}
+          >
             <Button
               size={SIZE.compact}
               kind={KIND.tertiary}
-              onClick={flipVertically}>
+              onClick={flipVertically}
+            >
               Lật ảnh dọc
             </Button>
           </StatefulTooltip>
           <StatefulTooltip
             placement={PLACEMENT.bottom}
             showArrow={true}
-            accessibilityType={"tooltip"}>
+            accessibilityType={"tooltip"}
+          >
             <Button
               size={SIZE.compact}
               kind={KIND.tertiary}
-              onClick={flipHorizontally}>
+              onClick={flipHorizontally}
+            >
               Lật ảnh ngang
             </Button>
           </StatefulTooltip>
           <StatefulTooltip
             placement={PLACEMENT.bottom}
             showArrow={true}
-            accessibilityType={"tooltip"}>
+            accessibilityType={"tooltip"}
+          >
             <Button
               size={SIZE.compact}
               kind={KIND.tertiary}
               onClick={() => removeBackground("storageKey")}
-              style={{ paddingRight: 5 }}>
+              style={{ paddingRight: 5 }}
+            >
               Xóa nền
-              <img
+              <NextImage
                 src="/assets/premium.png"
                 style={{
                   resize: "block",
                   marginBottom: "20%",
                   marginLeft: "3",
-                  width: "15px",
-                  height: "15px",
                 }}
+                width={15}
+                height={15}
                 alt=""
               />
             </Button>
@@ -425,13 +432,15 @@ export default function Flip() {
               <Block
                 width={"200px"}
                 backgroundColor={"#ffffff"}
-                padding={"20px"}>
+                padding={"20px"}
+              >
                 <Block
                   $style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                  }}>
+                  }}
+                >
                   <Block $style={{ fontSize: "14px" }}>Bo góc</Block>
                   <Block width={"52px"}>
                     <Input
@@ -459,7 +468,7 @@ export default function Flip() {
                       }}
                       size={SIZE.mini}
                       onChange={() => {}}
-                      value={Math.round(stated.opacity)}
+                      value={Math.round(border)}
                     />
                   </Block>
                 </Block>
@@ -486,13 +495,14 @@ export default function Flip() {
                     min={0}
                     max={100}
                     marks={false}
-                    value={[stated.opacity]}
+                    value={[border]}
                     // @ts-ignore
-                    onChange={({ value }) => onChange(value)}
+                    onChange={({ value }) => onChangeBorder(value)}
                   />
                 </Block>
               </Block>
-            )}>
+            )}
+          >
             <Button kind={KIND.tertiary} size={SIZE.compact}>
               Bo góc
             </Button>
@@ -505,13 +515,15 @@ export default function Flip() {
               <Block
                 width={"200px"}
                 backgroundColor={"#ffffff"}
-                padding={"20px"}>
+                padding={"20px"}
+              >
                 <Block
                   $style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                  }}>
+                  }}
+                >
                   <Block $style={{ fontSize: "14px" }}>Độ sáng</Block>
                   <Block width={"52px"}>
                     <Input
@@ -572,7 +584,8 @@ export default function Flip() {
                   />
                 </Block>
               </Block>
-            )}>
+            )}
+          >
             <Button kind={KIND.tertiary} size={SIZE.compact}>
               Độ sáng
             </Button>
@@ -583,11 +596,13 @@ export default function Flip() {
           <StatefulTooltip
             placement={PLACEMENT.bottom}
             showArrow={true}
-            accessibilityType={"tooltip"}>
+            accessibilityType={"tooltip"}
+          >
             <Button
               size={SIZE.compact}
               kind={KIND.tertiary}
-              onClick={openModal}>
+              onClick={openModal}
+            >
               Cắt ảnh
             </Button>
           </StatefulTooltip>
@@ -756,7 +771,6 @@ export function ModalImageCrop({ isOpen, onClose }: ModalImageCropProps) {
         formData.append("file", imageBlob);
         console.log(formData);
       }
-
       //Chuyen thay doi anh api
       const headers = {
         "Access-Control-Allow-Origin": "*",
@@ -863,7 +877,8 @@ export function ModalImageCrop({ isOpen, onClose }: ModalImageCropProps) {
               height: "auto",
             },
           },
-        }}>
+        }}
+      >
         <ModalBody>
           <div className="w-[300px] md:w-[400px] lg:w-[600px]">
             <ReactCrop
@@ -919,58 +934,27 @@ export function TransitionElement() {
           backgroundColor={"#ffffff"}
           display={"grid"}
           gridTemplateColumns={"1fr 1fr 1fr 1fr"}
-          gridGap={"8px"}>
-          <Button
-            // isSelected={state.align === TEXT_ALIGNS[0]}
-            // onClick={() => {
-            //   // @ts-ignore
-            //   editor.objects.update({ textAlign: TEXT_ALIGNS[0] });
-            //   setState({ align: TEXT_ALIGNS[0] });
-            // }}
-            kind={KIND.tertiary}
-            size={SIZE.mini}>
+          gridGap={"8px"}
+        >
+          <Button kind={KIND.tertiary} size={SIZE.mini}>
             <img
               src="../../../../../../assets/moveleft.png"
               style={{ width: "15px", height: "15px" }}
             />
           </Button>
-          <Button
-            // isSelected={state.align === TEXT_ALIGNS[1]}
-            // onClick={() => {
-            //   // @ts-ignore
-            //   editor.objects.update({ textAlign: TEXT_ALIGNS[1] });
-            //   setState({ align: TEXT_ALIGNS[1] });
-            // }}
-            kind={KIND.tertiary}
-            size={SIZE.mini}>
+          <Button kind={KIND.tertiary} size={SIZE.mini}>
             <img
               src="../../../../../../assets/moveright.png"
               style={{ width: "30px", height: "auto" }}
             />
           </Button>
-          <Button
-            // isSelected={state.align === TEXT_ALIGNS[2]}
-            // onClick={() => {
-            //   // @ts-ignore
-            //   editor.objects.update({ textAlign: TEXT_ALIGNS[2] });
-            //   setState({ align: TEXT_ALIGNS[2] });
-            // }}
-            kind={KIND.tertiary}
-            size={SIZE.mini}>
+          <Button kind={KIND.tertiary} size={SIZE.mini}>
             <img
               src="../../../../../../assets/movebottom.png"
               style={{ width: "15px", height: "auto" }}
             />
           </Button>
-          <Button
-            // isSelected={state.align === TEXT_ALIGNS[3]}
-            // onClick={() => {
-            //   // @ts-ignore
-            //   editor.objects.update({ textAlign: TEXT_ALIGNS[3] });
-            //   setState({ align: TEXT_ALIGNS[3] });
-            // }}
-            kind={KIND.tertiary}
-            size={SIZE.mini}>
+          <Button kind={KIND.tertiary} size={SIZE.mini}>
             <img
               src="../../../../../../assets/movetop.png"
               style={{ width: "17px", height: "auto" }}
@@ -979,12 +963,14 @@ export function TransitionElement() {
         </Block>
       )}
       returnFocus
-      autoFocus>
+      autoFocus
+    >
       <Block>
         <StatefulTooltip
           placement={PLACEMENT.bottom}
           showArrow={true}
-          accessibilityType={"tooltip"}>
+          accessibilityType={"tooltip"}
+        >
           <Button
             size={SIZE.compact}
             kind={KIND.tertiary}

@@ -32,7 +32,8 @@ export default function CanvasComponent() {
         display: "flex",
         position: "relative",
         overflow: "auto",
-      }}>
+      }}
+    >
       {displayPlayback && <Playback />}
       <Canvas
         config={{

@@ -21,7 +21,7 @@ import {
 } from "../../../../../../../hooks/hook";
 import { REPLACE_font } from "../../../../../../../redux/slices/font/fontSlice";
 import Image from "next/image";
-import logo from "../../../../../../../../public/images/logo.png";
+import ezlogo from "./EZPICS (converted)-03.png";
 import { FontItem } from "@/interfaces/common";
 
 export default function FontSelector() {
@@ -159,16 +159,19 @@ export default function FontSelector() {
             fontWeight: 500,
             justifyContent: "space-between",
             padding: "1.5rem",
-          }}>
+          }}
+        >
           <Block
             $style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            onClick={() => setActiveSubMenu("Text")}>
+            onClick={() => setActiveSubMenu("Text")}
+          >
             <ArrowBackOutline size={24} />
             <Block>Chọn kiểu chữ</Block>
           </Block>
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}>
+            $style={{ cursor: "pointer", display: "flex" }}
+          >
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -206,7 +209,8 @@ export default function FontSelector() {
                       backgroundColor: "rgb(245,246,247)",
                     },
                   })}
-                  id={font.id}>
+                  id={font.id}
+                >
                   <h3
                     // className={css({
 
@@ -214,7 +218,8 @@ export default function FontSelector() {
                     style={{
                       fontFamily: font.name, // Use useFont here
                       fontWeight: font.weight,
-                    }}>
+                    }}
+                  >
                     {font.name} - Dùng là thích
                   </h3>
                   {/* {font.} */}
@@ -232,7 +237,8 @@ export default function FontSelector() {
             // backgroundColor: "rgba(0,0,0,0.1)",
             position: "absolute",
             zIndex: 20000000000,
-          }}>
+          }}
+        >
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -249,7 +255,7 @@ export default function FontSelector() {
               width={40}
               height={40}
               alt=""
-              src={logo}
+              src={ezlogo}
             />
           </div>
         </div>

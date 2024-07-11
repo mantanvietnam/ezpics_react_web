@@ -15,6 +15,8 @@ import { useAppSelector } from "@/hooks/hook";
 import axios from "axios";
 import { DesignEditorContext } from "../../../DesignEditorContext";
 import { loadTemplateFonts } from "@/utils/media/fonts";
+import Image from "next/image";
+import ezlogo from "./EZPICS (converted)-03.png";
 
 interface ScenesProps {
   hide: boolean;
@@ -356,7 +358,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
             background: "#ffffff",
             // display:  hide ? 'block' : 'none',
             display: hide ? "block" : "none",
-          }}>
+          }}
+        >
           <Block $style={{ display: "flex", alignItems: "center" }}>
             {scenes.map((page: any, index: any) => (
               <div
@@ -369,7 +372,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
                 }}
                 key={index}
                 onMouseEnter={() => setHoveredPage(page)}
-                onMouseLeave={() => setHoveredPage(null)}>
+                onMouseLeave={() => setHoveredPage(null)}
+              >
                 <div
                   onClick={() => changePage(page)}
                   className={css({
@@ -379,7 +383,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
                       page.id === currentScene?.id
                         ? "2px solid #7158e2"
                         : "2px solid rgba(0,0,0,.15)",
-                  })}>
+                  })}
+                >
                   <img
                     style={{
                       maxWidth: "90px",
@@ -409,7 +414,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
                         alignItems: "center",
                         justifyContent: "center",
                         cursor: "pointer",
-                      })}>
+                      })}
+                    >
                       <FaTrash />
                     </div>
                   )}
@@ -427,7 +433,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                    })}>
+                    })}
+                  >
                     {index + 1}
                   </div>
                 </div>
@@ -437,7 +444,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
               style={{
                 background: "#ffffff",
                 padding: "1rem 1rem 1rem 0.5rem",
-              }}>
+              }}
+            >
               <div
                 onClick={addScene}
                 // onClick={handleAdd}
@@ -449,7 +457,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                })}>
+                })}
+              >
                 <Add size={20} />
               </div>
             </div>
@@ -469,7 +478,8 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
             right: 0,
             bottom: 0,
             left: 0,
-          }}>
+          }}
+        >
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -477,15 +487,16 @@ const Scenes: React.FC<ScenesProps> = ({ hide }) => {
                 <div></div>
               </div>
             </div>
-            <img
+            <Image
               style={{
                 position: "absolute",
                 top: "12%",
                 left: "16%",
-                width: 40,
-                height: 40,
               }}
-              src="/images/EZPICS.png"
+              alt=""
+              width={40}
+              height={40}
+              src={ezlogo}
             />
           </div>
         </div>

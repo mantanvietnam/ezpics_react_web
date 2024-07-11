@@ -16,7 +16,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 export const generateToServer = async (datas: any) => {
   // Remove the first two elements from the first sub-array
   console.log(datas);
-  datas.data[0].splice(0, 2);
+  datas.data[0]?.splice(0, 2);
 
   console.log(datas.frame);
   // Remove elements with id 'background' from each sub-array
@@ -64,9 +64,10 @@ export const generateToServer = async (datas: any) => {
           banner: data?.src, //
           gianchu: "normal",
           giandong: "normal",
-          width: `${(data?.scaleX * 100 * data?.metadata?.naturalWidth) /
+          width: `${
+            (data?.scaleX * 100 * data?.metadata?.naturalWidth) /
             datas?.frame?.width
-            }vw`, //
+          }vw`, //
           height: data?.metadata?.initialHeight, //
           gradient: 0,
           gradient_color: [],
@@ -181,9 +182,10 @@ export const generateToServerInternet = (datas: any) => {
           banner: data.src, //
           gianchu: "normal",
           giandong: "normal",
-          width: `${(data.scaleX * 100 * data.metadata.naturalWidth) /
+          width: `${
+            (data.scaleX * 100 * data.metadata.naturalWidth) /
             datas?.frame?.width
-            }vw`, //
+          }vw`, //
           height: data.metadata.initialHeight, //
           gradient: 0,
           gradient_color: [],
