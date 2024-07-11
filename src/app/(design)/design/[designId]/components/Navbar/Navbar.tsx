@@ -159,7 +159,7 @@ export default function Navbar() {
             indam: "normal", //
             linear_position: "to right", //
             border: 0, //
-            rotate: "0deg", //
+            rotate: `${Math.trunc(data?.angle)}deg`, //
             banner: "",
             gianchu: "normal",
             giandong: "normal",
