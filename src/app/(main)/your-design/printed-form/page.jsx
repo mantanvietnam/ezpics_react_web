@@ -28,27 +28,27 @@ export default function Page() {
   // };
   useEffect(() => {
     const fetchData = async () => {
-        setLoading(true)
-        try {
-            const response = await getMyProductSeriesAPI(searchValue);
-            setLoading(false)
-            if (response?.listData?.length === 0) {
-                setHasMore(false); // No more products to load
-            } else {
-                setProducts(response?.listData);
-                console.log(products)
-            }
-        } catch (error) {
-            console.log(error);
-            setLoading(false)
+      setLoading(true)
+      try {
+        const response = await getMyProductApi(searchValue);
+        setLoading(false)
+        if (response?.listData?.length === 0) {
+          setHasMore(false); // No more products to load
+        } else {
+          setProducts(response?.listData);
+          console.log(products)
         }
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
     }
     fetchData()
-},[searchValue])
+  }, [searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
-      const response = await getMyProductSeriesAPI(searchValue)
+      const response = await getMyProductApi(searchValue)
       setHasMoreData(true)
       setPage(1)
       setProducts(response.listData)
@@ -108,7 +108,7 @@ export default function Page() {
           </Flex> : 'Search'}</Button>
       </div>
       {/* <DefaultPage getData={getMyProductData} />  */}
-      <DefaultPage getData={products} /> 
+      <DefaultPage getData={products} />
 
     </>
   );

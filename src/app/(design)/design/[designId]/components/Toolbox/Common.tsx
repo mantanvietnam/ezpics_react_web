@@ -210,27 +210,50 @@ function CommonLayers() {
         metadata.metadata.backgroundLayer
       ) {
         toast.info("Bạn không thể di chuyển background layer!");
-      } else if (
-        metadata.metadata &&
-        metadata.metadata.sort &&
-        metadata.metadata.sort <= 1
-      ) {
-        console.log("🚀 ~ handleSendToBack ~ activeObject:", activeObject);
-        toast.info("Đã dưới nền ảnh, không thể chuyển xuống!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      } else {
+      } 
+      // else if (
+      //   metadata.metadata &&
+      //   metadata.metadata.sort &&
+      //   metadata.metadata.sort <= 1
+      // ) {
+      //   console.log("🚀 ~ handleSendToBack ~ activeObject:", activeObject);
+      //   toast.info("Đã dưới nền ảnh, không thể chuyển xuống!", {
+      //     position: "top-right",
+      //     autoClose: 2000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: false,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "dark",
+      //   });
+      // } 
+      else {
         editor.objects.sendBackwards();
       }
     }
   };
+
+  const handleSendToFront = () => {
+    if (activeObject) {
+      console.log('🚀 ~ handleSendToFront ~ activeObject:', activeObject)
+      const metadata = activeObject as {
+        metadata?: {
+          backgroundLayer: number | undefined;
+          sort?: number;
+        };
+      };
+      if (
+        metadata.metadata &&
+        metadata.metadata.sort &&
+        metadata.metadata.backgroundLayer
+      ) {
+        toast.info("Bạn không thể di chuyển background layer!");
+      }  else {
+        editor.objects.bringToFront();
+      }
+    }
+  }
   return (
     <StatefulPopover
       placement={PLACEMENT.bottomRight}
@@ -247,7 +270,7 @@ function CommonLayers() {
               }}
               kind={KIND.tertiary}
               size={SIZE.mini}>
-              Chuyển Layer đã chọn ra trước
+              Chuyển Layer lên trên 1 lớp
             </Button>
             <Button
               startEnhancer={<SendToBack size={24} />}
@@ -260,7 +283,25 @@ function CommonLayers() {
               }}
               kind={KIND.tertiary}
               size={SIZE.mini}>
-              Chuyển Layer đã chọn ra sau
+              Chuyển Layer ra sau 1 lớp
+            </Button>
+            <Button
+              startEnhancer={<SendToBack size={24} />}
+              onClick={() => {
+                handleSendToFront()
+              }}
+              kind={KIND.tertiary}
+              size={SIZE.mini}>
+              Chuyển Layer lên trên đầu
+            </Button>
+            <Button
+              startEnhancer={<SendToBack size={24} />}
+              onClick={() => {
+                editor.objects.sendToBack()
+              }}
+              kind={KIND.tertiary}
+              size={SIZE.mini}>
+              Chuyển Layer xuống dưới cùng
             </Button>
           </Block>
 

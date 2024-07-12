@@ -65,6 +65,7 @@ export default function Navbar() {
   const idProduct = useAppSelector((state) => state?.token?.id);
   const token = checkTokenCookie();
   const [modalBuyingFree, setModalBuyingFree] = React.useState(false);
+
   const generateToServer = (datas: any) => {
     // Remove the first two elements from the first sub-array
     datas.data[0].splice(0, 2);
@@ -112,7 +113,7 @@ export default function Navbar() {
             indam: "normal",
             linear_position: "to right",
             border: 0,
-            rotate: "0deg", //
+            rotate: `${Math.trunc(data?.angle)}deg`, //
             banner: data?.src, //
             gianchu: "normal",
             giandong: "normal",
@@ -126,10 +127,10 @@ export default function Navbar() {
             variable: data?.metadata?.variable,
             variableLabel: data?.metadata?.variableLabel,
             lock: 0,
-            lat_anh: 0, //
+            lat_anh: data?.lat_anh, //
             naturalWidth: data?.metadata?.naturalWidth,
             naturalHeight: data?.metadata?.naturalHeight,
-            image_svg: "",
+            image_svg: data?.src,
             page: Number(data?.metadata?.page),
           },
           sort: index + 1,
@@ -158,7 +159,7 @@ export default function Navbar() {
             indam: "normal", //
             linear_position: "to right", //
             border: 0, //
-            rotate: "0deg", //
+            rotate: `${Math.trunc(data?.angle)}deg`, //
             banner: "",
             gianchu: "normal",
             giandong: "normal",
@@ -183,6 +184,7 @@ export default function Navbar() {
 
     return initialData;
   };
+
   const parseGraphicJSON = () => {
     const currentScene = editor.scene.exportToJSON();
     const updatedScenes = scenes.map((scn) => {
@@ -210,13 +212,25 @@ export default function Navbar() {
       preview: "",
     };
 
-    const converLayer = () => {};
+    const convertLayerData = (layer: any) => {
+      return {
+        ...layer,
+        lat_anh: layer.flipX, // Chuyển đổi thuộc tính flipX sang lat_anh
+        // Loại bỏ thuộc tính flipX nếu cần thiết
+        // flipX: undefined,
+      };
+    };
 
-    const allLayers = graphicTemplate.scenes.map((scene: any) => scene.layers);
+    const allLayers = graphicTemplate.scenes.map((scene: any) =>
+      scene.layers.map(convertLayerData)
+    );
+    console.log("🚀 ~ parseGraphicJSON ~ allLayers:", allLayers);
     const newDesign = generateToServer({
       frame: currentDesign.frame,
       data: allLayers,
     });
+    console.log("🚀 ~ parseGraphicJSON ~ newDesign:", newDesign);
+
     newDesign.forEach(async (item: any, index: any) => {
       // Kiểm tra nếu id là chuỗi
       if (typeof item.id === "string") {
@@ -297,7 +311,6 @@ export default function Navbar() {
     const image = (await editor.renderer.render(template)) as string;
 
     // downloadImage(image, "preview.png");
-    console.log(parseGraphicJSON());
     setLoading(true);
 
     try {
@@ -499,7 +512,7 @@ export default function Navbar() {
           progress: undefined,
           theme: "dark",
         });
-        router.push("/");
+        // router.push("/");
         setLoading(false);
       } else {
         toast.error("Lưu mẫu thiết kế thất bại !! 🦄", {
@@ -521,11 +534,13 @@ export default function Navbar() {
   };
   const makePreview = async () => {
     const template = editor.scene.exportToJSON();
+    console.log("🚀 ~ makePreview ~ template:", template);
     const image = (await editor.renderer.render(template)) as string;
+    console.log("🚀 ~ makePreview ~ image:", image);
 
-    console.log(parseGraphicJSON());
     // setLoading(true);
     const dataRendering = parseGraphicJSON();
+    console.log("🚀 ~ makePreview ~ dataRendering:", dataRendering);
     await Promise.all(
       dataRendering.map(async (item: any, index: any) => {
         console.error(item);
@@ -572,12 +587,11 @@ export default function Navbar() {
         }
       })
     );
-    console.log(dataRendering);
     try {
       const res = await axios.post(`${network}/addListLayerAPI`, {
         idProduct: idProduct,
         token: checkTokenCookie(),
-        listLayer: JSON.stringify(parseGraphicJSON()),
+        listLayer: JSON.stringify(dataRendering),
       });
       if (res.data.code === 1) {
         const imageGenerate = await handleConversion(image, "preview.png");
