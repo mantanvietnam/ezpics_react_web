@@ -43,7 +43,7 @@ function checkTokenCookie() {
   }
 
   if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    // console.log('Giá trị của cookie "token" là:', tokenCookie);
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
     console.log('Không tìm thấy cookie có tên là "token"');

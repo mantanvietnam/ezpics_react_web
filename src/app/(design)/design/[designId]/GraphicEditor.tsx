@@ -335,9 +335,6 @@ function GraphicEditor() {
   const token = checkTokenCookie();
   const id = useAppSelector((state) => state.token.id);
 
-  console.log(token);
-  console.log(id);
-
   const dataScenes = (data: any, dataBackground: any) => {
     const dataString = {
       id: uuidv4(),
@@ -731,8 +728,7 @@ function GraphicEditor() {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-            }}
-          >
+            }}>
             <img
               src="../../../assets/error.jpg"
               alt="lỗi"
@@ -742,8 +738,7 @@ function GraphicEditor() {
               style={{
                 color: "black",
                 fontFamily: "Arial, Helvetica, sans-serif",
-              }}
-            >
+              }}>
               Bạn không có quyền truy cập, hãy thử lại
             </h2>
           </div>
@@ -756,8 +751,7 @@ function GraphicEditor() {
               backgroundColor: "rgba(0,0,0,0.9)",
               position: "absolute",
               zIndex: 20000000000,
-            }}
-          >
+            }}>
             <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
               <div className="ldio-4qpid53rus92">
                 <div></div>
@@ -769,11 +763,13 @@ function GraphicEditor() {
                     position: "absolute",
                     top: "12%",
                     left: "16%",
+                    width: "40px",
+                    height: "40px",
                   }}
                   // width={}
                   // height={ }
                   alt=""
-                  src="./EZPICS (converted)-03.png"
+                  src="/images/EZPICS.png"
                 />
               </div>
             </div>

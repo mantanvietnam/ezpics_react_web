@@ -582,19 +582,23 @@ export default function Flip() {
               Inner: {
                 style: ({ $theme }) => ({
                   backgroundColor: "#fff",
-                  borderRadius: "5px",
                   boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-                  padding: "0px",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  paddingRight: "0px",
+                  paddingLeft: "0px",
                 }),
               },
             }}
             content={() => (
-              <Block width={"220px"} backgroundColor={"#fff"} padding={"20px"}>
-                <Button onClick={() => openModalChangeNew()}>
+              <Block width={"200px"} backgroundColor={"#fff"} padding={"20px"}>
+                <Button
+                  onClick={() => openModalChangeNew()}
+                  style={{ fontSize: "14px" }}>
                   Chọn ảnh từ thiết bị
                 </Button>
                 <Button
-                  style={{ marginTop: "10px" }}
+                  style={{ marginTop: "10px", fontSize: "14px" }}
                   onClick={() => openModalChange()}>
                   Chọn ảnh có sẵn
                 </Button>
@@ -1332,11 +1336,14 @@ export function ModalChangeImage({ isOpen, onClose }: ModalProps) {
 
     const formData = new FormData();
 
+    const widthImage = activeObject.metadata.naturalWidth;
+
     if (token) {
       formData.append("idproduct", idProduct);
       formData.append("token", token);
       formData.append("idlayer", activeObject.id);
       formData.append("idfile", id);
+      formData.append("width", widthImage);
       console.log(formData);
     }
 

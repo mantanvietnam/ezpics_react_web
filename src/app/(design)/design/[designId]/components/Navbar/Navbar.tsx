@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { styled, ThemeProvider, DarkTheme, LightTheme } from "baseui";
+import { styled, ThemeProvider, DarkTheme } from "baseui";
 import { Theme } from "baseui/theme";
 import { Button, KIND } from "baseui/button";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
@@ -686,7 +686,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <ThemeProvider theme={DarkTheme}>
+      <div>
         <Container>
           <div style={{ color: "#ffffff" }}>
             <Image
@@ -717,7 +717,7 @@ const Navbar: React.FC = () => {
             <Button
               size="compact"
               onClick={handleInputFileRefClick}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
@@ -731,7 +731,7 @@ const Navbar: React.FC = () => {
             <Button
               size="compact"
               onClick={makeDownloadTemplate}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
@@ -756,7 +756,7 @@ const Navbar: React.FC = () => {
             <Button
               size="compact"
               onClick={() => makePreview()}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
@@ -777,7 +777,7 @@ const Navbar: React.FC = () => {
             <Button
               size="compact"
               onClick={() => setDisplayPreview(true)}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
@@ -795,7 +795,7 @@ const Navbar: React.FC = () => {
             </Button>
           </Block>
         </Container>
-      </ThemeProvider>
+      </div>
       {loading && (
         <div
           style={{
