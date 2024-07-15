@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Block } from "baseui/block";
 import useDesignEditorScenes from "@/hooks/useDesignEditorScenes";
@@ -52,8 +53,7 @@ export default function Presentation() {
         justifyContent: "center",
         display: "flex",
         position: "relative",
-      }}
-    >
+      }}>
       <Block $style={{ position: "absolute", maxWidth: "840px" }}>
         {loading ? (
           <Loading />
@@ -62,8 +62,7 @@ export default function Presentation() {
             showIndicators={false}
             showThumbs={false}
             useKeyboardArrows={true}
-            showStatus={false}
-          >
+            showStatus={false}>
             {slides.map((page, index) => (
               <img
                 width={"auto"}

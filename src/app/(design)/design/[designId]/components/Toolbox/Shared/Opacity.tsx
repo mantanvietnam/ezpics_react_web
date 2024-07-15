@@ -8,7 +8,7 @@ import { useActiveObject, useEditor } from "@layerhub-io/react";
 import { Button, SIZE, KIND } from "baseui/button";
 import OpacityIcon from "@/components/Icons/Opacity.";
 
-export default function () {
+export default function Opacity() {
   const editor = useEditor();
   const [state, setState] = React.useState({ opacity: 1 });
   const activeObject = useActiveObject() as Required<ILayer>;
@@ -37,8 +37,7 @@ export default function () {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-            }}
-          >
+            }}>
             <Block $style={{ fontSize: "14px" }}>Trong suốt</Block>
             <Block width={"52px"}>
               <Input
@@ -99,8 +98,7 @@ export default function () {
             />
           </Block>
         </Block>
-      )}
-    >
+      )}>
       <Button kind={KIND.tertiary} size={SIZE.mini}>
         <OpacityIcon size={24} />
       </Button>

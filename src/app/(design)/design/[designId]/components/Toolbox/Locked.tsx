@@ -5,7 +5,7 @@ import { PLACEMENT, StatefulTooltip } from "baseui/tooltip";
 import { Button, SIZE, KIND } from "baseui/button";
 import UnlockedIcon from "@/components/Icons/Unlocked";
 
-export default function () {
+export default function Locked() {
   const editor = useEditor();
 
   return (
@@ -16,21 +16,18 @@ export default function () {
         alignItems: "center",
         padding: "0 12px",
         justifyContent: "flex-end",
-      }}
-    >
+      }}>
       <StatefulTooltip
         placement={PLACEMENT.bottom}
         showArrow={true}
         accessibilityType={"tooltip"}
-        content="Unlock"
-      >
+        content="Unlock">
         <Button
           onClick={() => {
             editor.objects.unlock();
           }}
           size={SIZE.mini}
-          kind={KIND.tertiary}
-        >
+          kind={KIND.tertiary}>
           <UnlockedIcon size={24} />
         </Button>
       </StatefulTooltip>

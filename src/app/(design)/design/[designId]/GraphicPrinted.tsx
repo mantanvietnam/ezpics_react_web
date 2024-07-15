@@ -51,7 +51,7 @@ function GraphicPrinted() {
 
     // Kiểm tra nếu đã tìm thấy cookie "token"
     if (tokenCookie) {
-      console.log('Giá trị của cookie "token" là:', tokenCookie);
+      // console.log('Giá trị của cookie "token" là:', tokenCookie);
       return tokenCookie.replace(/^"|"$/g, "");
     } else {
       console.log('Không tìm thấy cookie có tên là "token"');
@@ -214,9 +214,12 @@ function GraphicPrinted() {
       template = await loadGraphicTemplate(data);
       // //   @ts-ignore
       console.log(template);
-      setScenes(template.scenes);
+
+      // Ép kiểu template về dạng có scenes và design
+      const fullTemplate = template as { scenes: any[]; design: any };
       // //   @ts-ignore
-      setCurrentDesign(template.design);
+      setScenes(fullTemplate.scenes);
+      setCurrentDesign(fullTemplate.design);
     },
     [editor]
   );
@@ -556,8 +559,7 @@ function GraphicPrinted() {
               paddingTop: "6%",
               paddingRight: "2%",
               paddingLeft: "18%",
-            }}
-          >
+            }}>
             <div
               style={{
                 width: "100%",
@@ -565,8 +567,7 @@ function GraphicPrinted() {
                 alignItems: "center",
                 justifyContent: "center",
                 paddingTop: "2%",
-              }}
-            >
+              }}>
               <button
                 onClick={(e) => handleDownloadImage(e)}
                 style={{
@@ -584,8 +585,7 @@ function GraphicPrinted() {
                   fontWeight: "500",
                   borderRadius: 5,
                   cursor: "pointer",
-                }}
-              >
+                }}>
                 Tải ảnh
               </button>
               <button
@@ -605,8 +605,7 @@ function GraphicPrinted() {
                   fontWeight: "500",
                   borderRadius: 5,
                   cursor: "pointer",
-                }}
-              >
+                }}>
                 Nhập lại thông tin
               </button>
             </div>
@@ -617,8 +616,7 @@ function GraphicPrinted() {
                 display: "flex",
                 alignSelf: "center",
                 justifyContent: "center",
-              }}
-            >
+              }}>
               {imageData ? (
                 <img
                   style={{

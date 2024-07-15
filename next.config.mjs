@@ -6,9 +6,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "https",
         hostname: "apis.ezpics.vn",
       },
       {
+        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
     ],

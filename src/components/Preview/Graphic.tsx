@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import { generateToServer } from "@/api/gererateToServer";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-export default function () {
+export default function Graphic() {
   const editor = useEditor();
   const [loading, setLoading] = React.useState(true);
   const {

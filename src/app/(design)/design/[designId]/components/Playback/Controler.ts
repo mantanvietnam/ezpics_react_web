@@ -45,12 +45,12 @@ class PlaybackController {
   /**
    * Pixi wrapper DOM Reference
    */
-  private el: HTMLElement;
+  private el!: HTMLElement;
 
   /**
    * Pixi app instance
    */
-  private app: PIXI.Application;
+  private app!: PIXI.Application;
 
   /**
    * Resources map used to store the data needed to display the content

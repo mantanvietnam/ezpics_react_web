@@ -3,13 +3,13 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
@@ -32,7 +32,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/app/(main)/design/contexts/DesignEditor.jsx"
-  ],
+    "src/app/(design)/design/[designId]/page.tsx"
+, "src/app/(auth)/(center)/sign-in/page.jsx", "src/app/(auth)/(center)/OtpVerification/page.jsx", "src/api/auth.js", "src/app/(design)/design/page.jsx"  ],
   "exclude": ["node_modules"]
 }

@@ -4,7 +4,7 @@ import { DesignEditorContext } from "@/app/(design)/design/[designId]/DesignEdit
 import TimelineItem from "./TimelineItem";
 import { useEditor, useFrame } from "@layerhub-io/react";
 
-export default function () {
+export default function TimelineItems() {
   const { currentScene, scenes, currentPreview, setCurrentPreview, setScenes } =
     React.useContext(DesignEditorContext);
   const editor = useEditor();

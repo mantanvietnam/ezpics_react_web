@@ -1,184 +1,189 @@
-import React, { useEffect, useState } from "react"
-import { Button, Modal, Radio, Skeleton, Space, Spin, Table, Tag } from "antd"
-import { SkeletonCustom } from "./Slide/CustomSlide"
-import { useRouter } from 'next/navigation'
-import Cookies from 'js-cookie';
-import { buyProductAPI, checkFavoriteAPI, deleteFavoriteAPI, saveFavoriteAPI } from '@/api/product'
-import { toast } from 'react-toastify'
-import { LoadingOutlined } from '@ant-design/icons'
-import Image from 'next/image'
-import images from '../../public/images/index2'
-import { getInfoMemberAPI } from '@/api/user'
-import { setCookie } from '@/utils';
+import React, { useEffect, useState } from "react";
+import { Button, Modal, Radio, Skeleton, Space, Spin, Table, Tag } from "antd";
+import { SkeletonCustom } from "./Slide/CustomSlide";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import {
+  buyProductAPI,
+  checkFavoriteAPI,
+  deleteFavoriteAPI,
+  saveFavoriteAPI,
+} from "@/api/product";
+import { toast } from "react-toastify";
+import { LoadingOutlined } from "@ant-design/icons";
+import Image from "next/image";
+import images from "../../public/images/index2";
+import { getInfoMemberAPI } from "@/api/user";
+import { setCookie } from "@/utils";
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
-})
+});
 
 export default function ProductInfo(props) {
-  const { data, user, isLoading } = props
-  const router = useRouter()
+  const { data, user, isLoading } = props;
+  const router = useRouter();
 
-  const [isFavorited, setIsFavorited] = useState(0)
-  const [loadingFavorite, setLoadingFavorite] = useState(true)
+  const [isFavorited, setIsFavorited] = useState(0);
+  const [loadingFavorite, setLoadingFavorite] = useState(true);
 
-  const user_login = Cookies.get('user_login')
-  let userLogin = null
+  const user_login = Cookies.get("user_login");
+  let userLogin = null;
   if (user_login) {
     try {
       // Parse the user_login JSON string
       userLogin = JSON.parse(user_login);
     } catch (error) {
-      console.error('Error parsing user_login JSON:', error);
+      console.error("Error parsing user_login JSON:", error);
     }
   }
-  const token = Cookies.get('token')
+  const token = Cookies.get("token");
 
-  const [open, setOpen] = useState(false)
-  const [confirmLoading, setConfirmLoading] = useState(false)
-  const [type, setType] = useState('')
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [type, setType] = useState("");
 
   const showModal = () => {
     if (!userLogin || !token) {
-      router.push('/sign-in')
+      router.push("/sign-in");
     } else {
-      setOpen(true)
+      setOpen(true);
     }
-  }
+  };
 
   const handleOk = async () => {
     try {
-      setConfirmLoading(true)
+      setConfirmLoading(true);
       const response = await buyProductAPI({
         id: data?.id,
         token: token,
-        type: type
-      })
+        type: type,
+      });
       if (response.code === 0) {
-        toast.success('Bạn đã mua thiết kế thành công')
+        toast.success("Bạn đã mua thiết kế thành công, xin chờ giây lát");
         try {
-          const response = await getInfoMemberAPI({ token: token })
+          const response = await getInfoMemberAPI({ token: token });
           if (response.code === 0) {
-            setCookie("user_login", response.data, 3)
+            setCookie("user_login", response.data, 3);
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
+        router.push(`/design/${response.product_id}`);
       } else {
-        toast.error(response.messages[0].text)
+        toast.error(response.messages[0].text);
       }
-      setOpen(false)
-      setConfirmLoading(false)
+      setOpen(false);
+      setConfirmLoading(false);
     } catch (error) {
-      console.log(error)
-      setOpen(false)
-      setConfirmLoading(false)
+      console.log(error);
+      setOpen(false);
+      setConfirmLoading(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button')
-    setOpen(false)
-  }
+    console.log("Clicked cancel button");
+    setOpen(false);
+  };
 
   const columns = [
     {
-      title: 'Tên',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Giá',
-      dataIndex: 'price',
-      key: 'price',
+      title: "Giá",
+      dataIndex: "price",
+      key: "price",
     },
     {
-      title: 'Giảm',
-      dataIndex: 'discount',
-      key: 'discount',
+      title: "Giảm",
+      dataIndex: "discount",
+      key: "discount",
     },
     {
-      title: 'Thành tiền',
-      dataIndex: 'sale_price',
-      key: 'sale_price',
+      title: "Thành tiền",
+      dataIndex: "sale_price",
+      key: "sale_price",
     },
     {
-      title: 'eCoin',
-      dataIndex: 'ecoin',
-      key: 'ecoin',
+      title: "eCoin",
+      dataIndex: "ecoin",
+      key: "ecoin",
     },
   ];
   const dataTable = [
     {
-      key: '1',
+      key: "1",
       name: data?.name,
       price: data?.price ? VND.format(data?.price) : "Miễn Phí",
       discount: data?.sale_price
         ? `${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
         : "Miễn Phí",
       sale_price: data?.sale_price ? VND.format(data?.sale_price) : "Miễn Phí",
-      ecoin: data?.ecoin ? `${data?.ecoin} e` : "0 e"
+      ecoin: data?.ecoin ? `${data?.ecoin} e` : "0 e",
     },
-  ]
+  ];
 
   useEffect(() => {
     const checkFavorited = async () => {
-      setLoadingFavorite(true)
+      setLoadingFavorite(true);
       if (data && data.id) {
         const response = await checkFavoriteAPI({
           product_id: data.id,
-          token: token
-        })
-        setIsFavorited(response.code)
-        setLoadingFavorite(false)
+          token: token,
+        });
+        setIsFavorited(response.code);
+        setLoadingFavorite(false);
       }
-    }
-    checkFavorited()
-  }, [data, token, router])
+    };
+    checkFavorited();
+  }, [data, token, router]);
 
   const handleFavorite = async () => {
     if (!userLogin || !token) {
-      router.push('/sign-in')
+      router.push("/sign-in");
     } else {
       if (isFavorited === 1) {
         try {
-          setLoadingFavorite(true)
+          setLoadingFavorite(true);
           await deleteFavoriteAPI({
             product_id: data.id,
-            token: token
-          })
-          setIsFavorited(0)
-          toast.success('Xóa khỏi danh sách yêu thích')
-          setLoadingFavorite(false)
+            token: token,
+          });
+          setIsFavorited(0);
+          toast.success("Xóa khỏi danh sách yêu thích");
+          setLoadingFavorite(false);
         } catch (error) {
-          console.log(error)
-          setLoadingFavorite(false)
-          toast.error('Vui lòng thử lại!')
+          console.log(error);
+          setLoadingFavorite(false);
+          toast.error("Vui lòng thử lại!");
         }
       } else {
         try {
-          setLoadingFavorite(true)
+          setLoadingFavorite(true);
           await saveFavoriteAPI({
             product_id: data.id,
-            token: token
-          })
-          toast.success('Thêm vào danh sách yêu thích')
-          setIsFavorited(1)
-          setLoadingFavorite(false)
+            token: token,
+          });
+          toast.success("Thêm vào danh sách yêu thích");
+          setIsFavorited(1);
+          setLoadingFavorite(false);
         } catch (error) {
-          console.log(error)
-          setLoadingFavorite(false)
-          toast.error('Vui lòng thử lại!')
+          console.log(error);
+          setLoadingFavorite(false);
+          toast.error("Vui lòng thử lại!");
         }
-
       }
     }
-  }
+  };
 
   const handleChangeRadio = (e) => {
-    setType(e.target.value)
-  }
+    setType(e.target.value);
+  };
 
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
@@ -290,13 +295,15 @@ export default function ProductInfo(props) {
             <div className="line-through text-slate-400 rounded-sm">
               {data?.price ? VND.format(data?.price) : ""}
             </div>
-            {
-              data?.sale_price ?
-                <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
-                  {`Giảm ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`}
-                </div> :
-                ""
-            }
+            {data?.sale_price ? (
+              <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+                {`Giảm ${Math.round(
+                  100 - (data?.sale_price / data?.price) * 100
+                )}%`}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm product-details-e">Khuyến mãi</div>
@@ -309,7 +316,9 @@ export default function ProductInfo(props) {
                 fontWeight: "semibold",
               }}>
               {data?.sale_price
-                ? `Lên đến ${Math.round(100 - (data?.sale_price / data?.price) * 100)}%`
+                ? `Lên đến ${Math.round(
+                    100 - (data?.sale_price / data?.price) * 100
+                  )}%`
                 : "Miễn Phí"}
             </div>
           </div>
@@ -353,51 +362,74 @@ export default function ProductInfo(props) {
                   "2s linear 0s infinite normal none running thumbs-up",
               }}
               className="flex items-center justify-center py-2"
-              onClick={handleFavorite}
-            >
-              {
-                isFavorited === 1 ? (
-                  <>
-                    {
-                      loadingFavorite ? <div><Space>
-                        <Spin indicator={<LoadingOutlined style={{ fontSize: 30, color: "rgb(255, 66, 78)" }} spin />} />
-                      </Space></div> :
-                        <>
-                          <svg
-                            style={{
-                              color: "rgb(255, 66, 78)",
-                              width: "30px",
-                              height: "30px",
-                              fill: "currentColor",
-                            }}>
-                            <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
-                          </svg>
-                          <div>Đã yêu thích</div>
-                        </>
-                    }
-                  </>
-                ) :
-                  (<>
-                    {
-                      loadingFavorite ? <div><Space>
-                        <Spin indicator={<LoadingOutlined style={{ fontSize: 30, color: "rgb(255, 66, 78)" }} spin />} />
-                      </Space></div> :
-                        <>
-                          <svg
-                            style={{
-                              color: "rgb(255, 66, 78)",
-                              width: "30px",
-                              height: "30px",
-                              fill: "currentColor",
-                            }}>
-                            <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
-                          </svg>
-                          <div>Thêm vào yêu thích</div>
-                        </>
-                    }
-                  </>)
-              }
-
+              onClick={handleFavorite}>
+              {isFavorited === 1 ? (
+                <>
+                  {loadingFavorite ? (
+                    <div>
+                      <Space>
+                        <Spin
+                          indicator={
+                            <LoadingOutlined
+                              style={{
+                                fontSize: 30,
+                                color: "rgb(255, 66, 78)",
+                              }}
+                              spin
+                            />
+                          }
+                        />
+                      </Space>
+                    </div>
+                  ) : (
+                    <>
+                      <svg
+                        style={{
+                          color: "rgb(255, 66, 78)",
+                          width: "30px",
+                          height: "30px",
+                          fill: "currentColor",
+                        }}>
+                        <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                      </svg>
+                      <div>Đã yêu thích</div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  {loadingFavorite ? (
+                    <div>
+                      <Space>
+                        <Spin
+                          indicator={
+                            <LoadingOutlined
+                              style={{
+                                fontSize: 30,
+                                color: "rgb(255, 66, 78)",
+                              }}
+                              spin
+                            />
+                          }
+                        />
+                      </Space>
+                    </div>
+                  ) : (
+                    <>
+                      <svg
+                        style={{
+                          color: "rgb(255, 66, 78)",
+                          width: "30px",
+                          height: "30px",
+                          fill: "currentColor",
+                        }}>
+                        <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                      </svg>
+                      <div>Thêm vào yêu thích</div>
+                    </>
+                  )}
+                </>
+              )}
             </button>
             <button
               style={{
@@ -408,14 +440,12 @@ export default function ProductInfo(props) {
                 paddingTop: "11.5px",
                 paddingBottom: "11.5px",
               }}
-              onClick={showModal}
-            >
+              onClick={showModal}>
               Mua ngay
             </button>
           </div>
-        </div >
-      )
-      }
+        </div>
+      )}
       <Modal
         title="Mua thiết kế"
         open={open}
@@ -423,10 +453,9 @@ export default function ProductInfo(props) {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={null}
-        className='buy-product-modal'
-      >
+        className="buy-product-modal">
         <div>
-          <div className='flex gap-2 mb-[20px]'>
+          <div className="flex gap-2 mb-[20px]">
             <div className="flex items-center text-slate-500">
               <Image
                 src={images.balance}
@@ -435,7 +464,9 @@ export default function ProductInfo(props) {
                 height={20}
                 className="rounded-full pr-1"
               />{" "}
-              <p className='text-sm font-semibold'>: {VND.format(userLogin?.account_balance)}</p>
+              <p className="text-sm font-semibold">
+                : {VND.format(userLogin?.account_balance)}
+              </p>
             </div>
             <div className="flex items-center text-slate-500">
               <Image
@@ -445,32 +476,60 @@ export default function ProductInfo(props) {
                 height={20}
                 className="rounded-full pr-1"
               />{" "}
-              <p className='text-sm font-semibold'>: {userLogin?.ecoin} eCoin</p>
+              <p className="text-sm font-semibold">
+                : {userLogin?.ecoin} eCoin
+              </p>
             </div>
           </div>
-          <Table columns={columns} dataSource={dataTable} pagination={false} className='mb-[20px]' />
-          <Radio.Group name="radiogroup" defaultValue={type} onChange={handleChangeRadio} className='mb-[20px]'>
-            <Radio value=''>Mua bằng tiền tài khoản</Radio>
-            <Radio value='ecoin'>Mua bằng ecoin</Radio>
+          <Table
+            columns={columns}
+            dataSource={dataTable}
+            pagination={false}
+            className="mb-[20px]"
+          />
+          <Radio.Group
+            name="radiogroup"
+            defaultValue={type}
+            onChange={handleChangeRadio}
+            className="mb-[20px]">
+            <Radio value="">Mua bằng tiền tài khoản</Radio>
+            <Radio value="ecoin">Mua bằng ecoin</Radio>
           </Radio.Group>
-          <div className='flex gap-2 justify-end mb-[20px] items-center'>
-            <div className='text-lg font-semibold'>Tổng tiền:</div>
-            <div className='text-lg font-semibold'>{type === 'ecoin' ? `${data?.ecoin} eCoin` : VND.format(data?.sale_price)}</div>
+          <div className="flex gap-2 justify-end mb-[20px] items-center">
+            <div className="text-lg font-semibold">Tổng tiền:</div>
+            <div className="text-lg font-semibold">
+              {type === "ecoin"
+                ? `${data?.ecoin} eCoin`
+                : VND.format(data?.sale_price)}
+            </div>
           </div>
-          <div className='flex justify-end'>
-            <Button className='h-[35px]' onClick={handleCancel}>Hủy</Button>
-            <button className='button-red text-sm font-semibold h-[35px] w-[200px]' onClick={handleOk}>
-              {confirmLoading ?
+          <div className="flex justify-end">
+            <Button className="h-[35px]" onClick={handleCancel}>
+              Hủy
+            </Button>
+            <button
+              className="button-red text-sm font-semibold h-[35px] w-[200px]"
+              onClick={handleOk}>
+              {confirmLoading ? (
                 <div>
                   <Space>
-                    <Spin indicator={<LoadingOutlined style={{ fontSize: 20, color: "white" }} spin />} />
+                    <Spin
+                      indicator={
+                        <LoadingOutlined
+                          style={{ fontSize: 20, color: "white" }}
+                          spin
+                        />
+                      }
+                    />
                   </Space>
-                </div> :
-                'Thanh toán ngay'}
+                </div>
+              ) : (
+                "Thanh toán ngay"
+              )}
             </button>
           </div>
         </div>
       </Modal>
-    </div >
-  )
+    </div>
+  );
 }

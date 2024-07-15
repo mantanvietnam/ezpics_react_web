@@ -28,12 +28,17 @@ const PRESET_COLORS = [
   "#d9d9d9",
 ];
 
+type ActiveObject = {
+  fill: string;
+  // Các thuộc tính khác của đối tượng activeObject nếu có
+};
+
 export default function TextFill() {
   const { setActiveSubMenu } = useAppContext();
 
   const dispatch = useAppDispatch();
   const [color, setColor] = React.useState("");
-  const activeObject = useActiveObject();
+  const activeObject: ActiveObject | null = useActiveObject();
   const editor = useEditor();
   const colorList = useAppSelector((state) => state.color.colorList);
   const updateObjectFill = (e: any, color: any) => {
@@ -50,8 +55,8 @@ export default function TextFill() {
     const getColorCurrentActive = () => {
       if (activeObject) {
         // editor.objects.
-        setColor(activeObject.fill);
-        console.log(activeObject.fill);
+        setColor(activeObject?.fill);
+        console.log(activeObject?.fill);
       }
     };
     getColorCurrentActive();

@@ -7,7 +7,7 @@ import { images } from "@/constants/mock-data";
 import { useEditor } from "@layerhub-io/react";
 import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 
-export default function () {
+export default function Images() {
   const editor = useEditor();
   const setIsSidebarOpen = useSetIsSidebarOpen();
 
@@ -34,8 +34,7 @@ export default function () {
           justifyContent: "space-between",
           paddingLeft: "1.5rem",
           paddingRight: "1.5rem",
-        }}
-      >
+        }}>
         <Block>
           <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
             Ảnh có sẵn
@@ -44,8 +43,7 @@ export default function () {
 
         <Block
           onClick={() => setIsSidebarOpen(false)}
-          $style={{ cursor: "pointer", display: "flex" }}
-        >
+          $style={{ cursor: "pointer", display: "flex" }}>
           <AngleDoubleLeft size={18} />
         </Block>
       </Block>
@@ -56,8 +54,7 @@ export default function () {
               display: "grid",
               gap: "8px",
               gridTemplateColumns: "1fr 1fr",
-            }}
-          >
+            }}>
             {images.map((image, index) => {
               return (
                 <ImageItem
@@ -94,8 +91,7 @@ function ImageItem({
         "::before:hover": {
           opacity: 1,
         },
-      })}
-    >
+      })}>
       <div
         className={css({
           backgroundImage: `linear-gradient(to bottom,
@@ -127,8 +123,7 @@ function ImageItem({
           ":hover": {
             opacity: 1,
           },
-        })}
-      ></div>
+        })}></div>
       <img
         src={preview}
         className={css({

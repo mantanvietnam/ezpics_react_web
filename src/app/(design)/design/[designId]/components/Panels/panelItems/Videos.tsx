@@ -57,7 +57,7 @@ const captureDuration = (video: HTMLVideoElement): Promise<number> => {
   });
 };
 
-export default function () {
+export default function Videos() {
   const editor = useEditor();
   const setIsSidebarOpen = useSetIsSidebarOpen();
   const [videos, setVideos] = React.useState<any[]>([]);
@@ -109,14 +109,12 @@ export default function () {
           fontWeight: 500,
           justifyContent: "space-between",
           padding: "1.5rem",
-        }}
-      >
+        }}>
         <Block>Videos</Block>
 
         <Block
           onClick={() => setIsSidebarOpen(false)}
-          $style={{ cursor: "pointer", display: "flex" }}
-        >
+          $style={{ cursor: "pointer", display: "flex" }}>
           <AngleDoubleLeft size={18} />
         </Block>
       </Block>
@@ -127,8 +125,7 @@ export default function () {
               display: "grid",
               gap: "8px",
               gridTemplateColumns: "1fr 1fr",
-            }}
-          >
+            }}>
             {videos.map((video, index) => {
               return (
                 <img
@@ -166,8 +163,7 @@ function ImageItem({
         "::before:hover": {
           opacity: 1,
         },
-      })}
-    >
+      })}>
       <div
         className={css({
           backgroundImage: `linear-gradient(to bottom,
@@ -199,8 +195,7 @@ function ImageItem({
           ":hover": {
             opacity: 1,
           },
-        })}
-      ></div>
+        })}></div>
       <img
         src={preview}
         className={css({

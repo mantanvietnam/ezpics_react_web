@@ -3,7 +3,7 @@ import React from "react";
 import { Provider as ScenifyProvider } from "@layerhub-io/react";
 import { Client as Styletron } from "styletron-engine-atomic";
 import { Provider as StyletronProvider } from "styletron-react";
-import { BaseProvider, LightTheme } from "baseui";
+import { LightTheme } from "baseui";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { AppProvider } from "@/app/(design)/design/[designId]/AppContext";
@@ -12,6 +12,7 @@ import { I18nextProvider } from "react-i18next";
 import { TimerProvider } from "@layerhub-io/use-timer";
 import i18next from "i18next";
 import "./translations";
+import { BaseProvider } from "baseui"; // Chỉ rõ import từ baseui
 
 const engine = new Styletron();
 
