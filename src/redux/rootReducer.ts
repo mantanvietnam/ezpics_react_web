@@ -14,7 +14,6 @@ import ipv4Reducer from "./slices/network/networkSlice";
 const rootReducer = combineReducers({
   token: tokenReducer,
   network: networkReducer,
-  newFont: fontReducer,
   typeUser: typeUserReducer,
   variable: variableReducer,
   color: colorReducer,
