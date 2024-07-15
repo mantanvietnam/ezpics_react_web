@@ -5,7 +5,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import tokenReducer from "./slices/token/reducers";
 import networkReducer from "./slices/network/networkSlice";
-import fontReducer from "./slices/font/fontSlice";
 import typeUserReducer from "./slices/type/typeSlice";
 import variableReducer from "./slices/variable/variableSlice";
 import colorReducer from "./slices/color/colorSlice";
