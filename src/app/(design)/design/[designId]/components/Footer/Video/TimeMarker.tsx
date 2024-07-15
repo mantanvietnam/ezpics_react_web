@@ -5,7 +5,7 @@ import { DesignEditorContext } from "@/app/(design)/design/[designId]/DesignEdit
 
 const SCALE_FACTOR = 1;
 
-export default function () {
+export default function TimeMaker() {
   const { time, setTime, pause } = useTimer();
 
   const [position, setPosition] = React.useState({

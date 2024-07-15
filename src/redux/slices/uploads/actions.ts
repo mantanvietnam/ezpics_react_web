@@ -36,8 +36,9 @@ export const uploadFile = createAsyncThunk<void, { file: File }, any>(
     await axios.put(response.url, updatedFile, {
       headers: { "Content-Type": mime.getType(updatedFileName) as string },
       onUploadProgress: (progressEvent) => {
+        const total = progressEvent.total || 1; // Đặt total mặc định là 1 nếu undefined
         const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
+          (progressEvent.loaded * 100) / total
         );
         setUploading({
           progress: percentCompleted,

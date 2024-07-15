@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
 
-export default function CenteredLayout(props) {
+export default function CenteredLayouts(props) {
   const [isNavbarOpen, setIsNavbarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -35,8 +35,7 @@ export default function CenteredLayout(props) {
   };
 
   return (
-    <SessionProvider className=""
-    >
+    <SessionProvider className="">
       <Header toggleNavbar={toggleNavbar} />
       <div
         className={`fixed inset-0 bg-black transition-opacity duration-0 ${

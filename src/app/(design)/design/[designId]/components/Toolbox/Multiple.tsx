@@ -1,7 +1,7 @@
-import { Block } from "baseui/block"
-import Common from "./Common"
+import { Block } from "baseui/block";
+import Common from "./Common";
 
-export default function () {
+export default function Multiple() {
   return (
     <Block
       $style={{
@@ -10,10 +10,9 @@ export default function () {
         alignItems: "center",
         padding: "0 12px",
         justifyContent: "space-between",
-      }}
-    >
+      }}>
       <Block>Đa Layers</Block>
       <Common />
     </Block>
-  )
+  );
 }

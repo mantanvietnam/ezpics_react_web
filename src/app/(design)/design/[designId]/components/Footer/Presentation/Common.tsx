@@ -19,7 +19,7 @@ interface Options {
   zoomRatio: number;
 }
 
-export default function () {
+export default function Common() {
   const zoomMin = 10;
   const zoomMax = 240;
   const [options, setOptions] = React.useState<Options>({
@@ -54,8 +54,7 @@ export default function () {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <Button kind={KIND.tertiary} size={SIZE.compact}>
           <Icons.Expand size={16} />
         </Button>
@@ -65,8 +64,7 @@ export default function () {
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => handleChange("zoomRatio", options.zoomRatio - 20)}
-        >
+          onClick={() => handleChange("zoomRatio", options.zoomRatio - 20)}>
           <Icons.RemoveCircleOutline size={24} />
         </Button>
         <Slider
@@ -101,8 +99,7 @@ export default function () {
         <Button
           kind={KIND.tertiary}
           size={SIZE.compact}
-          onClick={() => handleChange("zoomRatio", options.zoomRatio + 20)}
-        >
+          onClick={() => handleChange("zoomRatio", options.zoomRatio + 20)}>
           <Icons.AddCircleOutline size={24} />
         </Button>
         <Input
@@ -123,8 +120,11 @@ export default function () {
         />
       </div>
       <div
-        style={{ display: "flex", alignItems: "center", justifyContent: "end" }}
-      >
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "end",
+        }}>
         <Button kind={KIND.tertiary} size={SIZE.compact}>
           <Icons.Refresh size={16} />
         </Button>

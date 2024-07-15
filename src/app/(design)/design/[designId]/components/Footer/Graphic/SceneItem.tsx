@@ -14,7 +14,7 @@ interface Props {
   changePage: (p: IScene) => void;
 }
 
-export default function ({
+export default function SceneItem({
   isCurrentScene,
   scene,
   preview,

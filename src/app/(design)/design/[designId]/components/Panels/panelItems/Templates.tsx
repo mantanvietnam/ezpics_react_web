@@ -20,6 +20,21 @@ import check from "./check.png";
 import remove from "./magic-wand (1).png";
 import Image from "next/image";
 
+type Position = {
+  top: number;
+  left: number;
+};
+
+interface ModalProps {
+  onClose: () => void;
+  position: Position | undefined; // ví dụ kiểu string, thay bằng kiểu dữ liệu thực tế
+  currentItem: any;
+  onClick: () => void;
+  loadingTrue: () => void;
+  loadingFalse: () => void;
+  pageId: () => void;
+}
+
 function checkTokenCookie() {
   var allCookies = document.cookie;
 
@@ -39,17 +54,12 @@ function checkTokenCookie() {
   }
 
   if (tokenCookie) {
-    console.log('Giá trị của cookie "token" là:', tokenCookie);
+    // console.log('Giá trị của cookie "token" là:', tokenCookie);
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
     console.log('Không tìm thấy cookie có tên là "token"');
   }
 }
-
-type Position = {
-  top: number;
-  left: number;
-};
 
 export default function Templates() {
   const inputFileRef = React.useRef<HTMLInputElement>(null);
@@ -201,7 +211,7 @@ export default function Templates() {
         const response = await axios.post<any>(`${network}/listImage`, {
           token: checkTokenCookie(),
         });
-        setTemplates(response.data.data);
+        setTemplates(response.data.data.reverse());
         setIsLoading(false);
         setLoading(false);
       } catch (error) {
@@ -399,8 +409,7 @@ export default function Templates() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
               Tải ảnh lên
@@ -409,8 +418,7 @@ export default function Templates() {
 
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
+            $style={{ cursor: "pointer", display: "flex" }}>
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -425,8 +433,7 @@ export default function Templates() {
                     width: "100%",
                   },
                 },
-              }}
-            >
+              }}>
               Chọn từ máy tính
             </Button>
             <input
@@ -443,8 +450,7 @@ export default function Templates() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}
-            >
+              }}>
               {uploads.map((upload) => (
                 <div
                   key={upload.id}
@@ -453,8 +459,7 @@ export default function Templates() {
                     alignItems: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => addImageToCanvas(upload.url)}
-                >
+                  onClick={() => addImageToCanvas(upload.url)}>
                   <div>
                     <img
                       width="100px"
@@ -475,8 +480,7 @@ export default function Templates() {
               justifyContent: "space-between",
               paddingLeft: "1.5rem",
               paddingRight: "1.5rem",
-            }}
-          >
+            }}>
             <Block>
               <h4 style={{ fontFamily: "Helvetica, Arial, sans-serif" }}>
                 Ảnh bạn đã tải
@@ -489,8 +493,7 @@ export default function Templates() {
                 display: "grid",
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
-              }}
-            >
+              }}>
               {/* {templates.map((item, index) => {
               return (
                 <ImageItem
@@ -524,7 +527,7 @@ export default function Templates() {
                   loadingTrue={() => setLoading(true)}
                   loadingFalse={() => setLoading(false)}
                   pageId={() => parseGraphicJSON()}
-                  //           setIsLoading(false);
+                  position={undefined} //           setIsLoading(false);
                   // setLoading(false);
                 />
               )}
@@ -540,8 +543,7 @@ export default function Templates() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -594,8 +596,7 @@ function ImageItem({
           "::before:hover": {
             opacity: 1,
           },
-        })}
-      >
+        })}>
         <div
           className={css({
             backgroundImage: `linear-gradient(to bottom,
@@ -627,8 +628,7 @@ function ImageItem({
             ":hover": {
               opacity: 1,
             },
-          })}
-        ></div>
+          })}></div>
         <img
           src={preview}
           alt=""
@@ -653,7 +653,7 @@ const Modal = ({
   loadingTrue,
   loadingFalse,
   pageId,
-}) => {
+}: ModalProps) => {
   // const [css] = useStyletron();
   // const editor = useEditor();
 
@@ -765,6 +765,7 @@ const Modal = ({
             );
             console.log(response.data);
             // editor.objects.add({})
+            const idProduct = useAppSelector((state) => state?.token?.id);
             if (response) {
               const res = await axios.post(
                 `${networkAPI}/addLayerImageUrlAPI`,
@@ -867,8 +868,8 @@ const Modal = ({
     <div
       style={{
         position: "fixed",
-        top: position.top,
-        left: position.left,
+        top: position?.top,
+        left: position?.left,
         background: "#fff",
         width: "160px",
         border: "1px solid #ccc",
@@ -878,8 +879,7 @@ const Modal = ({
         boxSizing: "border-box", // Thêm box-sizing để tính toán kích thước đúng
         display: "flex",
         flexDirection: "column",
-      }}
-    >
+      }}>
       {/* */}
       <div className="my-div" onClick={onClick}>
         <Image src="./check.png" alt="" width={15} height={15} />

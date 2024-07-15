@@ -25,8 +25,7 @@ const RightHandle = ({
       justifyContent: "center",
       opacity: isHover ? 1 : 0,
       cursor: "col-resize",
-    }}
-  >
+    }}>
     <VerticalLine size={24} />
   </div>
 );
@@ -42,7 +41,7 @@ interface TimelineItemProps {
   isCurrentScene: boolean;
 }
 
-export default function ({
+export default function TimelineItem({
   id,
   preview,
   frame,
@@ -156,8 +155,7 @@ export default function ({
             isHover={options.isControlHover || options.isResizing}
           />
         ),
-      }}
-    >
+      }}>
       <Block
         onMouseMove={onMouseMoveItem}
         ref={timeLineItemRef}
@@ -165,8 +163,7 @@ export default function ({
           background: "rgb(243,244,246)",
           width: "100%",
           height: "100%",
-        }}
-      >
+        }}>
         <Block
           onMouseEnter={() => setOptions({ ...options, isItemHover: true })}
           onMouseLeave={() =>
@@ -179,8 +176,7 @@ export default function ({
           $style={{
             cursor: "pointer",
             position: "relative",
-          }}
-        >
+          }}>
           <Block
             $style={{
               backgroundImage: `url(${preview})`,
@@ -189,8 +185,7 @@ export default function ({
               }px 70px`,
               backgroundRepeat: "repeat",
               height: "70px",
-            }}
-          ></Block>
+            }}></Block>
 
           {options.isItemHover &&
             refBoundingRect &&
@@ -209,8 +204,7 @@ export default function ({
                   backgroundColor: "#333333",
                   transform: "translate(0, -2px)",
                   cursor: "pointer",
-                }}
-              ></Block>
+                }}></Block>
             )}
 
           <Block
@@ -227,8 +221,7 @@ export default function ({
               alignItems: "center",
               justifyContent: "center",
               padding: "0.15rem 0.35rem",
-            }}
-          >
+            }}>
             {(duration / 1000).toFixed(1)}s
           </Block>
         </Block>

@@ -6,7 +6,7 @@ import useOnClickOutside from "@/hooks/useOnClickOutside";
 import { getDefaultTemplate } from "@/constants/design-editor";
 import { useEditor, useFrame } from "@layerhub-io/react";
 
-export default function () {
+export default function SceneContextMenu() {
   const {
     scenes,
     setScenes,

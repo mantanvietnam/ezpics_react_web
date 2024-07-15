@@ -6,7 +6,7 @@ import { Input } from "baseui/input";
 import { Slider } from "baseui/slider";
 import { Button, SIZE, KIND } from "baseui/button";
 import { PLACEMENT, StatefulPopover } from "baseui/popover";
-import { StatefulTooltip } from "baseui/tooltip";
+import { StatefulTooltip, TRIGGER_TYPE } from "baseui/tooltip";
 import SliderBox from "@mui/material/Slider";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
@@ -31,6 +31,7 @@ import ReactCrop, {
   convertToPixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { useStyletron } from "baseui";
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
@@ -314,58 +315,37 @@ export default function Flip() {
     // editor.objects.update({ angle: newValue });
   };
 
-  //Cắt ảnh
-  let maxWidth = null;
-  let maxHeight = null;
-
-  try {
-    if (
-      activeObject &&
-      activeObject.width !== undefined &&
-      activeObject.height !== undefined
-    ) {
-      maxWidth = activeObject.width;
-      maxHeight = activeObject.height;
-    } else {
-      throw new Error(
-        "activeObject is null or does not have required properties."
-      );
-    }
-  } catch (error) {
-    console.error("Error");
-  }
-
-  const [cropX, setCropX] = React.useState({ cropX: 0 });
-
-  const handleSetCropX = React.useCallback(
-    (value: number) => {
-      const newCropX = (value / 100) * maxWidth;
-      setCropX({ cropX: newCropX });
-      editor.objects.update({ cropX: newCropX });
-    },
-    [editor, maxWidth]
-  );
-
-  const [cropY, setCropY] = React.useState({ cropY: 0 });
-
-  const handleSetCropY = React.useCallback(
-    (value: number) => {
-      const newCropY = (value / 100) * maxHeight;
-      setCropY({ cropY: newCropY });
-      editor.objects.update({ cropY: newCropY });
-    },
-    [editor, maxHeight]
-  );
-
   //Crop image modal
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalCropOpen, setIsModalCropOpen] = React.useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModalCrop = () => {
+    setIsModalCropOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeModalCrop = () => {
+    setIsModalCropOpen(false);
+  };
+
+  //Change image modal
+  const [isModalChangeOpen, setIsModaChangelOpen] = React.useState(false);
+
+  const openModalChange = () => {
+    setIsModaChangelOpen(true);
+  };
+
+  const closeModalChange = () => {
+    setIsModaChangelOpen(false);
+  };
+
+  //Change image modal
+  const [isModalChangeOpenNew, setIsModaChangelOpenNew] = React.useState(false);
+
+  const openModalChangeNew = () => {
+    setIsModaChangelOpenNew(true);
+  };
+
+  const closeModalChangeNew = () => {
+    setIsModaChangelOpenNew(false);
   };
 
   return (
@@ -587,12 +567,55 @@ export default function Flip() {
             <Button
               size={SIZE.compact}
               kind={KIND.tertiary}
-              onClick={openModal}>
+              onClick={openModalCrop}>
               Cắt ảnh
             </Button>
           </StatefulTooltip>
 
-          <ModalImageCrop isOpen={isModalOpen} onClose={closeModal} />
+          <ModalImageCrop isOpen={isModalCropOpen} onClose={closeModalCrop} />
+
+          {/* thay anh */}
+          <StatefulTooltip
+            placement={PLACEMENT.bottomLeft}
+            triggerType={TRIGGER_TYPE.click}
+            overrides={{
+              Inner: {
+                style: ({ $theme }) => ({
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  paddingRight: "0px",
+                  paddingLeft: "0px",
+                }),
+              },
+            }}
+            content={() => (
+              <Block width={"200px"} backgroundColor={"#fff"} padding={"20px"}>
+                <Button
+                  onClick={() => openModalChangeNew()}
+                  style={{ fontSize: "14px" }}>
+                  Chọn ảnh từ thiết bị
+                </Button>
+                <Button
+                  style={{ marginTop: "10px", fontSize: "14px" }}
+                  onClick={() => openModalChange()}>
+                  Chọn ảnh có sẵn
+                </Button>
+              </Block>
+            )}>
+            <Button size={SIZE.compact} kind={KIND.tertiary}>
+              Thay ảnh
+            </Button>
+          </StatefulTooltip>
+
+          <ModalChangeImageNew
+            isOpen={isModalChangeOpenNew}
+            onClose={closeModalChangeNew}></ModalChangeImageNew>
+
+          <ModalChangeImage
+            isOpen={isModalChangeOpen}
+            onClose={closeModalChange}></ModalChangeImage>
         </Block>
       </StatefulPopover>
     </>
@@ -639,12 +662,12 @@ function centerAspectCrop(
   );
 }
 
-interface ModalImageCropProps {
+interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function ModalImageCrop({ isOpen, onClose }: ModalImageCropProps) {
+export function ModalImageCrop({ isOpen, onClose }: ModalProps) {
   const editor = useEditor();
   const objects = useObjects() as ILayer[];
   const [loading, setLoading] = React.useState(false);
@@ -995,5 +1018,485 @@ export function TransitionElement() {
         </StatefulTooltip>
       </Block>
     </StatefulPopover>
+  );
+}
+
+export function ModalChangeImageNew({ isOpen, onClose }: ModalProps) {
+  const [imgSrc, setImgSrc] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = React.useState(false);
+
+  const token = checkTokenCookie();
+  const idProduct = useAppSelector((state) => state?.token?.id);
+  const activeObject = useActiveObject() as any;
+
+  const editor = useEditor();
+  const objects = useObjects() as ILayer[];
+  const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    if (objects) {
+      setLayerObjects(objects);
+      console.log(objects);
+    }
+  }, [objects]);
+
+  React.useEffect(() => {
+    let watcher = async () => {
+      if (objects) {
+        setLayerObjects([...objects]);
+      }
+    };
+    if (editor) {
+      editor.on("history:changed", watcher);
+    }
+    return () => {
+      if (editor) {
+        editor.off("history:changed", watcher);
+      }
+    };
+  }, [editor, objects]);
+
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+
+      const reader = new FileReader();
+      reader.addEventListener("load", () =>
+        setImgSrc(reader.result?.toString() || "")
+      );
+      reader.readAsDataURL(file);
+    }
+  };
+  const onChangeImage = async () => {
+    setLoading(true);
+    if (!selectedFile) {
+      setLoading(false);
+      console.error("No file selected");
+      return;
+    }
+
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/jpg"];
+
+    if (!allowedFileTypes.includes(selectedFile.type)) {
+      toast.error("Chỉ chấp nhận file png, jpg hoặc jpeg");
+      return;
+    }
+
+    const formData = new FormData();
+
+    if (token) {
+      formData.append("idproduct", idProduct);
+      formData.append("token", token);
+      formData.append("idlayer", activeObject.id);
+      formData.append("file", selectedFile);
+      console.log(formData);
+    }
+
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "*",
+      "Content-Type": "multipart/form-data",
+    };
+
+    const config = {
+      headers: headers,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://apis.ezpics.vn/apis/changeLayerImageNew",
+        formData,
+        config
+      );
+      console.log(response);
+
+      if (response && response?.data?.code === 1) {
+        const newOptions = {
+          id: activeObject.id,
+          name: "StaticImage",
+          angle: activeObject.angle,
+          stroke: activeObject.stroke,
+          strokeWidth: activeObject.strokeWidth,
+          left: activeObject.left,
+          top: activeObject.top,
+          opacity: activeObject.opacity,
+          originX: activeObject.originX,
+          originY: activeObject.originY,
+          scaleX: activeObject.scaleX,
+          // img.naturalWidth,
+          scaleY: activeObject.scaleY,
+          // img.naturalWidth,
+          // data.width,
+          type: "StaticImage",
+          flipX: activeObject.flipX,
+          flipY: activeObject.flipY,
+          skewX: activeObject.skewX,
+          skewY: activeObject.skewY,
+          visible: activeObject.visible,
+          shadow: activeObject.shadow,
+          src: response.data?.link,
+          cropX: activeObject.cropX,
+          cropY: activeObject.cropY,
+          image_svg: "",
+          metadata: {
+            naturalWidth: activeObject.metadata.naturalWidth,
+            naturalHeight: activeObject.metadata.naturalHeight,
+            initialHeight: activeObject.metadata.initialHeight,
+            initialWidth: activeObject.metadata.initialWidth,
+            lock: activeObject.metadata.lock,
+            variable: activeObject.metadata.variable,
+            variableLabel: activeObject.metadata.variableLabel,
+            brightness: activeObject.metadata.brightness,
+            sort: activeObject.metadata.sort,
+          },
+        };
+
+        editor.objects.remove();
+        editor.objects.add(newOptions);
+
+        layerObjects.map((layer, index) => {
+          if (index !== activeObject.metadata.sort) {
+            editor.objects.sendToBack();
+            index = layerObjects.findIndex((obj) => obj === layer);
+          }
+          console.log(activeObject.metadata.sort);
+        });
+      }
+    } catch (error) {
+      console.error("Error when making POST request:", error);
+    }
+  };
+
+  return (
+    <>
+      <Modal
+        onClose={() => {
+          onClose();
+          setImgSrc("");
+        }}
+        closeable
+        isOpen={isOpen}
+        animate
+        autoFocus
+        size={SIZE.default}
+        role={ROLE.dialog}
+        overrides={{
+          Root: {
+            style: {
+              zIndex: 5,
+            },
+          },
+          Dialog: {
+            style: {
+              marginTop: 0,
+              marginLeft: 0,
+              marginRight: 0,
+              marginBottom: 0,
+              borderTopRightRadius: 0,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              width: "auto",
+              height: "auto",
+            },
+          },
+        }}>
+        <ModalBody>
+          <div>
+            <input type="file" accept="image/*" onChange={onSelectFile} />
+            {!!imgSrc && <img alt="Change me" src={imgSrc} />}
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          {loading ? (
+            <Button isLoading>Loading</Button>
+          ) : (
+            <Button onClick={() => onChangeImage()}>Thay ảnh</Button>
+          )}
+        </ModalFooter>
+      </Modal>
+    </>
+  );
+}
+
+function ImageItem({
+  preview,
+  onClick,
+  onContextMenu,
+  item,
+}: {
+  preview: any;
+  onClick?: (option: any) => void;
+  onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  item: any;
+}) {
+  const [css] = useStyletron();
+
+  return (
+    <>
+      <div
+        onClick={onClick}
+        onContextMenu={onContextMenu}
+        className={css({
+          position: "relative",
+          background: "#f8f8fb",
+          cursor: "pointer",
+          borderRadius: "8px",
+          overflow: "hidden",
+          "::before:hover": {
+            opacity: 1,
+          },
+        })}>
+        <div
+          className={css({
+            backgroundImage: `linear-gradient(to bottom,
+              rgba(0, 0, 0, 0) 0,
+              rgba(0, 0, 0, 0.006) 8.1%,
+              rgba(0, 0, 0, 0.022) 15.5%,
+              rgba(0, 0, 0, 0.047) 22.5%,
+              rgba(0, 0, 0, 0.079) 29%,
+              rgba(0, 0, 0, 0.117) 35.3%,
+              rgba(0, 0, 0, 0.158) 41.2%,
+              rgba(0, 0, 0, 0.203) 47.1%,
+              rgba(0, 0, 0, 0.247) 52.9%,
+              rgba(0, 0, 0, 0.292) 58.8%,
+              rgba(0, 0, 0, 0.333) 64.7%,
+              rgba(0, 0, 0, 0.371) 71%,
+              rgba(0, 0, 0, 0.403) 77.5%,
+              rgba(0, 0, 0, 0.428) 84.5%,
+              rgba(0, 0, 0, 0.444) 91.9%,
+              rgba(0, 0, 0, 0.45) 100%)`,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 0,
+            transition: "opacity 0.3s ease-in-out",
+            height: "100%",
+            width: "100%",
+            ":hover": {
+              opacity: 1,
+            },
+          })}></div>
+        <img
+          src={preview}
+          alt=""
+          className={css({
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            pointerEvents: "none",
+            verticalAlign: "middle",
+          })}
+        />
+      </div>
+    </>
+  );
+}
+
+export function ModalChangeImage({ isOpen, onClose }: ModalProps) {
+  const [templates, setTemplates] = useState<any[]>([]);
+
+  const token = checkTokenCookie();
+  const idProduct = useAppSelector((state) => state?.token?.id);
+  const activeObject = useActiveObject() as any;
+
+  const editor = useEditor();
+  const objects = useObjects() as ILayer[];
+  const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    if (objects) {
+      setLayerObjects(objects);
+      console.log(objects);
+    }
+  }, [objects]);
+
+  React.useEffect(() => {
+    let watcher = async () => {
+      if (objects) {
+        setLayerObjects([...objects]);
+      }
+    };
+    if (editor) {
+      editor.on("history:changed", watcher);
+    }
+    return () => {
+      if (editor) {
+        editor.off("history:changed", watcher);
+      }
+    };
+  }, [editor, objects]);
+
+  const handleImageClick = async (id: any) => {
+    console.log("Selected Image Id:", id);
+
+    const formData = new FormData();
+
+    const widthImage = activeObject.metadata.naturalWidth;
+
+    if (token) {
+      formData.append("idproduct", idProduct);
+      formData.append("token", token);
+      formData.append("idlayer", activeObject.id);
+      formData.append("idfile", id);
+      formData.append("width", widthImage);
+      console.log(formData);
+    }
+
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "*",
+      "Content-Type": "multipart/form-data",
+    };
+
+    const config = {
+      headers: headers,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://apis.ezpics.vn/apis/changeLayerImageAPI",
+        formData,
+        config
+      );
+      console.log(response);
+
+      if (response && response?.data?.code === 1) {
+        const newOptions = {
+          id: activeObject.id,
+          name: "StaticImage",
+          angle: activeObject.angle,
+          stroke: activeObject.stroke,
+          strokeWidth: activeObject.strokeWidth,
+          left: activeObject.left,
+          top: activeObject.top,
+          opacity: activeObject.opacity,
+          originX: activeObject.originX,
+          originY: activeObject.originY,
+          scaleX: activeObject.scaleX,
+          // img.naturalWidth,
+          scaleY: activeObject.scaleY,
+          // img.naturalWidth,
+          // data.width,
+          type: "StaticImage",
+          flipX: activeObject.flipX,
+          flipY: activeObject.flipY,
+          skewX: activeObject.skewX,
+          skewY: activeObject.skewY,
+          visible: activeObject.visible,
+          shadow: activeObject.shadow,
+          src: response.data?.link,
+          cropX: activeObject.cropX,
+          cropY: activeObject.cropY,
+          image_svg: "",
+          metadata: {
+            naturalWidth: activeObject.metadata.naturalWidth,
+            naturalHeight: activeObject.metadata.naturalHeight,
+            initialHeight: activeObject.metadata.initialHeight,
+            initialWidth: activeObject.metadata.initialWidth,
+            lock: activeObject.metadata.lock,
+            variable: activeObject.metadata.variable,
+            variableLabel: activeObject.metadata.variableLabel,
+            brightness: activeObject.metadata.brightness,
+            sort: activeObject.metadata.sort,
+          },
+        };
+
+        editor.objects.remove();
+        editor.objects.add(newOptions);
+
+        layerObjects.map((layer, index) => {
+          // Nếu số thứ tự của object không bằng với sort, tiếp tục đẩy về phía sau
+          if (index !== activeObject.metadata.sort) {
+            editor.objects.sendToBack();
+            // Cập nhật lại số thứ tự của object sau khi đẩy về phía sau
+            index = layerObjects.findIndex((obj) => obj === layer);
+          }
+          console.log(activeObject.metadata.sort); // In ra sort khi nó đúng với số thứ tự của object
+        });
+      }
+    } catch (error) {
+      console.error("Error when making POST request:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.post<any>(
+          `https://apis.ezpics.vn/apis/listImage`,
+          {
+            token: checkTokenCookie(),
+          }
+        );
+        setTemplates(response.data.data.reverse());
+      } catch (error) {
+        console.error("Lỗi khi gửi yêu cầu GET:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  return (
+    <>
+      <Modal
+        onClose={() => {
+          onClose();
+        }}
+        closeable
+        isOpen={isOpen}
+        animate
+        autoFocus
+        size={SIZE.default}
+        role={ROLE.dialog}
+        overrides={{
+          Root: {
+            style: {
+              zIndex: 5,
+            },
+          },
+          Dialog: {
+            style: {
+              marginTop: "20px",
+              marginLeft: 0,
+              marginRight: 0,
+              marginBottom: "20px",
+              borderTopRightRadius: 0,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              width: "1000px",
+              height: "auto",
+            },
+          },
+        }}>
+        <ModalBody>
+          <div style={{ padding: "0 1.5rem" }}>
+            <div
+              style={{
+                display: "grid",
+                gap: "0.5rem",
+                gridTemplateColumns: "3fr 3fr 3fr 3fr 3fr",
+              }}>
+              {templates?.map((item, index) => {
+                return (
+                  <ImageItem
+                    key={index}
+                    preview={`${item.link}`}
+                    item={item}
+                    onClick={() => handleImageClick(item.id)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
+    </>
   );
 }

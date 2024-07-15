@@ -15,7 +15,7 @@ import TimelineContextMenu from "./TimelineContextMenu";
 import useContextMenuTimelineRequest from "@/hooks/useContextMenuTimelineRequest";
 import { findSceneIndexByTime } from "@/app/(design)/design/[designId]/utils/scenes";
 
-export default function () {
+export default function Timeline() {
   const { time, setTime, status } = useTimer();
   const {
     setScenes,

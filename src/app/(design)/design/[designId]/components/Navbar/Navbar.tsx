@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { styled, ThemeProvider, DarkTheme, LightTheme } from "baseui";
+import { styled, ThemeProvider, DarkTheme } from "baseui";
 import { Theme } from "baseui/theme";
 import { Button, KIND } from "baseui/button";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
@@ -23,6 +23,7 @@ import Box from "@mui/material/Box";
 import warning from "./warning.png";
 import ezlogo from "./EZPICS (converted)-03.png";
 import Image from "next/image";
+import { checkTokenCookie } from "@/utils";
 
 const Container = styled<"div", {}, Theme>("div", ({ $theme }) => ({
   height: "64px",
@@ -35,7 +36,7 @@ const Container = styled<"div", {}, Theme>("div", ({ $theme }) => ({
   justifyContent: "space-between",
 }));
 
-export default function Navbar() {
+const Navbar: React.FC = () => {
   const router = useRouter();
   const parseData = (data: any) => {
     let dataReal = [] as any[];
@@ -313,32 +314,6 @@ export default function Navbar() {
   //     console.log("NO CURRENT DESIGN");
   //   }
   // };
-  function checkTokenCookie() {
-    var allCookies = document.cookie;
-
-    var cookiesArray = allCookies.split("; ");
-
-    var tokenCookie;
-    for (var i = 0; i < cookiesArray.length; i++) {
-      var cookie = cookiesArray[i];
-      var cookieParts = cookie.split("=");
-      var cookieName = cookieParts[0];
-      var cookieValue = cookieParts[1];
-
-      if (cookieName === "token") {
-        tokenCookie = cookieValue;
-        break;
-      }
-    }
-
-    // Kiểm tra nếu đã tìm thấy cookie "token"
-    if (tokenCookie) {
-      console.log('Giá trị của cookie "token" là:', tokenCookie);
-      return tokenCookie.replace(/^"|"$/g, "");
-    } else {
-      console.log('Không tìm thấy cookie có tên là "token"');
-    }
-  }
   const handleSaveIcon = async () => {
     const template = editor.scene.exportToJSON();
     const image = (await editor.renderer.render(template)) as string;
@@ -554,7 +529,9 @@ export default function Navbar() {
 
     formData.append("file", base64toFile(image, "preview.png"));
     formData.append("idProduct", idProduct);
-    formData.append("token", checkTokenCookie());
+    if (token) {
+      formData.append("token", token);
+    }
 
     try {
       // Make an Axios POST request with the FormData
@@ -723,7 +700,7 @@ export default function Navbar() {
 
   return (
     <>
-      <ThemeProvider theme={DarkTheme}>
+      <div>
         <Container>
           <div style={{ color: "#ffffff" }}>
             <Image
@@ -742,8 +719,7 @@ export default function Navbar() {
               gap: "0.5rem",
               alignItems: "center",
               paddingBottom: "10px",
-            }}
-          >
+            }}>
             <input
               multiple={false}
               onChange={handleFileInput}
@@ -755,30 +731,28 @@ export default function Navbar() {
             <Button
               size="compact"
               onClick={handleInputFileRefClick}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
                     marginRight: "4px",
                   },
                 },
-              }}
-            >
+              }}>
               Nhập dữ liệu JSON
             </Button>
 
             <Button
               size="compact"
               onClick={makeDownloadTemplate}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
                     marginRight: "4px",
                   },
                 },
-              }}
-            >
+              }}>
               Xuất dữ liệu JSON
             </Button>
             {/* <Button
@@ -796,7 +770,7 @@ export default function Navbar() {
             <Button
               size="compact"
               onClick={() => makePreview()}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
@@ -806,8 +780,7 @@ export default function Navbar() {
                     // marginBottom: "10px",
                   },
                 },
-              }}
-            >
+              }}>
               <Image
                 src={imageIcon}
                 alt=""
@@ -818,7 +791,7 @@ export default function Navbar() {
             <Button
               size="compact"
               onClick={() => setDisplayPreview(true)}
-              kind={KIND.tertiary}
+              kind={KIND.primary}
               overrides={{
                 StartEnhancer: {
                   style: {
@@ -826,8 +799,7 @@ export default function Navbar() {
                     paddingBottom: "10px",
                   },
                 },
-              }}
-            >
+              }}>
               <Image
                 alt=""
                 src={exportIcon}
@@ -837,7 +809,7 @@ export default function Navbar() {
             </Button>
           </Block>
         </Container>
-      </ThemeProvider>
+      </div>
       {loading && (
         <div
           style={{
@@ -846,8 +818,7 @@ export default function Navbar() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
             <div className="ldio-4qpid53rus92">
               <div></div>
@@ -866,7 +837,9 @@ export default function Navbar() {
                 zIndex: 999999,
               }}
               alt=""
-              src={ezlogo}
+              src="/images/EZPICS.png"
+              width={40}
+              height={40}
             />
           </div>
         </div>
@@ -875,8 +848,7 @@ export default function Navbar() {
         open={modalBuyingFree}
         onClose={handleCloseModalFree}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box sx={styleModalBuyingFree}>
           <p
             style={{
@@ -885,8 +857,7 @@ export default function Navbar() {
               fontWeight: "bold",
               paddingBottom: "10px",
               fontFamily: "Helvetica, Arial, sans-serif",
-            }}
-          >
+            }}>
             Cảnh báo
           </p>
           <Image
@@ -901,8 +872,7 @@ export default function Navbar() {
               fontWeight: "500",
               paddingTop: "10px",
               fontFamily: "Helvetica, Arial, sans-serif",
-            }}
-          >
+            }}>
             Bạn muốn lưu mẫu thiết kế này trước khi rời đi chứ ?
           </p>
 
@@ -913,10 +883,8 @@ export default function Navbar() {
               width: "100%",
               paddingRight: "5%",
               paddingLeft: "5%",
-            }}
-          >
+            }}>
             <Button
-              variant="contained"
               size="default"
               style={{
                 height: 40,
@@ -931,8 +899,7 @@ export default function Navbar() {
               }}
               onClick={() => {
                 handleSaveIcon();
-              }}
-            >
+              }}>
               {" "}
               {loadingBuyingFunc ? (
                 <span className="loaderNew"></span>
@@ -941,7 +908,6 @@ export default function Navbar() {
               )}
             </Button>
             <Button
-              variant="contained"
               size="default"
               style={{
                 height: 40,
@@ -955,8 +921,7 @@ export default function Navbar() {
               }}
               onClick={() => {
                 handleNotSave();
-              }}
-            >
+              }}>
               {" "}
               {loadingBuyingFunc ? (
                 <span className="loaderNew"></span>
@@ -969,4 +934,6 @@ export default function Navbar() {
       </Modal>
     </>
   );
-}
+};
+
+export default Navbar;

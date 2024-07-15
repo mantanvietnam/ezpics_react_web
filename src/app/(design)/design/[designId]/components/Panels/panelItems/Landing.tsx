@@ -23,6 +23,12 @@ import ArrowBackOutline from "@/components/Icons/ArrowBackOutline";
 import { useAppDispatch, useAppSelector } from "@/hooks/hook";
 import { generateToServer } from "@/api/gererateToServer";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
+
+interface MetadataVariable {
+  variable: string;
+  variableLabel: string;
+  uppercase?: string;
+}
 interface Tab {
   id: number;
   name: string;
@@ -41,7 +47,9 @@ export default function Landing() {
   const network = useAppSelector((state) => state.network.ipv4Address);
   const editor = useEditor();
   const { setActiveSubMenu } = useAppContext();
-  const variable = useAppSelector((state) => state.variable.metadataVariables);
+  const variable: MetadataVariable = useAppSelector(
+    (state) => state.variable.metadataVariables[0]
+  );
 
   const setIsSidebarOpen = useSetIsSidebarOpen();
   const idProduct = useAppSelector((state) => state.token.id);

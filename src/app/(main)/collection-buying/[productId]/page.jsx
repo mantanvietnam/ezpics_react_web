@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import images from "../../../../../public/images/index2";
 import { setCookie } from "@/utils";
+import { useRouter } from "next/navigation";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -25,6 +26,7 @@ const VND = new Intl.NumberFormat("vi-VN", {
 
 const Product = (props) => {
   const { data, user, isLoading, defaultPrice, collection } = props;
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [openBuy, setOpenBuy] = useState(false);
@@ -68,6 +70,7 @@ const Product = (props) => {
       });
       if (response.code === 1) {
         toast.success("Bạn đã mua thiết kế thành công");
+        router.path(`/your-collection/purchase-collection`);
         try {
           const response = await getInfoMemberAPI({ token: token });
           if (response.code === 0) {

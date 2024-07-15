@@ -12,7 +12,7 @@ import useSetIsSidebarOpen from "@/hooks/useSetIsSidebarOpen";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
-import { images2 } from "../../../../../../../../public/images";
+// import { images2 } from "../../../../../../../../public/images";
 // import { checkTokenCookie } from "@/utils";
 // import { margin } from '@mui/system';
 
@@ -256,24 +256,21 @@ export default function Text() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4
               style={{
                 fontFamily: "Helvetica, Arial, sans-serif",
                 marginBottom: "10px",
                 marginTop: "10px",
-              }}
-            >
+              }}>
               Kiểu chữ
             </h4>
           </Block>
 
           <Block
             onClick={() => setIsSidebarOpen(false)}
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
+            $style={{ cursor: "pointer", display: "flex" }}>
             <AngleDoubleLeft size={18} />
           </Block>
         </Block>
@@ -290,8 +287,7 @@ export default function Text() {
                     width: "100%",
                   },
                 },
-              }}
-            >
+              }}>
               Thêm chữ
             </Button>
 
@@ -301,8 +297,7 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}
-            >
+              }}>
               {allText.map((text, index) => (
                 <div
                   key={text.id}
@@ -314,8 +309,7 @@ export default function Text() {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}
-                >
+                  onClick={() => handleAddText(text)}>
                   <p
                     style={{
                       color: text.content.color,
@@ -324,8 +318,7 @@ export default function Text() {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}
-                  >
+                    }}>
                     {text.content.text}
                   </p>
                 </div>
@@ -342,8 +335,7 @@ export default function Text() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -359,7 +351,7 @@ export default function Text() {
                 width: 40,
                 height: 40,
               }}
-              src={images2.logo}
+              src="/images/EZPICS.png"
             />
           </div>
         </div>
@@ -396,8 +388,7 @@ function TextComponentItem({
         "::before:hover": {
           opacity: 1,
         },
-      })}
-    >
+      })}>
       <div
         className={css({
           backgroundImage: `linear-gradient(to bottom,
@@ -429,8 +420,7 @@ function TextComponentItem({
           ":hover": {
             opacity: 1,
           },
-        })}
-      ></div>
+        })}></div>
       <img
         src={component.preview}
         className={css({

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Modal, ModalBody, SIZE, ROLE } from "baseui/modal";
 import useEditorType from "@/hooks/useEditorType";

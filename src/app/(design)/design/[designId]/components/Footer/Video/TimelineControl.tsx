@@ -5,7 +5,7 @@ import Pause from "@/components/Icons/Pause";
 import PlaySolid from "@/components/Icons/PlaySolid";
 import useDesignEditorContext from "@/hooks/useDesignEditorContext";
 
-export default function () {
+export default function TimelineItemsControl() {
   const { pause, status } = useTimer();
   const { setDisplayPlayback } = useDesignEditorContext();
 
@@ -32,8 +32,7 @@ export default function () {
           justifyContent: "center",
           boxShadow:
             "0 0 0 1px rgba(64,87,109,0.07),0 2px 12px rgba(53,71,90,0.2)",
-        }}
-      >
+        }}>
         {status === "STOPPED" || status === "PAUSED" ? (
           <PlaySolid size={24} />
         ) : (

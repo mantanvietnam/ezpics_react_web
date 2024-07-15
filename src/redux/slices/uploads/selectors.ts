@@ -1,4 +1,4 @@
-import { RootState } from "@/store/rootReducer";
+import { RootState } from "../../store";
 
 export const selectUploads = (state: RootState) => state.uploads.uploads;
 export const selectUploading = (state: RootState) => state.uploads.uploading;

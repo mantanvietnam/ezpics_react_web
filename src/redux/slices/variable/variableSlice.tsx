@@ -3,8 +3,14 @@ import { createReducer, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
+interface MetadataVariable {
+  variable: string;
+  variableLabel: string;
+  uppercase?: string;
+}
+
 export interface VariableState {
-  metadataVariables: any[];
+  metadataVariables: MetadataVariable[];
 }
 
 const initialState: VariableState = {
@@ -15,7 +21,7 @@ export const variableSlice = createSlice({
   name: "variable",
   initialState,
   reducers: {
-    REPLACE_METADATA: (state, action: PayloadAction<any[]>) => {
+    REPLACE_METADATA: (state, action: PayloadAction<MetadataVariable[]>) => {
       state.metadataVariables = action.payload;
     },
   },
