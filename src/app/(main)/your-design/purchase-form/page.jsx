@@ -16,27 +16,28 @@ export default function Page() {
     limit: 20,
     page: 1,
     name: searchTerm,
+    type: 'user_edit'
   })
 
   useEffect(() => {
     const fetchData = async () => {
-        setLoading(true)
-        try {
-            const response = await getMyProductApi(searchValue);
-            setLoading(false)
-            if (response?.listData?.length === 0) {
-                setHasMore(false); // No more products to load
-            } else {
-                setProducts(response?.listData);
-                console.log(products)
-            }
-        } catch (error) {
-            console.log(error);
-            setLoading(false)
+      setLoading(true)
+      try {
+        const response = await getMyProductApi(searchValue);
+        setLoading(false)
+        if (response?.listData?.length === 0) {
+          setHasMore(false); // No more products to load
+        } else {
+          setProducts(response?.listData);
+          console.log(products)
         }
+      } catch (error) {
+        console.log(error);
+        setLoading(false)
+      }
     }
     fetchData()
-},[searchValue])
+  }, [searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
@@ -78,7 +79,7 @@ export default function Page() {
       setSearchValue((prev) => ({ ...prev, name: value }));
     }, 2000); // 2000 milliseconds = 2 seconds
   };
-  return ( 
+  return (
     <>
       <div className='w-1/3 pt-1 flex items-center gap-2 mb-5'>
         <input

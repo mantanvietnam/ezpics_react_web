@@ -62,7 +62,6 @@ export default function Flip() {
   const objects = useObjects() as ILayer[];
 
   const [layerObjects, setLayerObjects] = React.useState<any[]>([]);
-  console.log("🚀 ~ Flip ~ layerObjects:", layerObjects);
   const idProduct = useAppSelector((state) => state.token.id);
   const token1 = checkTokenCookie();
   const activeObject = useActiveObject() as any;
@@ -298,6 +297,7 @@ export default function Flip() {
     (value: number) => {
       setStated({ opacity: value });
       editor.objects.update({ opacity: value / 100 });
+      console.log('🚀 ~ Flip ~ editor.objects:', editor.objects)
     },
     [editor]
   );
