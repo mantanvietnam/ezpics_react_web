@@ -1,4 +1,3 @@
-import { IFontFamily, Resource } from "@/interfaces/editor";
 import { createReducer, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
