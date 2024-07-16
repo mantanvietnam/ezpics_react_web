@@ -5,7 +5,13 @@ export const setCookie = (name, value, expirationHours) => {
   var expires = "expires=" + date.toUTCString();
   document.cookie = name + "=" + value + ";" + expires + ";path=/";
 };
+
 export const getCookie = (name) => {
+  if (typeof document === "undefined") {
+    // Nếu không có document (đang chạy trên server), trả về null hoặc giá trị mặc định
+    return null;
+  }
+
   var dc = document.cookie;
   var prefix = name + "=";
   var begin = dc.indexOf("; " + prefix);
@@ -24,6 +30,12 @@ export const getCookie = (name) => {
 };
 
 export function checkTokenCookie() {
+  // Kiểm tra xem đang chạy trên client hay không
+  // if (typeof document === "undefined") {
+  //   console.log("document is not defined");
+  //   return null;
+  // }
+
   // Lấy tất cả các cookies
   var allCookies = document.cookie;
 
@@ -50,6 +62,7 @@ export function checkTokenCookie() {
     return tokenCookie.replace(/^"|"$/g, "");
   } else {
     console.log('Không tìm thấy cookie có tên là "token"');
+    return null;
   }
 }
 

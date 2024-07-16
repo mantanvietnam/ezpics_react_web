@@ -35,28 +35,30 @@ export default function CenteredLayouts(props) {
   };
 
   return (
-    <SessionProvider className="">
-      <Header toggleNavbar={toggleNavbar} />
-      <div
-        className={`fixed inset-0 bg-black transition-opacity duration-0 ${
-          isNavbarOpen && isMobile
-            ? "opacity-50 z-40 ml-[250px]"
-            : "opacity-0 pointer-events-none"
-        }`}
-        onClick={toggleNavbar}></div>
-      <main className="flex pt-[var(--header-height)]">
-        <Nav isOpen={isNavbarOpen} closeNavbar={closeNavbar} />
-        {isMobile ? (
-          <div className=" w-full flex justify-center">{props.children}</div>
-        ) : (
-          <div
-            className={`transition-all duration-300 ${
-              isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
-            } flex justify-center`}>
-            {props.children}
-          </div>
-        )}
-      </main>
-    </SessionProvider>
+    <>
+      <SessionProvider className="">
+        <Header toggleNavbar={toggleNavbar} />
+        <div
+          className={`fixed inset-0 bg-black transition-opacity duration-0 ${
+            isNavbarOpen && isMobile
+              ? "opacity-50 z-40 ml-[250px]"
+              : "opacity-0 pointer-events-none"
+          }`}
+          onClick={toggleNavbar}></div>
+        <main className="flex pt-[var(--header-height)]">
+          <Nav isOpen={isNavbarOpen} closeNavbar={closeNavbar} />
+          {isMobile ? (
+            <div className=" w-full flex justify-center">{props.children}</div>
+          ) : (
+            <div
+              className={`transition-all duration-300 ${
+                isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
+              } flex justify-center`}>
+              {props.children}
+            </div>
+          )}
+        </main>
+      </SessionProvider>
+    </>
   );
 }

@@ -674,41 +674,37 @@ const Header = ({ toggleNavbar }) => {
           )}
 
           {isAuth ? (
-            <div>
-              {/* <img className="w-full h-full object-cover" alt="User Avatar" src={dataInforUser?.avatar} /> */}
-
-              <Dropdown
-                trigger={["click"]}
-                placement="bottomRight"
-                arrow={true}
-                dropdownRender={() => (
-                  <div
-                    style={{
-                      maxHeight: "400px",
-                      background: "white",
-                      overflowY: "overlay",
-                      borderRadius: "10px",
-                      scrollbarWidth: "thin",
-                      scrollbars: "false",
-                    }}>
-                    {itemsDropdowUser.map((item) => (
-                      <div key={item.key}>{item.label}</div>
-                    ))}
+            <Dropdown
+              trigger={["click"]}
+              placement="bottomRight"
+              arrow={true}
+              dropdownRender={() => (
+                <div
+                  style={{
+                    maxHeight: "400px",
+                    background: "white",
+                    overflowY: "overlay",
+                    borderRadius: "10px",
+                    scrollbarWidth: "thin",
+                    scrollbars: "false",
+                  }}>
+                  {itemsDropdowUser.map((item) => (
+                    <div key={item.key}>{item.label}</div>
+                  ))}
+                </div>
+              )}>
+              <div>
+                <Space>
+                  <div className="w-10 h-10 rounded-full overflow-hidden m-5">
+                    <img
+                      className="w-full h-full object-cover rounded-full"
+                      alt="User Avatar"
+                      src={dataInforUser?.avatar}
+                    />
                   </div>
-                )}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    <div className="w-10 h-10 rounded-full overflow-hidden m-5">
-                      <img
-                        className="w-full h-full object-cover rounded-full"
-                        alt="User Avatar"
-                        src={dataInforUser?.avatar}
-                      />
-                    </div>
-                  </Space>
-                </a>
-              </Dropdown>
-            </div>
+                </Space>
+              </div>
+            </Dropdown>
           ) : (
             <div>
               <button
@@ -723,10 +719,11 @@ const Header = ({ toggleNavbar }) => {
           )}
         </div>
         <div
-          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline
-            ? "bg-green-500 text-white opacity-0"
-            : "bg-red-500 text-white opacity-100"
-            } ${show ? "opacity-100" : "opacity-0"}`}
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
+            isOnline
+              ? "bg-green-500 text-white opacity-0"
+              : "bg-red-500 text-white opacity-100"
+          } ${show ? "opacity-100" : "opacity-0"}`}
           style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>
@@ -743,8 +740,7 @@ const Header = ({ toggleNavbar }) => {
           open={modalLogoutDevice}
           onClose={handleLogoutDevice}
           aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+          aria-describedby="modal-modal-description">
           <Box className="flex flex-col items-center justify-center">
             <p
               style={{
@@ -755,12 +751,7 @@ const Header = ({ toggleNavbar }) => {
               }}>
               Cảnh báo
             </p>
-            <Image
-              src={contactInfo.warning}
-              alt=""
-              width={150}
-              height={150}
-            />
+            <Image src={contactInfo.warning} alt="" width={150} height={150} />
             <p className="py-6 text-sm font-semibold">
               Tài khoản đã bị đăng nhập ở thiết bị khác
             </p>

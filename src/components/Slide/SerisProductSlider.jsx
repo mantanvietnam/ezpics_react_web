@@ -1,9 +1,9 @@
-import DefaultSlide from "./DefaultSlide";
+import DefaultSlidePrint from "./DefalultSlidePrint";
 import { getserisProductApi } from "@/api/product";
 
 const SerisProductSlider = () => {
   return (
-    <DefaultSlide
+    <DefaultSlidePrint
       apiAction={async () => {
         // "use server";
         const response = await getserisProductApi({ limit: "12", page: "1" });
