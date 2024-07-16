@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
+import TruncatedText from './TruncatedText';
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -60,16 +61,13 @@ export default function ProductComponent({ product }) {
         </div>
         <div className="p-4">
           <h2 className="text-lg font-medium h-20">
-            {product?.name}
+            <TruncatedText text={product?.name} maxLength={33}/>
           </h2>
           <p className="text-gray-500 mt-2 text-sm">
             Đã bán {product?.sold}
           </p>
           <div className="mt-2">
-            <span className="text-red-500 mr-2 font-bold text-sm">
-              {/* {product?.sale_price === 0
-                ? "Miễn phí"
-                : VND.format(product?.sale_price)} */}
+            <span className="text-red-500 mr-2 font-bold text-xl">
                   {product.sale_price === 0 || (dataInforUser?.member_pro === 1 && product?.free_pro) ? "Miễn phí" : VND.format(product.sale_price)}
             </span>
             <span className="text-gray-500 line-through">

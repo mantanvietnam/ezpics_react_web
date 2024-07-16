@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import Image from "next/image"
+import TruncatedText from './TruncatedText';
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -21,7 +22,7 @@ export default function Collection({ collection }) {
       </div>
       <div className="p-4">
         <h2 className="text-lg font-medium h-20">
-          {collection?.name}
+          <TruncatedText text={collection?.name} maxLength={33}/>
         </h2>
         <p className="text-gray-500 mt-2">
           Số lượng mẫu {collection?.number_product}
