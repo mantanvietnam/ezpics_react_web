@@ -15,6 +15,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useSession } from "next-auth/react";
 import { getCookie } from "@/utils";
+import TruncatedText from "../TruncatedText";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
@@ -137,13 +138,13 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                     </div>
                     <div className="p-4">
                       <h2 className="text-lg font-medium h-20">
-                        {product.name}
+                        <TruncatedText text={product.name} maxLength={33}/>
                       </h2>
                       <p className="text-gray-500 mt-2 text-sm">
                         Đã bán {product.sold}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 mr-2 font-bold text-sm">
+                        <span className="text-red-500 mr-2 font-bold text-xl">
                           {/* {product.sale_price === 0
                             ? "Miễn phí"
                             : VND.format(product.sale_price)} */}

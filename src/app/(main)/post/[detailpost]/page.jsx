@@ -7,6 +7,7 @@ import { Spin } from 'antd';
 import styles from '../styles.module.css'
 import Link from 'next/link';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import TruncatedText from '@/components/TruncatedText';
 
 
 const NewsDetailPage = ({params}) => {
@@ -71,8 +72,12 @@ console.log(article)
                 <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2" />
                 <div className="flex flex-col justify-between flex-grow">
                   <div>
-                    <h3 className="text-xl font-bold mb-2">{article?.title}</h3>
-                    <p className={`${styles.description} text-gray-700`}>{article?.description}</p>
+                    <h3 className="text-xl font-bold mb-2">
+                      <TruncatedText text={article?.title} maxLength={35}/>
+                    </h3>
+                    <p className={`${styles.description} text-gray-700`}>
+                      <TruncatedText text={article?.description} maxLength={90}/>
+                    </p>
                   </div>
                   <Link href={`/post/${article?.id}`} className="text-blue-500 mt-2 self-start">
                     Đọc thêm
