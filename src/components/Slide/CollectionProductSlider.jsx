@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Skeleton } from "antd";
+import TruncatedText from "../TruncatedText";
 
 import {
   StyledSlider,
@@ -129,13 +130,13 @@ const CollectionProductSlider = ({ title }) => {
                     </div>
                     <div className="p-4">
                       <h2 className="text-lg font-medium h-20">
-                        {product.name}
+                        <TruncatedText text={product.name} maxLength={33}/>
                       </h2>
                       <p className="text-gray-500 mt-2">
                         Số lượng mẫu {product?.number_product}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 font-bold mr-2">
+                        <span className="text-red-500 font-bold mr-2 text-xl">
                           {product.price && product.price >= 0
                             ? VND.format(product.price)
                             : "Miễn Phí"}

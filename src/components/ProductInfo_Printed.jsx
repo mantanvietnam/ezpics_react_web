@@ -271,7 +271,7 @@ export default function ProductInfoPrinted(props) {
               <span>{data?.author}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          {data?.color && <div className="flex items-center gap-3">
             <div className="product-details-e">Màu chủ đạo</div>
             <div
               style={{
@@ -279,7 +279,7 @@ export default function ProductInfoPrinted(props) {
                 height: "30px",
                 backgroundColor: `${data?.color}`,
               }}></div>
-          </div>
+          </div>}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Lượt xem:</div>
             <div>
