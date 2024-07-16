@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 // import styles from '../../../../styles/auth/otp_verification.module.scss';
 import styles from "./otp_verification.module.scss";
 import { acceptMemberAPI, SendOtp } from "@/api/auth";

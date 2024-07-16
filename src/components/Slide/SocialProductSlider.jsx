@@ -5,7 +5,7 @@ const SocialProductSlider = () => {
   return (
     <DefaultSlide
       apiAction={async () => {
-        "use server";
+        // "use server";
         const products = await getLogoProductApi({
           category_id: "17",
           limit: "12",

@@ -1,6 +1,9 @@
-"use client"
+"use client";
 import { getInfoMemberAPI } from "@/api/user";
-import { CHANGE_STATUS_AUTH, CHANGE_VALUE_TOKEN } from "../../../redux/slices/auth";
+import {
+  CHANGE_STATUS_AUTH,
+  CHANGE_VALUE_TOKEN,
+} from "../../../redux/slices/auth";
 import { setCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
@@ -20,5 +23,5 @@ export default function Home() {
     // cần xem lại dependencies
   }, [dispatch, session]);
 
-  return <></>;
+  return <div></div>;
 }
