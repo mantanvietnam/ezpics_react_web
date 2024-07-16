@@ -25,10 +25,9 @@ const Toolbox = () => {
     <>
       <div
         style={{
-          position: "absolute",
-          top: "0",
           height: "100%",
-          paddingTop: "64px",
+          position: "fixed",
+          zIndex: "5",
         }}>
         <div
           style={{
