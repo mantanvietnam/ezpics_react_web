@@ -24,10 +24,9 @@ const Photos = () => {
     fetchData();
   }, []);
 
-  console.log(photos);
   return (
     <>
-      <div className="absolute top-0 left-[100px] h-full w-[300px] border-r border-gray-300 overflow-y-auto">
+      <div className="absolute top-0 left-[100px] h-full w-[300px] border-r border-gray-300 overflow-y-scroll">
         <div className="px-6">
           <div>Ảnh đã tải lên</div>
           <div className="grid gap-2 grid-cols-2">
