@@ -62,6 +62,7 @@
     "sass": "^1.77.4",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.11",
+    "styletron-react": "^6.1.1",
     "swiper": "^11.1.4",
     "use-debounce": "^10.0.0",
     "use-image": "^1.1.1",
