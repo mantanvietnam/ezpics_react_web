@@ -5,6 +5,7 @@ import axios from "axios";
 
 const Photos = () => {
   const [photos, setPhotos] = useState([]);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -26,25 +27,10 @@ const Photos = () => {
   console.log(photos);
   return (
     <>
-      <div
-        style={{
-          position: "absolute",
-          top: "0",
-          left: "100px",
-          height: "100%",
-          width: "300px",
-          paddingTop: "94px",
-          borderRight: "1px solid #ccc",
-          overflowY: "auto",
-        }}>
-        <div style={{ padding: "0 1.5rem" }}>
+      <div className="absolute top-0 left-[100px] h-full w-[300px] border-r border-gray-300 overflow-y-auto">
+        <div className="px-6">
           <div>Ảnh đã tải lên</div>
-          <div
-            style={{
-              display: "grid",
-              gap: "0.5rem",
-              gridTemplateColumns: "1fr 1fr",
-            }}>
+          <div className="grid gap-2 grid-cols-2">
             {photos?.map((item, index) => {
               return (
                 <ImageItem key={index} preview={`${item.link}`} item={item} />
@@ -59,19 +45,17 @@ const Photos = () => {
 
 function ImageItem({ preview, onClick, onContextMenu, item }) {
   return (
-    <>
-      <div
-        onClick={onClick}
-        onContextMenu={onContextMenu}
-        className="relative bg-[#f8f8fb] cursor-pointer rounded-lg overflow-hidden hover:before:opacity-100">
-        <div className="absolute inset-0 h-full w-full"></div>
-        <img
-          src={preview}
-          alt=""
-          className="w-full h-full object-contain pointer-events-none align-middle"
-        />
-      </div>
-    </>
+    <div
+      onClick={onClick}
+      onContextMenu={onContextMenu}
+      className="relative bg-[#f8f8fb] cursor-pointer rounded-lg overflow-hidden hover:before:opacity-100">
+      <div className="absolute inset-0 h-full w-full"></div>
+      <img
+        src={preview}
+        alt=""
+        className="w-full h-full object-contain pointer-events-none align-middle"
+      />
+    </div>
   );
 }
 
