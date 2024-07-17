@@ -52,11 +52,9 @@ const Page = () => {
 
   return (
     <>
-      <div style={{ height: "100vh" }} className='relative'>
-        <Navbar />
-        <Toolbox />
-        {/* <div className='edit-container editor-nav bg-red-200 ml-[396px] flex items-center justify-center absolute'>
-         */}
+      <Navbar />
+      <div style={{ height: "100vh", padding: "65px 0px 0px 0px"}}>
+        <Toolbox  />
         <div className="relative z-1 bg-gray-300 h-[100%] ml-[396px]">
           <div className="flex h-[100%] justify-center items-center">
             <Stage width={initSize.width} height={initSize.height} className='bg-white'>

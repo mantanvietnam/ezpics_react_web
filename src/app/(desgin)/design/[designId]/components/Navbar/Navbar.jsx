@@ -9,7 +9,8 @@ const Navbar = () => {
       <div
         style={{
           zIndex: "10",
-          position: "relative",
+          position: "fixed",
+          width: "100vw"
         }}>
         <div
           style={{

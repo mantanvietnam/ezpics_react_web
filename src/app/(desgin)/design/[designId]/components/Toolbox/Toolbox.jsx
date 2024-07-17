@@ -22,7 +22,7 @@ const Toolbox = () => {
   });
 
   return (
-    <>
+    <div>
       <div
         style={{
           height: "100%",
@@ -115,7 +115,7 @@ const Toolbox = () => {
           {activeTool === "Customize" && <Customize />}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
