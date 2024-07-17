@@ -40,7 +40,6 @@ export default function Graphic() {
             page: page,
           });
           const fetchedItems = response.data.data;
-          console.log("Fetched items:", fetchedItems);
           if (Array.isArray(fetchedItems) && fetchedItems.length > 0) {
             allItems = [...allItems, ...fetchedItems];
             page++;
@@ -116,13 +115,11 @@ function CategorySection({ title, categoryId, items, handleImage }) {
         <h4 className="font-sans">{title}</h4>
         <button
           className="border-0 bg-white text-blue-700 cursor-pointer"
-          onClick={() => setShowAll(!showAll)}
-        >
+          onClick={() => setShowAll(!showAll)}>
           {showAll ? "Thu gọn" : "Xem thêm"}
         </button>
       </div>
       <div className="grid gap-2 grid-cols-2">
-        {console.log(displayItems)}
         {displayItems.map((item, index) => (
           <ImageItem
             key={index}
@@ -139,8 +136,7 @@ function ImageItem({ preview, onClick }) {
   return (
     <div
       onClick={onClick}
-      className="relative bg-gray-100 cursor-pointer rounded-lg overflow-hidden"
-    >
+      className="relative bg-gray-100 cursor-pointer rounded-lg overflow-hidden">
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100 bg-gradient-to-b from-transparent to-black/45"></div>
       <img src={preview} className="w-full h-full object-contain" />
     </div>

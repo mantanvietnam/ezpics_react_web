@@ -1,9 +1,16 @@
 "use client";
-
+import React, { useDispatch } from "react-redux";
+import { REPLACE_ID_USER } from "@/redux/slices/token/reducers";
+import { useEffect } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Toolbox from "./components/Toolbox/Toolbox";
 
-const page = () => {
+const page = ({ params }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(REPLACE_ID_USER(params.designId));
+  }, [dispatch, params]);
   return (
     <>
       <div style={{ height: "100vh" }}>
