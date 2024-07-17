@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Skeleton } from "antd";
+import TruncatedText from "../TruncatedText";
+
 
 import {
   StyledSlider,
@@ -103,13 +104,13 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
                     </div>
                     <div className="p-4">
                       <h2 className="text-lg font-medium h-20">
-                        {product.name}
+                        <TruncatedText text={product.name} maxLength={33}/>
                       </h2>
                       <p className="text-gray-500 mt-2 text-sm">
                         Đã bán {product.sold}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 mr-2 font-bold text-sm">
+                        <span className="text-red-500 mr-2 font-bold text-lg">
                           {product.sale_price === 0
                             ? "Miễn phí"
                             : VND.format(product.sale_price)}

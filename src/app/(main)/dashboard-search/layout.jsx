@@ -348,7 +348,7 @@ export default function Layout(props) {
       </Modal>
       {products.length > 0 ? (
         <div className="grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5">
-          {products.map((product) => (
+          {products?.map((product) => (
             <div key={product.id} className="flex justify-center items-center">
               <ProductComponent product={product} />
             </div>

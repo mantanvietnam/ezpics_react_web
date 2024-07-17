@@ -6,7 +6,7 @@ const GiftProductSlider = () => {
   return (
     <DefaultSlide
       apiAction={async () => {
-        "use server";
+        // "use server";
         const products = await getLogoProductApi({
           category_id: "14",
           limit: "12",

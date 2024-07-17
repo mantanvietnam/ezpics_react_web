@@ -9,8 +9,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import styles from './styles.module.css'
 import Link from 'next/link';
 import 'swiper/css';
-import { getPost } from '@/api/post';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import TruncatedText from '@/components/TruncatedText';
 
 const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -117,13 +117,6 @@ console.log(news)
   }, [loadingMore]);
 
   
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center min-h-screen">
-  //       <Spin size="large" />
-  //     </div>
-  //   );
-  // }
   const settings = {
     dots: false,
     infinite: true,
@@ -156,9 +149,6 @@ console.log(news)
       </header>
       <main className="flex flex-col lg:flex-row">
         <div className="flex-1">
-          {/* {news?.length > 0 && (
-          
-          {/* News List */}
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {news?.map((article, index) => (
               <div key={index} className="bg-white rounded-md shadow flex flex-col overflow-hidden relative  pb-7">
@@ -166,8 +156,12 @@ console.log(news)
                 <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110" />
                   <div className="flex flex-col justify-between flex-grow">
                     <div>
-                      <h3 className="text-xl font-bold mb-2 text-black p-1">{article?.title}</h3>
-                      <p className={`${styles.description} text-gray-700 text-xs p-1`}>{article?.description}</p>
+                      <h3 className="text-xl font-bold mb-2 text-black p-1">
+                        <TruncatedText text={article?.title} maxLength={35}/>
+                      </h3>
+                      <p className={`${styles.description} text-gray-700 text-xs p-1`}>
+                        <TruncatedText text={article.description} maxLength={90}/>
+                      </p>
                     </div>
                     <p className='absolute bottom-1 left-1 pl-1'>
                       Đọc thêm
@@ -180,24 +174,12 @@ console.log(news)
         {loadingMore && (
           <div className="center text-center w-full">
             <Flex align="center" gap="middle" className="flex justify-center items-center">
-              {/* Placeholder for loading more spinner */}<Spin size="large" />
+              <Spin size="large" />
             </Flex>
           </div>
         )}
         </div>
         <ScrollToTopButton/>
-
-        {/* <aside className="w-full lg:w-64 ml-0 lg:ml-8 mt-8 lg:mt-0">
-          <div className="bg-white p-4 rounded shadow">
-            <h3 className="text-xl font-bold mb-4">Categories</h3>
-            <ul>
-              <li><a href="#" className="text-blue-500">Business</a></li>
-              <li><a href="#" className="text-blue-500">Technology</a></li>
-              <li><a href="#" className="text-blue-500">Sports</a></li>
-              <li><a href="#" className="text-blue-500">Entertainment</a></li>
-            </ul>
-          </div>
-        </aside> */}
       </main>
     </div>
   );
