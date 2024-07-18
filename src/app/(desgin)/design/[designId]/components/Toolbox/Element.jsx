@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -138,7 +139,7 @@ function ImageItem({ preview, onClick }) {
       onClick={onClick}
       className="relative bg-gray-100 cursor-pointer rounded-lg overflow-hidden">
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100 bg-gradient-to-b from-transparent to-black/45"></div>
-      <img src={preview} className="w-full h-full object-contain" />
+      <img src={preview} alt="" className="w-full h-full object-contain" />
     </div>
   );
 }

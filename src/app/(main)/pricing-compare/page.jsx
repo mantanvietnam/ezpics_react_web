@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { GlobalOutlined, DownOutlined } from "@ant-design/icons";

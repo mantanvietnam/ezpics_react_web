@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 // import { useRouter } from 'next/navigation ';
 import { useRouter } from 'next/navigation'; 
@@ -37,7 +38,7 @@ const NewsDetailPage = ({params}) => {
 
       fetchArticle();
     }
-  }, []);
+  }, [params?.detailpost]);
 
   if (loading) {
     return (

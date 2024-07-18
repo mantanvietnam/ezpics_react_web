@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Radio, Skeleton, Space, Spin, Table, Tag } from "antd";
 import { SkeletonCustom } from "./Slide/CustomSlide";

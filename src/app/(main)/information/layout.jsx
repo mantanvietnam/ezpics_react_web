@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { getInfoMemberAPI } from "@/api/user";
 import {
@@ -66,7 +67,7 @@ const Page = () => {
     };
 
     getData();
-  }, []);
+  }, [dataInforUser]);
 
   console.log(data);
   console.log(dataInforUser);

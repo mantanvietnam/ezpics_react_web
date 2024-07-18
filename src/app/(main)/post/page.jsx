@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -114,7 +115,7 @@ console.log(news)
       };
       fetchData();
     }
-  }, [loadingMore]);
+  }, [currentPage, loadingMore]);
 
   
   const settings = {

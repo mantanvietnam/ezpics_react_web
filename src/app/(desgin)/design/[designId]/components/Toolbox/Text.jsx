@@ -92,36 +92,36 @@ export default function Text() {
     }
   };
   const handleAddText = async (item) => {
-    if (editor) {
-      console.log(item);
-      const response = await axios.post(`${network}/addLayerText`, {
-        idproduct: idProduct,
-        token: token,
-        text: item.content.text,
-        color: item.content.color,
-        size: 8,
-        font: item.content.font,
-        width: 20,
-        page: Number(parseGraphicJSON()),
-      });
-      if (response && response.data) {
-        const options = {
-          id: response.data.data.id,
-          type: "StaticText",
-          width: 200,
-          text: item.content.text,
-          fontSize: 24,
-          fontFamily: item.content.font,
-          textAlign: "center",
-          fontStyle: item.content.indam === "normal" ? "bold" : "400",
-          fill: item.content.color,
-          metadata: {
-            page: Number(parseGraphicJSON()),
-          },
-        };
-        editor.objects.add<(options);
-      }
-    }
+    // if (editor) {
+    //   console.log(item);
+    //   const response = await axios.post(`${network}/addLayerText`, {
+    //     idproduct: idProduct,
+    //     token: token,
+    //     text: item.content.text,
+    //     color: item.content.color,
+    //     size: 8,
+    //     font: item.content.font,
+    //     width: 20,
+    //     page: Number(parseGraphicJSON()),
+    //   });
+    //   if (response && response.data) {
+    //     const options = {
+    //       id: response.data.data.id,
+    //       type: "StaticText",
+    //       width: 200,
+    //       text: item.content.text,
+    //       fontSize: 24,
+    //       fontFamily: item.content.font,
+    //       textAlign: "center",
+    //       fontStyle: item.content.indam === "normal" ? "bold" : "400",
+    //       fill: item.content.color,
+    //       metadata: {
+    //         page: Number(parseGraphicJSON()),
+    //       },
+    //     };
+    //     editor.objects.add<(options);
+    //   }
+    // }
   };
   useEffect(() => {
     setLoading(true);
@@ -141,7 +141,7 @@ export default function Text() {
       }
     };
     getAllText();
-  }, []);
+  }, [network, token]);
   
   return (
     <>
