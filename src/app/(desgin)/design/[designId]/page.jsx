@@ -29,24 +29,24 @@ const Page = () => {
           setDesignLayers(response.data.productDetail);
           if (response.data.width >= 3000 || response.data.height >= 3000) {
             setInitSize({
-              width: response.data.width / 5,
-              height: response.data.height / 5,
+              width: response.data.width / 4,
+              height: response.data.height / 4,
             });
           } else if (
             response.data.width >= 1920 ||
             response.data.height >= 1920
           ) {
             setInitSize({
-              width: response.data.width / 5,
-              height: response.data.height / 5,
+              width: response.data.width / 2,
+              height: response.data.height / 2,
             });
           } else if (
             response.data.width >= 1600 ||
             response.data.height >= 1600
           ) {
             setInitSize({
-              width: response.data.width / 4,
-              height: response.data.height / 4,
+              width: response.data.width / 2,
+              height: response.data.height / 2,
             });
           } else if (
             response.data.width >= 1000 ||
@@ -61,8 +61,8 @@ const Page = () => {
             response.data.height >= 500
           ) {
             setInitSize({
-              width: response.data.width,
-              height: response.data.height,
+              width: response.data.width * 1.5,
+              height: response.data.height * 1.5,
             });
           } else {
             setInitSize({
