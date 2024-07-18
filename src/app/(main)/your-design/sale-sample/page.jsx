@@ -50,7 +50,7 @@ export default function Page() {
       }
     }
     fetchData()
-  }, [searchValue])
+  }, [products, searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {
@@ -91,11 +91,12 @@ export default function Page() {
       setSearchValue((prev) => ({ ...prev, name: value }));
     }, 2000); // 2000 milliseconds = 2 seconds
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = useCallback(_.debounce(() => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
-      setLoading(true);
-      setPage(prevPage => prevPage + 1);
-    }
+    // if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
+    //   setLoading(true);
+    //   setPage(prevPage => prevPage + 1);
+    // }
   }, 200), [loading, hasMoreData]);
 
   useEffect(() => {
@@ -127,7 +128,7 @@ export default function Page() {
       };
       fetchData();
     }
-  }, [page]);
+  }, [hasMoreData, page, searchValue]);
 
   return (
     <>
