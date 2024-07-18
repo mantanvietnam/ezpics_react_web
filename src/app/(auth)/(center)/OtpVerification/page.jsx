@@ -23,33 +23,33 @@ const OtpVerification = () => {
   const router = useRouter();
   const token = checkTokenCookie();
   // Lấy data user
-  let dataInforUser;
-  if (getCookie("user_login")) {
-    dataInforUser = JSON.parse(getCookie("user_login"));
-  } else if (session?.user_login) {
-    dataInforUser = session?.user_login;
-  } else {
-    dataInforUser = null;
-  }
+  // let dataInforUser;
+  // if (getCookie("user_login")) {
+  //   dataInforUser = JSON.parse(getCookie("user_login"));
+  // } else if (session?.user_login) {
+  //   dataInforUser = session?.user_login;
+  // } else {
+  //   dataInforUser = null;
+  // }
   const handleResendOtp = async () => {
-    setIsLoading(true);
-    try {
-      const response = await SendOtp({ phone: dataInforUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
-      if (response?.code == 0) {
-        console.log("response::", response);
-        toast.success("Mã OTP đã được gửi lại !");
-        setOtp(["", "", "", "", "", ""]); // Reset lại các ô nhập OTP
-        setIsOtpSent(true); // Đã gửi mã OTP thành công
-        document.getElementById("otp-input-0").focus(); // Focus vào ô nhập OTP đầu tiên
-      } else {
-        toast.error("Không thể gửi lại mã OTP, vui lòng thử lại sau.");
-      }
-    } catch (error) {
-      toast.error("Đã xảy ra lỗi, vui lòng thử lại....");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    // setIsLoading(true);
+    // try {
+    //   const response = await SendOtp({ phone: dataInforUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
+    //   if (response?.code == 0) {
+    //     console.log("response::", response);
+    //     toast.success("Mã OTP đã được gửi lại !");
+    //     setOtp(["", "", "", "", "", ""]); // Reset lại các ô nhập OTP
+    //     setIsOtpSent(true); // Đã gửi mã OTP thành công
+    //     document.getElementById("otp-input-0").focus(); // Focus vào ô nhập OTP đầu tiên
+    //   } else {
+    //     toast.error("Không thể gửi lại mã OTP, vui lòng thử lại sau.");
+    //   }
+    // } catch (error) {
+    //   toast.error("Đã xảy ra lỗi, vui lòng thử lại....");
+    //   console.error(error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
   useEffect(() => {
     let timer;
