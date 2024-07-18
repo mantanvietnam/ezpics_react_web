@@ -81,7 +81,7 @@ export default function Layout(props) {
       }
     };
     fetchData();
-  }, []);
+  }, [searchValue]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -161,6 +161,7 @@ export default function Layout(props) {
     setSearchValue((prev) => ({ ...prev, category_id: e.key }));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = useCallback(
     _.debounce(() => {
       if (
@@ -206,7 +207,7 @@ export default function Layout(props) {
       };
       fetchData();
     }
-  }, [page]);
+  }, [hasMoreData, page, searchValue]);
 
   const handleSearch = async () => {
     setLoading(true);

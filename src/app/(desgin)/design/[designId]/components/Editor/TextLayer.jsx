@@ -1,26 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Image, Transformer } from "react-konva";
-import useImage from "use-image";
+import React, { useEffect, useRef } from 'react'
+import { Text, Transformer } from 'react-konva'
 
-export default function ImageLayer(props) {
+export default function TextLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props
-  const { postion_left, postion_top, naturalHeight, naturalWidth } = data
+  const { postion_left, postion_top, size } = data
 
   const shapeRef = useRef()
   const trRef = useRef()
 
-  const [image] = useImage(data.banner);
-
-  //Chuyển đởi đơn vị vw vh sang px
-  const widthValue = parseFloat(data.width?.replace("vw", ""));
-  const width = designSize.width * (widthValue / 100);
-
-  const heightSize = (naturalHeight * width) / naturalWidth;
-
   //Vị trí của chúng
   const postionX = designSize.width * (postion_left / 100);
   const postionY = designSize.height * (postion_top / 100);
-  console.log('🚀 ~ ImageLayer ~ isSelected:', isSelected)
+
+  //Chuyển đởi đơn vị vw vh sang px
+  const sizeValue = parseFloat(size?.replace("vw", ""));
+  const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
   //Hiển thị transform thủ công
   useEffect(() => {
@@ -33,16 +27,15 @@ export default function ImageLayer(props) {
 
   return (
     <>
-      <Image
+      <Text
         ref={shapeRef}
-        id={id}
-        image={image}
-        alt="background"
+        text={data?.text}
         x={postionX}
         y={postionY}
-        width={width}
-        height={heightSize}
         draggable
+        fill={data?.color}
+        fontSize={sizeConvertToPx}
+        fontFamily={data?.font}
         onClick={onSelect}
         onTap={onSelect}
       />
@@ -77,5 +70,5 @@ export default function ImageLayer(props) {
         />
       )}
     </>
-  );
+  )
 }

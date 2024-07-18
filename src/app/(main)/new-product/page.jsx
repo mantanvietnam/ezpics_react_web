@@ -34,7 +34,7 @@ function Page() {
   const [dataInforUser, setdataInforUser] = useState(null);
   const limit = 20;
 
-  const searchValue = {
+    const searchValue = {
     limit: limit,
     page: currentPage,
     name: "",
@@ -106,6 +106,7 @@ function Page() {
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, filterOption, sortOption, currentPage]);
 
   const handleCategoryChange = (event) => {
@@ -158,6 +159,7 @@ function Page() {
     }, 500); // Thời gian trễ phải trùng với thời gian của animation
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop !==
@@ -175,7 +177,7 @@ function Page() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loadingMore, hasMore]);
+  }, [loadingMore, hasMore, handleScroll]);
 
   useEffect(() => {
     if (loadingMore) {
@@ -198,7 +200,7 @@ function Page() {
       };
       fetchData();
     }
-  }, [loadingMore]);
+  }, [loadingMore, searchValue]);
 
   const VND = new Intl.NumberFormat("vi-VN", {
     style: "currency",

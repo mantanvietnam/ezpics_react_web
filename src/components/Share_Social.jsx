@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FacebookShareButton, PinterestShareButton, TelegramIcon, TelegramShareButton, TwitterShareButton } from 'react-share';
 
 const Share_Social = ({ id_param, data_image }) => {

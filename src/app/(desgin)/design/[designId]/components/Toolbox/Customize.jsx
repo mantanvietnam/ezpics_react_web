@@ -190,7 +190,7 @@ export default function Customize() {
   };
 
   return (
-    <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-16 border-r border-gray-300 overflow-y-auto">
+    <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] border-r border-gray-300 overflow-y-auto">
       <Block className="flex items-center justify-between p-4">
         <h4 className="font-semibold">Chỉnh sửa</h4>
       </Block>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { searchWarehousesAPI } from '@/api/product'
 import Collection from '@/components/Collection'
@@ -40,6 +41,7 @@ export default function Page() {
     setSearchKey(e.target.value);
     setSearchValues((prev) => ({ ...prev, name: e.target.value }));
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = useCallback(_.debounce(() => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
       setLoading(true);
@@ -79,7 +81,7 @@ export default function Page() {
       fetchData();
     }
 
-  }, [page]);
+  }, [hasMoreData, page, searchValues]);
 
   const handleSearch = async () => {
     setLoading(true)
