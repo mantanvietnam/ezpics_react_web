@@ -34,16 +34,16 @@ function Page() {
   const [dataInforUser, setdataInforUser] = useState(null);
   const limit = 20;
 
-   const searchValue = useMemo(() => ({
+    const searchValue = {
     limit: limit,
     page: currentPage,
     name: "",
     price: "",
-    orderBy: filterOption !== "" ? filterOption : "create",
-    orderType: sortOption !== "" ? sortOption : "desc",
-    category_id: selectedCategory !== "" ? selectedCategory : "",
+    orderBy: filterOption != "" ? filterOption : "create",
+    orderType: sortOption != "" ? sortOption : "desc",
+    category_id: selectedCategory != "" ? selectedCategory : "",
     color: "",
-  }), [limit, currentPage, filterOption, sortOption, selectedCategory]);
+  };
   const cookie = checkTokenCookie();
   useEffect(() => {
     const fetchDataUser = async () => {
