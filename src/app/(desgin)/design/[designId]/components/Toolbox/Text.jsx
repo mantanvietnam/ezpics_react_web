@@ -144,7 +144,7 @@ export default function Text() {
 
   return (
     <>
-      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] border-r border-gray-300 overflow-y-auto">
+      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
         <Block
           $style={{
             display: "flex",

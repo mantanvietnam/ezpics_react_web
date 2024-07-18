@@ -54,7 +54,6 @@ const Toolbox = ({ onToolChange }) => {
           }}
           onClick={() => {
             handleToolClick("Layer");
-            setIsToolboxVisible(!isToolboxVisible);
           }}>
           <LayerIcon size={20} />
           <p>Layer</p>
@@ -69,7 +68,9 @@ const Toolbox = ({ onToolChange }) => {
             padding: "20px 10px",
             ...toolStyle("Text"),
           }}
-          onClick={() => handleToolClick("Text")}>
+          onClick={() => {
+            handleToolClick("Text");
+          }}>
           <TextIcon size={20} />
           <p>Text</p>
         </div>
