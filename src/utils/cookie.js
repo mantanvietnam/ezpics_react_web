@@ -35,6 +35,9 @@ export function checkTokenCookie() {
   //   console.log("document is not defined");
   //   return null;
   // }
+  if (typeof window === "undefined") {
+    return null;
+  }
 
   // Lấy tất cả các cookies
   var allCookies = document.cookie;
