@@ -10,11 +10,13 @@ import Photos from "./Photos";
 import Element from "./Element";
 import Customize from "./Customize";
 
-const Toolbox = () => {
+const Toolbox = ({ onToolChange }) => {
   const [activeTool, setActiveTool] = useState("Layer");
 
   const handleToolClick = (tool) => {
-    setActiveTool(tool === activeTool ? null : tool);
+    const newActiveTool = tool === activeTool ? null : tool;
+    setActiveTool(newActiveTool);
+    onToolChange(newActiveTool);
   };
 
   const toolStyle = (tool) => ({
