@@ -43,7 +43,6 @@ export default function Text() {
     const currentScene = editor.scene.exportToJSON();
 
     console.log(currentScene);
-
   };
   const addObject = async () => {
     if (editor) {
@@ -52,7 +51,7 @@ export default function Text() {
         url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
       };
       await loadFonts([font]);
-      console.log(loadFonts([font]))
+      console.log(loadFonts([font]));
       const res = await axios.post(`${network}/addLayerText`, {
         idproduct: idProduct,
         token: token,
@@ -132,7 +131,7 @@ export default function Text() {
           page: 1,
           limit: 100,
         });
-        
+
         console.log(res.data.data);
         setAllText(res?.data?.data);
       } catch (error) {
@@ -142,10 +141,10 @@ export default function Text() {
     };
     getAllText();
   }, [network, token]);
-  
+
   return (
     <>
-      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] border-r border-gray-300 overflow-y-auto">
+      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
         <Block
           $style={{
             display: "flex",
@@ -154,24 +153,19 @@ export default function Text() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4
               style={{
                 fontFamily: "Helvetica, Arial, sans-serif",
                 marginBottom: "10px",
                 marginTop: "10px",
-              }}
-            >
+              }}>
               Kiểu chữ
             </h4>
           </Block>
 
-          <Block
-            $style={{ cursor: "pointer", display: "flex" }}
-          >
-          </Block>
+          <Block $style={{ cursor: "pointer", display: "flex" }}></Block>
         </Block>
         <div>
           <Block padding={"0 1.5rem"}>
@@ -185,8 +179,7 @@ export default function Text() {
                     width: "100%",
                   },
                 },
-              }}
-            >
+              }}>
               Thêm chữ
             </Button>
 
@@ -196,8 +189,7 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}
-            >
+              }}>
               {allText.map((text, index) => (
                 <div
                   key={text.id}
@@ -209,8 +201,7 @@ export default function Text() {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}
-                >
+                  onClick={() => handleAddText(text)}>
                   <p
                     style={{
                       color: text.content.color,
@@ -219,8 +210,7 @@ export default function Text() {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}
-                  >
+                    }}>
                     {text.content.text}
                   </p>
                 </div>
@@ -237,8 +227,7 @@ export default function Text() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
@@ -263,4 +252,3 @@ export default function Text() {
     </>
   );
 }
-
