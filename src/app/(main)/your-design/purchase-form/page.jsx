@@ -37,7 +37,7 @@ export default function Page() {
       }
     }
     fetchData()
-  }, [searchValue])
+  }, [products, searchValue])
   const handleSearch = async () => {
     setLoading(true)
     try {

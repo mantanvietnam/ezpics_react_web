@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 import React, { useEffect, useState } from 'react'
 import ChartPage from '../chart'
@@ -14,6 +15,7 @@ const Page = () => {
     const [limit, setlimit] = useState(10);
     const [loading, setLoading] = useState(false);
     const [data, setdata] = useState([])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const searchValue = {
         limit: limit,
         page: currentPage,
@@ -57,7 +59,7 @@ const Page = () => {
             };
             fetchData();
         }
-    }, [loadingMore]);
+    }, [loadingMore, searchValue]);
     const handleType = (type) => {
         if (type === 0) {
             return 'Mua hàng'

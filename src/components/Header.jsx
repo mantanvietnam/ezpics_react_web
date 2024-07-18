@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import {
   BarsOutlined,
@@ -107,7 +108,7 @@ const Header = ({ toggleNavbar }) => {
       }
     };
     fetchDataUser();
-  }, [cookie]);
+  }, [cookie, router]);
   // lấy token 2 bên đăng nhập
   useEffect(() => {
     const fetchDataFromStorage = () => {
@@ -121,7 +122,7 @@ const Header = ({ toggleNavbar }) => {
     };
     // Gọi fetchDataFromStorage khi component được gắn vào
     fetchDataFromStorage();
-  }, []);
+  }, [session?.token, session?.user_login]);
   // Lấy data user
   let dataInforUser;
   if (getCookie("user_login")) {

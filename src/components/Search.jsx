@@ -37,7 +37,7 @@ function Search({ searchAPI, searchParams }) {
         };
 
         fetchApi();
-    }, [debounced]);
+    }, [debounced, searchAPI, searchParams]);
 
     useEffect(() => {
         if (containerRef.current) {

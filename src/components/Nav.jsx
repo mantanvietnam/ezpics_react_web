@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import images from "../../public/images/index2";
@@ -42,14 +43,14 @@ const Nav = ({ isOpen, closeNavbar }) => {
   const isAuthenticated = checkAvailableLogin();
   // console.log(isAuthenticated);
 
-  const navItems = [
+  const navItems = useMemo(() =>[
     { href: "/", label: "Trang chủ", icon: images.home },
     { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
     { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
     { href: "/project/recommend", label: "Danh mục", icon: images.category },
-  ];
+  ], []);
 
-  const userFuncs = [
+  const userFuncs =  useMemo(() =>[
     {
       href: "/your-design/purchase-form",
       label: "Thiết kế của bạn",
@@ -72,7 +73,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
       icon: images.renew,
       onClick: () => setOpenPro(true),
     },
-  ];
+  ], [isProMember]);
 
   //Them bg vao button khi chon tren thanh nav
   const [activeItem, setActiveItem] = useState(0);
@@ -90,7 +91,7 @@ const Nav = ({ isOpen, closeNavbar }) => {
       setActiveFunc(funcItemIndex);
       setActiveItem(null);
     }
-  }, [pathname]);
+  }, [navItems, pathname, userFuncs]);
 
   const handleNavItem = (item) => {
     setActiveItem(item);
