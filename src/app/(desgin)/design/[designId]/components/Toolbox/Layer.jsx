@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import Locked from "../../Icon/Locked";
 import Unlocked from "../../Icon/Unlocked";
 import Eye from "../../Icon/Eye";
 import EyeCrossed from "../../Icon/EyeCrossed";
 import Delete from "../../Icon/Delete";
 import Drapdrop from "../../Icon/Drapdrop";
+import { LeftOutlined } from "@ant-design/icons";
 
 import { useParams } from "next/navigation";
 
 const Layer = () => {
   const [listLayers, setListLayers] = useState([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const network = useAppSelector((state) => state.network.ipv4Address);
   const idProduct = useAppSelector((state) => state.token.id);
@@ -55,12 +57,14 @@ const Layer = () => {
   };
 
   return (
-    <div className="absolute top-0 left-[96px] h-full w-[300px] border-r border-gray-300 px-2">
+    <div className="absolute top-0 left-[96px] h-full w-[300px] px-2">
       <div className="flex-1 flex flex-col">
         <h4 className="py-2">Danh sách Layers</h4>
       </div>
+     
+
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="layerList">
+        <Droppable droppableId={"layerList"} type="group">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {listLayers.length > 0 ? (

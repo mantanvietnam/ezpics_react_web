@@ -10,7 +10,7 @@ const Navbar = () => {
         style={{
           zIndex: "10",
           position: "fixed",
-          width: "100vw"
+          width: "100vw",
         }}>
         <div
           style={{
@@ -22,6 +22,7 @@ const Navbar = () => {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "space-between",
+            borderBottom: "1px solid #fff",
           }}>
           <div>
             <Image
