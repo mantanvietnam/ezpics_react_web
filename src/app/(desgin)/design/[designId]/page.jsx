@@ -17,6 +17,8 @@ const Page = () => {
   const [designLayers, setDesignLayers] = useState([]);
   const [initSize, setInitSize] = useState({ width: 0, height: 0 });
 
+  const [activeTool, setActiveTool] = useState("Layer");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,12 +85,13 @@ const Page = () => {
 
   return (
     <>
-      <div style={{ height: "100vh" }} className="relative">
-        <Navbar />
-        <Toolbox />
-        {/* <div className='edit-container editor-nav bg-red-200 ml-[396px] flex items-center justify-center absolute'>
-         */}
-        <div className="relative z-1 bg-gray-300 h-[100%] ml-[396px]">
+      <Navbar />
+      <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
+        <Toolbox onToolChange={setActiveTool} />
+        <div
+          className={`relative z-1 bg-gray-300 h-[100%] transition-all duration-300 ${
+            activeTool ? "ml-[396px]" : "ml-[96px]"
+          }`}>
           <div className="flex h-[100%] justify-center items-center">
             <Stage
               width={initSize.width}
