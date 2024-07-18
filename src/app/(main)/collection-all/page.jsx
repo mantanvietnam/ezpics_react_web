@@ -35,7 +35,7 @@ export default function Page() {
       }
     }
     fetchApi()
-  }, [searchValues])
+  }, [])
 
   const handleSearchChange = (e) => {
     setSearchKey(e.target.value);
