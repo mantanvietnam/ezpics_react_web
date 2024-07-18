@@ -31,6 +31,11 @@ const Page = () => {
           setDesignLayers(response.data.productDetail);
           if (response.data.width >= 4000 || response.data.height >= 4000) {
             setInitSize({
+              width: response.data.width / 7,
+              height: response.data.height / 7,
+            });
+          } else if (response.data.width >= 4000 || response.data.height >= 4000) {
+            setInitSize({
               width: response.data.width / 6,
               height: response.data.height / 6,
             });
