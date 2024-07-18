@@ -17,6 +17,8 @@ const Page = () => {
   const [designLayers, setDesignLayers] = useState([]);
   const [initSize, setInitSize] = useState({ width: 0, height: 0 });
 
+  const [activeTool, setActiveTool] = useState("Layer");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,18 +29,23 @@ const Page = () => {
         if (response.code === 1) {
           setDesign(response.data);
           setDesignLayers(response.data.productDetail);
-          if (response.data.width >= 3000 || response.data.height >= 3000) {
+          if (response.data.width >= 4000 || response.data.height >= 4000) {
             setInitSize({
-              width: response.data.width / 4,
-              height: response.data.height / 4,
+              width: response.data.width / 6,
+              height: response.data.height / 6,
+            });
+          } else if (response.data.width >= 3000 || response.data.height >= 3000) {
+            setInitSize({
+              width: response.data.width / 5,
+              height: response.data.height / 5,
             });
           } else if (
             response.data.width >= 1920 ||
             response.data.height >= 1920
           ) {
             setInitSize({
-              width: response.data.width / 2,
-              height: response.data.height / 2,
+              width: response.data.width / 3,
+              height: response.data.height / 3,
             });
           } else if (
             response.data.width >= 1600 ||
@@ -83,12 +90,12 @@ const Page = () => {
 
   return (
     <>
-      <div style={{ height: "100vh" }} className="relative">
-        <Navbar />
-        <Toolbox />
-        {/* <div className='edit-container editor-nav bg-red-200 ml-[396px] flex items-center justify-center absolute'>
-         */}
-        <div className="relative z-1 bg-gray-300 h-[100%] ml-[396px]">
+      <Navbar />
+      <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
+        <Toolbox onToolChange={setActiveTool} />
+        <div
+          className={`relative z-1 bg-gray-300 h-[100%] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
+            }`}>
           <div className="flex h-[100%] justify-center items-center">
             <Stage
               width={initSize.width}
