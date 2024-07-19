@@ -20,7 +20,6 @@ export default function ImageLayer(props) {
   //Vị trí của chúng
   const postionX = designSize.width * (postion_left / 100);
   const postionY = designSize.height * (postion_top / 100);
-  console.log('🚀 ~ ImageLayer ~ isSelected:', isSelected)
 
   //Hiển thị transform thủ công
   useEffect(() => {

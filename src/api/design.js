@@ -6,4 +6,20 @@ export const getListLayerApi = async (data) => {
     data
   );
   return response.data;
-};
+}
+
+export const addLayerImageUrlAPI = async (data) => {
+  const response = await axios.post(
+    " https://apis.ezpics.vn/apis/addLayerImageUrlAPI",
+    data
+  );
+  return response.data;
+}
+
+export const deleteLayerAPI = async (data) => {
+  const response = await axios.post(
+    " https://apis.ezpics.vn/apis/deleteLayerAPI",
+    data
+  );
+  return response.data;
+}

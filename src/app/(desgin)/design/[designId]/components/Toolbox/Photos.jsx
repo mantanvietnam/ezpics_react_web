@@ -1,11 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
-import Photo from "../../Icon/Photo";
-import { checkTokenCookie } from "@/utils";
-import axios from "axios";
+import React, { useEffect, useState } from "react"
+import { checkTokenCookie } from "@/utils"
+import axios from "axios"
+import { useSelector } from 'react-redux'
+import { addLayerImageUrlAPI } from '@/api/design'
+import { useDispatch } from 'react-redux'
+import { addLayerImage } from '@/redux/slices/editor/stageSlice'
 
-const Photos = () => {
-  const [photos, setPhotos] = useState([]);
+const Photos = ({ stageRef }) => {
+  const [photos, setPhotos] = useState([])
+  const stageData = useSelector((state) => state.stage.stageData)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     async function fetchData() {
@@ -15,15 +20,33 @@ const Photos = () => {
           {
             token: checkTokenCookie(),
           }
-        );
-        setPhotos(response.data.data.reverse());
+        )
+        setPhotos(response.data.data.reverse())
       } catch (error) {
-        console.error("Lỗi khi gửi yêu cầu GET:", error);
+        console.error("Lỗi khi gửi yêu cầu GET:", error)
       }
     }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
+  //B1: Call api tạo layer image
+  //B2: Cập nhât redux để nó load lại state
+  const handleAddPhoto = (item) => {
+    const addLayer = async () => {
+      try {
+        const res = await addLayerImageUrlAPI({
+          idproduct: stageData.design.id,
+          token: checkTokenCookie(),
+          imageUrl: item.link,
+          page: 0
+        })
+        dispatch(addLayerImage(res.data))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    addLayer()
+  }
 
   return (
     <>
@@ -33,15 +56,15 @@ const Photos = () => {
           <div className="grid gap-2 grid-cols-2">
             {photos?.map((item, index) => {
               return (
-                <ImageItem key={index} preview={`${item.link}`} item={item} />
-              );
+                <ImageItem key={index} preview={`${item.link}`} item={item} onClick={() => { handleAddPhoto(item) }} />
+              )
             })}
           </div>
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
 function ImageItem({ preview, onClick, onContextMenu, item }) {
   return (
@@ -56,7 +79,7 @@ function ImageItem({ preview, onClick, onContextMenu, item }) {
         className="w-full h-full object-contain pointer-events-none align-middle"
       />
     </div>
-  );
+  )
 }
 
-export default Photos;
+export default Photos
