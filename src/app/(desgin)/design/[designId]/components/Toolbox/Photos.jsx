@@ -2,38 +2,36 @@
 import React, { useEffect, useState } from "react";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
-import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+import { toast } from "react-toastify";
 
-const Photos = () => {
+const Photos = ({ stageRef }) => {
   const [photos, setPhotos] = useState([]);
   const inputFileRef = React.useRef(null);
 
-  const params = useParams();
-  const { designId } = params;
   const stageData = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
 
   console.log("🚀 ~ Photos ~ stageRef:", stageRef);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.post(
-          `https://apis.ezpics.vn/apis/listImage`,
-          {
-            token: checkTokenCookie(),
-          }
-        );
-        setPhotos(response.data.data.reverse());
-      } catch (error) {
-        console.error("Lỗi khi gửi yêu cầu GET:", error);
-      }
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        `https://apis.ezpics.vn/apis/listImage`,
+        {
+          token: checkTokenCookie(),
+        }
+      );
+      setPhotos(response.data.data.reverse());
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu GET:", error);
     }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -68,7 +66,7 @@ const Photos = () => {
     const res = await axios.post(
       `https://apis.ezpics.vn/apis/addLayerImageAPI`,
       {
-        idproduct: designId,
+        idproduct: stageData.design.id,
         token: checkTokenCookie(),
         file: file,
         page: 0,
@@ -81,7 +79,9 @@ const Photos = () => {
     );
 
     if (res.data.code === 1) {
-      console.log(res.data);
+      toast.success("Thêm ảnh thành công");
+      // Cập nhật lại danh sách ảnh sau khi thêm thành công
+      fetchData();
     }
   };
 
