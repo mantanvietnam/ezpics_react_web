@@ -27,6 +27,7 @@ const Toolbox = ({ onToolChange }) => {
     color: activeTool === tool ? "#000" : "#fff",
   });
 
+  console.log(isToolboxVisible);
   return (
     <div
       style={{
@@ -54,6 +55,9 @@ const Toolbox = ({ onToolChange }) => {
           }}
           onClick={() => {
             handleToolClick("Layer");
+            if (activeTool === "Layer") {
+              setIsToolboxVisible(false);
+            }
           }}>
           <LayerIcon size={20} />
           <p>Layer</p>
@@ -70,6 +74,9 @@ const Toolbox = ({ onToolChange }) => {
           }}
           onClick={() => {
             handleToolClick("Text");
+            if (activeTool === "Text") {
+              setIsToolboxVisible(false);
+            }
           }}>
           <TextIcon size={20} />
           <p>Text</p>
@@ -84,7 +91,12 @@ const Toolbox = ({ onToolChange }) => {
             padding: "20px 10px",
             ...toolStyle("Photos"),
           }}
-          onClick={() => handleToolClick("Photos")}>
+          onClick={() => {
+            handleToolClick("Photos");
+            if (activeTool === "Photos") {
+              setIsToolboxVisible(false);
+            }
+          }}>
           <PhotoIcon size={20} />
           <p>Photos</p>
         </div>
@@ -98,7 +110,12 @@ const Toolbox = ({ onToolChange }) => {
             padding: "20px 10px",
             ...toolStyle("Element"),
           }}
-          onClick={() => handleToolClick("Element")}>
+          onClick={() => {
+            handleToolClick("Element");
+            if (activeTool === "Element") {
+              setIsToolboxVisible(false);
+            }
+          }}>
           <ElementIcon size={20} />
           <p>Element</p>
         </div>
@@ -112,28 +129,33 @@ const Toolbox = ({ onToolChange }) => {
             padding: "20px 10px",
             ...toolStyle("Customize"),
           }}
-          onClick={() => handleToolClick("Customize")}>
+          onClick={() => {
+            handleToolClick("Customize");
+            if (activeTool === "Customize") {
+              setIsToolboxVisible(false);
+            }
+          }}>
           <CustomizeIcon size={20} />
           <p>Customize</p>
         </div>
       </div>
 
-      {isToolboxVisible && (
-        <div
-          className="absolute top-[44%] left-[396px] cursor-pointer w-[28px] bg-white h-[60px] flex transition-all duration-300"
-          style={{
-            clipPath: "ellipse(66% 50% at 0% 50%)",
+      <div
+        className={`absolute z-1 top-[44%] cursor-pointer w-[28px] bg-white h-[60px] flex transition-all duration-300 ${
+          isToolboxVisible ? "opacity-100 left-[396px]" : "opacity-0 left-0"
+        }`}
+        style={{
+          clipPath: "ellipse(66% 50% at 0% 50%)",
+        }}>
+        <button
+          onClick={() => {
+            setIsToolboxVisible(!isToolboxVisible);
+            onToolChange(null);
+            setActiveTool(null);
           }}>
-          <button
-            onClick={() => {
-              setIsToolboxVisible(!isToolboxVisible);
-              onToolChange(null);
-              setActiveTool(null);
-            }}>
-            <LeftOutlined />
-          </button>
-        </div>
-      )}
+          <LeftOutlined />
+        </button>
+      </div>
 
       {activeTool === "Layer" && <Layer />}
       {activeTool === "Text" && <Text />}
