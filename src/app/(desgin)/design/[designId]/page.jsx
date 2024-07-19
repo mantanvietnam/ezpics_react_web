@@ -10,6 +10,7 @@ import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
 import PanelsImage from "./components/Panels/PanelsImage";
+import PanelsCommon from "./components/Panels/PanelsCommon";
 
 const Page = () => {
   const params = useParams();
@@ -132,7 +133,10 @@ const Page = () => {
           className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
             activeTool ? "ml-[396px]" : "ml-[96px]"
           }`}>
-          <PanelsImage />
+          <div>
+            <PanelsImage />
+          </div>
+
           <div className="flex h-[100%] justify-center items-center">
             <Stage
               width={initSize.width}

@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { Button, Dropdown, Menu, Slider } from "antd";
+import { Button, Slider, Popover } from "antd";
 import { useClickAway } from "react-use";
+import PanelsCommon from "./PanelsCommon";
 
 const SliderMenu = ({
   onChangeBrightness,
@@ -9,100 +10,141 @@ const SliderMenu = ({
   onChangeContrast,
   onChangeSaturate,
 }) => (
-  <Menu className="w-[250px]">
-    <Menu.Item key="slider1">
+  <div className="w-[250px]">
+    <div className="p-2">
       <span>Độ sáng</span>
       <Slider onChange={onChangeBrightness} />
-    </Menu.Item>
-    <Menu.Item key="slider2">
+    </div>
+    <div className="p-2">
       <span>Độ trong</span>
       <Slider onChange={onChangeOpacity} />
-    </Menu.Item>
-    <Menu.Item key="slider3">
+    </div>
+    <div className="p-2">
       <span>Độ tương phản</span>
       <Slider onChange={onChangeContrast} />
-    </Menu.Item>
-    <Menu.Item key="slider3">
+    </div>
+    <div className="p-2">
       <span>Độ bão hòa</span>
       <Slider onChange={onChangeSaturate} />
-    </Menu.Item>
-  </Menu>
+    </div>
+  </div>
+);
+
+const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
+  <div className="flex">
+    <Button
+      type="text"
+      className="text-lg font-bold"
+      onClick={onButtonChangeImageNew}>
+      Thay ảnh từ máy
+    </Button>
+    <Button
+      type="text"
+      className="text-lg font-bold"
+      onClick={onButtonChangeImage}>
+      Thay ảnh có sẵn
+    </Button>
+  </div>
 );
 
 const PanelsImage = () => {
-  //State độ sáng
+  // States for sliders
   const [valueBrightness, setValueBrightness] = useState(0);
+  const [valueOpacity, setValueOpacity] = useState(0);
+  const [valueContrast, setValueContrast] = useState(0);
+  const [valueSaturate, setValueSaturate] = useState(0);
+
+  // States for popover visibility
+  const [visibleEditImage, setVisibleEditImage] = useState(false);
+  const [visibleChangeImage, setVisibleChangeImage] = useState(false);
+
+  // Refs for popovers
+  const popoverRefEditImage = useRef(null);
+  const popoverRefChangeImage = useRef(null);
+
+  // Handlers for sliders
   const handleSliderBrightness = (newValue) => {
     setValueBrightness(newValue);
   };
 
-  //State độ trong
-  const [valueOpacity, setValueOpacity] = useState(0);
   const handleSliderOpacity = (newValue) => {
     setValueOpacity(newValue);
   };
 
-  //State độ tương phản
-  const [valueContrast, setValueContrast] = useState(0);
   const handleSliderContrast = (newValue) => {
     setValueContrast(newValue);
   };
 
-  //State độ bão hòa
-  const [valueSaturate, setValueSaturate] = useState(0);
   const handleSliderSaturate = (newValue) => {
     setValueSaturate(newValue);
   };
 
-  //State khi ấn blur ra ngoài mới ẩn dropdown edit image
-  const [visible, setVisible] = useState(false);
-  const dropdownRef = useRef(null);
-  useClickAway(dropdownRef, () => {
-    setVisible(false);
-  });
-  const handleButtonClick = () => {
-    setVisible(!visible);
+  // Handlers for popovers
+  const handleButtonEditImage = () => {
+    setVisibleEditImage(!visibleEditImage);
   };
 
-  useClickAway(dropdownRef, () => {
-    setVisible(false);
+  const handleButtonImage = () => {
+    setVisibleChangeImage(!visibleChangeImage);
+  };
+
+  const handleButtonChangeImageNew = () => {
+    console.log("Button 1 clicked");
+    setVisibleChangeImage(false);
+  };
+
+  const handleButtonChangeImage = () => {
+    console.log("Button 2 clicked");
+    setVisibleChangeImage(false);
+  };
+
+  // Click away handlers
+  useClickAway(popoverRefEditImage, () => {
+    if (visibleEditImage) {
+      setVisibleEditImage(false);
+    }
+  });
+
+  useClickAway(popoverRefChangeImage, () => {
+    if (visibleChangeImage) {
+      setVisibleChangeImage(false);
+    }
   });
 
   return (
-    <div className="stick  h-[50px] border-l border-slate-300">
-      <div className="h-[100%] flex items-center">
-        <div className="px-1">
-          <Button type="text" className="text-lg font-bold">
-            Lật ảnh ngang
-          </Button>
-        </div>
-        <div className="px-1">
-          <Button type="text" className="text-lg font-bold">
-            Lật ảnh dọc
-          </Button>
-        </div>
-        <div className="px-1">
-          <Button type="text" className="text-lg font-bold gap-0">
-            Xóa nền
-            <Image
-              src="/assets/premium.png"
-              style={{
-                resize: "block",
-                marginBottom: "20%",
-                marginLeft: "3",
-              }}
-              width={15}
-              height={15}
-              alt=""
-            />
-          </Button>
-        </div>
+    <div className="stick border-l border-slate-300 h-[50px] bg-white">
+      <div className="h-[100%] flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="px-1">
+            <Button type="text" className="text-lg font-bold">
+              Lật ảnh ngang
+            </Button>
+          </div>
+          <div className="px-1">
+            <Button type="text" className="text-lg font-bold">
+              Lật ảnh dọc
+            </Button>
+          </div>
+          <div className="px-1">
+            <Button type="text" className="text-lg font-bold gap-0">
+              Xóa nền
+              <Image
+                src="/assets/premium.png"
+                style={{
+                  resize: "block",
+                  marginBottom: "20%",
+                  marginLeft: "3",
+                }}
+                width={15}
+                height={15}
+                alt=""
+              />
+            </Button>
+          </div>
 
-        <div className="px-1" ref={dropdownRef}>
-          <Button onClick={handleButtonClick}>Chỉnh sửa ảnh</Button>
-          {visible && (
-            <Dropdown
-              overlay={
+          <div className="px-1" ref={popoverRefEditImage}>
+            <Popover
+              content={
                 <SliderMenu
                   onChangeBrightness={handleSliderBrightness}
                   onChangeOpacity={handleSliderOpacity}
@@ -110,10 +152,48 @@ const PanelsImage = () => {
                   onChangeSaturate={handleSliderSaturate}
                 />
               }
-              visible={true}>
-              <div />
-            </Dropdown>
-          )}
+              trigger="click"
+              open={visibleEditImage}
+              onOpenChange={setVisibleEditImage}>
+              <Button
+                type="text"
+                className="text-lg font-bold"
+                onClick={handleButtonEditImage}>
+                Chỉnh sửa ảnh
+              </Button>
+            </Popover>
+          </div>
+
+          <div className="px-1" ref={popoverRefChangeImage}>
+            <Popover
+              content={
+                <ButtonMenu
+                  onButtonChangeImageNew={handleButtonChangeImageNew}
+                  onButtonChangeImage={handleButtonChangeImage}
+                />
+              }
+              trigger="click"
+              open={visibleChangeImage}
+              onOpenChange={setVisibleChangeImage}
+              placement="bottomLeft">
+              <Button
+                type="text"
+                className="text-lg font-bold"
+                onClick={handleButtonImage}>
+                Thay ảnh
+              </Button>
+            </Popover>
+          </div>
+
+          <div className="px-1">
+            <Button type="text" className="text-lg font-bold">
+              Cắt ảnh
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <PanelsCommon />
         </div>
       </div>
     </div>

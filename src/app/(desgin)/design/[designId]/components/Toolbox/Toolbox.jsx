@@ -27,7 +27,6 @@ const Toolbox = ({ onToolChange }) => {
     color: activeTool === tool ? "#000" : "#fff",
   });
 
-  console.log(isToolboxVisible);
   return (
     <div
       style={{
