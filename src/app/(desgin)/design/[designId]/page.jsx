@@ -12,7 +12,6 @@ import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
 import { setStageData } from "@/redux/slices/editor/stageSlice";
 import PanelsImage from "./components/Panels/PanelsImage";
-import PanelsCommon from "./components/Panels/PanelsCommon";
 
 const Page = () => {
   const params = useParams()
