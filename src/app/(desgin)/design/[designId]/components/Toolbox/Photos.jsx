@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import Photo from "../../Icon/Photo";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 
 const Photos = () => {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState([])
 
   useEffect(() => {
     async function fetchData() {
