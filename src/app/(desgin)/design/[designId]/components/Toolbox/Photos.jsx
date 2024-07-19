@@ -4,7 +4,7 @@ import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 
 const Photos = () => {
-  const [photos, setPhotos] = useState([])
+  const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -27,8 +27,14 @@ const Photos = () => {
   return (
     <>
       <div className="absolute top-0 left-[100px] h-full w-[300px] overflow-y-scroll">
-        <div className="px-6">
-          <div>Ảnh đã tải lên</div>
+        <div className="px-4 py-4">
+          <h4 className="py-2">Ảnh tải lên</h4>
+          <button className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
+            Chọn ảnh từ máy
+          </button>
+        </div>
+        <div className="px-4">
+          <h4>Ảnh đã tải lên</h4>
           <div className="grid gap-2 grid-cols-2">
             {photos?.map((item, index) => {
               return (
