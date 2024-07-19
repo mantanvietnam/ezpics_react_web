@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Button, Dropdown, Menu, Slider } from "antd";
+import { useClickAway } from "react-use";
 
 const SliderMenu = ({
   onChangeBrightness,
@@ -53,8 +54,22 @@ const PanelsImage = () => {
     setValueSaturate(newValue);
   };
 
+  //State khi ấn blur ra ngoài mới ẩn dropdown edit image
+  const [visible, setVisible] = useState(false);
+  const dropdownRef = useRef(null);
+  useClickAway(dropdownRef, () => {
+    setVisible(false);
+  });
+  const handleButtonClick = () => {
+    setVisible(!visible);
+  };
+
+  useClickAway(dropdownRef, () => {
+    setVisible(false);
+  });
+
   return (
-    <div className="stick  h-[50px] ml-[396px] border-l border-slate-300">
+    <div className="stick  h-[50px] border-l border-slate-300">
       <div className="h-[100%] flex items-center">
         <div className="px-1">
           <Button type="text" className="text-lg font-bold">
@@ -82,21 +97,23 @@ const PanelsImage = () => {
             />
           </Button>
         </div>
-        <div className="px-1">
-          <Dropdown
-            overlay={
-              <SliderMenu
-                onChangeBrightness={handleSliderBrightness}
-                onChangeOpacity={handleSliderOpacity}
-                onChangeContrast={handleSliderContrast}
-                onChangeSaturate={handleSliderSaturate}
-              />
-            }
-            trigger={["click"]}>
-            <Button type="text" className="text-lg font-bold">
-              Chỉnh sửa ảnh
-            </Button>
-          </Dropdown>
+
+        <div className="px-1" ref={dropdownRef}>
+          <Button onClick={handleButtonClick}>Chỉnh sửa ảnh</Button>
+          {visible && (
+            <Dropdown
+              overlay={
+                <SliderMenu
+                  onChangeBrightness={handleSliderBrightness}
+                  onChangeOpacity={handleSliderOpacity}
+                  onChangeContrast={handleSliderContrast}
+                  onChangeSaturate={handleSliderSaturate}
+                />
+              }
+              visible={true}>
+              <div />
+            </Dropdown>
+          )}
         </div>
       </div>
     </div>
