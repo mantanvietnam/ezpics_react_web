@@ -14,12 +14,12 @@ import { setStageData } from "@/redux/slices/editor/stageSlice";
 import PanelsImage from "./components/Panels/PanelsImage";
 
 const Page = () => {
-  const params = useParams()
-  const { designId } = params
-  const stageRef = useRef(null)
-  const dispatch = useDispatch()
-  const stageData = useSelector((state) => state.stage.stageData)
-  const { design, designLayers, initSize } = stageData
+  const params = useParams();
+  const { designId } = params;
+  const stageRef = useRef(null);
+  const dispatch = useDispatch();
+  const stageData = useSelector((state) => state.stage.stageData);
+  const { design, designLayers, initSize } = stageData;
 
   // const [design, setDesign] = useState();
   // const [designLayers, setDesignLayers] = useState([]);
@@ -57,14 +57,16 @@ const Page = () => {
             sizeFactor = 2;
           }
           //Lưu thông tin design hiện tại vào redux
-          dispatch(setStageData({
-            initSize: {
-              width: width / sizeFactor,
-              height: height / sizeFactor,
-            },
-            design: response.data,
-            designLayers: response.data.productDetail
-          }))
+          dispatch(
+            setStageData({
+              initSize: {
+                width: width / sizeFactor,
+                height: height / sizeFactor,
+              },
+              design: response.data,
+              designLayers: response.data.productDetail,
+            })
+          );
         }
       } catch (error) {
         console.log(error);
@@ -93,8 +95,9 @@ const Page = () => {
       <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
-            }`}>
+          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
+            activeTool ? "ml-[396px]" : "ml-[96px]"
+          }`}>
           <div>
             <PanelsImage />
           </div>
@@ -116,7 +119,7 @@ const Page = () => {
               </Layer>
 
               {designLayers.map((layer) => {
-                if (layer.content.type === "image") {
+                if (layer?.content?.type === "image") {
                   return (
                     <Layer key={layer.id}>
                       <ImageLayer
@@ -133,7 +136,7 @@ const Page = () => {
                       />
                     </Layer>
                   );
-                } else if (layer.content.type === "text") {
+                } else if (layer?.content?.type === "text") {
                   return (
                     <Layer key={layer.id}>
                       <TextLayer

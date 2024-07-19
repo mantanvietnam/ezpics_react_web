@@ -17,15 +17,15 @@ import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { removeLayer } from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
+import { setStageData } from "@/redux/slices/editor/stageSlice";
 
 const Layer = () => {
   const [listLayers, setListLayers] = useState([]);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+
   const { designLayers } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
   const network = useAppSelector((state) => state.network.ipv4Address);
-  const idProduct = useAppSelector((state) => state.token.id);
 
   const params = useParams();
   const { designId } = params;
@@ -96,7 +96,7 @@ const Layer = () => {
                   designLayers.map((layer, index) => (
                     <Draggable
                       key={layer.id}
-                      draggableId={layer.id.toString()}
+                      draggableId={layer?.id?.toString()}
                       index={index}>
                       {(provided) => (
                         <div
@@ -107,14 +107,14 @@ const Layer = () => {
                           <button className="col-span-1 cursor-move">
                             <Drapdrop size={20} />
                           </button>
-                          {layer.content.type === "text" ? (
+                          {layer?.content?.type === "text" ? (
                             <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
-                              {layer.content.text}
+                              {layer?.content?.text}
                             </div>
                           ) : (
                             <img
                               className="col-span-3"
-                              src={layer.content.banner}
+                              src={layer?.content?.banner}
                               alt="Layer ảnh"
                               style={{
                                 width: "auto",
@@ -126,7 +126,7 @@ const Layer = () => {
                             />
                           )}
                           <div className="flex items-center justify-end col-span-2">
-                            {layer.content.lock === 1 ? (
+                            {layer?.content?.lock === 1 ? (
                               <button className="px-1">
                                 <Locked size={20} />
                               </button>
@@ -135,7 +135,7 @@ const Layer = () => {
                                 <Unlocked size={20} />
                               </button>
                             )}
-                            {layer.content.status === 1 ? (
+                            {layer?.content?.status === 1 ? (
                               <button className="px-1">
                                 <Eye size={20} />
                               </button>
