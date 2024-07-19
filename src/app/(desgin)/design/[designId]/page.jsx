@@ -1,19 +1,26 @@
-"use client";
-import { useEffect, useState } from "react";
-import Navbar from "./components/Navbar/Navbar";
-import Toolbox from "./components/Toolbox/Toolbox";
-import { useParams } from "next/navigation";
-import { getListLayerApi } from "../../../../api/design";
-import { checkTokenCookie } from "@/utils";
-import { Stage, Layer, Rect, Image } from "react-konva";
-import BackgroundLayer from "./components/Editor/BackgroundLayer";
-import ImageLayer from "./components/Editor/ImageLayer";
-import TextLayer from "./components/Editor/TextLayer";
+"use client"
+import { useEffect, useRef, useState } from "react"
+import Navbar from "./components/Navbar/Navbar"
+import Toolbox from "./components/Toolbox/Toolbox"
+import { useParams } from "next/navigation"
+import { getListLayerApi } from "../../../../api/design"
+import { checkTokenCookie } from "@/utils"
+import { Stage, Layer, Rect, Image } from "react-konva"
+import BackgroundLayer from "./components/Editor/BackgroundLayer"
+import ImageLayer from "./components/Editor/ImageLayer"
+import TextLayer from "./components/Editor/TextLayer"
+import { useDispatch, useSelector } from 'react-redux'
+import { setStageData } from '@/redux/slices/editor/stageSlice'
 import PanelsImage from "./components/Panels/PanelsImage";
 
 const Page = () => {
-  const params = useParams();
-  const { designId } = params;
+  const params = useParams()
+  const { designId } = params
+  const stageRef = useRef(null)
+  console.log('🚀 ~ Page ~ stageRef:', stageRef)
+  const dispatch = useDispatch()
+  const stageData = useSelector((state) => state.stage.stageData);
+  console.log('🚀 ~ Page ~ stageData:', stageData)
 
   const [design, setDesign] = useState();
   const [designLayers, setDesignLayers] = useState([]);
@@ -32,109 +39,76 @@ const Page = () => {
         if (response.code === 1) {
           setDesign(response.data);
           setDesignLayers(response.data.productDetail);
-          if (response.data.width >= 4000 || response.data.height >= 4000) {
-            setInitSize({
-              width: response.data.width / 7,
-              height: response.data.height / 7,
-            });
-          } else if (
-            response.data.width >= 4000 ||
-            response.data.height >= 4000
-          ) {
-            setInitSize({
-              width: response.data.width / 6,
-              height: response.data.height / 6,
-            });
-          } else if (
-            response.data.width >= 3000 ||
-            response.data.height >= 3000
-          ) {
-            setInitSize({
-              width: response.data.width / 5,
-              height: response.data.height / 5,
-            });
-          } else if (
-            response.data.width >= 2500 ||
-            response.data.height >= 2500
-          ) {
-            setInitSize({
-              width: response.data.width / 3,
-              height: response.data.height / 3,
-            });
-          } else if (
-            response.data.width >= 1920 ||
-            response.data.height >= 1920
-          ) {
-            setInitSize({
-              width: response.data.width / 2.5,
-              height: response.data.height / 2.5,
-            });
-          } else if (
-            response.data.width >= 1600 ||
-            response.data.height >= 1600
-          ) {
-            setInitSize({
-              width: response.data.width / 1.5,
-              height: response.data.height / 1.5,
-            });
-          } else if (
-            response.data.width >= 1000 ||
-            response.data.height >= 1000
-          ) {
-            setInitSize({
-              width: response.data.width / 1.5,
-              height: response.data.height / 1.5,
-            });
-          } else if (
-            response.data.width >= 500 ||
-            response.data.height >= 500
-          ) {
-            setInitSize({
-              width: response.data.width * 1.5,
-              height: response.data.height * 1.5,
-            });
+
+          const { width, height } = response.data;
+
+          let sizeFactor;
+          if (width >= 4000 || height >= 4000) {
+            sizeFactor = 7;
+          } else if (width >= 3000 || height >= 3000) {
+            sizeFactor = 5;
+          } else if (width >= 2500 || height >= 2500) {
+            sizeFactor = 3;
+          } else if (width >= 1920 || height >= 1920) {
+            sizeFactor = 2.5;
+          } else if (width >= 1600 || height >= 1600) {
+            sizeFactor = 1.5;
+          } else if (width >= 1000 || height >= 1000) {
+            sizeFactor = 1.5;
+          } else if (width >= 500 || height >= 500) {
+            sizeFactor = 1.5;
           } else {
-            setInitSize({
-              width: response.data.width * 2,
-              height: response.data.height * 2,
-            });
+            sizeFactor = 2;
           }
+
+          setInitSize({
+            width: width / sizeFactor,
+            height: height / sizeFactor,
+          })
+          //Lưu thông tin design hiện tại vào redux
+          dispatch(setStageData({
+            initSize: {
+              width: width / sizeFactor,
+              height: height / sizeFactor,
+            },
+            design: response.data,
+            layers: response.data.productDetail
+          }))
         }
       } catch (error) {
         console.log(error);
       }
-    };
-    fetchData();
-  }, [designId]);
+    }
+
+    fetchData()
+  }, [designId])
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
+    console.log('No layer active');
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
   };
 
-  console.log("🚀 ~ Page ~ design:", design);
-  console.log("🚀 ~ Page ~ selectedId:", selectedId);
+  const updateDesign = () => {
+    // 
+  }
+
 
   return (
     <>
       <Navbar />
-      <div
-        style={{
-          height: "100vh",
-          padding: "64px 0px 0px 0px",
-        }}>
-        <Toolbox onToolChange={setActiveTool} />
-
+      <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
+        <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
-            activeTool ? "ml-[396px]" : "ml-[96px]"
-          }`}>
+          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
+            }`}>
           <PanelsImage />
           <div className="flex h-[100%] justify-center items-center">
             <Stage
+              ref={stageRef}
               width={initSize.width}
               height={initSize.height}
               className="bg-white"

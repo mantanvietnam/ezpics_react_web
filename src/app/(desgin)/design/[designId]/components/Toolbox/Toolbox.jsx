@@ -11,9 +11,10 @@ import Element from "./Element";
 import Customize from "./Customize";
 import { LeftOutlined } from "@ant-design/icons";
 
-const Toolbox = ({ onToolChange }) => {
-  const [activeTool, setActiveTool] = useState("Layer");
+const Toolbox = ({ onToolChange, stageRef }) => {
+  console.log('🚀 ~ Toolbox ~ stageRef:', stageRef)
   const [isToolboxVisible, setIsToolboxVisible] = useState(true);
+  const [activeTool, setActiveTool] = useState("Layer")
 
   const handleToolClick = (tool) => {
     const newActiveTool = tool === activeTool ? null : tool;
@@ -141,9 +142,8 @@ const Toolbox = ({ onToolChange }) => {
       </div>
 
       <div
-        className={`absolute z-1 top-[44%] cursor-pointer w-[28px] bg-white h-[60px] flex transition-all duration-300 ${
-          isToolboxVisible ? "opacity-100 left-[396px]" : "opacity-0 left-0"
-        }`}
+        className={`absolute z-1 top-[44%] cursor-pointer w-[28px] bg-white h-[60px] flex transition-all duration-300 ${isToolboxVisible ? "opacity-100 left-[396px]" : "opacity-0 left-0"
+          }`}
         style={{
           clipPath: "ellipse(66% 50% at 0% 50%)",
         }}>
