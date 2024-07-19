@@ -80,8 +80,10 @@ const Photos = ({ stageRef }) => {
 
     if (res.data.code === 1) {
       toast.success("Thêm ảnh thành công");
+      // console.log(res.data);
       // Cập nhật lại danh sách ảnh sau khi thêm thành công
       fetchData();
+      dispatch(addLayerImage(res.data.data));
     }
   };
 
