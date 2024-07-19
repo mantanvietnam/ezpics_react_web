@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
 import { useParams } from "next/navigation";
 import { getListLayerApi } from "../../../../api/design";
@@ -125,7 +126,9 @@ const Page = () => {
         style={{
           height: "100vh",
           padding: "64px 0px 0px 0px",
-        }}>
+        }}
+        className="flex-1"
+      >
         <Toolbox onToolChange={setActiveTool} />
 
         <div
@@ -133,7 +136,7 @@ const Page = () => {
             activeTool ? "ml-[396px]" : "ml-[96px]"
           }`}>
           <PanelsImage />
-          <div className="flex h-[100%] justify-center items-center">
+          <div className="flex h-[calc(100%-50px)] justify-center items-center">
             <Stage
               width={initSize.width}
               height={initSize.height}
@@ -187,6 +190,7 @@ const Page = () => {
               })}
             </Stage>
           </div>
+          <Footer />
         </div>
       </div>
     </>
