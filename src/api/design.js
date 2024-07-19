@@ -15,3 +15,11 @@ export const addLayerImageUrlAPI = async (data) => {
   );
   return response.data;
 }
+
+export const deleteLayerAPI = async (data) => {
+  const response = await axios.post(
+    " https://apis.ezpics.vn/apis/deleteLayerAPI",
+    data
+  );
+  return response.data;
+}
