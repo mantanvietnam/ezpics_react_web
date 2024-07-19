@@ -1,26 +1,27 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
-import Navbar from "./components/Navbar/Navbar"
-import Toolbox from "./components/Toolbox/Toolbox"
-import { useParams } from "next/navigation"
-import { getListLayerApi } from "../../../../api/design"
-import { checkTokenCookie } from "@/utils"
-import { Stage, Layer, Rect, Image } from "react-konva"
-import BackgroundLayer from "./components/Editor/BackgroundLayer"
-import ImageLayer from "./components/Editor/ImageLayer"
-import TextLayer from "./components/Editor/TextLayer"
-import { useDispatch, useSelector } from 'react-redux'
-import { setStageData } from '@/redux/slices/editor/stageSlice'
+"use client";
+import { useEffect, useRef, useState } from "react";
+import Navbar from "./components/Navbar/Navbar";
+import Toolbox from "./components/Toolbox/Toolbox";
+import { useParams } from "next/navigation";
+import { getListLayerApi } from "../../../../api/design";
+import { checkTokenCookie } from "@/utils";
+import { Stage, Layer, Rect, Image } from "react-konva";
+import BackgroundLayer from "./components/Editor/BackgroundLayer";
+import ImageLayer from "./components/Editor/ImageLayer";
+import TextLayer from "./components/Editor/TextLayer";
+import { useDispatch, useSelector } from "react-redux";
+import { setStageData } from "@/redux/slices/editor/stageSlice";
 import PanelsImage from "./components/Panels/PanelsImage";
+import PanelsCommon from "./components/Panels/PanelsCommon";
 
 const Page = () => {
-  const params = useParams()
-  const { designId } = params
-  const stageRef = useRef(null)
-  console.log('🚀 ~ Page ~ stageRef:', stageRef)
-  const dispatch = useDispatch()
+  const params = useParams();
+  const { designId } = params;
+  const stageRef = useRef(null);
+  console.log("🚀 ~ Page ~ stageRef:", stageRef);
+  const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
-  console.log('🚀 ~ Page ~ stageData:', stageData)
+  console.log("🚀 ~ Page ~ stageData:", stageData);
 
   const [design, setDesign] = useState();
   const [designLayers, setDesignLayers] = useState([]);
@@ -64,28 +65,30 @@ const Page = () => {
           setInitSize({
             width: width / sizeFactor,
             height: height / sizeFactor,
-          })
+          });
           //Lưu thông tin design hiện tại vào redux
-          dispatch(setStageData({
-            initSize: {
-              width: width / sizeFactor,
-              height: height / sizeFactor,
-            },
-            design: response.data,
-            layers: response.data.productDetail
-          }))
+          dispatch(
+            setStageData({
+              initSize: {
+                width: width / sizeFactor,
+                height: height / sizeFactor,
+              },
+              design: response.data,
+              layers: response.data.productDetail,
+            })
+          );
         }
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
-    fetchData()
-  }, [designId])
+    fetchData();
+  }, [designId]);
 
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
-    console.log('No layer active');
+    console.log("No layer active");
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       setSelectedId(null);
@@ -93,9 +96,8 @@ const Page = () => {
   };
 
   const updateDesign = () => {
-    // 
-  }
-
+    //
+  };
 
   return (
     <>
@@ -103,9 +105,13 @@ const Page = () => {
       <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
-            }`}>
-          <PanelsImage />
+          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
+            activeTool ? "ml-[396px]" : "ml-[96px]"
+          }`}>
+          <div>
+            <PanelsImage />
+          </div>
+
           <div className="flex h-[100%] justify-center items-center">
             <Stage
               ref={stageRef}
