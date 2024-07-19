@@ -172,7 +172,7 @@ export default function Text() {
 
   return (
     <>
-      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] border-r border-gray-300 overflow-y-auto">
+      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
         <Block
           $style={{
             display: "flex",
@@ -181,16 +181,14 @@ export default function Text() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4
               style={{
                 fontFamily: "Helvetica, Arial, sans-serif",
                 marginBottom: "10px",
                 marginTop: "10px",
-              }}
-            >
+              }}>
               Kiểu chữ
             </h4>
           </Block>
@@ -207,8 +205,7 @@ export default function Text() {
                     width: "100%",
                   },
                 },
-              }}
-            >
+              }}>
               Thêm chữ
             </Button>
 
@@ -231,8 +228,7 @@ export default function Text() {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}
-                >
+                  onClick={() => handleAddText(text)}>
                   <p
                     style={{
                       color: text.content.color,
@@ -241,8 +237,7 @@ export default function Text() {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}
-                  >
+                    }}>
                     {text.content.text}
                   </p>
                 </div>
@@ -259,8 +254,7 @@ export default function Text() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}
-        >
+          }}>
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>

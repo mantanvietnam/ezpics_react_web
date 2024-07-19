@@ -112,7 +112,11 @@ const Page = () => {
   return (
     <>
       <Navbar />
-      <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
+      <div
+        style={{
+          height: "100vh",
+          padding: "64px 0px 0px 0px",
+        }}>
         <Toolbox onToolChange={setActiveTool} />
         <div
           className={`relative z-1 bg-gray-300 h-[100%] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"

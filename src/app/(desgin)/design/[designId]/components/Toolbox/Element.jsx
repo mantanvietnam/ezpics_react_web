@@ -22,7 +22,6 @@ export default function Graphic() {
       try {
         const response = await axios.get(`${network}/categoryIngredientAPI`);
         setCategories(response.data.data);
-        console.log("Fetched categories:", response.data.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -83,7 +82,7 @@ export default function Graphic() {
   }
 
   return (
-    <div className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] border-r border-gray-300 overflow-y-auto">
+    <div className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
       <div className="flex-1 flex flex-col">
         <div className="flex items-center font-semibold justify-between px-6">
           <h4 className="font-sans">Thành phần</h4>
@@ -140,6 +139,7 @@ function ImageItem({ preview, onClick }) {
       className="relative bg-gray-100 cursor-pointer rounded-lg overflow-hidden">
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100 bg-gradient-to-b from-transparent to-black/45"></div>
       <img src={preview} alt="" className="w-full h-full object-contain" />
+      {console.log(preview)}
     </div>
   );
 }
