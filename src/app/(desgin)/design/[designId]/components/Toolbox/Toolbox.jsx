@@ -10,8 +10,9 @@ import Photos from "./Photos";
 import Element from "./Element";
 import Customize from "./Customize";
 
-const Toolbox = ({ onToolChange }) => {
-  const [activeTool, setActiveTool] = useState("Layer");
+const Toolbox = ({ onToolChange, stageRef }) => {
+  console.log('🚀 ~ Toolbox ~ stageRef:', stageRef)
+  const [activeTool, setActiveTool] = useState("Layer")
 
   const handleToolClick = (tool) => {
     const newActiveTool = tool === activeTool ? null : tool;
