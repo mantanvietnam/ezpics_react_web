@@ -16,10 +16,8 @@ import { useParams } from "next/navigation";
 
 const Layer = () => {
   const [listLayers, setListLayers] = useState([]);
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const network = useAppSelector((state) => state.network.ipv4Address);
-  const idProduct = useAppSelector((state) => state.token.id);
 
   const params = useParams();
   const { designId } = params;
@@ -59,83 +57,84 @@ const Layer = () => {
 
   return (
     <div className="absolute top-0 left-[96px] h-full w-[300px] px-2">
-      <div className="flex-1 flex flex-col">
+      <div
+        className="flex-1 flex flex-col h-[100%] overflow-y-auto"
+        style={{ scrollbarWidth: "thin" }}>
         <h4 className="py-2">Danh sách Layers</h4>
-      </div>
-     
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId={"layerList"} type="group">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {listLayers.length > 0 ? (
-                listLayers.map((layer, index) => (
-                  <Draggable
-                    key={layer.id}
-                    draggableId={layer.id.toString()}
-                    index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]">
-                        <button className="col-span-1 cursor-move">
-                          <Drapdrop size={20} />
-                        </button>
-                        {layer.content.type === "text" ? (
-                          <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
-                            {layer.content.text}
-                          </div>
-                        ) : (
-                          <img
-                            className="col-span-3"
-                            src={layer.content.banner}
-                            alt="Layer ảnh"
-                            style={{
-                              width: "auto",
-                              height: 40,
-                              maxWidth: "100px",
-                              resize: "both",
-                              border: "1px solid black",
-                            }}
-                          />
-                        )}
-                        <div className="flex items-center justify-end col-span-2">
-                          {layer.content.lock === 1 ? (
-                            <button className="px-1">
-                              <Locked size={20} />
-                            </button>
-                          ) : (
-                            <button className="px-1">
-                              <Unlocked size={20} />
-                            </button>
-                          )}
-                          {layer.content.status === 1 ? (
-                            <button className="px-1">
-                              <Eye size={20} />
-                            </button>
-                          ) : (
-                            <button className="px-1">
-                              <EyeCrossed size={20} />
-                            </button>
-                          )}
-                          <button className="px-1">
-                            <Delete size={20} />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId={"layerList"} type="group">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {listLayers.length > 0 ? (
+                  listLayers.map((layer, index) => (
+                    <Draggable
+                      key={layer.id}
+                      draggableId={layer.id.toString()}
+                      index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]">
+                          <button className="col-span-1 cursor-move">
+                            <Drapdrop size={20} />
                           </button>
+                          {layer.content.type === "text" ? (
+                            <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
+                              {layer.content.text}
+                            </div>
+                          ) : (
+                            <img
+                              className="col-span-3"
+                              src={layer.content.banner}
+                              alt="Layer ảnh"
+                              style={{
+                                width: "auto",
+                                height: 40,
+                                maxWidth: "100px",
+                                resize: "both",
+                                border: "1px solid black",
+                              }}
+                            />
+                          )}
+                          <div className="flex items-center justify-end col-span-2">
+                            {layer.content.lock == 1 ? (
+                              <button className="px-1">
+                                <Locked size={20} />
+                              </button>
+                            ) : (
+                              <button className="px-1">
+                                <Unlocked size={20} />
+                              </button>
+                            )}
+                            {layer.content.status == 1 ? (
+                              <button className="px-1">
+                                <Eye size={20} />
+                              </button>
+                            ) : (
+                              <button className="px-1">
+                                <EyeCrossed size={20} />
+                              </button>
+                            )}
+                            <button className="px-1">
+                              <Delete size={20} />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))
-              ) : (
-                <div>Layer trống</div>
-              )}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <div>Layer trống</div>
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </div>
   );
 };
