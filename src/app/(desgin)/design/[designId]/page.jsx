@@ -127,11 +127,12 @@ const Page = () => {
           padding: "64px 0px 0px 0px",
         }}>
         <Toolbox onToolChange={setActiveTool} />
-        <PanelsImage />
+
         <div
           className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
             activeTool ? "ml-[396px]" : "ml-[96px]"
           }`}>
+          <PanelsImage />
           <div className="flex h-[100%] justify-center items-center">
             <Stage
               width={initSize.width}
