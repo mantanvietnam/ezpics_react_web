@@ -15,9 +15,10 @@ import { Spin } from "antd";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -70,6 +71,24 @@ export default function Login() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [savePasswordError, setSavePasswordError] = useState("");
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+
+  const [deviceToken, setDeviceToken] = useState("");
+  useEffect(() => {
+    const getDeviceToken = async () => {
+      // Load the FingerprintJS agent.
+      const fp = await FingerprintJS.load();
+
+      // Get the visitor identifier when you need it.
+      const result = await fp.get();
+
+      // This is the visitor identifier:
+      const visitorId = result.visitorId;
+      setDeviceToken(visitorId);
+    };
+
+    getDeviceToken();
+  }, []);
+
   function handleCheckForgot() {
     setCheck(true);
   }
@@ -93,6 +112,7 @@ export default function Login() {
         const repon = await loginByPhone({
           phone: phone,
           password: password,
+          token_device: deviceToken,
           type_device: "web",
         });
         if (repon.code === 0) {
