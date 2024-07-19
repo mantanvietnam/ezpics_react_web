@@ -12,7 +12,6 @@ import Customize from "./Customize";
 import { LeftOutlined } from "@ant-design/icons";
 
 const Toolbox = ({ onToolChange, stageRef }) => {
-  console.log('🚀 ~ Toolbox ~ stageRef:', stageRef)
   const [isToolboxVisible, setIsToolboxVisible] = useState(true);
   const [activeTool, setActiveTool] = useState("Layer")
 
@@ -158,7 +157,7 @@ const Toolbox = ({ onToolChange, stageRef }) => {
 
       {activeTool === "Layer" && <Layer />}
       {activeTool === "Text" && <Text />}
-      {activeTool === "Photos" && <Photos />}
+      {activeTool === "Photos" && <Photos stageRef={stageRef} />}
       {activeTool === "Element" && <Element />}
       {activeTool === "Customize" && <Customize />}
     </div>

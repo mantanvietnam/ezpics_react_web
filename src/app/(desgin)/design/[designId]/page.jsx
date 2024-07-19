@@ -14,17 +14,16 @@ import { setStageData } from "@/redux/slices/editor/stageSlice";
 import PanelsImage from "./components/Panels/PanelsImage";
 
 const Page = () => {
-  const params = useParams();
-  const { designId } = params;
-  const stageRef = useRef(null);
-  console.log("🚀 ~ Page ~ stageRef:", stageRef);
-  const dispatch = useDispatch();
-  const stageData = useSelector((state) => state.stage.stageData);
-  console.log("🚀 ~ Page ~ stageData:", stageData);
+  const params = useParams()
+  const { designId } = params
+  const stageRef = useRef(null)
+  const dispatch = useDispatch()
+  const stageData = useSelector((state) => state.stage.stageData)
+  const { design, designLayers, initSize } = stageData
 
-  const [design, setDesign] = useState();
-  const [designLayers, setDesignLayers] = useState([]);
-  const [initSize, setInitSize] = useState({ width: 0, height: 0 });
+  // const [design, setDesign] = useState();
+  // const [designLayers, setDesignLayers] = useState([]);
+  // const [initSize, setInitSize] = useState({ width: 0, height: 0 });
   const [selectedId, setSelectedId] = useState(null);
 
   const [activeTool, setActiveTool] = useState("Layer");
@@ -37,9 +36,6 @@ const Page = () => {
           token: checkTokenCookie(),
         });
         if (response.code === 1) {
-          setDesign(response.data);
-          setDesignLayers(response.data.productDetail);
-
           const { width, height } = response.data;
 
           let sizeFactor;
@@ -60,22 +56,15 @@ const Page = () => {
           } else {
             sizeFactor = 2;
           }
-
-          setInitSize({
-            width: width / sizeFactor,
-            height: height / sizeFactor,
-          });
           //Lưu thông tin design hiện tại vào redux
-          dispatch(
-            setStageData({
-              initSize: {
-                width: width / sizeFactor,
-                height: height / sizeFactor,
-              },
-              design: response.data,
-              layers: response.data.productDetail,
-            })
-          );
+          dispatch(setStageData({
+            initSize: {
+              width: width / sizeFactor,
+              height: height / sizeFactor,
+            },
+            design: response.data,
+            designLayers: response.data.productDetail
+          }))
         }
       } catch (error) {
         console.log(error);
@@ -104,9 +93,8 @@ const Page = () => {
       <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
-            activeTool ? "ml-[396px]" : "ml-[96px]"
-          }`}>
+          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
+            }`}>
           <div>
             <PanelsImage />
           </div>

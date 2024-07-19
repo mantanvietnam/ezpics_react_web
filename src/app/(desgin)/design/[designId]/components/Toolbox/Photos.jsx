@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import { addLayerImageUrlAPI } from "@/api/design";
+import { useDispatch } from "react-redux";
+import { addLayerImage } from "@/redux/slices/editor/stageSlice";
 
 const Photos = () => {
   const [photos, setPhotos] = useState([]);
@@ -10,6 +14,10 @@ const Photos = () => {
 
   const params = useParams();
   const { designId } = params;
+  const stageData = useSelector((state) => state.stage.stageData);
+  const dispatch = useDispatch();
+
+  console.log("🚀 ~ Photos ~ stageRef:", stageRef);
 
   useEffect(() => {
     async function fetchData() {
@@ -28,6 +36,26 @@ const Photos = () => {
 
     fetchData();
   }, []);
+
+  //B1: Call api tạo layer image
+  //B2: Cập nhât redux để nó load lại state
+  const handleAddPhoto = (item) => {
+    console.log("🚀 ~ handleAddPhoto ~ item:", item);
+    const addLayer = async () => {
+      try {
+        const res = await addLayerImageUrlAPI({
+          idproduct: stageData.design.id,
+          token: checkTokenCookie(),
+          imageUrl: item.link,
+          page: 0,
+        });
+        dispatch(addLayerImage(res.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    addLayer();
+  };
 
   const handleDropFiles = async (files) => {
     const file = files[0];
@@ -88,7 +116,14 @@ const Photos = () => {
           <div className="grid gap-2 grid-cols-2">
             {photos?.map((item, index) => {
               return (
-                <ImageItem key={index} preview={`${item.link}`} item={item} />
+                <ImageItem
+                  key={index}
+                  preview={`${item.link}`}
+                  item={item}
+                  onClick={() => {
+                    handleAddPhoto(item);
+                  }}
+                />
               );
             })}
           </div>

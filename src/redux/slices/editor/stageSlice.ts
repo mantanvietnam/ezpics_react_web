@@ -5,7 +5,11 @@ interface StageState {
 }
 
 const initialState: StageState = {
-  stageData: null,
+  stageData: {
+    design: {},
+    initSize: {},
+    designLayers: []
+  },
 };
 
 const stageSlice = createSlice({
@@ -15,8 +19,11 @@ const stageSlice = createSlice({
     setStageData: (state, action: PayloadAction<any>) => {
       state.stageData = action.payload;
     },
+    addLayerImage: (state, action: PayloadAction<any>) => {
+      state.stageData.designLayers = [...state.stageData.designLayers, action.payload]
+    }
   },
 });
 
-export const { setStageData } = stageSlice.actions;
+export const { setStageData, addLayerImage } = stageSlice.actions;
 export default stageSlice.reducer;
