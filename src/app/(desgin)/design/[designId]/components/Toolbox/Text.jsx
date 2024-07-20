@@ -6,9 +6,13 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import Image from "next/image";
 import images from "public/images/index2";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addLayerImage } from "@/redux/slices/editor/stageSlice";
 
-async function loadFonts(fonts) {
+async function LoadFonts(fonts) {
   const styleElement = document.createElement("style");
+
   let fontFaceRules = "";
 
   fonts.forEach((font) => {
@@ -66,12 +70,14 @@ export default function Text() {
   const [fonts, setFonts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const stageData = useSelector((state) => state.stage.stageData);
+  const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       const fontsFromApi = await fetchAllFonts();
       setFonts(fontsFromApi);
-      await loadFonts(fontsFromApi);
+      await LoadFonts(fontsFromApi);
       setLoading(false);
     };
     fetchData();
@@ -94,81 +100,31 @@ export default function Text() {
     getAllText();
   }, [network, token]);
 
-  const parseGraphicJSON = () => {
-    const currentScene = editor.scene.exportToJSON();
-    console.log(currentScene);
-  };
-
   const addObject = async () => {
-    if (editor && fonts.length > 0) {
-      const font = fonts[0];
-      console.log("Adding text with font:", font);
-      const res = await axios.post(`${network}/addLayerText`, {
-        idproduct: idProduct,
-        token: token,
-        text: "Thêm chữ",
-        color: "#333333",
-        size: 92,
-        font: font.name,
-        page: Number(parseGraphicJSON()),
-      });
-      if (res.data.code === 1) {
-        const options = {
-          id: res.data.data.id,
-          type: "StaticText",
-          width: 420,
-          text: "Thêm chữ",
-          fontSize: 92,
-          fontFamily: font.name,
-          textAlign: "center",
-          fill: "#000000",
-          metadata: {
-            idBackground: 0,
-            lock: false,
-            page: Number(parseGraphicJSON()),
-          },
-        };
-        editor.objects.add(options);
-      }
-    }
+    
+  
   };
 
   const handleAddText = async (item) => {
-    if (editor && fonts.length > 0) {
-      const font = fonts.find((f) => f.name === item.content.font);
-      if (font) {
-        await loadFonts([font]);
-        console.log("Adding text with font:", font);
-        const res = await axios.post(`${network}/addLayerText`, {
-          idproduct: idProduct,
-          token: token,
-          text: item.content.text,
-          color: item.content.color,
-          size: 8,
-          font: item.content.font,
-          width: 20,
-          page: Number(parseGraphicJSON()),
-        });
-        if (res.data.code === 1) {
-          const options = {
-            id: res.data.data.id,
-            type: "StaticText",
-            width: 200,
-            text: item.content.text,
-            fontSize: 24,
-            fontFamily: item.content.font,
-            textAlign: "center",
-            fontStyle: item.content.indam === "normal" ? "bold" : "400",
-            fill: item.content.color,
-            metadata: {
-              page: Number(parseGraphicJSON()),
-            },
-          };
-          editor.objects.add(options);
-        }
+    const font = fonts.find((f) => f.name === item.content.font);
+    if (font) {
+      await LoadFonts([font]);
+      const res = await axios.post(`${network}/addLayerText`, {
+        idproduct: stageData.design.id,
+        token: token,
+        text: item.content.text,
+        color: item.content.color,
+        size: 8,
+        font: item.content.font,
+        width: 20,
+      });
+      console.log("Adding text with font:", res);
+      dispatch(addLayerImage(res.data));
+
+      addLayerImage();
       }
-    }
-  };
+  }
+      
 
   return (
     <>

@@ -6,7 +6,7 @@ export const getListLayerApi = async (data) => {
     data
   );
   return response.data;
-}
+};
 
 export const addLayerImageUrlAPI = async (data) => {
   const response = await axios.post(
@@ -14,7 +14,15 @@ export const addLayerImageUrlAPI = async (data) => {
     data
   );
   return response.data;
-}
+};
+
+export const addLayerTextAPI = async (data) => {
+  const response = await axios.post(
+    " https://apis.ezpics.vn/apis/addLayerText",
+    data
+  );
+  return response.data;
+};
 
 export const deleteLayerAPI = async (data) => {
   const response = await axios.post(
@@ -22,4 +30,4 @@ export const deleteLayerAPI = async (data) => {
     data
   );
   return response.data;
-}
+};
