@@ -17,15 +17,15 @@ import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { removeLayer } from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
+import { setStageData } from "@/redux/slices/editor/stageSlice";
 
 const Layer = () => {
   const [listLayers, setListLayers] = useState([]);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+
   const { designLayers } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
   const network = useAppSelector((state) => state.network.ipv4Address);
-  const idProduct = useAppSelector((state) => state.token.id);
 
   const params = useParams();
   const { designId } = params;

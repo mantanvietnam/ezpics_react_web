@@ -135,7 +135,7 @@ const Page = () => {
                       />
                     </Layer>
                   );
-                } else if (layer.content?.type === "text") {
+                } else if (layer?.content?.type === "text") {
                   return (
                     <Layer key={layer.id}>
                       <TextLayer
