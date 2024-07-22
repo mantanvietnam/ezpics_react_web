@@ -50,8 +50,11 @@ const Layer = () => {
     }
   }, [network, designId]);
 
+<<<<<<< HEAD
+=======
   console.log(listLayers);
 
+>>>>>>> 9a0961233a43cae6b4f9876742a99f62fe9eb8fd
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
