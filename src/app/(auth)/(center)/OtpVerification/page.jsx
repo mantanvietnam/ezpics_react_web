@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { checkTokenCookie, getCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 import { clearAllCookies } from "../../../../utils/cookie";
+import { getInfoMemberAPI } from "@/api/user";
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -18,7 +19,6 @@ const OtpVerification = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [canResendOtp, setCanResendOtp] = useState(false);
   const [countdown, setCountdown] = useState(60); // Đếm ngược 60 giây
-  // const
   // const { data: session } = useSession();
   const router = useRouter();
   const token = checkTokenCookie();
@@ -31,25 +31,43 @@ const OtpVerification = () => {
   // } else {
   //   dataInforUser = null;
   // }
+
+  const [dataUser, setDataUser] = useState({});
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getInfoMemberAPI({
+          token: checkTokenCookie(),
+        });
+        setDataUser(response.data);
+        console.log("page:", response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleResendOtp = async () => {
-    // setIsLoading(true);
-    // try {
-    //   const response = await SendOtp({ phone: dataInforUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
-    //   if (response?.code == 0) {
-    //     console.log("response::", response);
-    //     toast.success("Mã OTP đã được gửi lại !");
-    //     setOtp(["", "", "", "", "", ""]); // Reset lại các ô nhập OTP
-    //     setIsOtpSent(true); // Đã gửi mã OTP thành công
-    //     document.getElementById("otp-input-0").focus(); // Focus vào ô nhập OTP đầu tiên
-    //   } else {
-    //     toast.error("Không thể gửi lại mã OTP, vui lòng thử lại sau.");
-    //   }
-    // } catch (error) {
-    //   toast.error("Đã xảy ra lỗi, vui lòng thử lại....");
-    //   console.error(error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    setIsLoading(true);
+    try {
+      const response = await SendOtp({ phone: dataUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
+      if (response?.code == 0) {
+        console.log("response::", response);
+        toast.success("Mã OTP đã được gửi lại !");
+        setOtp(["", "", "", "", "", ""]); // Reset lại các ô nhập OTP
+        setIsOtpSent(true); // Đã gửi mã OTP thành công
+        document.getElementById("otp-input-0").focus(); // Focus vào ô nhập OTP đầu tiên
+      } else {
+        toast.error("Không thể gửi lại mã OTP, vui lòng thử lại sau.");
+      }
+    } catch (error) {
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại....");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   useEffect(() => {
     let timer;
@@ -73,7 +91,7 @@ const OtpVerification = () => {
   const handleSendOtp = async () => {
     setIsLoading(true);
     try {
-      const response = await SendOtp({ phone: dataInforUser?.phone }); // Gọi hàm sendOtp để nhận mã OTP
+      const response = await SendOtp({ phone: dataUser?.phone }); // Gọi hàm sendOtp để nhận mã OTP
       if (response?.code == 0) {
         console.log("respone: ", response);
         toast.success("Đã gửi mã OTP!2");

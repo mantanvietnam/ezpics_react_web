@@ -13,6 +13,7 @@ import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
 import { setStageData } from "@/redux/slices/editor/stageSlice";
 import PanelsImage from "./components/Panels/PanelsImage";
+import PanelsCommon from "./components/Panels/PanelsCommon"
 
 const Page = () => {
   const params = useParams();
@@ -23,8 +24,8 @@ const Page = () => {
   const stageData = useSelector((state) => state.stage.stageData);
   const { design, designLayers, initSize } = stageData;
 
-  const [selectedId, setSelectedId] = useState(null);
-  const [activeTool, setActiveTool] = useState("Layer");
+  const [selectedId, setSelectedId] = useState(null)
+  const [activeTool, setActiveTool] = useState("Layer")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,29 +33,29 @@ const Page = () => {
         const response = await getListLayerApi({
           idproduct: designId,
           token: checkTokenCookie(),
-        });
+        })
         if (response.code === 1) {
-          const { width, height } = response.data;
+          const { width, height } = response.data
 
-          let sizeFactor;
+          let sizeFactor
           if (width >= 4000 || height >= 4000) {
-            sizeFactor = 7;
+            sizeFactor = 7
           } else if (width >= 3000 || height >= 3000) {
-            sizeFactor = 5;
+            sizeFactor = 5
           } else if (width >= 2500 || height >= 2500) {
-            sizeFactor = 3;
+            sizeFactor = 3
           } else if (width >= 1920 || height >= 1920) {
-            sizeFactor = 2.5;
+            sizeFactor = 2.5
           } else if (width >= 1600 || height >= 1600) {
-            sizeFactor = 1.5;
+            sizeFactor = 1.5
           } else if (width >= 1000 || height >= 1000) {
-            sizeFactor = 1.5;
+            sizeFactor = 1.5
           } else if (width >= 500 || height >= 500) {
-            sizeFactor = 1.5;
+            sizeFactor = 1.5
           } else {
-            sizeFactor = 2;
+            sizeFactor = 2
           }
-          
+
           dispatch(setStageData({
             initSize: {
               width: width / sizeFactor,
@@ -65,19 +66,21 @@ const Page = () => {
           }));
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
+    }
 
-    fetchData();
-  }, [designId]);
+    fetchData()
+  }, [designId])
 
   const checkDeselect = (e) => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
-      setSelectedId(null);
+      setSelectedId(null)
     }
-  };
+  }
+
+  console.log('🚀 ~ Page ~ designLayers:', designLayers)
 
   return (
     <>
@@ -113,47 +116,40 @@ const Page = () => {
                     />
                   </Layer>
                   {designLayers.map((layer) => {
-                    if (!layer.id) {
-                      console.error("Layer ID is undefined", layer);
-                      return null;
-                    }
-                    if (layer.content?.type === "image") {
-                      return (
-                        <Layer key={layer.id}>
-                          <ImageLayer
-                            designSize={{
-                              width: initSize.width,
-                              height: initSize.height,
-                            }}
-                            id={layer.id}
-                            data={layer.content}
-                            isSelected={layer.id === selectedId}
-                            onSelect={() => {
-                              setSelectedId(layer.id);
-                            }}
-                          />
-                        </Layer>
-                      );
-                    } else if (layer?.content?.type === "text") {
-                      return (
-                        <Layer key={layer.id}>
-                          <TextLayer
-                            designSize={{
-                              width: initSize.width,
-                              height: initSize.height,
-                            }}
-                            id={layer.id}
-                            data={layer.content}
-                            isSelected={layer.id === selectedId}
-                            onSelect={() => {
-                              setSelectedId(layer.id);
-                            }}
-                          />
-                        </Layer>
-                      );
-                    }
-                    return null;
-                  })}
+                  if (layer.content?.type === "image") {
+                    return (
+                      <ImageLayer
+                        key={layer.id}
+                        designSize={{
+                          width: initSize.width,
+                          height: initSize.height,
+                        }}
+                        id={layer.id}
+                        data={layer.content}
+                        isSelected={layer.id === selectedId}
+                        onSelect={() => {
+                          setSelectedId(layer.id)
+                        }}
+                      />
+                    )
+                  } else if (layer.content?.type === "text") {
+                    return (
+                      <TextLayer
+                        key={layer.id}
+                        designSize={{
+                          width: initSize.width,
+                          height: initSize.height,
+                        }}
+                        id={layer.id}
+                        data={layer.content}
+                        isSelected={layer.id === selectedId}
+                        onSelect={() => {
+                          setSelectedId(layer.id)
+                        }}
+                      />
+                    )
+                  }
+                })}
                 </Stage>
               </div>
             </div>
@@ -164,7 +160,7 @@ const Page = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

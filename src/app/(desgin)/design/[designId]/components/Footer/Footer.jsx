@@ -48,15 +48,15 @@ const Footer = ({ containerRef }) => {
   };
 
   const handleMinusClick = () => {
-    setCurrentScaleIdx((prevIdx) => Math.max(prevIdx - 1, 0));
-    const newScale = scales[Math.max(currentScaleIdx - 1, 0)];
+    setCurrentScaleIdx((prevIdx) => Math.min(prevIdx + 1, scales.length - 1));
+    const newScale = scales[Math.min(currentScaleIdx + 1, scales.length - 1)];
     setSliderValue(newScale);
     updateScale(newScale);
   };
 
   const handlePlusClick = () => {
-    setCurrentScaleIdx((prevIdx) => Math.min(prevIdx + 1, scales.length - 1));
-    const newScale = scales[Math.min(currentScaleIdx + 1, scales.length - 1)];
+    setCurrentScaleIdx((prevIdx) => Math.max(prevIdx - 1, 0));
+    const newScale = scales[Math.max(currentScaleIdx - 1, 0)];
     setSliderValue(newScale);
     updateScale(newScale);
   };
