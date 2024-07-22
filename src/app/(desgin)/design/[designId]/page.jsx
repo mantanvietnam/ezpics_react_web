@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
@@ -18,6 +18,7 @@ const Page = () => {
   const params = useParams();
   const { designId } = params;
   const stageRef = useRef(null);
+  const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
   const { design, designLayers, initSize } = stageData;
@@ -78,86 +79,88 @@ const Page = () => {
     }
   };
 
-  const updateDesign = () => {
-    //
-  };
-
   return (
     <>
       <Navbar />
-      <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
+      <div className="h-screen pt-[65px] overflow-hidden">
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
-        <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
-            activeTool ? "ml-[396px]" : "ml-[96px]"
-          }`}
-        >
-          <div>
+        <div className={`
+          relative w-full h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"}`}>
+          <div className="fixed top-50 z-10 w-full">
             <PanelsImage />
           </div>
-
-          <div className="flex h-[calc(100%-50px)] justify-center items-center">
-            <Stage
-              ref={stageRef}
-              width={initSize.width}
-              height={initSize.height}
-              className="bg-white"
-              onMouseDown={checkDeselect}
-              onTouchStart={checkDeselect}
-            >
-              <Layer>
-                <BackgroundLayer
-                  src={design?.thumn}
+          <div className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center">
+            <div ref={containerRef}>
+              <div
+                
+                style={{ width: initSize.width, height: initSize.height }}
+              >
+                <Stage
+                  ref={stageRef}
                   width={initSize.width}
                   height={initSize.height}
-                />
-              </Layer>
-              {console.log("designLayers", designLayers)}
-              {designLayers.map((layer) => {
-                if (!layer.id) {
-                  console.error("Layer ID is undefined", layer);
-                  return null;
-                }
-                if (layer.content?.type === "image") {
-                  return (
-                    <Layer key={layer.id}>
-                      <ImageLayer
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                        isSelected={layer.id === selectedId}
-                        onSelect={() => {
-                          setSelectedId(layer.id);
-                        }}
-                      />
-                    </Layer>
-                  );
-                } else if (layer?.content?.type === "text") {
-                  return (
-                    <Layer key={layer.id}>
-                      <TextLayer
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                        isSelected={layer.id === selectedId}
-                        onSelect={() => {
-                          setSelectedId(layer.id);
-                        }}
-                      />
-                    </Layer>
-                  );
-                }
-                return null;
-              })}
-            </Stage>
+                  className="bg-white"
+                  style={{ zIndex: -1, overflow: "auto" }}
+                  onMouseDown={checkDeselect}
+                  onTouchStart={checkDeselect}
+                >
+                  <Layer>
+                    <BackgroundLayer
+                      src={design?.thumn}
+                      width={initSize.width}
+                      height={initSize.height}
+                    />
+                  </Layer>
+                  {designLayers.map((layer) => {
+                    if (!layer.id) {
+                      console.error("Layer ID is undefined", layer);
+                      return null;
+                    }
+                    if (layer.content?.type === "image") {
+                      return (
+                        <Layer key={layer.id}>
+                          <ImageLayer
+                            designSize={{
+                              width: initSize.width,
+                              height: initSize.height,
+                            }}
+                            id={layer.id}
+                            data={layer.content}
+                            isSelected={layer.id === selectedId}
+                            onSelect={() => {
+                              setSelectedId(layer.id);
+                            }}
+                          />
+                        </Layer>
+                      );
+                    } else if (layer?.content?.type === "text") {
+                      return (
+                        <Layer key={layer.id}>
+                          <TextLayer
+                            designSize={{
+                              width: initSize.width,
+                              height: initSize.height,
+                            }}
+                            id={layer.id}
+                            data={layer.content}
+                            isSelected={layer.id === selectedId}
+                            onSelect={() => {
+                              setSelectedId(layer.id);
+                            }}
+                          />
+                        </Layer>
+                      );
+                    }
+                    return null;
+                  })}
+                </Stage>
+              </div>
+            </div>
           </div>
-          <Footer />
+          <div className="fixed bottom-0 z-10 w-full">
+            <Footer containerRef={containerRef} />
+          </div>
         </div>
       </div>
     </>

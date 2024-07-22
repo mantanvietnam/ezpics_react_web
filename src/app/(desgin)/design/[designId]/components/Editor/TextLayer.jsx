@@ -1,43 +1,138 @@
-import React, { useEffect, useRef } from 'react'
-import { Text, Transformer } from 'react-konva'
+import React, { useEffect, useRef, useState } from 'react';
+import { Text, Transformer } from 'react-konva';
 
 export default function TextLayer(props) {
-  const { data, designSize, id, isSelected, onSelect } = props
-  const { postion_left, postion_top, size } = data
+  const { data, designSize, isSelected, onSelect, onTextChange } = props;
+  const { postion_left, postion_top, size } = data;
 
-  const shapeRef = useRef()
-  const trRef = useRef()
+  const shapeRef = useRef();
+  const trRef = useRef();
+  const [isEditing, setIsEditing] = useState(false);
+  const [textValue, setTextValue] = useState(data?.text);
 
-  //Vị trí của chúng
-  const postionX = designSize.width * (postion_left / 100);
-  const postionY = designSize.height * (postion_top / 100);
+  // State for dynamic offsets
+  const [offsetX, setOffsetX] = useState(window.innerWidth * 0.1); // 10% of viewport width
+  const [offsetY, setOffsetY] = useState(window.innerHeight * 0.05); // 5% of viewport height
 
-  //Chuyển đởi đơn vị vw vh sang px
-  const sizeValue = parseFloat(size?.replace("vw", ""));
+  // Function to update offsets based on viewport size
+  const updateOffsets = () => {
+    setOffsetX(window.innerWidth * 0.1); // 10% of viewport width
+    setOffsetY(window.innerHeight * 0.05); // 5% of viewport height
+  };
+
+  useEffect(() => {
+    // Add resize event listener to update offsets
+    window.addEventListener('resize', updateOffsets);
+    return () => window.removeEventListener('resize', updateOffsets);
+  }, []);
+
+  // Position of the text
+  const positionX = designSize.width * (postion_left / 100);
+  const positionY = designSize.height * (postion_top / 100);
+
+  // Convert vw to px
+  const sizeValue = parseFloat(size?.replace('vw', ''));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
-  //Hiển thị transform thủ công
   useEffect(() => {
     if (isSelected) {
-      // we need to attach transformer manually
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
 
+  useEffect(() => {
+    if (isEditing) {
+      const handleClickOutside = (e) => {
+        if (e.target.tagName !== 'TEXTAREA') {
+          setIsEditing(false);
+          if (onTextChange) {
+            onTextChange(textValue); // Call the parent callback to update text
+          }
+        }
+      };
+      window.addEventListener('click', handleClickOutside);
+
+      return () => {
+        window.removeEventListener('click', handleClickOutside);
+      };
+    }
+  }, [isEditing, textValue, onTextChange]);
+
+  const handleDblClick = () => {
+    setIsEditing(true);
+
+    const textPosition = shapeRef.current.absolutePosition();
+    const areaPosition = {
+      x: textPosition.x,
+      y: textPosition.y,
+    };
+
+    const textarea = document.createElement('textarea');
+    document.body.appendChild(textarea);
+
+    textarea.value = textValue;
+    textarea.style.position = 'absolute';
+    textarea.style.top = `${textPosition.y + offsetY}px`;
+    textarea.style.left = `${textPosition.x + offsetX}px`;
+    textarea.style.width = shapeRef.current.width() - shapeRef.current.padding() * 2 + 'px';
+    textarea.style.height = shapeRef.current.height() - shapeRef.current.padding() * 2 + 'px';
+    textarea.style.fontSize = shapeRef.current.fontSize() + 'px';
+    textarea.style.border = 'none';
+    textarea.style.padding = '0px';
+    textarea.style.margin = '0px';
+    textarea.style.overflow = 'hidden';
+    textarea.style.background = 'none';
+    textarea.style.outline = 'none';
+    textarea.style.resize = 'none';
+    textarea.style.lineHeight = shapeRef.current.lineHeight();
+    textarea.style.fontFamily = shapeRef.current.fontFamily();
+    textarea.style.transformOrigin = 'left top';
+    textarea.style.textAlign = shapeRef.current.align();
+    textarea.style.color = shapeRef.current.fill();
+
+    textarea.focus();
+
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        setTextValue(textarea.value);
+        document.body.removeChild(textarea);
+        setIsEditing(false);
+      }
+      if (e.key === 'Escape') {
+        document.body.removeChild(textarea);
+        setIsEditing(false);
+      }
+    });
+
+    const handleOutsideClick = (e) => {
+      if (e.target !== textarea) {
+        setTextValue(textarea.value);
+        document.body.removeChild(textarea);
+        setIsEditing(false);
+      }
+    };
+
+    setTimeout(() => {
+      window.addEventListener('click', handleOutsideClick);
+    });
+  };
+
   return (
     <>
       <Text
         ref={shapeRef}
-        text={data?.text}
-        x={postionX}
-        y={postionY}
+        text={textValue}
+        x={positionX}
+        y={positionY}
         draggable
         fill={data?.color}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
         onClick={onSelect}
         onTap={onSelect}
+        onDblClick={handleDblClick}
+        onDblTap={handleDblClick}
       />
       {isSelected && (
         <Transformer
@@ -57,11 +152,8 @@ export default function TextLayer(props) {
               anchor.width(6);
               anchor.offsetX(3);
             }
-            // you also can set other properties
-            // e.g. you can set fillPatternImage to set icon to the anchor
           }}
           boundBoxFunc={(oldBox, newBox) => {
-            // limit resize
             if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
               return oldBox;
             }
@@ -70,5 +162,5 @@ export default function TextLayer(props) {
         />
       )}
     </>
-  )
+  );
 }

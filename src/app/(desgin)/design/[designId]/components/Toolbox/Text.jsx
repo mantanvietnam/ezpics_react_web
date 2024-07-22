@@ -152,6 +152,7 @@ export default function Text() {
         <div>
           <Block padding={"0 1.5rem"}>
             <Button
+              className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300"
               onClick={addObject}
               style={{ marginBottom: "5px" }}
               size={SIZE.compact}
