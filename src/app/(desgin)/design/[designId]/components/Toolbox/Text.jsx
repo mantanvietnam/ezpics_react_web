@@ -1,35 +1,65 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button, SIZE } from "baseui/button";
-import { loadFonts } from "@/utils/fonts";
 import { Block } from "baseui/block";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import Image from "next/image";
 import images from "public/images/index2";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+
+async function LoadFonts(fonts) {
+  const styleElement = document.createElement("style");
+
+  let fontFaceRules = "";
+
+  fonts.forEach((font) => {
+    fontFaceRules += `
+      @font-face {
+        font-family: '${font.name}';
+        src: url('${font.font_woff2}') format('woff2'),
+             url('${font.font_woff}') format('woff'),
+             url('${font.font_ttf}') format('truetype');
+        font-weight: ${font.weight};
+        font-style: ${font.style};
+      }
+    `;
+  });
+
+  styleElement.innerHTML = fontFaceRules;
+  document.head.appendChild(styleElement);
+}
+
+async function fetchAllFonts() {
+  try {
+    const response = await axios.get("https://apis.ezpics.vn/apis/listFont");
+    if (response.data.code === 1) {
+      return response.data.data;
+    } else {
+      console.error("Failed to fetch fonts:", response.data);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching fonts:", error);
+    return [];
+  }
+}
 
 function checkTokenCookie() {
   var allCookies = document.cookie;
-
   var cookiesArray = allCookies.split("; ");
-
-  var tokenCookie;
   for (var i = 0; i < cookiesArray.length; i++) {
     var cookie = cookiesArray[i];
     var cookieParts = cookie.split("=");
     var cookieName = cookieParts[0];
     var cookieValue = cookieParts[1];
-
     if (cookieName === "token") {
-      tokenCookie = cookieValue;
-      break;
+      return cookieValue.replace(/^"|"$/g, "");
     }
   }
-
-  if (tokenCookie) {
-    return tokenCookie.replace(/^"|"$/g, "");
-  } else {
-  }
+  return null;
 }
 
 export default function Text() {
@@ -37,93 +67,23 @@ export default function Text() {
   const idProduct = useAppSelector((state) => state.token.id);
   const token = checkTokenCookie();
   const [allText, setAllText] = useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [fonts, setFonts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const parseGraphicJSON = () => {
-    const currentScene = editor.scene.exportToJSON();
-
-    console.log(currentScene);
-  };
-  const addObject = async () => {
-    if (editor) {
-      const font = {
-        name: "Open Sans",
-        url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
-      };
-      await loadFonts([font]);
-      console.log(loadFonts([font]));
-      const res = await axios.post(`${network}/addLayerText`, {
-        idproduct: idProduct,
-        token: token,
-        text: "Thêm chữ",
-        color: "#333333",
-        size: 92,
-        font: font.name,
-        page: Number(parseGraphicJSON()),
-      });
-      if (res.data.code === 1) {
-        console.log(res.data);
-        const options = {
-          id: res.data.data.id,
-          type: "StaticText",
-          width: 420,
-          text: "Thêm chữ",
-          fontSize: 92,
-          fontFamily: font.name,
-          textAlign: "center",
-          fontStyle: "normal",
-          fontURL: font.url,
-          fill: "#000000",
-          metadata: {
-            idBackground: 0,
-            lock: false,
-            page: Number(parseGraphicJSON()),
-
-            // sort: 1,
-            srcBackground: "",
-            uppercase: "",
-            variable: "",
-            variableLabel: "",
-          },
-        };
-        editor.objects.add(options);
-      }
-    }
-  };
-  const handleAddText = async (item) => {
-    // if (editor) {
-    //   console.log(item);
-    //   const response = await axios.post(`${network}/addLayerText`, {
-    //     idproduct: idProduct,
-    //     token: token,
-    //     text: item.content.text,
-    //     color: item.content.color,
-    //     size: 8,
-    //     font: item.content.font,
-    //     width: 20,
-    //     page: Number(parseGraphicJSON()),
-    //   });
-    //   if (response && response.data) {
-    //     const options = {
-    //       id: response.data.data.id,
-    //       type: "StaticText",
-    //       width: 200,
-    //       text: item.content.text,
-    //       fontSize: 24,
-    //       fontFamily: item.content.font,
-    //       textAlign: "center",
-    //       fontStyle: item.content.indam === "normal" ? "bold" : "400",
-    //       fill: item.content.color,
-    //       metadata: {
-    //         page: Number(parseGraphicJSON()),
-    //       },
-    //     };
-    //     editor.objects.add<(options);
-    //   }
-    // }
-  };
+  const stageData = useSelector((state) => state.stage.stageData);
+  const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
+    const fetchData = async () => {
+      const fontsFromApi = await fetchAllFonts();
+      setFonts(fontsFromApi);
+      await LoadFonts(fontsFromApi);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     const getAllText = async () => {
       try {
         const res = await axios.post(`${network}/listStyleTextAPI`, {
@@ -131,8 +91,6 @@ export default function Text() {
           page: 1,
           limit: 100,
         });
-
-        console.log(res.data.data);
         setAllText(res?.data?.data);
       } catch (error) {
         console.log(error);
@@ -141,6 +99,32 @@ export default function Text() {
     };
     getAllText();
   }, [network, token]);
+
+  const addObject = async () => {
+    
+  
+  };
+
+  const handleAddText = async (item) => {
+    const font = fonts.find((f) => f.name === item.content.font);
+    if (font) {
+      await LoadFonts([font]);
+      const res = await axios.post(`${network}/addLayerText`, {
+        idproduct: stageData.design.id,
+        token: token,
+        text: item.content.text,
+        color: item.content.color,
+        size: 8,
+        font: item.content.font,
+        width: 20,
+      });
+      console.log("Adding text with font:", res);
+      dispatch(addLayerImage(res.data));
+
+      addLayerImage();
+      }
+  }
+      
 
   return (
     <>
@@ -164,8 +148,6 @@ export default function Text() {
               Kiểu chữ
             </h4>
           </Block>
-
-          <Block $style={{ cursor: "pointer", display: "flex" }}></Block>
         </Block>
         <div>
           <Block padding={"0 1.5rem"}>
@@ -189,8 +171,9 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}>
-              {allText.map((text, index) => (
+              }}
+            >
+              {allText.map((text) => (
                 <div
                   key={text.id}
                   style={{

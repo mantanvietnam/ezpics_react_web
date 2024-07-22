@@ -1,26 +1,27 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
-import Navbar from "./components/Navbar/Navbar"
-import Toolbox from "./components/Toolbox/Toolbox"
-import { useParams } from "next/navigation"
-import { getListLayerApi } from "../../../../api/design"
-import { checkTokenCookie } from "@/utils"
-import { Stage, Layer, Rect, Image } from "react-konva"
-import BackgroundLayer from "./components/Editor/BackgroundLayer"
-import ImageLayer from "./components/Editor/ImageLayer"
-import TextLayer from "./components/Editor/TextLayer"
-import { useDispatch, useSelector } from "react-redux"
-import { setStageData } from "@/redux/slices/editor/stageSlice"
-import PanelsImage from "./components/Panels/PanelsImage"
+"use client";
+import { useEffect, useRef, useState } from "react";
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import Toolbox from "./components/Toolbox/Toolbox";
+import { useParams } from "next/navigation";
+import { getListLayerApi } from "../../../../api/design";
+import { checkTokenCookie } from "@/utils";
+import { Stage, Layer } from "react-konva";
+import BackgroundLayer from "./components/Editor/BackgroundLayer";
+import ImageLayer from "./components/Editor/ImageLayer";
+import TextLayer from "./components/Editor/TextLayer";
+import { useDispatch, useSelector } from "react-redux";
+import { setStageData } from "@/redux/slices/editor/stageSlice";
+import PanelsImage from "./components/Panels/PanelsImage";
 import PanelsCommon from "./components/Panels/PanelsCommon"
 
 const Page = () => {
-  const params = useParams()
-  const { designId } = params
-  const stageRef = useRef(null)
-  const dispatch = useDispatch()
-  const stageData = useSelector((state) => state.stage.stageData)
-  const { design, designLayers, initSize } = stageData
+  const params = useParams();
+  const { designId } = params;
+  const stageRef = useRef(null);
+  const dispatch = useDispatch();
+  const stageData = useSelector((state) => state.stage.stageData);
+  const { design, designLayers, initSize } = stageData;
 
   const [selectedId, setSelectedId] = useState(null)
   const [activeTool, setActiveTool] = useState("Layer")
@@ -54,7 +55,7 @@ const Page = () => {
           } else {
             sizeFactor = 2
           }
-          //Lưu thông tin design hiện tại vào redux
+
           dispatch(setStageData({
             initSize: {
               width: width / sizeFactor,
@@ -62,7 +63,7 @@ const Page = () => {
             },
             design: response.data,
             designLayers: response.data.productDetail
-          }))
+          }));
         }
       } catch (error) {
         console.log(error)
@@ -73,9 +74,7 @@ const Page = () => {
   }, [designId])
 
   const checkDeselect = (e) => {
-    // deselect when clicked on empty area
-    console.log("No layer active")
-    const clickedOnEmpty = e.target === e.target.getStage()
+    const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       setSelectedId(null)
     }
@@ -91,19 +90,21 @@ const Page = () => {
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
           className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
-            }`}>
+            }`}
+        >
           <div>
             <PanelsImage />
           </div>
 
-          <div className="flex h-[100%] justify-center items-center">
+          <div className="flex h-[calc(100%-50px)] justify-center items-center">
             <Stage
               ref={stageRef}
               width={initSize.width}
               height={initSize.height}
               className="bg-white"
               onMouseDown={checkDeselect}
-              onTouchStart={checkDeselect}>
+              onTouchStart={checkDeselect}
+            >
               <Layer>
                 <BackgroundLayer
                   src={design?.thumn}
@@ -148,6 +149,7 @@ const Page = () => {
               </Layer>
             </Stage>
           </div>
+          <Footer />
         </div>
       </div>
     </>

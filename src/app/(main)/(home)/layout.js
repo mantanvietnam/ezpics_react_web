@@ -61,7 +61,7 @@ export default function HomeRoot(props) {
       <CollectionProductSlider />
       <EndowProduct />
       <EventProductSlider />
-      <div className="my-8 px-4">
+      {/* <div className="my-8 px-4">
         <h1 className="text-2xl font-bold py-4 text-start">Thiết kế gần đây</h1>
         <ProductCard products={products} onDeleteProduct={onDeleteProduct} />
       </div>
@@ -70,7 +70,7 @@ export default function HomeRoot(props) {
         <Link href="/your-design/purchase-form">
           <button className="button-red relative z-10 px-4">Xem thêm</button>
         </Link>
-      </div>
+      </div> */}
       <ScrollToTopButton />
     </div>
   );
