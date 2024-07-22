@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -H 171.244.16.94 -p 3000",
+    "start": "next start",
     "lint": "next lint"
   },
   "resolutions": {
