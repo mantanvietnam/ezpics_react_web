@@ -1,5 +1,6 @@
 "use client";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
@@ -48,14 +49,22 @@ export default function CenteredLayouts(props) {
         <main className="flex pt-[var(--header-height)]">
           <Nav isOpen={isNavbarOpen} closeNavbar={closeNavbar} />
           {isMobile ? (
-            <div className=" w-full flex justify-center">{props.children}</div>
-          ) : (
+            <div className=" w-full flex flex-col justify-center">
+              {props.children}
+              <div className={`transition-all duration-300 w-[100%] flex justify-center`}>
+                <Footer />
+              </div>
+            </div>
+          ) : (  
             <div
-              className={`transition-all duration-300 ${
+              className={`flex flex-col items-center justify-center transition-all duration-300 ${
                 isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
               } flex justify-center`}>
-              {props.children}
-            </div>
+                {props.children}
+                <div className={`transition-all duration-300 w-[100%] flex justify-center`}>
+                  <Footer />
+                </div>  
+              </div>
           )}
         </main>
       </SessionProvider>
