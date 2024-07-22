@@ -35,8 +35,9 @@ export default function ProductCard({
 
   return (
     <div
-      className={`w-[100%] mx-auto grid grid-cols-4 grid-flow-row ${!onDuplicateProduct ? "gap-8" : "gap-4"
-        }`}>
+      className={`w-[100%] mx-auto grid grid-cols-2 sm:grid-cols-4 grid-flow-row ${
+        !onDuplicateProduct ? "gap-8" : "gap-4"
+      }`}>
       {products?.map((product) => {
         let buttonsData2 = [...buttonsData];
 
@@ -78,14 +79,13 @@ export default function ProductCard({
                 </div>
               )}
               {/* Button overlay */}
-              <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg">
+              <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-80 opacity-50 mobile:opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg">
                 <div className="flex flex-wrap justify-center">
                   {buttonsData2.map((button, index) => (
                     <button
                       key={index}
                       onClick={() => button.action(product.id)}
-                      className="flex items-center justify-center group mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2"
-                      style={{ width: "100px" }}>
+                      className="w-[50px] mobile:w-[100px] flex items-center justify-center group mb-2 p-2 bg-white rounded-lg hover:bg-gray-200 transition duration-300 mr-2">
                       <div className="relative flex items-center">
                         <Image
                           src={button.icon}

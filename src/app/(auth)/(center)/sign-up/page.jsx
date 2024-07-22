@@ -107,9 +107,12 @@ const Sign_up = () => {
     });
   return (
     <>
-      <div className="form-signup">
-        <form onSubmit={handleSubmit} action="" className="form-submit">
-          <div className="box-left">
+      <div className="form-signup p-[2%] mobile:p-[50px]">
+        <form
+          onSubmit={handleSubmit}
+          action=""
+          className="form-submit flex-col mobile:flex-row">
+          <div className="box-left w-full mobile:w-[50%]">
             {/* Image */}
             <Image
               className="object-contain rounded_image img-singup"
