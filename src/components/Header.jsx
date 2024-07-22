@@ -500,7 +500,7 @@ const Header = ({ toggleNavbar }) => {
   };
   return (
     <SessionProvider>
-      <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-6 shadow-xl bg-white">
+      <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-1 mobile:px-6 shadow-xl bg-white">
         <div className="flex justify-center items-center">
           <div className="p-3 mr-4 icon-primary">
             <button onClick={() => toggleNavbar()}>
@@ -620,7 +620,7 @@ const Header = ({ toggleNavbar }) => {
             )}
           </div>
           <button
-            className="button-red whitespace-nowrap"
+            className="button-red whitespace-nowrap text-xs mobile:text-base"
             onClick={() => handleAddNewDesign()}>
             Tạo thiết kế
           </button>
@@ -709,7 +709,7 @@ const Header = ({ toggleNavbar }) => {
           ) : (
             <div>
               <button
-                className="flex border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap"
+                className="flex items-center border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap text-xs mobile:text-base"
                 onClick={() => {
                   router.push("/sign-in");
                 }}>

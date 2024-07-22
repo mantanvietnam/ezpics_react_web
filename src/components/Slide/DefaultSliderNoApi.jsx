@@ -6,7 +6,6 @@ import dynamic from "next/dynamic";
 import { Skeleton } from "antd";
 import TruncatedText from "../TruncatedText";
 
-
 import {
   StyledSlider,
   SampleNextArrow,
@@ -68,7 +67,7 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">{title}</h1>
+        <h1 className="text-lg mobile:text-2xl font-bold mb-4">{title}</h1>
         <Link href={pathString} className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
@@ -94,18 +93,21 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
           ) : (
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
-                <Link href={`/category/${product.id}`} className="slide-content pr-8" key={product.id}>
+                <Link
+                  href={`/category/${product.id}`}
+                  className="slide-content pr-8"
+                  key={product.id}>
                   <div className="card flex flex-col justify-between bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="overflow-hidden group">
+                    <div className="overflow-hidden group flex justify-center">
                       <img
                         src={product.image}
                         className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
                         alt={product.name}
                       />
                     </div>
-                    <div className="p-4">
-                      <h2 className="text-lg font-medium h-20">
-                        <TruncatedText text={product.name} maxLength={33}/>
+                    <div className="p-2">
+                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                        <TruncatedText text={product.name} maxLength={33} />
                       </h2>
                       <p className="text-gray-500 mt-2 text-sm">
                         Đã bán {product.sold}

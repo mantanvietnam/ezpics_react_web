@@ -27,6 +27,20 @@ export const SkeletonCustom = styled.div`
   }
 `;
 
+export const SkeletonCustomProduct = styled.div`
+  .ant-skeleton {
+    width: 100% !important;
+  }
+  .ant-skeleton-image {
+    height: 200px !important;
+    width: 300px !important;
+  }
+
+  .ant-skeleton-input {
+    width: 90% !important;
+  }
+`;
+
 export const Arrow = styled.div`
   display: flex !important;
   align-items: center;

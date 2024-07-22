@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
-})
+});
 
 const Nav = ({ isOpen, closeNavbar }) => {
   const [openPro, setOpenPro] = useState(false);
@@ -43,37 +43,43 @@ const Nav = ({ isOpen, closeNavbar }) => {
   const isAuthenticated = checkAvailableLogin();
   // console.log(isAuthenticated);
 
-  const navItems = useMemo(() =>[
-    { href: "/", label: "Trang chủ", icon: images.home },
-    { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
-    { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
-    { href: "/project/recommend", label: "Danh mục", icon: images.category },
-  ], []);
+  const navItems = useMemo(
+    () => [
+      { href: "/", label: "Trang chủ", icon: images.home },
+      { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
+      { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
+      { href: "/project/recommend", label: "Danh mục", icon: images.category },
+    ],
+    []
+  );
 
-  const userFuncs =  useMemo(() =>[
-    {
-      href: "/your-design/purchase-form",
-      label: "Thiết kế của bạn",
-      icon: images.design,
-    },
-    { href: "/ordered", label: "Order mẫu thiết kế", icon: images.order },
-    {
-      href: "/your-collection/purchase-collection",
-      label: "Bộ sưu tập của bạn",
-      icon: images.collection2,
-    },
-    {
-      href: "/transaction/table-1",
-      label: "Tổng quan giao dịch",
-      icon: images.transaction,
-    },
-    {
-      href: "/",
-      label: `${isProMember ? "Gia hạn bản PRO" : "Dùng thử bản PRO"}`,
-      icon: images.renew,
-      onClick: () => setOpenPro(true),
-    },
-  ], [isProMember]);
+  const userFuncs = useMemo(
+    () => [
+      {
+        href: "/your-design/purchase-form",
+        label: "Thiết kế của bạn",
+        icon: images.design,
+      },
+      { href: "/ordered", label: "Order mẫu thiết kế", icon: images.order },
+      {
+        href: "/your-collection/purchase-collection",
+        label: "Bộ sưu tập của bạn",
+        icon: images.collection2,
+      },
+      {
+        href: "/transaction/table-1",
+        label: "Tổng quan giao dịch",
+        icon: images.transaction,
+      },
+      {
+        href: "/",
+        label: `${isProMember ? "Gia hạn bản PRO" : "Dùng thử bản PRO"}`,
+        icon: images.renew,
+        onClick: () => setOpenPro(true),
+      },
+    ],
+    [isProMember]
+  );
 
   //Them bg vao button khi chon tren thanh nav
   const [activeItem, setActiveItem] = useState(0);
@@ -107,8 +113,9 @@ const Nav = ({ isOpen, closeNavbar }) => {
 
   return (
     <div
-      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-10 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}>
+      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
       {isAuthenticated ? (
         <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
           <div className="relative flex justify-around items-center">

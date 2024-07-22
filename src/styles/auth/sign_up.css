@@ -4,7 +4,6 @@
     width: 100%;
     min-height: 100%;
     /* margin: -20px 0 50px; */
-    padding: 50px;
     background: url('../image/background.jpg') 0% 0% / contain;
     background-attachment: fixed;
     z-index: 0;
@@ -23,7 +22,7 @@
 }
 .box-left{
     /* background: url('./image/img4.jpg'); */
-    width: 50%;
+  
         display: flex ;
         justify-content: center;
         align-items: center;
@@ -31,7 +30,7 @@
 }
 .box-right{
 
-    width: 50%;
+ 
     padding: 0 10px;
 }
 .img-singup{
