@@ -6,17 +6,22 @@ import { useDispatch } from 'react-redux'
 export default function TextLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props
   const { postion_left, postion_top, size } = data
+  console.log('🚀 ~ TextLayer ~ size:', size)
 
   const dispatch = useDispatch()
   const shapeRef = useRef()
   const trRef = useRef()
+
+  //Chuyển đởi đơn vị vw vh sang px
+  const widthValue = parseFloat(data.width?.replace("vw", ""))
+  const width = designSize.width * (widthValue / 100)
 
   //Vị trí của chúng
   const postionX = designSize.width * (postion_left / 100);
   const postionY = designSize.height * (postion_top / 100);
 
   //Chuyển đởi đơn vị vw vh sang px
-  const sizeValue = parseFloat(size?.replace("vw", ""));
+  const sizeValue = parseFloat(size?.replace("px", ""));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
   //Hiển thị transform thủ công
@@ -51,6 +56,8 @@ export default function TextLayer(props) {
       rotate: `${e.target.rotation()}deg`
     }
     dispatch(updateLayer({ id: id, data: data }))
+    e.target.scaleX(1);
+    e.target.scaleY(1);
   }
 
   return (
@@ -63,6 +70,7 @@ export default function TextLayer(props) {
         draggable
         fill={data?.color}
         fontSize={sizeConvertToPx}
+        width={width}
         fontFamily={data?.font}
         onClick={onSelect}
         onTap={onSelect}

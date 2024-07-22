@@ -31,3 +31,11 @@ export const deleteLayerAPI = async (data) => {
   );
   return response.data;
 };
+
+export const saveListLayer = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/updateListLayerAPI",
+    data
+  );
+  return response.data;
+};
