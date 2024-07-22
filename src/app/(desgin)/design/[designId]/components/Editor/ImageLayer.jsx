@@ -53,15 +53,17 @@ export default function ImageLayer(props) {
     //   width: e.target.width() * e.target.scaleX(),
     //   height: e.target.height() * e.target.scaleY(),
     //   rotation: e.target.rotation(),
-    //   newWidth: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`
+    //   newWidth: (e.target.width() * e.target.scaleX()) * 100 / designSize.width
     // })
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`,
+      width: `${(e.target.width() * e.target.scaleX()) * 100 / designSize.width}vw`,
       rotate: `${e.target.rotation()}deg`
     }
     dispatch(updateLayer({ id: id, data: data }))
+    e.target.scaleX(1);
+    e.target.scaleY(1);
   }
 
   return (

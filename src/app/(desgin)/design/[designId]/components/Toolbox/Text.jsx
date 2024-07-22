@@ -101,30 +101,29 @@ export default function Text() {
   }, [network, token]);
 
   const addObject = async () => {
-    
-  
+
+
   };
 
   const handleAddText = async (item) => {
     const font = fonts.find((f) => f.name === item.content.font);
     if (font) {
-      await LoadFonts([font]);
-      const res = await axios.post(`${network}/addLayerText`, {
-        idproduct: stageData.design.id,
-        token: token,
-        text: item.content.text,
-        color: item.content.color,
-        size: 8,
-        font: item.content.font,
-        width: 20,
-      });
-      console.log("Adding text with font:", res);
-      dispatch(addLayerImage(res.data));
-
-      addLayerImage();
+      try {
+        await LoadFonts([font]);
+        const res = await axios.post(`${network}/addLayerText`, {
+          idproduct: stageData.design.id,
+          token: token,
+          text: item.content.text,
+          color: item.content.color,
+          size: '8px',
+          font: item.content.font,
+        });
+        dispatch(addLayerImage(res.data.data));
+      } catch (error) {
+        console.log(error)
       }
+    }
   }
-      
 
   return (
     <>

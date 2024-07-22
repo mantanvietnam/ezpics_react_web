@@ -25,7 +25,6 @@ const Page = () => {
 
   const [selectedId, setSelectedId] = useState(null)
   const [activeTool, setActiveTool] = useState("Layer")
-  const [layers, setLayers] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,7 +111,7 @@ const Page = () => {
                   height={initSize.height}
                 />
                 {designLayers.map((layer) => {
-                  if (layer.content.type === "image") {
+                  if (layer.content?.type === "image") {
                     return (
                       <ImageLayer
                         key={layer.id}
@@ -128,7 +127,7 @@ const Page = () => {
                         }}
                       />
                     )
-                  } else if (layer.content.type === "text") {
+                  } else if (layer.content?.type === "text") {
                     return (
                       <TextLayer
                         key={layer.id}
