@@ -2,8 +2,40 @@ import React from "react";
 import Image from "next/image";
 import imageIcon from "./save.png";
 import exportIcon from "./Layer 2.png";
+import { useSelector } from 'react-redux';
+import { checkTokenCookie } from "@/utils";
+import { saveListLayer } from '@/api/design';
 
 const Navbar = () => {
+  const stageData = useSelector((state) => state.stage.stageData);
+
+  const handleSaveDesign = async () => {
+    try {
+      console.log('🚀 ~ Navbar ~ stageData:', stageData);
+      if (!stageData || !stageData.designLayers) {
+        throw new Error('Invalid stageData or designLayers not found');
+      }
+
+      const data = stageData.designLayers.map(layer => ({
+        id: layer.id,
+        content: layer.content,
+        sort: layer.sort
+      }));
+
+      const jsonData = JSON.stringify(data);
+
+      const response = await saveListLayer({
+        idProduct: stageData.design?.id,
+        token: checkTokenCookie(),
+        listLayer: jsonData
+      });
+
+      console.log('🚀 ~ handleSaveDesign ~ response:', response);
+    } catch (error) {
+      console.error('Error saving design:', error);
+    }
+  };
+
   return (
     <>
       <div
@@ -64,7 +96,9 @@ const Navbar = () => {
                 paddingTop: "20px",
                 display: "flex",
                 alignItems: "center",
-              }}>
+              }}
+              onClick={handleSaveDesign}
+            >
               <Image
                 src={imageIcon}
                 alt=""

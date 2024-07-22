@@ -15,8 +15,6 @@ const Photos = ({ stageRef }) => {
   const stageData = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
 
-  console.log("🚀 ~ Photos ~ stageRef:", stageRef);
-
   const fetchData = async () => {
     try {
       const response = await axios.post(
@@ -38,7 +36,6 @@ const Photos = ({ stageRef }) => {
   //B1: Call api tạo layer image
   //B2: Cập nhât redux để nó load lại state
   const handleAddPhoto = (item) => {
-    console.log("🚀 ~ handleAddPhoto ~ item:", item);
     const addLayer = async () => {
       try {
         const res = await addLayerImageUrlAPI({
