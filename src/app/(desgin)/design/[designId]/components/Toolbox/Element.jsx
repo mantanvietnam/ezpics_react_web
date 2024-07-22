@@ -22,7 +22,6 @@ export default function Graphic() {
       try {
         const response = await axios.get(`${network}/categoryIngredientAPI`);
         setCategories(response.data.data);
-        console.log("Fetched categories:", response.data.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -140,6 +139,7 @@ function ImageItem({ preview, onClick }) {
       className="relative bg-gray-100 cursor-pointer rounded-lg overflow-hidden">
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100 bg-gradient-to-b from-transparent to-black/45"></div>
       <img src={preview} alt="" className="w-full h-full object-contain" />
+      {console.log(preview)}
     </div>
   );
 }
