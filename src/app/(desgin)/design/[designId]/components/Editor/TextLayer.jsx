@@ -1,10 +1,13 @@
+import { updateLayer } from '@/redux/slices/editor/stageSlice'
 import React, { useEffect, useRef } from 'react'
 import { Text, Transformer } from 'react-konva'
+import { useDispatch } from 'react-redux'
 
 export default function TextLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props
   const { postion_left, postion_top, size } = data
 
+  const dispatch = useDispatch()
   const shapeRef = useRef()
   const trRef = useRef()
 
@@ -25,6 +28,31 @@ export default function TextLayer(props) {
     }
   }, [isSelected]);
 
+  const handleDragEnd = (e) => {
+    const data = {
+      postion_left: (e.target.x() / designSize.width) * 100,
+      postion_top: (e.target.y() / designSize.height) * 100,
+    }
+    dispatch(updateLayer({ id: id, data: data }))
+  }
+
+  const handleTransformEnd = (e) => {
+    console.log("--------------------------------22222222222222", {
+      id,
+      width: e.target.width() * e.target.scaleX(),
+      height: e.target.height() * e.target.scaleY(),
+      rotation: e.target.rotation(),
+      newWidth: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`
+    })
+    const data = {
+      postion_left: (e.target.x() / designSize.width) * 100,
+      postion_top: (e.target.y() / designSize.height) * 100,
+      width: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`,
+      rotate: `${e.target.rotation()}deg`
+    }
+    dispatch(updateLayer({ id: id, data: data }))
+  }
+
   return (
     <>
       <Text
@@ -38,6 +66,8 @@ export default function TextLayer(props) {
         fontFamily={data?.font}
         onClick={onSelect}
         onTap={onSelect}
+        onDragEnd={handleDragEnd}
+        onTransformEnd={handleTransformEnd}
       />
       {isSelected && (
         <Transformer

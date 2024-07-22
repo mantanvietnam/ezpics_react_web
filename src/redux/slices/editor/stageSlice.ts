@@ -26,9 +26,14 @@ const stageSlice = createSlice({
       state.stageData.designLayers = state.stageData.designLayers.filter(
         (layer: any) => layer.id !== action.payload
       );
-    }
+    },
+    updateLayer: (state, action: PayloadAction<{ id: string, data: any }>) => {
+      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
+        layer.id === action.payload.id ? { ...layer, content: { ...layer.content, ...action.payload.data} } : layer
+      );
+    },
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer } = stageSlice.actions;
+export const { setStageData, addLayerImage, removeLayer, updateLayer } = stageSlice.actions;
 export default stageSlice.reducer;
