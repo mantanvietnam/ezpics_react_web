@@ -10,23 +10,32 @@ const Navbar = () => {
   const stageData = useSelector((state) => state.stage.stageData);
 
   const handleSaveDesign = async () => {
-    console.log('🚀 ~ Navbar ~ stageData:', stageData)
-    const data = stageData?.designLayers.map(layer => ({
-      id: layer.id,
-      content: layer.content,
-      sort: layer.sort
-    }))
     try {
+      console.log('🚀 ~ Navbar ~ stageData:', stageData);
+      if (!stageData || !stageData.designLayers) {
+        throw new Error('Invalid stageData or designLayers not found');
+      }
+
+      const data = stageData.designLayers.map(layer => ({
+        id: layer.id,
+        content: layer.content,
+        sort: layer.sort
+      }));
+
+      const jsonData = JSON.stringify(data);
+
       const response = await saveListLayer({
-        idProduct: stageData?.design?.id,
+        idProduct: stageData.design?.id,
         token: checkTokenCookie(),
-        listLayer: data
-      })
-      console.log('🚀 ~ handleSaveDesign ~ response:', response)
+        listLayer: jsonData
+      });
+
+      console.log('🚀 ~ handleSaveDesign ~ response:', response);
     } catch (error) {
-      console.log(error)
+      console.error('Error saving design:', error);
     }
-  }
+  };
+
   return (
     <>
       <div
