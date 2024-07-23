@@ -69,12 +69,11 @@ export default function CenteredLayouts(props) {
               className={`flex flex-col items-center justify-center transition-all duration-300 ${
                 isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
               } flex justify-center`}>
-              {props.children}
-              <div
-                className={`transition-all duration-300 w-[100%] flex justify-center`}>
-                <Footer />
+                {props.children}
+                <div className={`transition-all duration-300 w-[100%] flex justify-center`}>
+                  <Footer />
+                </div>  
               </div>
-            </div>
           )}
         </main>
       </SessionProvider>
