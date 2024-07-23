@@ -8,14 +8,14 @@ import { useDispatch } from 'react-redux';
 import { updateLayer } from '@/redux/slices/editor/stageSlice';
 
 const SliderMenu = ({
+  valueSaturate,
+  valueBrightness,
+  valueContrast,
+  valueOpacity,
   onChangeBrightness,
   onChangeOpacity,
   onChangeContrast,
   onChangeSaturate,
-  valueBrightness,
-  valueOpacity,
-  valueContrast,
-  valueSaturate,
 }) => (
   <div className="w-[250px]">
     <div className="p-2">
@@ -24,15 +24,15 @@ const SliderMenu = ({
     </div>
     <div className="p-2">
       <span>Độ trong</span>
-      <Slider onChange={onChangeOpacity} value={valueOpacity} />
+      <Slider onChange={onChangeOpacity} value={valueOpacity}/>
     </div>
     <div className="p-2">
       <span>Độ tương phản</span>
-      <Slider onChange={onChangeContrast} value={valueContrast} />
+      <Slider onChange={onChangeContrast} value={valueContrast}/>
     </div>
     <div className="p-2">
       <span>Độ bão hòa</span>
-      <Slider onChange={onChangeSaturate} value={valueSaturate} />
+      <Slider onChange={onChangeSaturate} value={valueSaturate}/>
     </div>
   </div>
 );
@@ -55,19 +55,32 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
 );
 
 const PanelsImage = () => {
-  const { selectedLayer } = useSelector((state) => state.stage.stageData);
-  console.log('🚀 ~ PanelsImage ~ selectedLayer:', selectedLayer)
+  const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
-  // States for sliders
-  const [valueBrightness, setValueBrightness] = useState(50);
-  const [valueOpacity, setValueOpacity] = useState(100); // Set default value to 100
-  const [valueContrast, setValueContrast] = useState(0);
+  const selectedLayer = layerActive.selectedLayer;
+
+  const [valueBrightness, setValueBrightness] = useState(0);
+  const [valueOpacity, setValueOpacity] = useState(selectedLayer?.content.opacity * 100 || 100);
+  const [valueContrast, setValueContrast] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
   const [valueSaturate, setValueSaturate] = useState(0);
 
   useEffect(() => {
-    setValueOpacity(selectedLayer.content.opacity * 100)
-    setValueBrightness(selectedLayer.content.brightness / 2)
-  }, [selectedLayer.id])
+    if (selectedLayer) {
+      setValueOpacity(selectedLayer.content.opacity * 100);
+      setValueContrast((selectedLayer.content.contrast + 100) / 2);
+    }
+  }, [selectedLayer]);
+
+  useEffect(() => {
+    if (selectedLayer) {
+      const data = {
+        opacity: valueOpacity / 100,
+        contrast: (valueContrast - 50) * 2, // Transform 0 to 100 to -100 to 100
+      };
+
+      dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+    }
+  }, [selectedLayer?.id, valueOpacity, valueContrast]);
 
   // States for popover visibility
   const [visibleEditImage, setVisibleEditImage] = useState(false);

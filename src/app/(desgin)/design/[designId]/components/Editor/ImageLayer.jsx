@@ -1,47 +1,38 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Image, Transformer } from "react-konva";
 import useImage from "use-image";
-import Konva from "konva"; // Đảm bảo import Konva
 import { useDispatch } from "react-redux";
-import { updateLayer } from '@/redux/slices/editor/stageSlice';
+import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import Konva from "konva";
 
 export default function ImageLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props;
-  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, brightness } = data;
+  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast } = data;
 
   const dispatch = useDispatch();
+
   const shapeRef = useRef();
   const trRef = useRef();
-  const brightnessRef = useRef(brightness);
-  const [image] = useImage(data.banner);
-  console.log('🚀 ~ ImageLayer ~ image:', image)
 
-  // Chuyển đổi đơn vị vw vh sang px
+  const [image] = useImage(data.banner, 'anonymous'); // Set crossOrigin to 'anonymous'
+
+  // Convert vw to px
   const widthValue = parseFloat(data.width?.replace("vw", ""));
   const width = designSize.width * (widthValue / 100);
+
   const heightSize = (naturalHeight * width) / naturalWidth;
 
-  // Vị trí của chúng
+  // Position
   const postionX = designSize.width * (postion_left / 100);
   const postionY = designSize.height * (postion_top / 100);
 
   // Rotation
   const rotation = parseFloat(rotate?.replace("deg", ""));
 
-  // Độ sáng
-  // useEffect(() => {
-  //   if (shapeRef.current && brightness !== undefined) {
-  //     shapeRef.current.cache();
-  //     shapeRef.current.filters([Konva.Filters.Brighten]);
-  //     shapeRef.current.brightness(brightness / 100 - 1 || 0); // Đặt độ sáng
-  //     shapeRef.current.getLayer().batchDraw();
-  //     console.log('🚀 ~ useEffect ~ brightness / 100:', brightness / 100 - 1)
-  //   }
-  // }, [image, brightness]);
-
-  // Hiển thị transform thủ công
+  // Show transform manually
   useEffect(() => {
     if (isSelected) {
+      // Attach transformer manually
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
@@ -67,6 +58,15 @@ export default function ImageLayer(props) {
     e.target.scaleY(1);
   };
 
+  useEffect(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache();
+      shapeRef.current.filters([Konva.Filters.Contrast]);
+      shapeRef.current.contrast(contrast);
+      shapeRef.current.getLayer().batchDraw();
+    }
+  }, [contrast, image]);
+
   return (
     <>
       <Image
@@ -78,8 +78,8 @@ export default function ImageLayer(props) {
         y={postionY}
         width={width}
         height={heightSize}
-        rotation={rotation}
         opacity={opacity}
+        rotation={rotation}
         draggable
         onClick={onSelect}
         onTap={onSelect}
@@ -92,13 +92,13 @@ export default function ImageLayer(props) {
           flipEnabled={false}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
-            if (anchor.hasName('top-center') || anchor.hasName('bottom-center')) {
+            if (anchor.hasName("top-center") || anchor.hasName("bottom-center")) {
               anchor.height(6);
               anchor.offsetY(3);
               anchor.width(30);
               anchor.offsetX(15);
             }
-            if (anchor.hasName('middle-left') || anchor.hasName('middle-right')) {
+            if (anchor.hasName("middle-left") || anchor.hasName("middle-right")) {
               anchor.height(30);
               anchor.offsetY(15);
               anchor.width(6);
