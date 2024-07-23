@@ -68,11 +68,12 @@ export default function ImageLayer(props) {
     }
   }, [image, brightness]);
 
+  //do tuong phan
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.Contrast]);
-      shapeRef.current.contrast((contrast / 100 - 1));
+      shapeRef.current.contrast(contrast);
       shapeRef.current.getLayer().batchDraw();
     }
   }, [contrast, image]);
