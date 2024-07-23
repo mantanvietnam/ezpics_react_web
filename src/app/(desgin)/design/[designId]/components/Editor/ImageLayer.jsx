@@ -65,7 +65,6 @@ export default function ImageLayer(props) {
       shapeRef.current.filters([Konva.Filters.Brighten]);
       shapeRef.current.brightness((brightness / 100 - 1)); // Đặt độ sáng
       shapeRef.current.getLayer().batchDraw();
-      console.log('🚀 ~ useEffect ~ brightness / 100:', brightness / 100 - 1)
     }
   }, [image, brightness]);
 
@@ -73,7 +72,7 @@ export default function ImageLayer(props) {
     if (shapeRef.current) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.Contrast]);
-      shapeRef.current.contrast(contrast);
+      shapeRef.current.contrast((contrast / 100 - 1));
       shapeRef.current.getLayer().batchDraw();
     }
   }, [contrast, image]);
