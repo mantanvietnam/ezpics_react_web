@@ -7,7 +7,7 @@ import Konva from "konva";
 
 export default function ImageLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props;
-  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast } = data;
+  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast, saturation, hue, luminance } = data;
 
   const dispatch = useDispatch();
 
@@ -58,6 +58,7 @@ export default function ImageLayer(props) {
     e.target.scaleY(1);
   };
 
+  // Apply Contrast filter
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
@@ -66,6 +67,18 @@ export default function ImageLayer(props) {
       shapeRef.current.getLayer().batchDraw();
     }
   }, [contrast, image]);
+
+  // Apply HSL filter
+  useEffect(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache();
+      shapeRef.current.filters([Konva.Filters.HSL]);
+      shapeRef.current.hue(hue);
+      shapeRef.current.saturation(saturation);
+      shapeRef.current.luminance(luminance);
+      shapeRef.current.getLayer().batchDraw();
+    }
+  }, [hue, saturation, luminance, image]);
 
   return (
     <>

@@ -62,12 +62,13 @@ const PanelsImage = () => {
   const [valueBrightness, setValueBrightness] = useState(0);
   const [valueOpacity, setValueOpacity] = useState(selectedLayer?.content.opacity * 100 || 100);
   const [valueContrast, setValueContrast] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
-  const [valueSaturate, setValueSaturate] = useState(0);
+  const [valueSaturate, setValueSaturate] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
       setValueContrast((selectedLayer.content.contrast + 100) / 2);
+      setValueSaturate((selectedLayer.content.contrast + 100) / 2);
     }
   }, [selectedLayer]);
 
@@ -75,12 +76,13 @@ const PanelsImage = () => {
     if (selectedLayer) {
       const data = {
         opacity: valueOpacity / 100,
-        contrast: (valueContrast - 50) * 2, // Transform 0 to 100 to -100 to 100
+        contrast: (valueContrast - 50) * 2, 
+        saturate: (valueSaturate - 50) * 2, 
       };
 
       dispatch(updateLayer({ id: selectedLayer.id, data: data }));
     }
-  }, [selectedLayer?.id, valueOpacity, valueContrast]);
+  }, [selectedLayer?.id, valueOpacity, valueContrast, valueSaturate]);
 
   // States for popover visibility
   const [visibleEditImage, setVisibleEditImage] = useState(false);
