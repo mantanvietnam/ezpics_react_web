@@ -96,11 +96,15 @@ export default function TextLayer(props) {
     textarea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         setTextValue(textarea.value);
-        document.body.removeChild(textarea);
+        if (document.body.contains(textarea)) {
+          document.body.removeChild(textarea);
+        }
         setIsEditing(false);
       }
       if (e.key === 'Escape') {
-        document.body.removeChild(textarea);
+        if (document.body.contains(textarea)) {
+          document.body.removeChild(textarea);
+        }
         setIsEditing(false);
       }
     });
@@ -108,7 +112,9 @@ export default function TextLayer(props) {
     const handleOutsideClick = (e) => {
       if (e.target !== textarea) {
         setTextValue(textarea.value);
-        document.body.removeChild(textarea);
+        if (document.body.contains(textarea)) {
+          document.body.removeChild(textarea);
+        }
         setIsEditing(false);
       }
     };
