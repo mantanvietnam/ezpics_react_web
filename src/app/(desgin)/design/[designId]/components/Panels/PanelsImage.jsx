@@ -3,8 +3,9 @@ import Image from "next/image";
 import { Button, Slider, Popover } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
-import { useSelector, useDispatch } from "react-redux";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { updateLayer } from '@/redux/slices/editor/stageSlice';
 
 const SliderMenu = ({
   valueSaturate,
@@ -137,6 +138,14 @@ const PanelsImage = () => {
       setVisibleChangeImage(false);
     }
   });
+
+  useEffect(() => {
+    const data = {
+      opacity: valueOpacity / 100,
+      brightness: valueBrightness * 2,
+    }
+    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  }, [valueOpacity, selectedLayer.id, valueBrightness]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">

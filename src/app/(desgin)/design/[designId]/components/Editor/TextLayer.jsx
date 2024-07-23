@@ -1,10 +1,13 @@
+import { updateLayer } from '@/redux/slices/editor/stageSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, Transformer } from 'react-konva';
+import { useDispatch } from 'react-redux';
 
 export default function TextLayer(props) {
-  const { data, designSize, isSelected, onSelect, onTextChange } = props;
+  const { data, designSize, isSelected, onSelect, onTextChange, id } = props;
   const { postion_left, postion_top, size } = data;
 
+  const dispatch = useDispatch()
   const shapeRef = useRef();
   const trRef = useRef();
   const [isEditing, setIsEditing] = useState(false);
@@ -58,6 +61,33 @@ export default function TextLayer(props) {
       };
     }
   }, [isEditing, textValue, onTextChange]);
+
+  const handleDragEnd = (e) => {
+    const data = {
+      postion_left: (e.target.x() / designSize.width) * 100,
+      postion_top: (e.target.y() / designSize.height) * 100,
+    }
+    dispatch(updateLayer({ id: id, data: data }))
+  }
+
+  const handleTransformEnd = (e) => {
+    console.log("--------------------------------22222222222222", {
+      id,
+      width: e.target.width() * e.target.scaleX(),
+      height: e.target.height() * e.target.scaleY(),
+      rotation: e.target.rotation(),
+      newWidth: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`
+    })
+    const data = {
+      postion_left: (e.target.x() / designSize.width) * 100,
+      postion_top: (e.target.y() / designSize.height) * 100,
+      width: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`,
+      rotate: `${e.target.rotation()}deg`
+    }
+    dispatch(updateLayer({ id: id, data: data }))
+    e.target.scaleX(1);
+    e.target.scaleY(1);
+  }
 
   const handleDblClick = () => {
     setIsEditing(true);
@@ -139,6 +169,8 @@ export default function TextLayer(props) {
         onTap={onSelect}
         onDblClick={handleDblClick}
         onDblTap={handleDblClick}
+        onDragEnd={handleDragEnd}
+        onTransformEnd={handleTransformEnd}
       />
       {isSelected && (
         <Transformer
