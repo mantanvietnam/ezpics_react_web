@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import Image from "next/image";
-import { Button, Slider, Popover } from "antd";
+import React, { useState, useRef, useEffect } from "react";
+import NextImage from "next/image";
+import { Button, Slider, Popover, Modal } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
 import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
@@ -66,7 +66,7 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-const PanelsImage = () => {
+export function PanelsImage() {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
@@ -304,7 +304,7 @@ const PanelsImage = () => {
       </div>
     </div>
   );
-};
+}
 
 function dataURLToBlob(dataURL) {
   const parts = dataURL.split(",");
