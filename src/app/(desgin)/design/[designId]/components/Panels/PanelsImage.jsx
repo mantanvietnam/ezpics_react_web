@@ -1,31 +1,38 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button, Slider, Popover } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { updateLayer } from '@/redux/slices/editor/stageSlice';
 
 const SliderMenu = ({
   onChangeBrightness,
   onChangeOpacity,
   onChangeContrast,
   onChangeSaturate,
+  valueBrightness,
+  valueOpacity,
+  valueContrast,
+  valueSaturate,
 }) => (
   <div className="w-[250px]">
     <div className="p-2">
       <span>Độ sáng</span>
-      <Slider onChange={onChangeBrightness} />
+      <Slider onChange={onChangeBrightness} value={valueBrightness} />
     </div>
     <div className="p-2">
       <span>Độ trong</span>
-      <Slider onChange={onChangeOpacity} />
+      <Slider onChange={onChangeOpacity} value={valueOpacity} />
     </div>
     <div className="p-2">
       <span>Độ tương phản</span>
-      <Slider onChange={onChangeContrast} />
+      <Slider onChange={onChangeContrast} value={valueContrast} />
     </div>
     <div className="p-2">
       <span>Độ bão hòa</span>
-      <Slider onChange={onChangeSaturate} />
+      <Slider onChange={onChangeSaturate} value={valueSaturate} />
     </div>
   </div>
 );
@@ -48,11 +55,18 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
 );
 
 const PanelsImage = () => {
+  const { selectedLayer } = useSelector((state) => state.stage.stageData);
+  const dispatch = useDispatch();
+  console.log('🚀 ~ PanelsImage ~ selectedLayer:', selectedLayer)
   // States for sliders
   const [valueBrightness, setValueBrightness] = useState(0);
-  const [valueOpacity, setValueOpacity] = useState(0);
+  const [valueOpacity, setValueOpacity] = useState(0); // Set default value to 100
   const [valueContrast, setValueContrast] = useState(0);
   const [valueSaturate, setValueSaturate] = useState(0);
+
+  useEffect(() => {
+    setValueOpacity(selectedLayer.content.opacity * 100)
+  }, [selectedLayer.id])
 
   // States for popover visibility
   const [visibleEditImage, setVisibleEditImage] = useState(false);
@@ -111,6 +125,14 @@ const PanelsImage = () => {
     }
   });
 
+  useEffect(() => {
+    const data = {
+      opacity: valueOpacity / 100
+    }
+    console.log('--------------------------------', data);
+    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  }, [valueOpacity, selectedLayer.id]);
+
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
       <div className="h-[100%] flex items-center justify-between">
@@ -150,6 +172,10 @@ const PanelsImage = () => {
                   onChangeOpacity={handleSliderOpacity}
                   onChangeContrast={handleSliderContrast}
                   onChangeSaturate={handleSliderSaturate}
+                  valueBrightness={valueBrightness}
+                  valueOpacity={valueOpacity}
+                  valueContrast={valueContrast}
+                  valueSaturate={valueSaturate}
                 />
               }
               trigger="click"
