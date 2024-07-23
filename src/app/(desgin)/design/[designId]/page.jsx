@@ -96,7 +96,7 @@ const Page = () => {
           <div className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center">
             <div ref={containerRef}>
               <div
-                
+
                 style={{ width: initSize.width, height: initSize.height }}
               >
                 <Stage
@@ -114,42 +114,42 @@ const Page = () => {
                       width={initSize.width}
                       height={initSize.height}
                     />
+                    {designLayers.map((layer) => {
+                      if (layer.content?.type === "image") {
+                        return (
+                          <ImageLayer
+                            key={layer.id}
+                            designSize={{
+                              width: initSize.width,
+                              height: initSize.height,
+                            }}
+                            id={layer.id}
+                            data={layer.content}
+                            isSelected={layer.id === selectedId}
+                            onSelect={() => {
+                              setSelectedId(layer.id)
+                            }}
+                          />
+                        )
+                      } else if (layer.content?.type === "text") {
+                        return (
+                          <TextLayer
+                            key={layer.id}
+                            designSize={{
+                              width: initSize.width,
+                              height: initSize.height,
+                            }}
+                            id={layer.id}
+                            data={layer.content}
+                            isSelected={layer.id === selectedId}
+                            onSelect={() => {
+                              setSelectedId(layer.id)
+                            }}
+                          />
+                        )
+                      }
+                    })}
                   </Layer>
-                  {designLayers.map((layer) => {
-                  if (layer.content?.type === "image") {
-                    return (
-                      <ImageLayer
-                        key={layer.id}
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                        isSelected={layer.id === selectedId}
-                        onSelect={() => {
-                          setSelectedId(layer.id)
-                        }}
-                      />
-                    )
-                  } else if (layer.content?.type === "text") {
-                    return (
-                      <TextLayer
-                        key={layer.id}
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                        isSelected={layer.id === selectedId}
-                        onSelect={() => {
-                          setSelectedId(layer.id)
-                        }}
-                      />
-                    )
-                  }
-                })}
                 </Stage>
               </div>
             </div>
