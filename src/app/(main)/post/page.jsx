@@ -13,13 +13,6 @@ import 'swiper/css';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import TruncatedText from '@/components/TruncatedText';
 
-const truncateText = (text, maxLength) => {
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + '...';
-  }
-  return text;
-};
-
 const NewsPage = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,10 +20,6 @@ const NewsPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
-  const searchValue = {
-    limit: limit,
-    page: currentPage,
-  }
 
   const fetchNews = async (page) => {
     try {
@@ -54,43 +43,6 @@ const NewsPage = () => {
 
     initialFetch();
   }, []);
-console.log(news)
-  // const handleScroll = () => {
-  //   if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || loadingMore || !hasMore) {
-  //     return;
-  //   }
-  //   setLoadingMore(true);
-  //   setCurrentPage((prevPage) => prevPage + 1);
-  //   // setLoadingMore(false);
-  // };
-  
-  // useEffect(() => {
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, [loadingMore, hasMore]);
-  // useEffect(() => {
-  //   if (loadingMore) {
-  //     const fetchData = async () => {
-  //       try {
-  //         // const response = await searchProductAPI(searchValue);
-  //         const response = await getPost(searchValue);
-  //         // setNews(response?.data?.listData || []);
-  //         // setLoading(false);
-  //         if (response.listData.length === 0) {
-  //           setHasMore(false);
-  //         } else {
-  //           setNews((prevProducts) => [...prevProducts, ...response.data.listData]);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       } finally {
-  //         setLoadingMore(false);
-  //       }
-  //     };
-  //     fetchData();
-  //   }
-  // }, [loadingMore]);
-
   const handleScroll = useCallback(() => {
     if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight && !loadingMore && hasMore) {
       setLoadingMore(true);

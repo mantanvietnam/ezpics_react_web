@@ -24,8 +24,6 @@ const Page = () => {
   const stageData = useSelector((state) => state.stage.stageData);
   const { design, designLayers, initSize } = stageData;
 
-  const [isLayerImage, setIsLayerImage] = useState(false);
-
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
 
@@ -93,7 +91,11 @@ const Page = () => {
       <div className="h-screen pt-[65px] overflow-hidden">
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${
+          className={`
+          relative ${
+            activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+          } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
             activeTool ? "ml-[396px]" : "ml-[96px]"
           }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
@@ -103,7 +105,7 @@ const Page = () => {
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
           )}
-          <div className="flex h-[calc(100%-50px)] justify-center items-center">
+          <div className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center">
             <div ref={containerRef}>
               <div style={{ width: initSize.width, height: initSize.height }}>
                 <Stage
@@ -151,7 +153,6 @@ const Page = () => {
                             isSelected={layer.id === selectedId}
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              dispatch(selectLayer({ id: layer.id }));
                             }}
                           />
                         );
@@ -167,7 +168,7 @@ const Page = () => {
               activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
             }`}>
             <Footer containerRef={containerRef} />
-          </div>{" "}
+          </div>
         </div>
       </div>
     </>
