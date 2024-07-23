@@ -70,20 +70,17 @@ export function PanelsImage() {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
-  // States for sliders
-  const [valueBrightness, setValueBrightness] = useState(0);
-  const [valueOpacity, setValueOpacity] = useState(
-    selectedLayer?.content.opacity * 100 || 100
-  );
-  const [valueContrast, setValueContrast] = useState(
-    (selectedLayer?.content.contrast + 100) / 2 || 50
-  );
+
+  const [valueBrightness, setValueBrightness] = useState(50);
+  const [valueOpacity, setValueOpacity] = useState(selectedLayer?.content.opacity * 100 || 100);
+  const [valueContrast, setValueContrast] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
   const [valueSaturate, setValueSaturate] = useState(0);
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
       setValueContrast((selectedLayer.content.contrast + 100) / 2);
+      setValueBrightness(selectedLayer.content.brightness / 2)
     }
   }, [selectedLayer]);
 
@@ -92,11 +89,12 @@ export function PanelsImage() {
       const data = {
         opacity: valueOpacity / 100,
         contrast: (valueContrast - 50) * 2, // Transform 0 to 100 to -100 to 100
+        brightness: valueBrightness * 2,
       };
 
       dispatch(updateLayer({ id: selectedLayer.id, data: data }));
     }
-  }, [selectedLayer?.id, valueOpacity, valueContrast]);
+  }, [selectedLayer?.id, valueOpacity, valueContrast, valueBrightness]);
 
   // States for popover visibility
   const [visibleEditImage, setVisibleEditImage] = useState(false);
@@ -476,7 +474,7 @@ export function ModalImageCrop({ isOpen, onCancel }) {
             aspect={aspect}
             // minWidth={400}
             minHeight={50}
-            // circularCrop
+          // circularCrop
           >
             <img alt="Crop me" src={imgSrc} ref={imgRef} onLoad={onImageLoad} />
           </ReactCrop>

@@ -7,7 +7,7 @@ import Konva from "konva";
 
 export default function ImageLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props;
-  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast } = data;
+  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast, brightness } = data;
 
   const dispatch = useDispatch();
 
@@ -57,6 +57,17 @@ export default function ImageLayer(props) {
     e.target.scaleX(1);
     e.target.scaleY(1);
   };
+
+  // Độ sáng
+  useEffect(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache();
+      shapeRef.current.filters([Konva.Filters.Brighten]);
+      shapeRef.current.brightness((brightness / 100 - 1)); // Đặt độ sáng
+      shapeRef.current.getLayer().batchDraw();
+      console.log('🚀 ~ useEffect ~ brightness / 100:', brightness / 100 - 1)
+    }
+  }, [image, brightness]);
 
   useEffect(() => {
     if (shapeRef.current) {
