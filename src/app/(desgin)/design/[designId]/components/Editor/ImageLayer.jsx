@@ -7,7 +7,7 @@ import { updateLayer } from '@/redux/slices/editor/stageSlice'
 
 export default function ImageLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props
-  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate } = data
+  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity } = data
 
   const dispatch = useDispatch()
 
@@ -78,6 +78,8 @@ export default function ImageLayer(props) {
         width={width}
         height={heightSize}
         rotation={rotation}
+        opacity={opacity}
+        brightness={100}
         draggable
         onClick={onSelect}
         onTap={onSelect}
