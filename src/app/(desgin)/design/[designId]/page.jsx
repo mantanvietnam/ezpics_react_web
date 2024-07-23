@@ -11,7 +11,7 @@ import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
-import { setStageData } from "@/redux/slices/editor/stageSlice";
+import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
 import PanelsImage from "./components/Panels/PanelsImage";
 import PanelsCommon from "./components/Panels/PanelsCommon"
 
@@ -79,8 +79,8 @@ const Page = () => {
     }
   }
 
-  console.log('🚀 ~ Page ~ designLayers:', designLayers)
-
+  console.log('🚀 ~ Page ~ selectedId:', selectedId)
+  console.log('🚀 ~ Page ~ stageData:', stageData.selectedLayer)
 
   return (
     <>
@@ -124,6 +124,7 @@ const Page = () => {
                         isSelected={layer.id === selectedId}
                         onSelect={() => {
                           setSelectedId(layer.id)
+                          dispatch(selectLayer({ id: layer.id }))
                         }}
                       />
                     )

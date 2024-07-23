@@ -5,13 +5,13 @@ import exportIcon from "./Layer 2.png";
 import { useSelector } from 'react-redux';
 import { checkTokenCookie } from "@/utils";
 import { saveListLayer } from '@/api/design';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const stageData = useSelector((state) => state.stage.stageData);
 
   const handleSaveDesign = async () => {
     try {
-      console.log('🚀 ~ Navbar ~ stageData:', stageData);
       if (!stageData || !stageData.designLayers) {
         throw new Error('Invalid stageData or designLayers not found');
       }
@@ -29,8 +29,11 @@ const Navbar = () => {
         token: checkTokenCookie(),
         listLayer: jsonData
       });
-
-      console.log('🚀 ~ handleSaveDesign ~ response:', response);
+      if (response.code == 1) {
+        toast.success('Bạn đã lưu thiết kế thành công')
+      } else {
+        toast.error('Lưu thiết kế thất bại!')
+      }
     } catch (error) {
       console.error('Error saving design:', error);
     }
