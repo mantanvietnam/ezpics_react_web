@@ -56,16 +56,17 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
 
 const PanelsImage = () => {
   const { selectedLayer } = useSelector((state) => state.stage.stageData);
-  const dispatch = useDispatch();
   console.log('🚀 ~ PanelsImage ~ selectedLayer:', selectedLayer)
+  const dispatch = useDispatch();
   // States for sliders
-  const [valueBrightness, setValueBrightness] = useState(0);
-  const [valueOpacity, setValueOpacity] = useState(0); // Set default value to 100
+  const [valueBrightness, setValueBrightness] = useState(50);
+  const [valueOpacity, setValueOpacity] = useState(100); // Set default value to 100
   const [valueContrast, setValueContrast] = useState(0);
   const [valueSaturate, setValueSaturate] = useState(0);
 
   useEffect(() => {
     setValueOpacity(selectedLayer.content.opacity * 100)
+    setValueBrightness(selectedLayer.content.brightness / 2)
   }, [selectedLayer.id])
 
   // States for popover visibility
@@ -127,11 +128,11 @@ const PanelsImage = () => {
 
   useEffect(() => {
     const data = {
-      opacity: valueOpacity / 100
+      opacity: valueOpacity / 100,
+      brightness: valueBrightness * 2,
     }
-    console.log('--------------------------------', data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [valueOpacity, selectedLayer.id]);
+  }, [valueOpacity, selectedLayer.id, valueBrightness]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
