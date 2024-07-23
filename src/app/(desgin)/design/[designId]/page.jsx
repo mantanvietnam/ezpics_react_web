@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
@@ -19,6 +19,7 @@ const Page = () => {
   const params = useParams();
   const { designId } = params;
   const stageRef = useRef(null);
+  const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
   const { design, designLayers, initSize } = stageData;
@@ -85,71 +86,78 @@ const Page = () => {
   return (
     <>
       <Navbar />
-      <div style={{ height: "100vh", padding: "65px 0px 0px 0px" }}>
+      <div className="h-screen pt-[65px] overflow-hidden">
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
-        <div
-          className={`relative z-1 bg-gray-300 h-[calc(100%-50px)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
-            }`}
-        >
-          <div>
+        <div className={`
+          relative ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"} h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"}`}>
+           <div className={`fixed top-50 z-10 ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"}`}>
             <PanelsImage />
           </div>
-
-          <div className="flex h-[calc(100%-50px)] justify-center items-center">
-            <Stage
-              ref={stageRef}
-              width={initSize.width}
-              height={initSize.height}
-              className="bg-white"
-              onMouseDown={checkDeselect}
-              onTouchStart={checkDeselect}
-            >
-              <Layer>
-                <BackgroundLayer
-                  src={design?.thumn}
+          <div className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center">
+            <div ref={containerRef}>
+              <div
+                style={{ width: initSize.width, height: initSize.height }}
+              >
+                <Stage
+                  ref={stageRef}
                   width={initSize.width}
                   height={initSize.height}
-                />
-                {designLayers.map((layer) => {
-                  if (layer.content?.type === "image") {
-                    return (
-                      <ImageLayer
-                        key={layer.id}
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                        isSelected={layer.id === selectedId}
-                        onSelect={() => {
-                          setSelectedId(layer.id)
-                          dispatch(selectLayer({ id: layer.id }))
-                        }}
-                      />
-                    )
-                  } else if (layer.content?.type === "text") {
-                    return (
-                      <TextLayer
-                        key={layer.id}
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                        isSelected={layer.id === selectedId}
-                        onSelect={() => {
-                          setSelectedId(layer.id)
-                        }}
-                      />
-                    )
-                  }
-                })}
-              </Layer>
-            </Stage>
+                  className="bg-white"
+                  style={{ zIndex: -1, overflow: "auto" }}
+                  onMouseDown={checkDeselect}
+                  onTouchStart={checkDeselect}
+                >
+                  <Layer>
+                    <BackgroundLayer
+                      src={design?.thumn}
+                      width={initSize.width}
+                      height={initSize.height}
+                    />
+                     {designLayers.map((layer) => {
+                      if (layer.content?.type === "image") {
+                        return (
+                          <ImageLayer
+                            key={layer.id}
+                            designSize={{
+                              width: initSize.width,
+                              height: initSize.height,
+                            }}
+                            id={layer.id}
+                            data={layer.content}
+                            isSelected={layer.id === selectedId}
+                            onSelect={() => {
+                              setSelectedId(layer.id)
+                              dispatch(selectLayer({ id: layer.id }))
+                            }}
+                          />
+                        )
+                      } else if (layer.content?.type === "text") {
+                        return (
+                          <TextLayer
+                            key={layer.id}
+                            designSize={{
+                              width: initSize.width,
+                              height: initSize.height,
+                            }}
+                            id={layer.id}
+                            data={layer.content}
+                            isSelected={layer.id === selectedId}
+                            onSelect={() => {
+                              setSelectedId(layer.id)
+                            }}
+                          />
+                        )
+                      }
+                    })}
+                  </Layer>
+                </Stage>
+              </div>
+            </div>
           </div>
-          <Footer />
+          <div className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"}`}>
+            <Footer containerRef={containerRef} />
+          </div>
         </div>
       </div>
     </>

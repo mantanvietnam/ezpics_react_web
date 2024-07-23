@@ -3,7 +3,7 @@
 import {
   BarsOutlined,
   BellOutlined,
-  DesktopOutlined,
+  DownloadOutlined,
   SettingOutlined,
   UserOutlined,
   EllipsisOutlined,
@@ -330,7 +330,7 @@ const Header = ({ toggleNavbar }) => {
 
   const actionIcons = [
     {
-      icon: <DesktopOutlined style={{ fontSize: "20px" }} />,
+      icon: <DownloadOutlined style={{ fontSize: "20px" }} />,
       name: "download",
       desc: "Tải xuống ứng dụng",
       href: "/download",
