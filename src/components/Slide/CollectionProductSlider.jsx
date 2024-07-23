@@ -86,10 +86,12 @@ const CollectionProductSlider = ({ title }) => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-2">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">
+        <h1 className="text-lg mobile:text-2xl font-bold mb-4">
           {title || "Bộ sưu tập bạn có thể thích"}
         </h1>
-        <Link href="/dashboard-search" className="font-bold text-red-500 text-sm">
+        <Link
+          href="/dashboard-search"
+          className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
       </div>
@@ -119,7 +121,7 @@ const CollectionProductSlider = ({ title }) => {
                   className="slide-content pr-8"
                   key={product.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="bg-orange-100 overflow-hidden group">
+                    <div className="bg-orange-100 overflow-hidden group flex justify-center">
                       <Image
                         src={product.thumbnail}
                         width={300}
@@ -128,15 +130,15 @@ const CollectionProductSlider = ({ title }) => {
                         alt={product.name}
                       />
                     </div>
-                    <div className="p-4">
-                      <h2 className="text-lg font-medium h-20">
-                        <TruncatedText text={product.name} maxLength={33}/>
+                    <div className="p-2">
+                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                        <TruncatedText text={product.name} maxLength={33} />
                       </h2>
                       <p className="text-gray-500 mt-2">
                         Số lượng mẫu {product?.number_product}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 font-bold mr-2 text-xl">
+                        <span className="text-red-500 font-bold mr-2 text-lg">
                           {product.price && product.price >= 0
                             ? VND.format(product.price)
                             : "Miễn Phí"}

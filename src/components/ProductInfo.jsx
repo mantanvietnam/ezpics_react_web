@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Radio, Skeleton, Space, Spin, Table, Tag } from "antd";
-import { SkeletonCustom } from "./Slide/CustomSlide";
+import { SkeletonCustomProduct } from "./Slide/CustomSlide";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import {
@@ -190,12 +190,13 @@ export default function ProductInfo(props) {
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
         {isLoading ? (
-          <SkeletonCustom>
+          <SkeletonCustomProduct>
             <Skeleton.Image
-              className="w-full h-[100%] flex items-center justify-center"
+              className="skeleton-image h-[100%] flex items-center justify-center"
               active="true"
+              style={{ width: "300px !important" }}
             />
-          </SkeletonCustom>
+          </SkeletonCustomProduct>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <img
@@ -336,15 +337,17 @@ export default function ProductInfo(props) {
               <span>{data?.author}</span>
             </div>
           </div>
-          {data?.color && <div className="flex items-center gap-3">
-            <div className="product-details-e">Màu chủ đạo</div>
-            <div
-              style={{
-                width: "30px",
-                height: "30px",
-                backgroundColor: `${data?.color}`,
-              }}></div>
-          </div>}
+          {data?.color && (
+            <div className="flex items-center gap-3">
+              <div className="product-details-e">Màu chủ đạo</div>
+              <div
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  backgroundColor: `${data?.color}`,
+                }}></div>
+            </div>
+          )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Lượt xem:</div>
             <div>

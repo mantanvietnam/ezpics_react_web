@@ -96,7 +96,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">{title}</h1>
+        <h1 className="text-lg mobile:text-2xl font-bold mb-4">{title}</h1>
         <Link href={pathString} className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
@@ -127,7 +127,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                   className="slide-content pr-8"
                   key={product.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="bg-orange-100 overflow-hidden group">
+                    <div className="bg-orange-100 overflow-hidden group flex justify-center">
                       <Image
                         src={product.image}
                         width={300}
@@ -136,15 +136,15 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
                         alt={product.name}
                       />
                     </div>
-                    <div className="p-4">
-                      <h2 className="text-lg font-medium h-20">
-                        <TruncatedText text={product.name} maxLength={33}/>
+                    <div className="p-2">
+                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                        <TruncatedText text={product.name} maxLength={33} />
                       </h2>
                       <p className="text-gray-500 mt-2 text-sm">
                         Đã bán {product.sold}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 mr-2 font-bold text-xl">
+                        <span className="text-red-500 mr-2 font-bold text-lg">
                           {/* {product.sale_price === 0
                             ? "Miễn phí"
                             : VND.format(product.sale_price)} */}
