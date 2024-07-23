@@ -73,13 +73,13 @@ export function PanelsImage() {
 
   const [valueBrightness, setValueBrightness] = useState(50);
   const [valueOpacity, setValueOpacity] = useState(selectedLayer?.content.opacity * 100 || 100);
-  const [valueContrast, setValueContrast] = useState(50)
+  const [valueContrast, setValueContrast] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
   const [valueSaturate, setValueSaturate] = useState(0);
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
-      setValueContrast((selectedLayer.content.contrast + 100) / 2);
+      setValueContrast(selectedLayer.content.contrast / 2);
       setValueBrightness(selectedLayer.content.brightness / 2)
     }
   }, [selectedLayer]);
@@ -88,7 +88,7 @@ export function PanelsImage() {
     if (selectedLayer) {
       const data = {
         opacity: valueOpacity / 100,
-        contrast: valueContrast * 2, // Transform 0 to 100 to -100 to 100
+        contrast: (valueContrast - 50) * 2, // Transform 0 to 100 to -100 to 100
         brightness: valueBrightness * 2,
       };
 
