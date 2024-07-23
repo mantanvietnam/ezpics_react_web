@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux'
 export default function TextLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props
   const { postion_left, postion_top, size } = data
-  console.log('🚀 ~ TextLayer ~ size:', size)
 
   const dispatch = useDispatch()
   const shapeRef = useRef()
