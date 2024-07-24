@@ -71,13 +71,6 @@ export default function TextLayer(props) {
   }
 
   const handleTransformEnd = (e) => {
-    console.log("--------------------------------22222222222222", {
-      id,
-      width: e.target.width() * e.target.scaleX(),
-      height: e.target.height() * e.target.scaleY(),
-      rotation: e.target.rotation(),
-      newWidth: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`
-    })
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
@@ -175,16 +168,24 @@ export default function TextLayer(props) {
       {isSelected && (
         <Transformer
           ref={trRef}
-          flipEnabled={false}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
-            if (anchor.hasName('top-center') || anchor.hasName('bottom-center')) {
-              anchor.height(6);
-              anchor.offsetY(3);
-              anchor.width(30);
-              anchor.offsetX(15);
+            // Hide anchors for height adjustment
+            if (
+              anchor.hasName('top-left') ||
+              anchor.hasName('top-right') ||
+              anchor.hasName('bottom-left') ||
+              anchor.hasName('bottom-right')
+            ) {
+              anchor.visible(false);
             }
+            // Hide anchors for height adjustment
+            if (anchor.hasName('top-center') || anchor.hasName('bottom-center')) {
+              anchor.visible(false);
+            }
+            // Show anchors for width adjustment
             if (anchor.hasName('middle-left') || anchor.hasName('middle-right')) {
+              anchor.visible(true);
               anchor.height(30);
               anchor.offsetY(15);
               anchor.width(6);
@@ -192,7 +193,9 @@ export default function TextLayer(props) {
             }
           }}
           boundBoxFunc={(oldBox, newBox) => {
-            if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
+            // Limit resize to width only
+            newBox.height = oldBox.height;
+            if (Math.abs(newBox.width) < 5) {
               return oldBox;
             }
             return newBox;
