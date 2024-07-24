@@ -71,22 +71,25 @@ export function PanelsImage() {
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
   // States for sliders
-  const [valueBrightness, setValueBrightness] = useState(0);
+  const [valueBrightness, setValueBrightness] = useState(
+    (selectedLayer?.content.brightness) / 2 || 100
+  );
   const [valueOpacity, setValueOpacity] = useState(
     selectedLayer?.content.opacity * 100 || 100
   );
   const [valueContrast, setValueContrast] = useState(
-    (selectedLayer?.content.contrast + 100) / 2 || 50
+    (selectedLayer?.content.contrast) / 2 || 100
   );
-  const [valueSaturate, setValueSaturate] = useState((
-    selectedLayer?.content.contrast + 100) / 2 || 50
+  const [valueSaturate, setValueSaturate] = useState(
+    (selectedLayer?.content.saturate) / 2 || 100
   );
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
-      setValueContrast((selectedLayer.content.contrast + 100) / 2);
-      setValueSaturate((selectedLayer.content.contrast + 100) / 2);
+      setValueContrast((selectedLayer.content.contrast) / 2);
+      setValueContrast((selectedLayer.content.brightness) / 2 || 100);
+      setValueSaturate((selectedLayer.content.saturate) / 2);
     }
   }, [selectedLayer]);
 
@@ -94,14 +97,15 @@ export function PanelsImage() {
     if (selectedLayer) {
       const data = {
         opacity: valueOpacity / 100,
-        contrast: (valueContrast - 50) * 2, 
-        saturate: (valueSaturate - 50) * 2, 
+        contrast: (valueContrast) * 2, 
+        saturate: (valueSaturate) * 2, 
+        brightness: valueBrightness * 2,
       };
 
       dispatch(updateLayer({ id: selectedLayer.id, data: data }));
     }
-  }, [selectedLayer?.id, valueOpacity, valueContrast, valueSaturate]);
-
+  }, [selectedLayer.id, valueOpacity, valueBrightness, valueContrast, valueSaturate, selectedLayer, dispatch]);
+  
   // States for popover visibility
   const [visibleEditImage, setVisibleEditImage] = useState(false);
   const [visibleChangeImage, setVisibleChangeImage] = useState(false);
@@ -190,14 +194,6 @@ export function PanelsImage() {
       setVisibleChangeImage(false);
     }
   });
-
-  useEffect(() => {
-    const data = {
-      opacity: valueOpacity / 100,
-      brightness: valueBrightness * 2,
-    };
-    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [valueOpacity, selectedLayer.id, valueBrightness]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">

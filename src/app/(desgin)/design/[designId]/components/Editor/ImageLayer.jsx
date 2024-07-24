@@ -7,8 +7,8 @@ import Konva from "konva";
 
 export default function ImageLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props;
-  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast, saturation, hue, luminance } = data;
-
+  const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast, saturate, brightness } = data;
+  console.log("opavity", opacity)
   const dispatch = useDispatch();
 
   const shapeRef = useRef();
@@ -58,27 +58,36 @@ export default function ImageLayer(props) {
     e.target.scaleY(1);
   };
 
-  // Apply Contrast filter
+  // Độ sáng
+  useEffect(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache();
+      shapeRef.current.filters([Konva.Filters.Brighten]);
+      shapeRef.current.brightness((brightness / 100 - 1)); // Đặt độ sáng
+      shapeRef.current.getLayer().batchDraw();
+    }
+  }, [image, brightness]);
+
+  //do tuong phan
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.Contrast]);
-      shapeRef.current.contrast(contrast);
+      shapeRef.current.contrast(contrast - 100);
       shapeRef.current.getLayer().batchDraw();
     }
   }, [contrast, image]);
 
   // Apply HSL filter
   useEffect(() => {
+    console.log("saturate", saturate)
     if (shapeRef.current) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.HSL]);
-      shapeRef.current.hue(hue);
-      shapeRef.current.saturation(saturation);
-      shapeRef.current.luminance(luminance);
+      shapeRef.current.saturation(saturate / 100 - 1);
       shapeRef.current.getLayer().batchDraw();
     }
-  }, [hue, saturation, luminance, image]);
+  }, [saturate, image]);
 
   return (
     <>
