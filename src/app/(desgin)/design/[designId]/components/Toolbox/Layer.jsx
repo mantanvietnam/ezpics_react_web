@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
-import { useAppSelector } from "@/hooks/hook";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import Locked from "../../Icon/Locked";
 import Unlocked from "../../Icon/Unlocked";
@@ -10,56 +9,35 @@ import Eye from "../../Icon/Eye";
 import EyeCrossed from "../../Icon/EyeCrossed";
 import Delete from "../../Icon/Delete";
 import Drapdrop from "../../Icon/Drapdrop";
-import { LeftOutlined } from "@ant-design/icons";
 
-import { useParams } from "next/navigation";
 import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
-import { removeLayer } from "@/redux/slices/editor/stageSlice";
+import { removeLayer, updateListLayers } from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
-import { setStageData } from "@/redux/slices/editor/stageSlice";
 
 const Layer = () => {
-  const [listLayers, setListLayers] = useState([]);
 
   const { designLayers } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
-  const network = useAppSelector((state) => state.network.ipv4Address);
-
-  const params = useParams();
-  const { designId } = params;
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.post(`${network}/listLayerAPI`, {
-          token: checkTokenCookie(),
-          idproduct: designId,
-        });
-        console.log(response);
-        if (response.data.code === 1) {
-          setListLayers(response.data.data.productDetail);
-        }
-      } catch (error) {
-        console.error("Lỗi khi gửi yêu cầu GET:", error);
-      }
-    }
-    if (network && designId) {
-      fetchData();
-    }
-  }, [network, designId]);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
-    const items = Array.from(listLayers);
+    const items = Array.from(designLayers);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    setListLayers(items);
+    // Cập nhật lại giá trị sort
+    const updatedItems = items.map((item, index) => ({
+      ...item,
+      sort: index + 1,
+    }));
+
+    dispatch(updateListLayers(updatedItems))
   };
+
 
   const handleDeleteLayer = (layer) => {
     const daleteLayerApi = async () => {
