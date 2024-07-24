@@ -96,7 +96,6 @@ const Page = () => {
     []
   );
 
-  console.log("Max Positions:", maxPositions);
   console.log("🚀 ~ Page ~ selectedId:", selectedId);
   console.log("🚀 ~ Page ~ stageData:", stageData.selectedLayer);
 

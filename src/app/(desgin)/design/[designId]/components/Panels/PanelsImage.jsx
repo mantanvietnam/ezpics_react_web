@@ -71,7 +71,9 @@ export function PanelsImage({ selectedId, maxPositions }) {
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
 
-  const [valueBrightness, setValueBrightness] = useState(50);
+  const [valueBrightness, setValueBrightness] = useState(
+    selectedLayer.content.brightness / 2
+  );
   const [valueOpacity, setValueOpacity] = useState(
     selectedLayer?.content.opacity * 100 || 100
   );
@@ -189,13 +191,13 @@ export function PanelsImage({ selectedId, maxPositions }) {
     }
   });
 
-  useEffect(() => {
-    const data = {
-      opacity: valueOpacity / 100,
-      brightness: valueBrightness * 2,
-    };
-    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [valueOpacity, selectedLayer.id, valueBrightness]);
+  // useEffect(() => {
+  //   const data = {
+  //     opacity: valueOpacity / 100,
+  //     brightness: valueBrightness * 2,
+  //   };
+  //   dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  // }, [valueOpacity, selectedLayer.id, valueBrightness]);
 
   //Btn click lat anh
   const onFlipHorizontally = () => {
