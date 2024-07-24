@@ -23,6 +23,7 @@ const Navbar = () => {
         content: {
           ...layer.content,
           lat_anh: layer.content.scaleX === -1 ? 1 : 0, // Set lat_anh based on scaleX
+          lat_anh_doc: layer.content.scaleY === -1 ? 1 : 0, // Set lat_anh_doc based on scaleY
         },
         sort: layer.sort,
       }));

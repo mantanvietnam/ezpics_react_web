@@ -18,6 +18,7 @@ export default function ImageLayer(props) {
     contrast,
     brightness,
     scaleX,
+    scaleY,
   } = data;
 
   const dispatch = useDispatch();
@@ -143,6 +144,7 @@ export default function ImageLayer(props) {
         opacity={opacity}
         rotation={rotation}
         scaleX={scaleX}
+        scaleY={scaleY}
         draggable
         onClick={onSelect}
         onTap={onSelect}

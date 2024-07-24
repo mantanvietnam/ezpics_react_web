@@ -53,6 +53,14 @@ const stageSlice = createSlice({
       );
     },
 
+    flipLayerVertically: (state, action: PayloadAction<{ id: string }>) => {
+      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
+        layer.id === action.payload.id
+          ? { ...layer, content: { ...layer.content, scaleY: -layer.content.scaleY || -1 } }
+          : layer
+      );
+    },
+
     moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -118,9 +126,8 @@ const stageSlice = createSlice({
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, moveLayerToFinal,
+export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, updateListLayers, moveLayerToFinal,
   moveLayerToFront,
   sendLayerBack,
-  updateListLayers,
   bringLayerForward, flipLayerHorizontally } = stageSlice.actions;
 export default stageSlice.reducer;
