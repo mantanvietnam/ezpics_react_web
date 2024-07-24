@@ -8,7 +8,6 @@ import Konva from "konva";
 export default function ImageLayer(props) {
   const { data, designSize, id, isSelected, onSelect } = props;
   const { postion_left, postion_top, naturalHeight, naturalWidth, rotate, opacity, contrast, saturate, brightness } = data;
-  console.log("opavity", opacity)
   const dispatch = useDispatch();
 
   const shapeRef = useRef();
@@ -80,7 +79,6 @@ export default function ImageLayer(props) {
 
   // Apply HSL filter
   useEffect(() => {
-    console.log("saturate", saturate)
     if (shapeRef.current) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.HSL]);
