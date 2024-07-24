@@ -94,18 +94,14 @@ const CommonLayers = () => {
   const dispatch = useDispatch();
 
   const handleBringForward = () => {
-    console.log("Tôi di chuyển layer lên trên layer");
     dispatch(bringLayerForward({ id: selectedLayer.id }))
   };
 
   const handleSendToBack = () => {
-    console.log("Layer sent to back");
     dispatch(sendLayerBack({ id: selectedLayer.id }))
   };
 
   const handleSendToFront = () => {
-    console.log("Tôi di chuyển layer lên đầu tiên");
-    console.log('🚀 ~ CommonLayers ~ selectedLayer:', selectedLayer)
     dispatch(moveLayerToFront({ id: selectedLayer.id }))
   };
 

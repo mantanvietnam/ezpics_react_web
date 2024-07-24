@@ -38,6 +38,16 @@ export default function ImageLayer(props) {
     }
   }, [isSelected]);
 
+  // Độ sáng
+  useEffect(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache();
+      shapeRef.current.filters([Konva.Filters.Brighten]);
+      shapeRef.current.brightness((brightness / 100 - 1)); // Đặt độ sáng
+      shapeRef.current.getLayer().batchDraw();
+    }
+  }, [image, brightness]);
+
   const handleDragEnd = (e) => {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
@@ -58,25 +68,22 @@ export default function ImageLayer(props) {
     e.target.scaleY(1);
   };
 
-  // Độ sáng
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
-      shapeRef.current.filters([Konva.Filters.Brighten]);
-      shapeRef.current.brightness((brightness / 100 - 1)); // Đặt độ sáng
       shapeRef.current.getLayer().batchDraw();
     }
-  }, [image, brightness]);
+  }, [image, brightness, width])
 
-  //do tuong phan
-  useEffect(() => {
-    if (shapeRef.current) {
-      shapeRef.current.cache();
-      shapeRef.current.filters([Konva.Filters.Contrast]);
-      shapeRef.current.contrast(contrast);
-      shapeRef.current.getLayer().batchDraw();
-    }
-  }, [contrast, image]);
+  // //do tuong phan
+  // useEffect(() => {
+  //   if (shapeRef.current) {
+  //     shapeRef.current.cache();
+  //     shapeRef.current.filters([Konva.Filters.Contrast]);
+  //     shapeRef.current.contrast(contrast - 100);
+  //     shapeRef.current.getLayer().batchDraw();
+  //   }
+  // }, [contrast, image]);
 
   return (
     <>

@@ -185,13 +185,13 @@ export function PanelsImage() {
     }
   });
 
-  useEffect(() => {
-    const data = {
-      opacity: valueOpacity / 100,
-      brightness: valueBrightness * 2,
-    };
-    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [valueOpacity, selectedLayer.id, valueBrightness]);
+  // useEffect(() => {
+  //   const data = {
+  //     opacity: valueOpacity / 100,
+  //     brightness: valueBrightness * 2,
+  //   };
+  //   dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  // }, [valueOpacity, selectedLayer.id, valueBrightness]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
