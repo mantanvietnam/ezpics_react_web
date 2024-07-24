@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
@@ -26,6 +26,13 @@ const Page = () => {
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
+
+  const [maxPositions, setMaxPositions] = useState({
+    maxLeft: null,
+    maxTop: null,
+    centerX: null,
+    centerY: null,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,6 +89,14 @@ const Page = () => {
     }
   };
 
+  const handleMaxPositionUpdate = useCallback(
+    (maxLeft, maxTop, centerX, centerY) => {
+      setMaxPositions({ maxLeft, maxTop, centerX, centerY });
+    },
+    []
+  );
+
+  console.log("Max Positions:", maxPositions);
   console.log("🚀 ~ Page ~ selectedId:", selectedId);
   console.log("🚀 ~ Page ~ stageData:", stageData.selectedLayer);
 
@@ -100,7 +115,10 @@ const Page = () => {
           }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
-              <PanelsImage />
+              <PanelsImage
+                selectedId={selectedId}
+                maxPositions={maxPositions}
+              />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
@@ -138,6 +156,7 @@ const Page = () => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
+                            onMaxPositionUpdate={handleMaxPositionUpdate}
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -153,6 +172,7 @@ const Page = () => {
                             isSelected={layer.id === selectedId}
                             onSelect={() => {
                               setSelectedId(layer.id);
+                              dispatch(selectLayer({ id: layer.id }));
                             }}
                           />
                         );

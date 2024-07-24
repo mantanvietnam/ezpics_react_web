@@ -33,7 +33,7 @@ const stageSlice = createSlice({
     },
     updateLayer: (state, action: PayloadAction<{ id: string, data: any }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
-        layer.id === action.payload.id ? { ...layer, content: { ...layer.content, ...action.payload.data} } : layer
+        layer.id === action.payload.id ? { ...layer, content: { ...layer.content, ...action.payload.data } } : layer
       );
     },
     selectLayer: (state, action: PayloadAction<{ id: string }>) => {
@@ -42,8 +42,15 @@ const stageSlice = createSlice({
         state.stageData.selectedLayer = { ...layer };
       }
     },
+    flipLayerHorizontally: (state, action: PayloadAction<{ id: string }>) => {
+      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
+        layer.id === action.payload.id
+          ? { ...layer, content: { ...layer.content, scaleX: -layer.content.scaleX || -1 } }
+          : layer
+      );
+    },
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer } = stageSlice.actions;
+export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, flipLayerHorizontally } = stageSlice.actions;
 export default stageSlice.reducer;

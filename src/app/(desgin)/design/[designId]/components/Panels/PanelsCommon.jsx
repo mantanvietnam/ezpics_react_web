@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Popover, Tooltip, Space } from "antd";
 import BringToFontIcon from "../../Icon/BringToFont";
 import SendToBackIcon from "../../Icon/SendToBack";
@@ -13,6 +13,8 @@ import LockedIcon from "../../Icon/Locked";
 import UnlockedIcon from "../../Icon/Unlocked";
 import DuplicateIcon from "../../Icon/Duplicate";
 import DeleteIcon from "../../Icon/Delete";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
 const LayersPopoverContent = ({
   onBringForward,
@@ -115,7 +117,105 @@ const CommonLayers = () => {
   );
 };
 
-const CommonAlign = () => {
+const CommonAlign = ({ maxPositions }) => {
+  const dispatch = useDispatch();
+  const stageData = useSelector((state) => state.stage.stageData);
+  const [selectedLayer, setSelectedLayer] = useState({});
+
+  useEffect(() => {
+    if (stageData && stageData.selectedLayer) {
+      setSelectedLayer(stageData.selectedLayer);
+    }
+  }, [stageData]);
+
+  if (!maxPositions) return null; // Tránh lỗi nếu maxPositions chưa được khởi tạo
+
+  const { maxLeft, maxTop, centerX, centerY } = maxPositions;
+
+  const onAlignLeftIcon = () => {
+    console.log("sang trai");
+    if (selectedLayer) {
+      // Cập nhật dữ liệu layer
+      const updatedData = {
+        ...selectedLayer.content,
+        postion_left: 0.1,
+      };
+
+      // Dispatch hành động cập nhật layer
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+    }
+  };
+
+  const onAlignRightIcon = () => {
+    console.log("sang phai");
+    if (selectedLayer) {
+      // Cập nhật dữ liệu layer
+      const updatedData = {
+        ...selectedLayer.content,
+        postion_left: maxLeft - 0.1,
+      };
+
+      // Dispatch hành động cập nhật layer
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+    }
+  };
+
+  const onAlignCenterIcon = () => {
+    console.log("trung tam");
+    if (selectedLayer) {
+      // Cập nhật dữ liệu layer
+      const updatedData = {
+        ...selectedLayer.content,
+        postion_left: centerX,
+      };
+
+      // Dispatch hành động cập nhật layer
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+    }
+  };
+
+  const onAlignTopIcon = () => {
+    console.log("len tren");
+    if (selectedLayer) {
+      // Cập nhật dữ liệu layer
+      const updatedData = {
+        ...selectedLayer.content,
+        postion_top: 0.1,
+      };
+
+      // Dispatch hành động cập nhật layer
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+    }
+  };
+
+  const onAlignMiddleIcon = () => {
+    console.log("o giua");
+    if (selectedLayer) {
+      // Cập nhật dữ liệu layer
+      const updatedData = {
+        ...selectedLayer.content,
+        postion_top: centerY,
+      };
+
+      // Dispatch hành động cập nhật layer
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+    }
+  };
+
+  const onAlignBottomIcon = () => {
+    console.log("xuong duoi");
+    if (selectedLayer) {
+      // Cập nhật dữ liệu layer
+      const updatedData = {
+        ...selectedLayer.content,
+        postion_top: maxTop,
+      };
+
+      // Dispatch hành động cập nhật layer
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+    }
+  };
+
   return (
     <Popover
       placement="bottomRight"
@@ -129,32 +229,41 @@ const CommonAlign = () => {
             gridGap: "8px",
           }}>
           <Tooltip title="Chỉnh vị trí sang trái" placement="bottom">
-            <Button type="text" size="small">
+            <Button type="text" size="small" onClick={() => onAlignLeftIcon()}>
               <AlignLeftIcon size={20} />
             </Button>
           </Tooltip>
-          <Tooltip title="Chỉnh vị trí trung tâm" placement="bottom">
+          <Tooltip
+            title="Chỉnh vị trí trung tâm"
+            placement="bottom"
+            onClick={() => onAlignCenterIcon()}>
             <Button type="text" size="small">
               <AlignCenterIcon size={20} />
             </Button>
           </Tooltip>
           <Tooltip title="Chỉnh vị trí sang phải" placement="bottom">
-            <Button type="text" size="small">
+            <Button type="text" size="small" onClick={() => onAlignRightIcon()}>
               <AlignRightIcon size={20} />
             </Button>
           </Tooltip>
           <Tooltip title="Chỉnh vị trí lên trên" placement="bottom">
-            <Button type="text" size="small">
+            <Button type="text" size="small" onClick={() => onAlignTopIcon()}>
               <AlignTopIcon size={20} />
             </Button>
           </Tooltip>
           <Tooltip title="Chỉnh vị trí ở giữa" placement="bottom">
-            <Button type="text" size="small">
+            <Button
+              type="text"
+              size="small"
+              onClick={() => onAlignMiddleIcon()}>
               <AlignMiddleIcon size={20} />
             </Button>{" "}
           </Tooltip>
           <Tooltip title="Chỉnh vị trí xuống dưới" placement="bottom">
-            <Button type="text" size="small">
+            <Button
+              type="text"
+              size="small"
+              onClick={() => onAlignBottomIcon()}>
               <AlignBottomIcon size={20} />
             </Button>
           </Tooltip>
@@ -200,14 +309,14 @@ const LockUnlock = () => {
   );
 };
 
-export default function PanelsCommon() {
+export default function PanelsCommon({ maxPositions }) {
   return (
     <div className="flex">
       <div className="px-1 w-[50px]">
         <CommonLayers />
       </div>
       <div className="px-1 w-[50px]">
-        <CommonAlign />
+        <CommonAlign maxPositions={maxPositions} />
       </div>
       <div className="px-1 w-[50px]">
         <LockUnlock />

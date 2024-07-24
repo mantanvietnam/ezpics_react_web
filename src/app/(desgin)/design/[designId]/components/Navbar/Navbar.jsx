@@ -2,10 +2,10 @@ import React from "react";
 import Image from "next/image";
 import imageIcon from "./save.png";
 import exportIcon from "./Layer 2.png";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { checkTokenCookie } from "@/utils";
-import { saveListLayer } from '@/api/design';
-import { toast } from 'react-toastify';
+import { saveListLayer } from "@/api/design";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const stageData = useSelector((state) => state.stage.stageData);
@@ -13,29 +13,36 @@ const Navbar = () => {
   const handleSaveDesign = async () => {
     try {
       if (!stageData || !stageData.designLayers) {
-        throw new Error('Invalid stageData or designLayers not found');
+        throw new Error("Invalid stageData or designLayers not found");
       }
 
-      const data = stageData.designLayers.map(layer => ({
+      console.log(stageData.designLayers);
+
+      const data = stageData.designLayers.map((layer) => ({
         id: layer.id,
-        content: layer.content,
-        sort: layer.sort
+        content: {
+          ...layer.content,
+          lat_anh: layer.content.scaleX === -1 ? 1 : 0, // Set lat_anh based on scaleX
+        },
+        sort: layer.sort,
       }));
+
+      console.log(data);
 
       const jsonData = JSON.stringify(data);
 
       const response = await saveListLayer({
         idProduct: stageData.design?.id,
         token: checkTokenCookie(),
-        listLayer: jsonData
+        listLayer: jsonData,
       });
       if (response.code == 1) {
-        toast.success('Bạn đã lưu thiết kế thành công')
+        toast.success("Bạn đã lưu thiết kế thành công");
       } else {
-        toast.error('Lưu thiết kế thất bại!')
+        toast.error("Lưu thiết kế thất bại!");
       }
     } catch (error) {
-      console.error('Error saving design:', error);
+      console.error("Error saving design:", error);
     }
   };
 
@@ -100,8 +107,7 @@ const Navbar = () => {
                 display: "flex",
                 alignItems: "center",
               }}
-              onClick={handleSaveDesign}
-            >
+              onClick={handleSaveDesign}>
               <Image
                 src={imageIcon}
                 alt=""
