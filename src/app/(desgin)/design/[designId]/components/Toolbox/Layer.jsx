@@ -25,30 +25,9 @@ const Layer = () => {
   const { designLayers } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
-  const network = useAppSelector((state) => state.network.ipv4Address);
 
   const params = useParams();
   const { designId } = params;
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.post(`${network}/listLayerAPI`, {
-          token: checkTokenCookie(),
-          idproduct: designId,
-        });
-        console.log(response);
-        if (response.data.code === 1) {
-          setListLayers(response.data.data.productDetail);
-        }
-      } catch (error) {
-        console.error("Lỗi khi gửi yêu cầu GET:", error);
-      }
-    }
-    if (network && designId) {
-      fetchData();
-    }
-  }, [network, designId]);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -83,8 +62,7 @@ const Layer = () => {
     <div className="absolute top-0 left-[96px] h-full w-[300px] px-2">
       <div
         className="flex-1 flex flex-col h-[100%] overflow-y-auto"
-        style={{ scrollbarWidth: "thin" }}
-      >
+        style={{ scrollbarWidth: "thin" }}>
         <h4 className="py-2">Danh sách Layers</h4>
 
         <DragDropContext onDragEnd={onDragEnd}>
@@ -98,15 +76,13 @@ const Layer = () => {
                       <Draggable
                         key={layer.id}
                         draggableId={layer.id.toString()}
-                        index={index}
-                      >
+                        index={index}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
-                          >
+                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]">
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
                             </button>
@@ -149,8 +125,7 @@ const Layer = () => {
                               )}
                               <button
                                 className="px-1"
-                                onClick={() => handleDeleteLayer(layer)}
-                              >
+                                onClick={() => handleDeleteLayer(layer)}>
                                 <Delete size={20} />
                               </button>
                             </div>
