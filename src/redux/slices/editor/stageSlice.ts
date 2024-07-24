@@ -42,8 +42,36 @@ const stageSlice = createSlice({
         state.stageData.selectedLayer = { ...layer };
       }
     },
+    moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
+      const layerIndex = state.stageData.designLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      )
+      if (layerIndex > -1) {
+        const layer = state.stageData.designLayers[layerIndex];
+        const updatedLayers = [
+          layer,
+          ...state.stageData.designLayers.filter((_:any, index:any) => index !== layerIndex),
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.designLayers = updatedLayers;
+      }
+    },
+    moveLayerToFront: (state, action: PayloadAction<{ id: string }>) => {
+      const layerIndex = state.stageData.designLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndex > -1) {
+        const layer = state.stageData.designLayers[layerIndex];
+        const updatedLayers = [
+          ...state.stageData.designLayers.filter((_: any, index: any) => index !== layerIndex),
+          layer,
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.designLayers = updatedLayers;
+      }
+    }
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer } = stageSlice.actions;
+export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, moveLayerToFinal, moveLayerToFront } = stageSlice.actions;
 export default stageSlice.reducer;

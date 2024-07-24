@@ -71,7 +71,7 @@ export function PanelsImage() {
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
 
-  const [valueBrightness, setValueBrightness] = useState(50);
+  const [valueBrightness, setValueBrightness] = useState(selectedLayer.content.brightness / 2);
   const [valueOpacity, setValueOpacity] = useState(selectedLayer?.content.opacity * 100 || 100);
   const [valueContrast, setValueContrast] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
   const [valueSaturate, setValueSaturate] = useState(0);
