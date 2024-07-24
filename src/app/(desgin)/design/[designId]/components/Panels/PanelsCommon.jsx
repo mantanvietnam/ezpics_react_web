@@ -15,7 +15,7 @@ import DuplicateIcon from "../../Icon/Duplicate";
 import DeleteIcon from "../../Icon/Delete";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { moveLayerToFinal, moveLayerToFront } from '@/redux/slices/editor/stageSlice';
+import { bringLayerForward, moveLayerToFinal, moveLayerToFront, sendLayerBack } from '@/redux/slices/editor/stageSlice';
 
 const LayersPopoverContent = ({
   onBringForward,
@@ -95,10 +95,12 @@ const CommonLayers = () => {
 
   const handleBringForward = () => {
     console.log("Tôi di chuyển layer lên trên layer");
+    dispatch(bringLayerForward({ id: selectedLayer.id }))
   };
 
   const handleSendToBack = () => {
     console.log("Layer sent to back");
+    dispatch(sendLayerBack({ id: selectedLayer.id }))
   };
 
   const handleSendToFront = () => {
