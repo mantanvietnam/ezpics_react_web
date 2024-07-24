@@ -37,7 +37,6 @@
     "src/app/(auth)/(center)/OtpVerification/page.jsx",
     "src/api/auth.js",
     "src/app/(design)/design/page.jsx",
-    "src/utils/fonts.js"
-  ],
+    "src/utils/fonts.js", ],
   "exclude": ["node_modules"]
 }
