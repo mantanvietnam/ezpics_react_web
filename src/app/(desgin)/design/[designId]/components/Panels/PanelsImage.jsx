@@ -3,7 +3,7 @@ import NextImage from "next/image";
 import { Button, Slider, Popover, Modal } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
-import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
+import { flipLayerHorizontally } from "@/redux/slices/editor/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { checkTokenCookie } from "@/utils";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
@@ -66,21 +66,27 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-export function PanelsImage() {
+export function PanelsImage({ selectedId, maxPositions }) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
 
-  const [valueBrightness, setValueBrightness] = useState(selectedLayer.content.brightness / 2);
-  const [valueOpacity, setValueOpacity] = useState(selectedLayer?.content.opacity * 100 || 100);
-  const [valueContrast, setValueContrast] = useState((selectedLayer?.content.contrast + 100) / 2 || 50);
+  const [valueBrightness, setValueBrightness] = useState(
+    selectedLayer.content.brightness / 2
+  );
+  const [valueOpacity, setValueOpacity] = useState(
+    selectedLayer?.content.opacity * 100 || 100
+  );
+  const [valueContrast, setValueContrast] = useState(
+    (selectedLayer?.content.contrast + 100) / 2 || 50
+  );
   const [valueSaturate, setValueSaturate] = useState(0);
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
       setValueContrast(selectedLayer.content.contrast / 2);
-      setValueBrightness(selectedLayer.content.brightness / 2)
+      setValueBrightness(selectedLayer.content.brightness / 2);
     }
   }, [selectedLayer]);
 
@@ -193,12 +199,21 @@ export function PanelsImage() {
   //   dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   // }, [valueOpacity, selectedLayer.id, valueBrightness]);
 
+  //Btn click lat anh
+  const onFlipHorizontally = () => {
+    if (selectedLayer) {
+      dispatch(flipLayerHorizontally({ id: selectedId }));
+    }
+  };
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
       <div className="h-[100%] flex items-center justify-between">
         <div className="flex items-center">
           <div className="px-1">
-            <Button type="text" className="text-lg font-bold">
+            <Button
+              type="text"
+              className="text-lg font-bold"
+              onClick={() => onFlipHorizontally()}>
               Lật ảnh ngang
             </Button>
           </div>
@@ -297,7 +312,7 @@ export function PanelsImage() {
         </div>
 
         <div>
-          <PanelsCommon />
+          <PanelsCommon maxPositions={maxPositions} />
         </div>
       </div>
     </div>
@@ -474,7 +489,7 @@ export function ModalImageCrop({ isOpen, onCancel }) {
             aspect={aspect}
             // minWidth={400}
             minHeight={50}
-          // circularCrop
+            // circularCrop
           >
             <img alt="Crop me" src={imgSrc} ref={imgRef} onLoad={onImageLoad} />
           </ReactCrop>
