@@ -80,10 +80,7 @@ const Page = () => {
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
-  };
-
-  console.log("🚀 ~ Page ~ selectedId:", selectedId);
-  console.log("🚀 ~ Page ~ stageData:", stageData.selectedLayer);
+  }
 
   return (
     <>
@@ -92,12 +89,10 @@ const Page = () => {
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
           className={`
-          relative ${
-            activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
-          } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
-            activeTool ? "ml-[396px]" : "ml-[96px]"
-          }`}>
+          relative ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+            } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
+            }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage />
@@ -164,9 +159,8 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${
-              activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
-            }`}>
+            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+              }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

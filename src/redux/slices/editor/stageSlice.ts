@@ -42,8 +42,80 @@ const stageSlice = createSlice({
         state.stageData.selectedLayer = { ...layer };
       }
     },
+    moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
+      const layerIndex = state.stageData.designLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      )
+      if (layerIndex > -1) {
+        const layer = state.stageData.designLayers[layerIndex];
+        const updatedLayers = [
+          layer,
+          ...state.stageData.designLayers.filter((_:any, index:any) => index !== layerIndex),
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.designLayers = updatedLayers;
+      }
+    },
+    moveLayerToFront: (state, action: PayloadAction<{ id: string }>) => {
+      const layerIndex = state.stageData.designLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndex > -1) {
+        const layer = state.stageData.designLayers[layerIndex];
+        const updatedLayers = [
+          ...state.stageData.designLayers.filter((_: any, index: any) => index !== layerIndex),
+          layer,
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.designLayers = updatedLayers;
+      }
+    },
+    sendLayerBack: (state, action: PayloadAction<{ id: string }>) => {
+      const layerIndex = state.stageData.designLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndex > 0) {
+        const updatedLayers = [...state.stageData.designLayers];
+        const temp = updatedLayers[layerIndex - 1];
+        updatedLayers[layerIndex - 1] = updatedLayers[layerIndex];
+        updatedLayers[layerIndex] = temp;
+        
+        updatedLayers.forEach((layer, index) => {
+          layer.sort = index + 1;
+        });
+
+        state.stageData.designLayers = updatedLayers;
+      }
+    },
+    bringLayerForward: (state, action: PayloadAction<{ id: string }>) => {
+      const layerIndex = state.stageData.designLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndex < state.stageData.designLayers.length - 1) {
+        const updatedLayers = [...state.stageData.designLayers];
+        const temp = updatedLayers[layerIndex];
+        updatedLayers[layerIndex] = updatedLayers[layerIndex + 1];
+        updatedLayers[layerIndex + 1] = temp;
+        
+        updatedLayers.forEach((layer, index) => {
+          layer.sort = index + 1;
+        });
+
+        state.stageData.designLayers = updatedLayers;
+      }
+    },
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer } = stageSlice.actions;
+export const { 
+  setStageData, 
+  addLayerImage, 
+  removeLayer, 
+  updateLayer, 
+  selectLayer,
+  moveLayerToFinal, 
+  moveLayerToFront,
+  sendLayerBack,
+  bringLayerForward,
+} = stageSlice.actions;
 export default stageSlice.reducer;

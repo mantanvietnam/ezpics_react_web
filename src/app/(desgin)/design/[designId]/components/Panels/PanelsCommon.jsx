@@ -13,6 +13,9 @@ import LockedIcon from "../../Icon/Locked";
 import UnlockedIcon from "../../Icon/Unlocked";
 import DuplicateIcon from "../../Icon/Duplicate";
 import DeleteIcon from "../../Icon/Delete";
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { bringLayerForward, moveLayerToFinal, moveLayerToFront, sendLayerBack } from '@/redux/slices/editor/stageSlice';
 
 const LayersPopoverContent = ({
   onBringForward,
@@ -87,20 +90,27 @@ const LayersPopover = ({
 );
 
 const CommonLayers = () => {
+  const { selectedLayer } = useSelector((state) => state.stage.stageData);
+  const dispatch = useDispatch();
+
   const handleBringForward = () => {
-    console.log("Layer brought forward");
+    console.log("Tôi di chuyển layer lên trên layer");
+    dispatch(bringLayerForward({ id: selectedLayer.id }))
   };
 
   const handleSendToBack = () => {
     console.log("Layer sent to back");
+    dispatch(sendLayerBack({ id: selectedLayer.id }))
   };
 
   const handleSendToFront = () => {
-    console.log("Layer sent to front");
+    console.log("Tôi di chuyển layer lên đầu tiên");
+    console.log('🚀 ~ CommonLayers ~ selectedLayer:', selectedLayer)
+    dispatch(moveLayerToFront({ id: selectedLayer.id }))
   };
 
   const handleSendToFinal = () => {
-    console.log("Layer sent to final");
+    dispatch(moveLayerToFinal({ id: selectedLayer.id }))
   };
 
   return (
