@@ -26,6 +26,9 @@ const stageSlice = createSlice({
         action.payload,
       ];
     },
+    updateListLayers: (state, action: PayloadAction<any>) => {
+      state.stageData.designLayers = action.payload
+    },
     removeLayer: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = state.stageData.designLayers.filter(
         (layer: any) => layer.id !== action.payload
@@ -123,8 +126,8 @@ const stageSlice = createSlice({
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, moveLayerToFinal,
+export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, updateListLayers, moveLayerToFinal,
   moveLayerToFront,
   sendLayerBack,
-  bringLayerForward, flipLayerHorizontally, flipLayerVertically } = stageSlice.actions;
+  bringLayerForward, flipLayerHorizontally } = stageSlice.actions;
 export default stageSlice.reducer;
