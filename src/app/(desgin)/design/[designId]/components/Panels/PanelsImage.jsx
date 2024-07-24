@@ -3,7 +3,10 @@ import NextImage from "next/image";
 import { Button, Slider, Popover, Modal } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
-import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
+import {
+  flipLayerHorizontally,
+  flipLayerVertically,
+} from "@/redux/slices/editor/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
@@ -66,7 +69,7 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-export function PanelsImage() {
+export function PanelsImage({ selectedId, maxPositions }) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
@@ -302,17 +305,34 @@ export function PanelsImage() {
   }
 };
 
+  //Btn click lat anh
+  const onFlipHorizontally = () => {
+    if (selectedLayer) {
+      dispatch(flipLayerHorizontally({ id: selectedId }));
+    }
+  };
+  const onFlipVertically = () => {
+    if (selectedLayer) {
+      dispatch(flipLayerVertically({ id: selectedId }));
+    }
+  };
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
       <div className="h-[100%] flex items-center justify-between">
         <div className="flex items-center">
           <div className="px-1">
-            <Button type="text" className="text-lg font-bold">
+            <Button
+              type="text"
+              className="text-lg font-bold"
+              onClick={() => onFlipHorizontally()}>
               Lật ảnh ngang
             </Button>
           </div>
           <div className="px-1">
-            <Button type="text" className="text-lg font-bold">
+            <Button
+              type="text"
+              className="text-lg font-bold"
+              onClick={() => onFlipVertically()}>
               Lật ảnh dọc
             </Button>
           </div>
@@ -409,7 +429,7 @@ export function PanelsImage() {
         </div>
 
         <div>
-          <PanelsCommon />
+          <PanelsCommon maxPositions={maxPositions} />
         </div>
       </div>
     </div>
@@ -674,14 +694,78 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
         open={isOpen}
         onCancel={() => handleCancel()}
         footer={null}>
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={onSelectFile}
-        />
         <div>
-          {!!imgSrc && <img alt="Change image" src={imgSrc} className="mt-2" />}
+          {imgSrc ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "24px",
+              }}>
+              <img
+                src={imgSrc}
+                alt=""
+                style={{
+                  height: "auto",
+                  alignSelf: "center",
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-col relative pt-4">
+              <form
+                id="file-upload-form"
+                className="block clear-both mx-auto w-full max-w-600">
+                <input
+                  className="hidden"
+                  id="file-upload"
+                  type="file"
+                  name="fileUpload"
+                  accept="image/*"
+                  onChange={onSelectFile}
+                />
+
+                <label
+                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  htmlFor="file-upload"
+                  id="file-drag"
+                  style={{ cursor: "pointer" }}>
+                  <img
+                    id="file-image"
+                    src="#"
+                    alt="Preview"
+                    className="hidden"
+                  />
+                  <div id="">
+                    <img
+                      src="/images/direct-download.png"
+                      alt=""
+                      style={{
+                        width: 30,
+                        height: 30,
+                        alignSelf: "center",
+                        margin: "0 auto",
+                        marginBottom: "2%",
+                      }}
+                    />
+                    <div id="notimage" className="hidden">
+                      Hãy chọn ảnh
+                    </div>
+                    <span id="file-upload-btn" className="">
+                      {imgSrc === null ? "Chọn ảnh" : "Chọn lại"}
+                    </span>
+                  </div>
+                  <div id="response" className="hidden">
+                    <div id="messages"></div>
+                    <progress className="progress" id="file-progress" value="0">
+                      <span>0</span>%
+                    </progress>
+                  </div>
+                </label>
+              </form>
+            </div>
+          )}
         </div>
 
         {loading ? (

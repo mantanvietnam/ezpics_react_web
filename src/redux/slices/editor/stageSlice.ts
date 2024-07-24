@@ -26,6 +26,9 @@ const stageSlice = createSlice({
         action.payload,
       ];
     },
+    updateListLayers: (state, action: PayloadAction<any>) => {
+      state.stageData.designLayers = action.payload
+    },
     removeLayer: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = state.stageData.designLayers.filter(
         (layer: any) => layer.id !== action.payload
@@ -33,7 +36,7 @@ const stageSlice = createSlice({
     },
     updateLayer: (state, action: PayloadAction<{ id: string, data: any }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
-        layer.id === action.payload.id ? { ...layer, content: { ...layer.content, ...action.payload.data} } : layer
+        layer.id === action.payload.id ? { ...layer, content: { ...layer.content, ...action.payload.data } } : layer
       );
     },
     selectLayer: (state, action: PayloadAction<{ id: string }>) => {
@@ -42,6 +45,22 @@ const stageSlice = createSlice({
         state.stageData.selectedLayer = { ...layer };
       }
     },
+    flipLayerHorizontally: (state, action: PayloadAction<{ id: string }>) => {
+      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
+        layer.id === action.payload.id
+          ? { ...layer, content: { ...layer.content, scaleX: -layer.content.scaleX || -1 } }
+          : layer
+      );
+    },
+
+    flipLayerVertically: (state, action: PayloadAction<{ id: string }>) => {
+      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
+        layer.id === action.payload.id
+          ? { ...layer, content: { ...layer.content, scaleY: -layer.content.scaleY || -1 } }
+          : layer
+      );
+    },
+
     moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -50,7 +69,7 @@ const stageSlice = createSlice({
         const layer = state.stageData.designLayers[layerIndex];
         const updatedLayers = [
           layer,
-          ...state.stageData.designLayers.filter((_:any, index:any) => index !== layerIndex),
+          ...state.stageData.designLayers.filter((_: any, index: any) => index !== layerIndex),
         ].map((layer, index) => ({ ...layer, sort: index + 1 }));
 
         state.stageData.designLayers = updatedLayers;
@@ -79,7 +98,7 @@ const stageSlice = createSlice({
         const temp = updatedLayers[layerIndex - 1];
         updatedLayers[layerIndex - 1] = updatedLayers[layerIndex];
         updatedLayers[layerIndex] = temp;
-        
+
         updatedLayers.forEach((layer, index) => {
           layer.sort = index + 1;
         });
@@ -96,7 +115,7 @@ const stageSlice = createSlice({
         const temp = updatedLayers[layerIndex];
         updatedLayers[layerIndex] = updatedLayers[layerIndex + 1];
         updatedLayers[layerIndex + 1] = temp;
-        
+
         updatedLayers.forEach((layer, index) => {
           layer.sort = index + 1;
         });
@@ -107,15 +126,8 @@ const stageSlice = createSlice({
   },
 });
 
-export const { 
-  setStageData, 
-  addLayerImage, 
-  removeLayer, 
-  updateLayer, 
-  selectLayer,
-  moveLayerToFinal, 
+export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, updateListLayers, moveLayerToFinal,
   moveLayerToFront,
   sendLayerBack,
-  bringLayerForward,
-} = stageSlice.actions;
+  bringLayerForward, flipLayerHorizontally } = stageSlice.actions;
 export default stageSlice.reducer;

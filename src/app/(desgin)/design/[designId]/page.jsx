@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
@@ -26,6 +26,13 @@ const Page = () => {
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
+
+  const [maxPositions, setMaxPositions] = useState({
+    maxLeft: null,
+    maxTop: null,
+    centerX: null,
+    centerY: null,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,7 +87,17 @@ const Page = () => {
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
-  }
+  };
+
+  const handleMaxPositionUpdate = useCallback(
+    (maxLeft, maxTop, centerX, centerY) => {
+      setMaxPositions({ maxLeft, maxTop, centerX, centerY });
+    },
+    []
+  );
+
+  console.log("🚀 ~ Page ~ selectedId:", selectedId);
+  console.log("🚀 ~ Page ~ stageData:", stageData.selectedLayer);
 
   return (
     <>
@@ -89,13 +106,18 @@ const Page = () => {
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
           className={`
-          relative ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
-            } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[396px]" : "ml-[96px]"
-            }`}>
+          relative ${
+            activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+          } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
+            activeTool ? "ml-[396px]" : "ml-[96px]"
+          }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
-              <PanelsImage />
+              <PanelsImage
+                selectedId={selectedId}
+                maxPositions={maxPositions}
+              />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
@@ -133,6 +155,7 @@ const Page = () => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
+                            onMaxPositionUpdate={handleMaxPositionUpdate}
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -148,6 +171,7 @@ const Page = () => {
                             isSelected={layer.id === selectedId}
                             onSelect={() => {
                               setSelectedId(layer.id);
+                              dispatch(selectLayer({ id: layer.id }));
                             }}
                           />
                         );
@@ -159,8 +183,9 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
-              }`}>
+            className={`fixed bottom-0 z-10 ${
+              activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+            }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

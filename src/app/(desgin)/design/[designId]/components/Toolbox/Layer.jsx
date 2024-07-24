@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
-import { useAppSelector } from "@/hooks/hook";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import Locked from "../../Icon/Locked";
 import Unlocked from "../../Icon/Unlocked";
@@ -10,25 +9,20 @@ import Eye from "../../Icon/Eye";
 import EyeCrossed from "../../Icon/EyeCrossed";
 import Delete from "../../Icon/Delete";
 import Drapdrop from "../../Icon/Drapdrop";
-import { LeftOutlined } from "@ant-design/icons";
 
-import { useParams } from "next/navigation";
 import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
-import { removeLayer } from "@/redux/slices/editor/stageSlice";
+import {
+  removeLayer,
+  updateListLayers,
+} from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
-import { setStageData } from "@/redux/slices/editor/stageSlice";
 
 const Layer = () => {
-  const [listLayers, setListLayers] = useState([]);
-
   const { designLayers } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
   const network = useAppSelector((state) => state.network.ipv4Address);
-
-  const params = useParams();
-  const { designId } = params;
 
   useEffect(() => {
     async function fetchData() {
@@ -54,11 +48,17 @@ const Layer = () => {
     if (!result.destination) {
       return;
     }
-    const items = Array.from(listLayers);
+    const items = Array.from(designLayers);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    setListLayers(items);
+    // Cập nhật lại giá trị sort
+    const updatedItems = items.map((item, index) => ({
+      ...item,
+      sort: index + 1,
+    }));
+
+    dispatch(updateListLayers(updatedItems));
   };
 
   const handleDeleteLayer = (layer) => {
@@ -83,8 +83,7 @@ const Layer = () => {
     <div className="absolute top-0 left-[96px] h-full w-[300px] px-2">
       <div
         className="flex-1 flex flex-col h-[100%] overflow-y-auto"
-        style={{ scrollbarWidth: "thin" }}
-      >
+        style={{ scrollbarWidth: "thin" }}>
         <h4 className="py-2">Danh sách Layers</h4>
 
         <DragDropContext onDragEnd={onDragEnd}>
@@ -98,15 +97,13 @@ const Layer = () => {
                       <Draggable
                         key={layer.id}
                         draggableId={layer.id.toString()}
-                        index={index}
-                      >
+                        index={index}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
-                          >
+                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]">
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
                             </button>
@@ -149,8 +146,7 @@ const Layer = () => {
                               )}
                               <button
                                 className="px-1"
-                                onClick={() => handleDeleteLayer(layer)}
-                              >
+                                onClick={() => handleDeleteLayer(layer)}>
                                 <Delete size={20} />
                               </button>
                             </div>
