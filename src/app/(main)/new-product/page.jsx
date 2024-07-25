@@ -7,13 +7,8 @@ import { DateTime } from "luxon";
 import { searchProductAPI } from "@/api/product";
 // import { Flex, Spin } from 'antd';
 import Link from "next/link";
-import {
-  Spin,
-  Flex,
-} from "antd";
-import {
-  ControlOutlined,
-} from "@ant-design/icons";
+import { Spin, Flex } from "antd";
+import { ControlOutlined } from "@ant-design/icons";
 import { checkTokenCookie } from "@/utils";
 // import { useSession } from "next-auth/react";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
@@ -34,7 +29,7 @@ function Page() {
   const [dataInforUser, setdataInforUser] = useState(null);
   const limit = 20;
 
-    const searchValue = {
+  const searchValue = {
     limit: limit,
     page: currentPage,
     name: "",
@@ -106,7 +101,7 @@ function Page() {
       }
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, filterOption, sortOption, currentPage]);
 
   const handleCategoryChange = (event) => {
@@ -163,7 +158,7 @@ function Page() {
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop !==
-      document.documentElement.offsetHeight ||
+        document.documentElement.offsetHeight ||
       loadingMore ||
       !hasMore
     ) {
@@ -212,31 +207,31 @@ function Page() {
     <div className="p-6 w-full">
       {/* Header */}
       <div className="w-full text-start">
-      <h1 className="text-2xl font-semibold mb-6 w-full">
-        Thiết kế mới trong tuần
-      </h1>
-      {/* Search Bar and Drawer */}
-      <div className="flex justify-start items-center mb-6 w-full">
-        <div className="flex items-start gap-3">
-          <button
-            onClick={toggleDrawer}
-            className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
-            <ControlOutlined />
-            <span>Nâng cao</span>
-          </button>
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="p-2 border rounded-md">
-            <option value="">Chọn danh mục</option>
-            {categories?.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
+        <h1 className="text-2xl font-semibold mb-6 w-full">
+          Thiết kế mới trong tuần
+        </h1>
+        {/* Search Bar and Drawer */}
+        <div className="flex justify-start items-center mb-6 w-full">
+          <div className="flex items-start gap-3">
+            <button
+              onClick={toggleDrawer}
+              className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
+              <ControlOutlined />
+              <span>Nâng cao</span>
+            </button>
+            <select
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              className="p-2 border rounded-md">
+              <option value="">Chọn danh mục</option>
+              {categories?.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
       </div>
 
       {/* Drawer */}
@@ -358,49 +353,48 @@ function Page() {
           {/* Products */}
           {products.length > 0 ? (
             <div className="w-full">
-
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-3 gap-3 justify-center">
-              {products.map((item, index) => (
-                <div className="block" key={index}>
-                  <div className="card bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="bg-orange-100 overflow-hidden text-center">
-                      <Image
-                        src={item.image}
-                        width={300}
-                        height={200}
-                        className="object-cover h-48 w-full"
-                        alt={item.name}
-                      />
-                    </div>
-                    <Link href={`/category/${item.id}`} key={item.id}>
-                      <div className="p-4">
-                        <h2 className="text-lg font-medium h-20 line-clamp-3">
-                          {item.name}
-                        </h2>
-                        <p className="text-gray-500 mt-2 text-sm">
-                          Đã bán {item.sold}
-                        </p>
-                        <div className="mt-2">
-                          <span className="text-red-500 mr-2 font-bold text-sm">
-                            {item.sale_price === 0 ||
-                              (dataInforUser?.member_pro === 1 && item?.free_pro)
-                              ? "Miễn phí"
-                              : VND.format(item.sale_price)}
-                          </span>
-                          {item.sale_price !== 0 && (
-                            <span className="text-gray-500 line-through">
-                              {VND.format(item.price)}
-                            </span>
-                          )}
-                        </div>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-3 gap-3 justify-center">
+                {products.map((item, index) => (
+                  <div className="block" key={index}>
+                    <div className="card bg-white rounded-lg shadow-md overflow-hidden">
+                      <div className="bg-orange-100 overflow-hidden text-center">
+                        <Image
+                          src={item.image}
+                          width={300}
+                          height={200}
+                          className="object-cover h-48 w-full"
+                          alt={item.name}
+                        />
                       </div>
-                    </Link>
+                      <Link href={`/category/${item.id}`} key={item.id}>
+                        <div className="p-4">
+                          <h2 className="text-lg font-medium h-20 line-clamp-3">
+                            {item.name}
+                          </h2>
+                          <p className="text-gray-500 mt-2 text-sm">
+                            Đã bán {item.sold}
+                          </p>
+                          <div className="mt-2">
+                            <span className="text-red-500 mr-2 font-bold text-sm">
+                              {item.sale_price === 0 ||
+                              (dataInforUser?.member_pro === 1 &&
+                                item?.free_pro)
+                                ? "Miễn phí"
+                                : VND.format(item.sale_price)}
+                            </span>
+                            {item.sale_price !== 0 && (
+                              <span className="text-gray-500 line-through">
+                                {VND.format(item.price)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            </div>
-
           ) : (
             <div className="center text-center w-full">
               <Flex

@@ -1,13 +1,13 @@
-import { updateLayer } from '@/redux/slices/editor/stageSlice';
-import React, { useEffect, useRef, useState } from 'react';
-import { Text, Transformer } from 'react-konva';
-import { useDispatch } from 'react-redux';
+import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import React, { useEffect, useRef, useState } from "react";
+import { Text, Transformer } from "react-konva";
+import { useDispatch } from "react-redux";
 
 export default function TextLayer(props) {
   const { data, designSize, isSelected, onSelect, onTextChange, id } = props;
-  const { postion_left, postion_top, size, indam, innghieng } = data;
+  const { postion_left, postion_top, size, indam, innghieng, gachchan } = data;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const shapeRef = useRef();
   const trRef = useRef();
   const [isEditing, setIsEditing] = useState(false);
@@ -25,8 +25,8 @@ export default function TextLayer(props) {
 
   useEffect(() => {
     // Add resize event listener to update offsets
-    window.addEventListener('resize', updateOffsets);
-    return () => window.removeEventListener('resize', updateOffsets);
+    window.addEventListener("resize", updateOffsets);
+    return () => window.removeEventListener("resize", updateOffsets);
   }, []);
 
   // Position of the text
@@ -34,7 +34,7 @@ export default function TextLayer(props) {
   const positionY = designSize.height * (postion_top / 100);
 
   // Convert vw to px
-  const sizeValue = parseFloat(size?.replace('vw', ''));
+  const sizeValue = parseFloat(size?.replace("vw", ""));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
   useEffect(() => {
@@ -47,17 +47,17 @@ export default function TextLayer(props) {
   useEffect(() => {
     if (isEditing) {
       const handleClickOutside = (e) => {
-        if (e.target.tagName !== 'TEXTAREA') {
+        if (e.target.tagName !== "TEXTAREA") {
           setIsEditing(false);
           if (onTextChange) {
             onTextChange(textValue); // Call the parent callback to update text
           }
         }
       };
-      window.addEventListener('click', handleClickOutside);
+      window.addEventListener("click", handleClickOutside);
 
       return () => {
-        window.removeEventListener('click', handleClickOutside);
+        window.removeEventListener("click", handleClickOutside);
       };
     }
   }, [isEditing, textValue, onTextChange]);
@@ -66,21 +66,23 @@ export default function TextLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-    }
-    dispatch(updateLayer({ id: id, data: data }))
-  }
+    };
+    dispatch(updateLayer({ id: id, data: data }));
+  };
 
   const handleTransformEnd = (e) => {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${((e.target.width() * e.target.scaleX()) / designSize.width) * 100}vw`,
-      rotate: `${e.target.rotation()}deg`
-    }
-    dispatch(updateLayer({ id: id, data: data }))
+      width: `${
+        ((e.target.width() * e.target.scaleX()) / designSize.width) * 100
+      }vw`,
+      rotate: `${e.target.rotation()}deg`,
+    };
+    dispatch(updateLayer({ id: id, data: data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
-  }
+  };
 
   const handleDblClick = () => {
     setIsEditing(true);
@@ -91,40 +93,42 @@ export default function TextLayer(props) {
       y: textPosition.y,
     };
 
-    const textarea = document.createElement('textarea');
+    const textarea = document.createElement("textarea");
     document.body.appendChild(textarea);
 
     textarea.value = textValue;
-    textarea.style.position = 'absolute';
+    textarea.style.position = "absolute";
     textarea.style.top = `${textPosition.y + offsetY}px`;
     textarea.style.left = `${textPosition.x + offsetX}px`;
-    textarea.style.width = shapeRef.current.width() - shapeRef.current.padding() * 2 + 'px';
-    textarea.style.height = shapeRef.current.height() - shapeRef.current.padding() * 2 + 'px';
-    textarea.style.fontSize = shapeRef.current.fontSize() + 'px';
-    textarea.style.border = 'none';
-    textarea.style.padding = '0px';
-    textarea.style.margin = '0px';
-    textarea.style.overflow = 'hidden';
-    textarea.style.background = 'none';
-    textarea.style.outline = 'none';
-    textarea.style.resize = 'none';
+    textarea.style.width =
+      shapeRef.current.width() - shapeRef.current.padding() * 2 + "px";
+    textarea.style.height =
+      shapeRef.current.height() - shapeRef.current.padding() * 2 + "px";
+    textarea.style.fontSize = shapeRef.current.fontSize() + "px";
+    textarea.style.border = "none";
+    textarea.style.padding = "0px";
+    textarea.style.margin = "0px";
+    textarea.style.overflow = "hidden";
+    textarea.style.background = "none";
+    textarea.style.outline = "none";
+    textarea.style.resize = "none";
     textarea.style.lineHeight = shapeRef.current.lineHeight();
     textarea.style.fontFamily = shapeRef.current.fontFamily();
-    textarea.style.transformOrigin = 'left top';
+    textarea.style.transformOrigin = "left top";
     textarea.style.textAlign = shapeRef.current.align();
     textarea.style.color = shapeRef.current.fill();
 
     textarea.focus();
 
-    textarea.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+    textarea.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
         setTextValue(textarea.value);
         if (document.body.contains(textarea)) {
           document.body.removeChild(textarea);
         }
         setIsEditing(false);
       }
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         if (document.body.contains(textarea)) {
           document.body.removeChild(textarea);
         }
@@ -143,20 +147,20 @@ export default function TextLayer(props) {
     };
 
     setTimeout(() => {
-      window.addEventListener('click', handleOutsideClick);
+      window.addEventListener("click", handleOutsideClick);
     });
   };
 
   // Hàm để tạo giá trị fontStyle dựa trên các cờ
   const getFontStyle = (indam, innghieng) => {
-    let fontStyle = '';
+    let fontStyle = "";
 
-    if (indam === 'bolder') {
-      fontStyle += 'bold ';
+    if (indam === "bolder") {
+      fontStyle += "bold ";
     }
 
-    if (innghieng === 'italic') {
-      fontStyle += 'italic';
+    if (innghieng === "italic") {
+      fontStyle += "italic";
     }
 
     return fontStyle.trim();
@@ -174,6 +178,7 @@ export default function TextLayer(props) {
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
+        textDecoration={gachchan}
         onClick={onSelect}
         onTap={onSelect}
         onDblClick={handleDblClick}
@@ -188,19 +193,25 @@ export default function TextLayer(props) {
             anchor.cornerRadius(10);
             // Hide anchors for height adjustment
             if (
-              anchor.hasName('top-left') ||
-              anchor.hasName('top-right') ||
-              anchor.hasName('bottom-left') ||
-              anchor.hasName('bottom-right')
+              anchor.hasName("top-left") ||
+              anchor.hasName("top-right") ||
+              anchor.hasName("bottom-left") ||
+              anchor.hasName("bottom-right")
             ) {
               anchor.visible(false);
             }
             // Hide anchors for height adjustment
-            if (anchor.hasName('top-center') || anchor.hasName('bottom-center')) {
+            if (
+              anchor.hasName("top-center") ||
+              anchor.hasName("bottom-center")
+            ) {
               anchor.visible(false);
             }
             // Show anchors for width adjustment
-            if (anchor.hasName('middle-left') || anchor.hasName('middle-right')) {
+            if (
+              anchor.hasName("middle-left") ||
+              anchor.hasName("middle-right")
+            ) {
               anchor.visible(true);
               anchor.height(30);
               anchor.offsetY(15);
