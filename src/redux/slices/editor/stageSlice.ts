@@ -26,6 +26,24 @@ const stageSlice = createSlice({
         action.payload,
       ];
     },
+    addLayerText: (state, action: PayloadAction<any>) => {
+      // Tìm giá trị sort lớn nhất hiện tại trong designLayers
+      const maxSort = state.stageData.designLayers.length > 0 
+        ? Math.max(...state.stageData.designLayers.map((layer:any) => layer.sort))
+        : 0;
+        
+      // Tạo phần tử mới với giá trị sort được cập nhật
+      const newLayer = {
+        ...action.payload,
+        sort: maxSort + 1,
+      };
+    
+      // Cập nhật state với phần tử mới
+      state.stageData.designLayers = [
+        ...state.stageData.designLayers,
+        newLayer,
+      ];
+    },
     updateListLayers: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = action.payload
     },
@@ -126,8 +144,17 @@ const stageSlice = createSlice({
   },
 });
 
-export const { setStageData, addLayerImage, removeLayer, updateLayer, selectLayer, updateListLayers, moveLayerToFinal,
+export const { 
+  setStageData, 
+  addLayerImage, 
+  removeLayer, 
+  updateLayer, 
+  selectLayer, 
+  updateListLayers, 
+  moveLayerToFinal,
   moveLayerToFront,
   sendLayerBack,
-  bringLayerForward, flipLayerHorizontally } = stageSlice.actions;
+  bringLayerForward, 
+  flipLayerHorizontally, 
+  addLayerText } = stageSlice.actions;
 export default stageSlice.reducer;

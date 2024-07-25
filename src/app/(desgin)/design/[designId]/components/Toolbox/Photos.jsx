@@ -5,7 +5,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
-import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
 
 const Photos = ({ stageRef }) => {
@@ -44,7 +44,7 @@ const Photos = ({ stageRef }) => {
           imageUrl: item.link,
           page: 0,
         });
-        dispatch(addLayerImage(res.data));
+        dispatch(addLayerText(res.data));
       } catch (error) {
         console.log(error);
       }
