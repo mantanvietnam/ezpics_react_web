@@ -74,14 +74,23 @@ export function PanelsText({ maxPositions }) {
     (state) => state.stage.stageData
   );
   // Convert vw to px
-  const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
+  const [fontSize, setFontSize] = useState(12);
   const [fontStyle, setFontStyle] = useState({
-    bold: selectedLayer.content.indam,
-    italic: selectedLayer.content.innghieng,
-    underline: selectedLayer.content.gachchan,
+    bold: "",
+    italic: "",
+    underline: "",
   });
 
-  const [fontSize, setFontSize] = useState(sizeValue);
+  useEffect(() => {
+    const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
+    setFontStyle({
+      bold: selectedLayer.content.indam,
+      italic: selectedLayer.content.innghieng,
+      underline: selectedLayer.content.gachchan,
+    });
+    setFontSize(sizeValue);
+  }, [selectedLayer]);
+
   const dispatch = useDispatch();
 
   const handleFontSizeChange = (size) => {
