@@ -70,7 +70,18 @@ const SliderMenu = ({
 export default SliderMenu;
 
 export function PanelsText({ maxPositions }) {
-  const [fontSize, setFontSize] = useState(44);
+  const { selectedLayer, initSize } = useSelector(
+    (state) => state.stage.stageData
+  );
+  // Convert vw to px
+  const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
+  const [fontStyle, setFontStyle] = useState({
+    bold: selectedLayer.content.indam,
+    italic: selectedLayer.content.innghieng,
+  });
+
+  const [fontSize, setFontSize] = useState(sizeValue);
+  const dispatch = useDispatch();
 
   const handleFontSizeChange = (size) => {
     setFontSize(size);
@@ -83,16 +94,22 @@ export function PanelsText({ maxPositions }) {
   const decreaseFontSize = () => {
     setFontSize((prevSize) => prevSize - 1);
   };
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-
-    // Kiểm tra nếu giá trị là một số hợp lệ hoặc chuỗi rỗng
-    const newSize = value === "" ? "" : parseInt(value, 10);
-    if (value === "" || !isNaN(newSize)) {
-      handleFontSizeChange(newSize);
-    }
+  const handleFontStyleChange = (type, value) => {
+    setFontStyle((prevFontStyle) => ({
+      ...prevFontStyle,
+      [type]: prevFontStyle[type] === value ? "normal" : value,
+    }));
   };
+
+  useEffect(() => {
+    const data = {
+      size: `${fontSize}vw`,
+      indam: fontStyle.bold,
+      innghieng: fontStyle.italic,
+    };
+    console.log("🚀 ~ useEffect ~ data:", data);
+    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  }, [selectedLayer.id, fontSize, fontStyle]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -123,9 +140,8 @@ export function PanelsText({ maxPositions }) {
                 trigger="click">
                 <Input
                   type="number"
-                  value={fontSize === "" ? "" : fontSize}
-                  onChange={handleInputChange}
-                  min={1}
+                  onChange={(e) => handleFontSizeChange(e.target.value)}
+                  value={fontSize}
                   className="w-[80px] text-lg font-bold text-center border-x rounded-none"
                 />
               </Popover>
@@ -153,7 +169,7 @@ export function PanelsText({ maxPositions }) {
               <Button
                 type="text"
                 className="flex items-center px-2"
-                onClick={() => toggleBold()}>
+                onClick={() => handleFontStyleChange("bold", "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[20px] font-bold">B</p>
                 </div>
@@ -163,7 +179,10 @@ export function PanelsText({ maxPositions }) {
 
           <div>
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
-              <Button type="text" className="flex items-center px-2">
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                onClick={() => handleFontStyleChange("italic", "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
