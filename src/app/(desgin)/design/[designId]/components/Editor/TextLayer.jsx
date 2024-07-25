@@ -5,9 +5,7 @@ import { useDispatch } from "react-redux";
 
 export default function TextLayer(props) {
   const { data, designSize, isSelected, onSelect, onTextChange, id } = props;
-  const { postion_left, postion_top, size, indam, innghieng } = data;
-
-  // console.log(indam);
+  const { postion_left, postion_top, size, indam, innghieng, gachchan } = data;
 
   const dispatch = useDispatch();
   const shapeRef = useRef();
@@ -155,14 +153,14 @@ export default function TextLayer(props) {
 
   // Hàm để tạo giá trị fontStyle dựa trên các cờ
   const getFontStyle = (indam, innghieng) => {
-    let fontStyle = '';
+    let fontStyle = "";
 
-    if (indam === 'bolder') {
-      fontStyle += 'bold ';
+    if (indam === "bolder") {
+      fontStyle += "bold ";
     }
 
-    if (innghieng === 'italic') {
-      fontStyle += 'italic';
+    if (innghieng === "italic") {
+      fontStyle += "italic";
     }
 
     return fontStyle.trim();
@@ -180,6 +178,7 @@ export default function TextLayer(props) {
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
+        textDecoration={gachchan}
         onClick={onSelect}
         onTap={onSelect}
         onDblClick={handleDblClick}
