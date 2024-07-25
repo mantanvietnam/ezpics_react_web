@@ -134,8 +134,11 @@ const Page = () => {
                   ref={stageRef}
                   width={initSize.width}
                   height={initSize.height}
-                  className="bg-white"
-                  style={{ zIndex: -1, overflow: "auto" }}
+                  style={{
+                    zIndex: -1,
+                    overflow: "auto",
+                    backgroundColor: "#fff",
+                  }}
                   onMouseDown={checkDeselect}
                   onTouchStart={checkDeselect}>
                   <Layer>
