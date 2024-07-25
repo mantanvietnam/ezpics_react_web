@@ -100,10 +100,7 @@ export default function Text() {
     getAllText();
   }, [network, token]);
 
-  const addObject = async () => {
-
-
-  };
+  const addObject = async () => {};
 
   const handleAddText = async (item) => {
     const font = fonts.find((f) => f.name === item.content.font);
@@ -115,19 +112,21 @@ export default function Text() {
           token: token,
           text: item.content.text,
           color: item.content.color,
-          size: '8px',
+          size: "8px",
           font: item.content.font,
         });
         dispatch(addLayerImage(res.data.data));
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-  }
+  };
 
   return (
     <>
-      <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
+      <Block
+        className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto px-4"
+        style={{ scrollbarWidth: "thin" }}>
         <Block
           $style={{
             display: "flex",
@@ -171,8 +170,7 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}
-            >
+              }}>
               {allText.map((text) => (
                 <div
                   key={text.id}

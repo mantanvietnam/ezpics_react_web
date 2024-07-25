@@ -13,7 +13,7 @@ import { LeftOutlined } from "@ant-design/icons";
 
 const Toolbox = ({ onToolChange, stageRef }) => {
   const [isToolboxVisible, setIsToolboxVisible] = useState(true);
-  const [activeTool, setActiveTool] = useState("Layer")
+  const [activeTool, setActiveTool] = useState("Layer");
 
   const handleToolClick = (tool) => {
     const newActiveTool = tool === activeTool ? null : tool;
@@ -36,7 +36,7 @@ const Toolbox = ({ onToolChange, stageRef }) => {
       }}>
       <div
         style={{
-          width: "96px",
+          width: "108px",
           height: "100%",
           display: "flex",
           flexDirection: "column",
@@ -78,7 +78,7 @@ const Toolbox = ({ onToolChange, stageRef }) => {
             }
           }}>
           <TextIcon size={20} />
-          <p>Text</p>
+          <p>Văn bản</p>
         </div>
 
         <div
@@ -97,7 +97,7 @@ const Toolbox = ({ onToolChange, stageRef }) => {
             }
           }}>
           <PhotoIcon size={20} />
-          <p>Photos</p>
+          <p>Hình ảnh</p>
         </div>
 
         <div
@@ -116,7 +116,7 @@ const Toolbox = ({ onToolChange, stageRef }) => {
             }
           }}>
           <ElementIcon size={20} />
-          <p>Element</p>
+          <p>Thành phần</p>
         </div>
 
         <div
@@ -135,13 +135,14 @@ const Toolbox = ({ onToolChange, stageRef }) => {
             }
           }}>
           <CustomizeIcon size={20} />
-          <p>Customize</p>
+          <p>Dự án</p>
         </div>
       </div>
 
       <div
-        className={`absolute z-1 top-[44%] cursor-pointer w-[28px] bg-white h-[60px] flex transition-all duration-300 ${isToolboxVisible ? "opacity-100 left-[396px]" : "opacity-0 left-0"
-          }`}
+        className={`absolute z-1 top-[44%] cursor-pointer w-[28px] bg-white h-[60px] flex transition-all duration-300 ${
+          isToolboxVisible ? "opacity-100 left-[408px]" : "opacity-0 left-0"
+        }`}
         style={{
           clipPath: "ellipse(66% 50% at 0% 50%)",
         }}>
