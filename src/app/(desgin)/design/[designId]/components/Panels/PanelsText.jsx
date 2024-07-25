@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Popover, List, Input, Tooltip, Slider } from "antd";
 import { DownOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import PanelsCommon from "./PanelsCommon";
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { updateLayer } from '@/redux/slices/editor/stageSlice';
 
 const fontSizes = [
   8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64,
@@ -68,7 +71,16 @@ const SliderMenu = ({
 export default SliderMenu;
 
 export function PanelsText({ maxPositions }) {
-  const [fontSize, setFontSize] = useState(44);
+  const { selectedLayer, initSize } = useSelector((state) => state.stage.stageData);
+  // Convert vw to px
+  const sizeValue = parseFloat(selectedLayer.content.size?.replace('vw', ''));
+  const [fontStyle, setFontStyle] = useState({
+    bold: selectedLayer.content.indam,
+    italic: selectedLayer.content.innghieng,
+  })
+
+  const [fontSize, setFontSize] = useState(sizeValue);
+  const dispatch = useDispatch();
 
   const handleFontSizeChange = (size) => {
     setFontSize(size);
@@ -81,6 +93,23 @@ export function PanelsText({ maxPositions }) {
   const decreaseFontSize = () => {
     setFontSize((prevSize) => prevSize - 1);
   };
+
+  const handleFontStyleChange = (type, value) => {
+    setFontStyle((prevFontStyle) => ({
+      ...prevFontStyle,
+      [type]: prevFontStyle[type] === value ? 'normal' : value,
+    }));
+  };
+
+  useEffect(() => {
+    const data = {
+      size: `${fontSize}vw`,
+      indam: fontStyle.bold,
+      innghieng: fontStyle.italic
+    }
+    console.log('🚀 ~ useEffect ~ data:', data)
+    dispatch(updateLayer({ id: selectedLayer.id, data: data }))
+  }, [selectedLayer.id, fontSize, fontStyle])
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -112,6 +141,7 @@ export function PanelsText({ maxPositions }) {
                 <Input
                   type="number"
                   value={fontSize}
+                  onChange={(e) => handleFontSizeChange(e.target.value)}
                   className="w-[80px] text-lg font-bold text-center border-x rounded-none"
                   style={{
                     appearance: "none",
@@ -129,7 +159,10 @@ export function PanelsText({ maxPositions }) {
 
           <div className="pl-1">
             <Tooltip title="Chọn màu chữ" placement="bottom">
-              <Button type="text" className="flex items-center px-2">
+              <Button
+                type="text"
+                className="flex items-center px-2"
+              >
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[18px] font-bold h-6">A</p>
                   <div className="w-6 h-2 mt-1 bg-red-600 rounded"></div>
@@ -140,7 +173,7 @@ export function PanelsText({ maxPositions }) {
 
           <div>
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
-              <Button type="text" className="flex items-center px-2">
+              <Button type="text" className="flex items-center px-2" onClick={() => handleFontStyleChange('bold', "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[20px] font-bold">B</p>
                 </div>
@@ -150,7 +183,7 @@ export function PanelsText({ maxPositions }) {
 
           <div>
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
-              <Button type="text" className="flex items-center px-2">
+              <Button type="text" className="flex items-center px-2" onClick={() => handleFontStyleChange('italic', "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
