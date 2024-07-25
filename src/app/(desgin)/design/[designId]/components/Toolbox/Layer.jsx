@@ -22,27 +22,6 @@ const Layer = () => {
   const { designLayers } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
-  const network = useAppSelector((state) => state.network.ipv4Address);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.post(`${network}/listLayerAPI`, {
-          token: checkTokenCookie(),
-          idproduct: designId,
-        });
-        console.log(response);
-        if (response.data.code === 1) {
-          setListLayers(response.data.data.productDetail);
-        }
-      } catch (error) {
-        console.error("Lỗi khi gửi yêu cầu GET:", error);
-      }
-    }
-    if (network && designId) {
-      fetchData();
-    }
-  }, [network, designId]);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -80,7 +59,7 @@ const Layer = () => {
   };
 
   return (
-    <div className="absolute top-0 left-[96px] h-full w-[300px] px-2">
+    <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
       <div
         className="flex-1 flex flex-col h-[100%] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}>

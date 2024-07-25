@@ -82,13 +82,15 @@ export default function Graphic() {
   }
 
   return (
-    <div className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
+    <div
+      className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto"
+      style={{ scrollbarWidth: "thin" }}>
       <div className="flex-1 flex flex-col">
-        <div className="flex items-center font-semibold justify-between px-6">
+        <div className="flex items-center font-semibold justify-between px-4">
           <h4 className="font-sans">Thành phần</h4>
           <div className="cursor-pointer flex"></div>
         </div>
-        <div className="px-6">
+        <div className="px-4">
           {categories.map((category) => (
             <CategorySection
               key={category.id}

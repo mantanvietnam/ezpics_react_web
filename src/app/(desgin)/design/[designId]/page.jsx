@@ -13,6 +13,7 @@ import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
 import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
+import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
 
 const Page = () => {
@@ -107,10 +108,10 @@ const Page = () => {
         <div
           className={`
           relative ${
-            activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
           } h-full
           z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
-            activeTool ? "ml-[396px]" : "ml-[96px]"
+            activeTool ? "ml-[408px]" : "ml-[108px]"
           }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
@@ -118,6 +119,10 @@ const Page = () => {
                 selectedId={selectedId}
                 maxPositions={maxPositions}
               />
+            </div>
+          ) : stageData.selectedLayer?.content?.type === "text" ? (
+            <div>
+              <PanelsText maxPositions={maxPositions} />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
@@ -184,7 +189,7 @@ const Page = () => {
           </div>
           <div
             className={`fixed bottom-0 z-10 ${
-              activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
+              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
             }`}>
             <Footer containerRef={containerRef} />
           </div>

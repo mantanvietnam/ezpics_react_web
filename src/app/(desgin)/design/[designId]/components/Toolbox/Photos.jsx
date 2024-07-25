@@ -95,7 +95,7 @@ const Photos = ({ stageRef }) => {
   return (
     <>
       <div
-        className="absolute top-0 left-[100px] h-full w-[300px] overflow-y-scroll"
+        className="absolute top-0 left-[108px] h-full w-[300px] overflow-y-scroll"
         style={{ scrollbarWidth: "thin" }}>
         <div className="px-4 py-4">
           <h4 className="py-2">Ảnh tải lên</h4>
