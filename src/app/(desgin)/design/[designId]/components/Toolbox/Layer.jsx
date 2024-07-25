@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import Locked from "../../Icon/Locked";
-import Unlocked from "../../Icon/Unlocked";
+import LockedIcon from "../../Icon/Locked";
+import UnlockedIcon from "../../Icon/Unlocked";
 import Eye from "../../Icon/Eye";
 import EyeCrossed from "../../Icon/EyeCrossed";
 import Delete from "../../Icon/Delete";
@@ -14,35 +14,16 @@ import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import {
   removeLayer,
+  selectLayer,
+  updateLayer,
   updateListLayers,
 } from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
+import { Button, Tooltip } from "antd";
 
 const Layer = () => {
-  const { designLayers } = useSelector((state) => state.stage.stageData);
-
+  const { designLayers, selectedLayer } = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
-  const network = useAppSelector((state) => state.network.ipv4Address);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.post(`${network}/listLayerAPI`, {
-          token: checkTokenCookie(),
-          idproduct: designId,
-        });
-        console.log(response);
-        if (response.data.code === 1) {
-          setListLayers(response.data.data.productDetail);
-        }
-      } catch (error) {
-        console.error("Lỗi khi gửi yêu cầu GET:", error);
-      }
-    }
-    if (network && designId) {
-      fetchData();
-    }
-  }, [network, designId]);
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -52,7 +33,7 @@ const Layer = () => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Cập nhật lại giá trị sort
+    // Update the sort value
     const updatedItems = items.map((item, index) => ({
       ...item,
       sort: index + 1,
@@ -62,7 +43,7 @@ const Layer = () => {
   };
 
   const handleDeleteLayer = (layer) => {
-    const daleteLayerApi = async () => {
+    const deleteLayerApi = async () => {
       try {
         const res = await deleteLayerAPI({
           idproduct: layer.products_id,
@@ -76,7 +57,7 @@ const Layer = () => {
         console.log(error);
       }
     };
-    daleteLayerApi();
+    deleteLayerApi();
   };
 
   return (
@@ -126,24 +107,8 @@ const Layer = () => {
                               />
                             )}
                             <div className="flex items-center justify-end col-span-2">
-                              {layer.content.lock === 1 ? (
-                                <button className="px-1">
-                                  <Locked size={20} />
-                                </button>
-                              ) : (
-                                <button className="px-1">
-                                  <Unlocked size={20} />
-                                </button>
-                              )}
-                              {layer.content.status === 1 ? (
-                                <button className="px-1">
-                                  <Eye size={20} />
-                                </button>
-                              ) : (
-                                <button className="px-1">
-                                  <EyeCrossed size={20} />
-                                </button>
-                              )}
+                              <LockUnlock layer={layer} />
+                              <VisibilityToggle layer={layer} />
                               <button
                                 className="px-1"
                                 onClick={() => handleDeleteLayer(layer)}>
@@ -166,5 +131,85 @@ const Layer = () => {
     </div>
   );
 };
+
+const LockUnlock = ({ layer }) => {
+  const dispatch = useDispatch();
+  const [locked, setLocked] = useState(layer.content.lock === 1);
+
+  useEffect(() => {
+    setLocked(layer.content.lock === 1);
+  }, [layer]);
+
+  const onChangeLocked = () => {
+    const newLockState = locked ? 0 : 1;
+    const updatedData = {
+      ...layer.content,
+      lock: newLockState,
+      draggable: newLockState === 1,
+    };
+
+    setLocked(!locked);
+    dispatch(updateLayer({ id: layer.id, data: updatedData }));
+    console.log("layer :", layer, "updatedData :", updatedData);
+  };
+
+  return (
+    <>
+      {!locked ? (
+        <Tooltip placement="bottom" title="Mở khóa Layers">
+          <Button onClick={onChangeLocked} size="small" type="text">
+            <UnlockedIcon size={25} />
+          </Button>
+        </Tooltip>
+      ) : (
+        <Tooltip placement="bottom" title="Khóa Layers">
+          <Button onClick={onChangeLocked} size="small" type="text">
+            <LockedIcon size={25} />
+          </Button>
+        </Tooltip>
+      )}
+    </>
+  );
+};
+
+const VisibilityToggle = ({ layer }) => {
+  const dispatch = useDispatch();
+  const [visible, setVisible] = useState(layer.content.status === 1);
+
+  useEffect(() => {
+    setVisible(layer.content.status === 1);
+  }, [layer]);
+
+  const onChangeVisibility = () => {
+    const newVisibilityState = visible ? 0 : 1;
+    const updatedData = {
+      ...layer.content,
+      status: newVisibilityState,
+    };
+
+    setVisible(!visible);
+    dispatch(updateLayer({ id: layer.id, data: updatedData }));
+    console.log("layervisible :", layer, "updatedData :", updatedData);
+  };
+
+  return (
+    <>
+      {visible ? (
+        <Tooltip placement="bottom" title="Ẩn Layer">
+          <Button onClick={onChangeVisibility} size="small" type="text">
+            <Eye size={20} />
+          </Button>
+        </Tooltip>
+      ) : (
+        <Tooltip placement="bottom" title="Hiện Layer">
+          <Button onClick={onChangeVisibility} size="small" type="text">
+            <EyeCrossed size={20} />
+          </Button>
+        </Tooltip>
+      )}
+    </>
+  );
+};
+
 
 export default Layer;

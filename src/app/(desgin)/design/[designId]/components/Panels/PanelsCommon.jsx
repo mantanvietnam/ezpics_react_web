@@ -289,27 +289,40 @@ const CommonAlign = ({ maxPositions }) => {
 };
 
 const LockUnlock = () => {
-  const [locked, setLocked] = useState(false);
+  const dispatch = useDispatch();
+  const selectedLayer = useSelector((state) => state.stage.stageData.selectedLayer);
+  const [locked, setLocked] = useState(selectedLayer?.content?.lock === 0);
 
-  const handleLock = () => {
-    setLocked(true);
-  };
+  useEffect(() => {
+    setLocked(selectedLayer?.content?.lock === 0);
+  }, [selectedLayer]);
 
-  const handleUnlock = () => {
-    setLocked(false);
+  const onChangeLocked = () => {
+    const newLockState = locked ? 1 : 0;
+    if (selectedLayer) {
+      const updatedData = {
+        ...selectedLayer.content,
+        lock: newLockState,
+        draggable: newLockState === 0,
+      };
+
+      setLocked(!locked);
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+      console.log("selectedLayer :", selectedLayer, "updatedData :", updatedData);
+    }
   };
 
   return (
     <>
       {locked ? (
         <Tooltip placement="bottom" title="Mở khóa Layers">
-          <Button onClick={handleUnlock} size="small" type="text">
+          <Button onClick={onChangeLocked} size="small" type="text">
             <UnlockedIcon size={25} />
           </Button>
         </Tooltip>
       ) : (
         <Tooltip placement="bottom" title="Khóa Layers">
-          <Button onClick={handleLock} size="small" type="text">
+          <Button onClick={onChangeLocked} size="small" type="text">
             <LockedIcon size={25} />
           </Button>
         </Tooltip>
@@ -334,7 +347,7 @@ export default function PanelsCommon({ maxPositions }) {
       <div className="px-1 w-[50px]">
         <Tooltip placement="bottom" title="Nhân bản layer đã chọn">
           <Button size="small" type="text">
-            <DuplicateIcon size={25} />
+             <DuplicateIcon size={25} />
           </Button>
         </Tooltip>
       </div>

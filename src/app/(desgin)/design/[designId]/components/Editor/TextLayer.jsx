@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 export default function TextLayer(props) {
   const { data, designSize, isSelected, onSelect, onTextChange, id } = props;
-  const { postion_left, postion_top, size } = data;
+  const { postion_left, postion_top, size, lock, status } = data;
 
   const dispatch = useDispatch()
   const shapeRef = useRef();
@@ -154,7 +154,8 @@ export default function TextLayer(props) {
         text={textValue}
         x={positionX}
         y={positionY}
-        draggable
+        draggable={!lock}
+        visible={Boolean(status)}
         fill={data?.color}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
