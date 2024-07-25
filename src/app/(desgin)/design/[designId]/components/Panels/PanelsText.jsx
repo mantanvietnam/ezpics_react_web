@@ -109,7 +109,6 @@ export function PanelsText({ maxPositions }) {
       innghieng: fontStyle.italic,
       gachchan: fontStyle.underline,
     };
-    console.log("🚀 ~ useEffect :", selectedLayer);
     console.log("🚀 ~ useEffect ~ data:", data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   }, [selectedLayer.id, fontSize, fontStyle]);

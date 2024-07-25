@@ -35,6 +35,8 @@ const Page = () => {
     centerY: null,
   });
 
+  console.log("🚀 ~ selectedLayer :", stageData.selectedLayer);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -104,10 +106,12 @@ const Page = () => {
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
           className={`
-          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-            } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
-            }`}>
+          relative ${
+            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+          } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
+            activeTool ? "ml-[408px]" : "ml-[108px]"
+          }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
@@ -186,8 +190,9 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-              }`}>
+            className={`fixed bottom-0 z-10 ${
+              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>
