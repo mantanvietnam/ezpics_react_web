@@ -70,38 +70,6 @@ const SliderMenu = ({
 export default SliderMenu;
 
 export function PanelsText({ maxPositions }) {
-  const dispatch = useDispatch();
-  const stageData = useSelector((state) => state.stage.stageData);
-  const [selectedLayer, setSelectedLayer] = useState({});
-
-  useEffect(() => {
-    if (stageData && stageData.selectedLayer) {
-      setSelectedLayer(stageData.selectedLayer);
-    }
-  }, [stageData]);
-
-  if (!selectedLayer) return null;
-
-  const [isBold, setIsBold] = useState(false);
-
-  useEffect(() => {
-    if (selectedLayer && selectedLayer.content) {
-      const currentBoldStatus = selectedLayer.content.indam === "bold";
-      setIsBold(currentBoldStatus);
-    }
-  }, [selectedLayer]);
-
-  const toggleBold = () => {
-    if (selectedLayer) {
-      const updatedData = {
-        ...selectedLayer.content,
-        indam: isBold ? "normal" : "bold",
-      };
-      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
-      setIsBold(!isBold); // cập nhật trạng thái isBold ngay lập tức
-    }
-  };
-
   const [fontSize, setFontSize] = useState(44);
 
   const handleFontSizeChange = (size) => {
@@ -205,6 +173,23 @@ export function PanelsText({ maxPositions }) {
                       fill="currentColor"
                       fillRule="evenodd"
                       d="m14.73 6.5-3.67 11H14l-.3 1.5H6l.3-1.5h2.81l3.68-11H10l.3-1.5H18l-.3 1.5h-2.97z"></path>
+                  </svg>
+                </div>
+              </Button>
+            </Tooltip>
+          </div>
+
+          <div>
+            <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
+              <Button type="text" className="flex items-center px-2">
+                <div className="flex flex-col justify-center w-full h-8">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    fill="currentColor"
+                    width="20"
+                    height="20">
+                    <path d="M200 224a8 8 0 0 1-8 8H64a8 8 0 0 1 0-16h128a8 8 0 0 1 8 8Zm-72-24a64.07 64.07 0 0 0 64-64V56a8 8 0 0 0-16 0v80a48 48 0 0 1-96 0V56a8 8 0 0 0-16 0v80a64.07 64.07 0 0 0 64 64Z"></path>
                   </svg>
                 </div>
               </Button>

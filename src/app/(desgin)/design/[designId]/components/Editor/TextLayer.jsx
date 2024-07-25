@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 export default function TextLayer(props) {
   const { data, designSize, isSelected, onSelect, onTextChange, id } = props;
-  const { postion_left, postion_top, size, indam, ing } = data;
+  const { postion_left, postion_top, size } = data;
 
   // console.log(indam);
 
@@ -163,7 +163,6 @@ export default function TextLayer(props) {
         draggable
         fill={data?.color}
         fontSize={sizeConvertToPx}
-        fontStyle={indam}
         fontFamily={data?.font}
         onClick={onSelect}
         onTap={onSelect}
