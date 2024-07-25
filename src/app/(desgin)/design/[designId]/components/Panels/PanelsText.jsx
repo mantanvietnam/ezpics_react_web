@@ -73,13 +73,24 @@ export default SliderMenu;
 export function PanelsText({ maxPositions }) {
   const { selectedLayer, initSize } = useSelector((state) => state.stage.stageData);
   // Convert vw to px
-  const sizeValue = parseFloat(selectedLayer.content.size?.replace('vw', ''));
+  const [fontSize, setFontSize] = useState(12);
   const [fontStyle, setFontStyle] = useState({
-    bold: selectedLayer.content.indam,
-    italic: selectedLayer.content.innghieng,
+    bold: '',
+    italic: '',
   })
 
-  const [fontSize, setFontSize] = useState(sizeValue);
+  useEffect(() => {
+    const sizeValue = parseFloat(selectedLayer.content.size?.replace('vw', ''));
+    setFontStyle({
+      bold: selectedLayer.content.indam,
+      italic: selectedLayer.content.innghieng,
+    })
+    setFontSize(sizeValue)
+  }, [selectedLayer])
+
+
+
+
   const dispatch = useDispatch();
 
   const handleFontSizeChange = (size) => {
