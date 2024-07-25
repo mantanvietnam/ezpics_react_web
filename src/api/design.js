@@ -39,3 +39,11 @@ export const saveListLayer = async (data) => {
   );
   return response.data;
 };
+
+export const updateDesign = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/updateProductAPI",
+    data
+  );
+  return response.data;
+};
