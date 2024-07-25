@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Popover, List, Input, Tooltip, Slider } from "antd";
 import { DownOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import PanelsCommon from "./PanelsCommon";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
 const fontSizes = [
   8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64,
@@ -68,6 +70,38 @@ const SliderMenu = ({
 export default SliderMenu;
 
 export function PanelsText({ maxPositions }) {
+  const dispatch = useDispatch();
+  const stageData = useSelector((state) => state.stage.stageData);
+  const [selectedLayer, setSelectedLayer] = useState({});
+
+  useEffect(() => {
+    if (stageData && stageData.selectedLayer) {
+      setSelectedLayer(stageData.selectedLayer);
+    }
+  }, [stageData]);
+
+  if (!selectedLayer) return null;
+
+  const [isBold, setIsBold] = useState(false);
+
+  useEffect(() => {
+    if (selectedLayer && selectedLayer.content) {
+      const currentBoldStatus = selectedLayer.content.indam === "bold";
+      setIsBold(currentBoldStatus);
+    }
+  }, [selectedLayer]);
+
+  const toggleBold = () => {
+    if (selectedLayer) {
+      const updatedData = {
+        ...selectedLayer.content,
+        indam: isBold ? "normal" : "bold",
+      };
+      dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
+      setIsBold(!isBold); // cập nhật trạng thái isBold ngay lập tức
+    }
+  };
+
   const [fontSize, setFontSize] = useState(44);
 
   const handleFontSizeChange = (size) => {
@@ -80,6 +114,16 @@ export function PanelsText({ maxPositions }) {
 
   const decreaseFontSize = () => {
     setFontSize((prevSize) => prevSize - 1);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+
+    // Kiểm tra nếu giá trị là một số hợp lệ hoặc chuỗi rỗng
+    const newSize = value === "" ? "" : parseInt(value, 10);
+    if (value === "" || !isNaN(newSize)) {
+      handleFontSizeChange(newSize);
+    }
   };
 
   return (
@@ -111,12 +155,10 @@ export function PanelsText({ maxPositions }) {
                 trigger="click">
                 <Input
                   type="number"
-                  value={fontSize}
+                  value={fontSize === "" ? "" : fontSize}
+                  onChange={handleInputChange}
+                  min={1}
                   className="w-[80px] text-lg font-bold text-center border-x rounded-none"
-                  style={{
-                    appearance: "none",
-                    MozAppearance: "textfield",
-                  }}
                 />
               </Popover>
               <Tooltip title="Tăng kích thước" placement="bottom">
@@ -140,7 +182,10 @@ export function PanelsText({ maxPositions }) {
 
           <div>
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
-              <Button type="text" className="flex items-center px-2">
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                onClick={() => toggleBold()}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[20px] font-bold">B</p>
                 </div>
