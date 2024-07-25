@@ -9,6 +9,9 @@ import { Tabs, Tab } from "baseui/tabs";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import { toast } from "react-toastify";
+import { useSelector } from 'react-redux';
+import { useParams } from 'next/navigation';
+import { updateDesign } from '@/api/design';
 
 function checkTokenCookie() {
   const tokenCookie = document.cookie
@@ -30,8 +33,13 @@ const colors = [
 ];
 
 export default function Customize() {
-  const idProduct = useAppSelector((state) => state.token.id);
+  const params = useParams();
+  const { designId } = params;
+  const idProduct = designId
   const network = useAppSelector((state) => state.network.ipv4Address);
+  const stageData = useSelector((state) => state.stage.stageData);
+  console.log('🚀 ~ Customize ~ stageData:', stageData)
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -113,11 +121,11 @@ export default function Customize() {
 
   const handleSelectChange = (event) => {
     setCategoryId(event.target.value);
+    handleChange("category_id", event.target.value)
   };
 
   const handleChange = (type, value) => {
     setState({ ...state, [type]: value });
-    changeBackgroundColor(value);
   };
 
   const handleSelectChangeStatus = (event) => {
@@ -126,19 +134,26 @@ export default function Customize() {
 
   const handleSelectChangeStatusDisplay = (event) => {
     setSelectedOptionDisplay(event.target.value);
+    handleChange("status", event.target.value)
   };
 
-  const options = [
-    { value: "", label: "Chọn trạng thái" },
-    { value: "0", label: "Đang chỉnh sửa" },
-    { value: "1", label: "Đã hoàn thành" },
-  ];
+  console.log('🚀 ~ Customize ~ state:', state)
 
   const optionsDisplay = [
     { value: "", label: "Chọn trạng thái" },
-    { value: "1", label: "Hiển thị" },
-    { value: "0", label: "Ẩn đi" },
+    { value: "1", label: "Đã hoàn thành" },
+    { value: "0", label: "Đang chỉnh sửa" },
   ];
+
+  const categories = categoryList.map((category) => ({
+    value: category.id,
+    label: category.name
+  }))
+
+  const optionsCategories = [
+    { value: 0, label: "Chưa chọn categorie" },
+    ...categories
+  ]
 
   const inputFileRef = React.useRef(null);
   const inputFileRefThumn = React.useRef(null);
@@ -161,65 +176,40 @@ export default function Customize() {
       return;
     }
     setSelectedFiles(file);
+    console.log('🚀 ~ handleChangeInputFileBackground ~ file:', file)
+    handleChange("background", file)
   };
 
   const handleSaveInformation = async () => {
-    if (name === "") {
-      toast.error("Bạn hãy nhập đầy đủ thông tin");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const formData = new FormData();
-      if (selectedFiles) {
-        formData.append("background", selectedFilesBackground);
-      }
-      if (selectedFilesBackground) {
-        formData.append("thumbnail", selectedFiles);
-      }
-      formData.append("name", name);
-      formData.append("sale_price", price.toString());
-      formData.append("price", sessPrice.toString());
-      formData.append("category_id", categoryId.toString());
-      formData.append("warehouse_id", checkedItems.join(","));
-      formData.append("status", selectedOption === "1" ? 1 : 0);
-      formData.append("display", selectedOptionDisplay !== "1" ? 0 : 1);
-      formData.append("description", description);
-      formData.append("token", token);
-      formData.append("idProduct", idProduct.toString());
-
-      const response = await axios.post(
-        `${network}/updateProductAPI`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
+    if (!name) {
+      toast.error('Vui lòng nhập tên thiết kế')
+    } else {
+      try {
+        const res = await updateDesign({
+          token: checkTokenCookie(),
+          idProduct: idProduct,
+          ...state
+        })
+        if (res.code === 1) {
+          toast.success('Bạn đã lưu thông tin mẫu thiết kế thành công')
         }
-      );
-
-      if (response.data) {
-        toast("Lưu thông tin mẫu thiết kế thành công !! 🦄");
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Lỗi khi lưu thông tin mẫu thiết kế");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <Block className="absolute top-0 left-[100px] h-full w-[300px] pb-[65px] overflow-y-auto">
+    <Block className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto">
       <Block className="flex items-center justify-between p-4">
         <h4 className="font-semibold">Chỉnh sửa</h4>
       </Block>
 
       <ResizeTemplate />
       <div className="p-4">
-        <Block className="text-center pt-1">
+        {/* <Block className="text-center pt-1">
           <p className="text-sm">1080 x 1920px</p>
-        </Block>
+        </Block> */}
 
         <Block className="mt-4 p-4 bg-gray-100 rounded border border-gray-300">
           <div className="font-medium">Màu nền</div>
@@ -243,7 +233,10 @@ export default function Customize() {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value)
+                  handleChange("name", e.target.value)
+                }}
                 className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
@@ -252,32 +245,39 @@ export default function Customize() {
               <input
                 type="text"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                  setDescription(e.target.value)
+                  handleChange("description", e.target.value)
+                }}
                 className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
-            <div>
-              <label className="block">Chế độ hiển thị lên thị trường</label>
-              <select
-                value={selectedOptionDisplay}
-                onChange={handleSelectChangeStatusDisplay}
-                className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                {optionsDisplay.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+
 
             {typeUser !== "user_edit" && (
               <>
+                <div>
+                  <label className="block">Chế độ hiển thị lên thị trường</label>
+                  <select
+                    value={selectedOptionDisplay}
+                    onChange={handleSelectChangeStatusDisplay}
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    {optionsDisplay.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div>
                   <label className="block">Giá bán thị trường</label>
                   <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      setPrice(parseInt(e.target.value))
+                      handleChange("price", e.target.value)
+                    }}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
@@ -286,7 +286,10 @@ export default function Customize() {
                   <input
                     type="number"
                     value={sessPrice}
-                    onChange={(e) => setsessPrice(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      setsessPrice(parseInt(e.target.value))
+                      handleChange("sale_price", e.target.value)
+                    }}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
@@ -296,14 +299,14 @@ export default function Customize() {
                     value={categoryId}
                     onChange={handleSelectChange}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    {categoryList.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
+                    {optionsCategories.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div>
+                {/* <div>
                   <label className="block">Ảnh nền</label>
                   <input
                     onChange={handleChangeInputFile}
@@ -320,20 +323,7 @@ export default function Customize() {
                     ref={inputFileRefThumn}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
-                </div>
-                <div>
-                  <label className="block">Trạng thái</label>
-                  <select
-                    value={selectedOption}
-                    onChange={handleSelectChangeStatus}
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    {options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                </div> */}
                 <div>
                   <label className="block">Bộ sưu tập</label>
                   {dataStorage?.map((item) => (
@@ -349,14 +339,15 @@ export default function Customize() {
                     </div>
                   ))}
                 </div>
-                <Button
-                  onClick={handleSaveInformation}
-                  size={SIZE.compact}
-                  className="button-red">
-                  Lưu thông tin
-                </Button>
+
               </>
             )}
+            <Button
+              onClick={handleSaveInformation}
+              size={SIZE.compact}
+              className="button-red">
+              Lưu thông tin
+            </Button>
           </div>
         </Block>
       </div>

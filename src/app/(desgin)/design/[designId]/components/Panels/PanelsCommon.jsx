@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Popover, Tooltip, Space } from "antd";
-import BringToFontIcon from "../../Icon/BringToFont";
-import SendToBackIcon from "../../Icon/SendToBack";
+import MoveOneLayerIcon from "../../Icon/MoveOneLayer";
+import MoveFrontLayerIcon from "../../Icon/MoveFrontLayer";
+import BackOneLayerIcon from "../../Icon/BackOneLayer";
+import BackFinalLayerIcon from "../../Icon/BackFinalLayer";
 import LayerIcon from "../../Icon/Layer";
 import AlignBottomIcon from "../../Icon/AlignBottom";
 import AlignCenterIcon from "../../Icon/AlignCenter";
@@ -38,21 +40,7 @@ const LayersPopoverContent = ({
       justifyItems: "start",
     }}>
     <Button
-      icon={<BringToFontIcon size={20} />}
-      onClick={onBringForward}
-      type="text"
-      size="small">
-      Chuyển Layer lên trên 1 lớp
-    </Button>
-    <Button
-      icon={<SendToBackIcon size={20} />}
-      onClick={onSendToBack}
-      type="text"
-      size="small">
-      Chuyển Layer ra sau 1 lớp
-    </Button>
-    <Button
-      icon={<BringToFontIcon size={20} />}
+      icon={<MoveFrontLayerIcon size={20} />}
       i
       onClick={onSendToFront}
       type="text"
@@ -60,7 +48,21 @@ const LayersPopoverContent = ({
       Chuyển Layer lên trên đầu
     </Button>
     <Button
-      icon={<SendToBackIcon size={20} />}
+      icon={<MoveOneLayerIcon size={20} />}
+      onClick={onBringForward}
+      type="text"
+      size="small">
+      Chuyển Layer lên trên 1 lớp
+    </Button>
+    <Button
+      icon={<BackOneLayerIcon size={20} />}
+      onClick={onSendToBack}
+      type="text"
+      size="small">
+      Chuyển Layer ra sau 1 lớp
+    </Button>
+    <Button
+      icon={<BackFinalLayerIcon size={20} />}
       onClick={onSendToFinal}
       type="text"
       size="small">

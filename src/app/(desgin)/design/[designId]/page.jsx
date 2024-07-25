@@ -13,6 +13,7 @@ import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
 import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
+import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
 
 const Page = () => {
@@ -96,9 +97,6 @@ const Page = () => {
     []
   );
 
-  console.log("🚀 ~ Page ~ selectedId:", selectedId);
-  console.log("🚀 ~ Page ~ stageData:", stageData.selectedLayer);
-
   return (
     <>
       <Navbar />
@@ -106,18 +104,20 @@ const Page = () => {
         <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
         <div
           className={`
-          relative ${
-            activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
-          } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
-            activeTool ? "ml-[396px]" : "ml-[96px]"
-          }`}>
+          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
+            }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
                 selectedId={selectedId}
                 maxPositions={maxPositions}
               />
+            </div>
+          ) : stageData.selectedLayer?.content?.type === "text" ? (
+            <div>
+              <PanelsText maxPositions={maxPositions} />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
@@ -129,8 +129,11 @@ const Page = () => {
                   ref={stageRef}
                   width={initSize.width}
                   height={initSize.height}
-                  className="bg-white"
-                  style={{ zIndex: -1, overflow: "auto" }}
+                  style={{
+                    zIndex: -1,
+                    overflow: "auto",
+                    backgroundColor: "#fff",
+                  }}
                   onMouseDown={checkDeselect}
                   onTouchStart={checkDeselect}>
                   <Layer>
@@ -183,9 +186,8 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${
-              activeTool ? "w-[calc(100%-396px)]" : "w-[calc(100%-96px)]"
-            }`}>
+            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+              }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

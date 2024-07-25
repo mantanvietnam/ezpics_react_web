@@ -61,7 +61,7 @@ const Layer = () => {
   };
 
   return (
-    <div className="absolute top-0 left-[96px] h-full w-[300px] px-2">
+    <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
       <div
         className="flex-1 flex flex-col h-[100%] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}>

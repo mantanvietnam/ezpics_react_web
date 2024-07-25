@@ -321,6 +321,25 @@ export function PanelsImage({ selectedId, maxPositions }) {
       <div className="h-[100%] flex items-center justify-between">
         <div className="flex items-center">
           <div className="px-1">
+             <Button type="text"
+              className="text-lg font-bold gap-0"
+              onClick={HandleRemoveBackground}
+            >  Xóa nền
+              <NextImage
+                src="/assets/premium.png"
+                style={{
+                  resize: "block",
+                  marginBottom: "20%",
+                  marginLeft: "3",
+                }}
+                width={15}
+                height={15}
+                alt=""
+              />
+            </Button>
+          </div>
+
+          <div className="px-1">
             <Button
               type="text"
               className="text-lg font-bold"
@@ -334,25 +353,6 @@ export function PanelsImage({ selectedId, maxPositions }) {
               className="text-lg font-bold"
               onClick={() => onFlipVertically()}>
               Lật ảnh dọc
-            </Button>
-          </div>
-          <div className="px-1">
-            <Button type="text"
-              className="text-lg font-bold gap-0"
-              onClick={HandleRemoveBackground}
-            >
-              Xóa nền
-              <NextImage
-                src="/assets/premium.png"
-                style={{
-                  resize: "block",
-                  marginBottom: "20%",
-                  marginLeft: "3",
-                }}
-                width={15}
-                height={15}
-                alt=""
-              />
             </Button>
           </div>
 
@@ -589,18 +589,36 @@ export function ModalImageCrop({ isOpen, onCancel }) {
         open={isOpen}
         onCancel={onCancel}
         footer={null}
-        width={600}>
-        <div className="">
+        width={600}
+        bodyStyle={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          backgroundColor: "#f0f0f0",
+        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+            padding: "10px",
+          }}>
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(_)}
             onComplete={(c) => setCompletedCrop(c)}
             aspect={aspect}
-            // minWidth={400}
-            minHeight={50}
-            // circularCrop
-          >
-            <img alt="Crop me" src={imgSrc} ref={imgRef} onLoad={onImageLoad} />
+            minHeight={50}>
+            <img
+              alt="Crop me"
+              src={imgSrc}
+              ref={imgRef}
+              onLoad={onImageLoad}
+              style={{ maxWidth: "100%", maxHeight: "100%" }}
+            />
           </ReactCrop>
         </div>
         {loading ? (
@@ -608,7 +626,7 @@ export function ModalImageCrop({ isOpen, onCancel }) {
             Loading
           </Button>
         ) : (
-          <Button className="text-lg" onClick={() => cropCompleteImage()}>
+          <Button className="text-lg" onClick={cropCompleteImage}>
             Cắt ảnh
           </Button>
         )}
@@ -753,7 +771,7 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
                       Hãy chọn ảnh
                     </div>
                     <span id="file-upload-btn" className="">
-                      {imgSrc === null ? "Chọn ảnh" : "Chọn lại"}
+                      {imgSrc === "" && "Chọn ảnh"}
                     </span>
                   </div>
                   <div id="response" className="hidden">

@@ -87,49 +87,35 @@ const Navbar = () => {
             }}>
             <button
               style={{
-                paddingTop: "20px",
-                marginRight: "20px",
-              }}>
-              Nhập dữ liệu JSON
-            </button>
-
-            <button
-              style={{
-                paddingTop: "20px",
-                marginRight: "20px",
-              }}>
-              Xuất dữ liệu JSON
-            </button>
-
-            <button
-              style={{
-                marginRight: "20px",
-                paddingTop: "20px",
+                marginRight: "50px",
+                paddingTop: "18px",
                 display: "flex",
                 alignItems: "center",
+                fontSize: "18px",
               }}
               onClick={handleSaveDesign}>
               <Image
                 src={imageIcon}
                 alt=""
-                style={{ width: 15, height: 15, marginRight: 10 }}
+                style={{ width: 24, height: 24, marginRight: 10 }}
               />
-              Lưu mẫu thiết kế
+              <p>Lưu mẫu thiết kế</p>
             </button>
 
             <button
               style={{
                 marginRight: "4px",
-                paddingTop: "20px",
+                paddingTop: "18px",
                 display: "flex",
                 alignItems: "center",
+                fontSize: "18px",
               }}>
               <Image
                 alt=""
                 src={exportIcon}
-                style={{ width: 15, height: 15, marginRight: 10 }}
+                style={{ width: 24, height: 24, marginRight: 10 }}
               />
-              Xuất ảnh
+              <p>Xuất ảnh</p>
             </button>
           </div>
         </div>

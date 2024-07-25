@@ -5,7 +5,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
-import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
 
 const Photos = ({ stageRef }) => {
@@ -44,7 +44,7 @@ const Photos = ({ stageRef }) => {
           imageUrl: item.link,
           page: 0,
         });
-        dispatch(addLayerImage(res.data));
+        dispatch(addLayerText(res.data));
       } catch (error) {
         console.log(error);
       }
@@ -95,7 +95,7 @@ const Photos = ({ stageRef }) => {
   return (
     <>
       <div
-        className="absolute top-0 left-[100px] h-full w-[300px] overflow-y-scroll"
+        className="absolute top-0 left-[108px] h-full w-[300px] overflow-y-scroll"
         style={{ scrollbarWidth: "thin" }}>
         <div className="px-4 py-4">
           <h4 className="py-2">Ảnh tải lên</h4>
