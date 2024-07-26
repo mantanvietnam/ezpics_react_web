@@ -334,7 +334,7 @@ export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
     };
     console.log("🚀 ~ useEffect ~ data:", data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [selectedLayer]);
+  }, [dispatch, selectedLayer]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -598,7 +598,6 @@ export function ModalImageCrop({ isOpen, onCancel }) {
           ...stageData.selectedLayer.content,
           banner: response.data?.link,
         };
-        console.log(data);
         dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
         onCancel();
         setLoading(false);

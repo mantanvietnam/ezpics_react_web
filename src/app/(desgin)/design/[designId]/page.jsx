@@ -17,6 +17,7 @@ import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
 import axios from "axios";
 import { toast } from "react-toastify";
+import useFonts from "../../../../hooks/useLoadFont";
 
 const Page = () => {
   const params = useParams();
@@ -30,6 +31,7 @@ const Page = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
 
+  const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
     maxLeft: null,
     maxTop: null,
@@ -151,8 +153,8 @@ const Page = () => {
             <div>
               <PanelsText
                 maxPositions={maxPositions}
-                onDuplicateLayer={handleDuplicateLayer}
                 onColorButtonClick={() => setActiveTool("Color")}
+                onFontsButtonClick={() => setActiveTool("Fonts")}
               />
             </div>
           ) : (

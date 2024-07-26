@@ -40,6 +40,13 @@ export const saveListLayer = async (data) => {
   return response.data;
 };
 
+export const downloadListLayer = async (data) => {
+  const response = await axios.get("https://apis.ezpics.vn/apis/createThumb", {
+    params: data,
+  });
+  return response.data;
+};
+
 export const updateDesign = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/updateProductAPI",
