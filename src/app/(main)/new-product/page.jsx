@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { SkeletonCustom } from "@/components/Slide/CustomSlide";
-import { Image, Skeleton } from "antd";
+import Image from "next/image";
 import { DateTime } from "luxon";
 import { searchProductAPI } from "@/api/product";
 // import { Flex, Spin } from 'antd';
@@ -102,7 +102,7 @@ function Page() {
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory, filterOption, sortOption, currentPage]);
+  }, [selectedCategory, filterOption, sortOption, currentPage, searchValue]);
 
   const handleCategoryChange = (event) => {
     setProducts([]);
@@ -356,17 +356,18 @@ function Page() {
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-3 gap-3 justify-center">
                 {products.map((item, index) => (
                   <div className="block" key={index}>
-                    <div className="card bg-white rounded-lg shadow-md overflow-hidden">
-                      <div className="bg-orange-100 overflow-hidden text-center">
-                        <Image
-                          src={item.image}
-                          width={300}
-                          height={200}
-                          className="object-cover h-48 w-full"
-                          alt={item.name}
-                        />
-                      </div>
-                      <Link href={`/category/${item.id}`} key={item.id}>
+                    <Link href={`/category/${item.id}`} key={item.id}>
+                      <div className="card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div className="bg-orange-100 overflow-hidden text-center">
+                          <Image
+                            src={item.image}
+                            width={300}
+                            height={200}
+                            className="object-contain h-48 w-full"
+                            alt={item.name}
+                          />
+                        </div>
+
                         <div className="p-4">
                           <h2 className="text-lg font-medium h-20 line-clamp-3">
                             {item.name}
@@ -389,8 +390,8 @@ function Page() {
                             )}
                           </div>
                         </div>
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
                   </div>
                 ))}
               </div>

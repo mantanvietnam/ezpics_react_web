@@ -22,8 +22,11 @@ import { getProductCategoryAPI, searchProductAPI } from "@/api/product";
 import ProductComponent from "@/components/ProductComponent";
 import _ from "lodash";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { useParams } from "next/navigation";
 
 export default function Layout(props) {
+  const params = useParams();
+  const searchItem = params.searchTerm || "";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -42,7 +45,7 @@ export default function Layout(props) {
     color: "",
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchItem);
   const [orderType, setOrderType] = useState("");
   const [price, setPrice] = useState("");
   const [orderBy, setOrderBy] = useState("");
@@ -69,6 +72,12 @@ export default function Layout(props) {
   }, []);
 
   useEffect(() => {
+    if (searchTerm) {
+      setSearchValue((prev) => ({ ...prev, name: searchTerm }));
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {
@@ -86,7 +95,7 @@ export default function Layout(props) {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearchValue((prev) => ({ ...prev, name: value }));
+    // setSearchValue((prev) => ({ ...prev, name: value }));
   };
 
   const handleOrderTypeChange = (e) => {
@@ -254,7 +263,7 @@ export default function Layout(props) {
       {/* <div className='w-full pt-5 flex items-center gap-2'> */}
       <form action="" className="w-3/5 pt-5 flex items-center gap-2">
         <input
-          placeholder="Tim kiem san pham"
+          placeholder="Tìm kiếm sản phẩm"
           type="text"
           style={{
             backgroundColor: "#fff",
@@ -267,6 +276,7 @@ export default function Layout(props) {
           className="w-[60%] h-[40px] p-3"
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
+          value={searchTerm}
         />
         <Button
           onClick={handleSearch}

@@ -5,8 +5,9 @@ import { useDebounce } from "@/hooks";
 import { SearchOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-function Search({ searchAPI, searchParams }) {
+function Search({ searchAPI, searchParams, placeholder }) {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [popoverVisible, setPopoverVisible] = useState(false);
@@ -15,12 +16,13 @@ function Search({ searchAPI, searchParams }) {
   const debounced = useDebounce(searchValue, 500);
   const inputRef = useRef();
   const containerRef = useRef();
+  const router = useRouter();
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      // Chuyển hướng đến một liên kết khác
-      window.location.href = "https://ezpics.vn/dashboard-search"; // Thay đổi liên kết theo nhu cầu của bạn
+      // Chuyển hướng đến trang /dashboard-search với giá trị tìm kiếm
+      router.push(`/dashboard-search/${searchValue}`);
     }
   };
 
@@ -101,7 +103,7 @@ function Search({ searchAPI, searchParams }) {
                 ref={inputRef}
                 value={searchValue}
                 onKeyDown={handleKeyDown}
-                placeholder="Tìm kiếm nội dung trên Ezpics"
+                placeholder={placeholder || "Tìm kiếm nội dung"}
                 spellCheck={false}
                 onChange={(e) => setSearchValue(e.target.value.trimStart())}
               />

@@ -9,15 +9,16 @@ import Text from "./Text";
 import Photos from "./Photos";
 import Element from "./Element";
 import Customize from "./Customize";
+import TextFill from "./TextFill";
 import { LeftOutlined } from "@ant-design/icons";
 
-const Toolbox = ({ onToolChange, stageRef }) => {
+const Toolbox = ({ onToolChange, stageRef, activeTool }) => {
   const [isToolboxVisible, setIsToolboxVisible] = useState(true);
-  const [activeTool, setActiveTool] = useState("Layer");
+  // const [activeTool, setActiveTool] = useState("Layer");
 
   const handleToolClick = (tool) => {
     const newActiveTool = tool === activeTool ? null : tool;
-    setActiveTool(newActiveTool);
+    // setActiveTool(newActiveTool);
     onToolChange(newActiveTool);
     setIsToolboxVisible(true);
   };
@@ -150,7 +151,7 @@ const Toolbox = ({ onToolChange, stageRef }) => {
           onClick={() => {
             setIsToolboxVisible(!isToolboxVisible);
             onToolChange(null);
-            setActiveTool(null);
+            // setActiveTool(null);
           }}>
           <LeftOutlined />
         </button>
@@ -161,6 +162,9 @@ const Toolbox = ({ onToolChange, stageRef }) => {
       {activeTool === "Photos" && <Photos stageRef={stageRef} />}
       {activeTool === "Element" && <Element />}
       {activeTool === "Customize" && <Customize />}
+
+      {/* Display the color picker when the active tool is "Color" */}
+      {activeTool === "Color" && <TextFill />}
     </div>
   );
 };

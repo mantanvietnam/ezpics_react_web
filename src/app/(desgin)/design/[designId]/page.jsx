@@ -107,7 +107,11 @@ const Page = () => {
     <>
       <Navbar />
       <div className="h-screen pt-[65px] overflow-hidden">
-        <Toolbox onToolChange={setActiveTool} stageRef={stageRef} />
+        <Toolbox
+          onToolChange={setActiveTool}
+          stageRef={stageRef}
+          activeTool={activeTool}
+        />
         <div
           className={`
           relative ${
@@ -125,7 +129,10 @@ const Page = () => {
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (
             <div>
-              <PanelsText maxPositions={maxPositions} />
+              <PanelsText
+                maxPositions={maxPositions}
+                onColorButtonClick={() => setActiveTool("Color")}
+              />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
