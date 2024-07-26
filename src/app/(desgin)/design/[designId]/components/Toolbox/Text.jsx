@@ -113,7 +113,7 @@ const addObject = async () => {
       token: token,
       text: "Thêm chữ",
       color: "#333333",
-      size: "16px",
+      size: "10px",
       font: defaultFont.name,
     });
 

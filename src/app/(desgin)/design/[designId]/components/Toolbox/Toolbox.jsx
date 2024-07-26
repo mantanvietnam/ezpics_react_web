@@ -10,6 +10,7 @@ import Photos from "./Photos";
 import Element from "./Element";
 import Customize from "./Customize";
 import TextFill from "./TextFill";
+import TextFonts from "./TextFonts";
 import { LeftOutlined } from "@ant-design/icons";
 
 const Toolbox = ({ onToolChange, stageRef, activeTool }) => {
@@ -165,6 +166,7 @@ const Toolbox = ({ onToolChange, stageRef, activeTool }) => {
 
       {/* Display the color picker when the active tool is "Color" */}
       {activeTool === "Color" && <TextFill />}
+      {activeTool === "Fonts" && <TextFonts />}
     </div>
   );
 };

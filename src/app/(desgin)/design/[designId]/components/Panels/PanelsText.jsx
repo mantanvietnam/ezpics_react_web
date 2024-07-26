@@ -69,7 +69,7 @@ const SliderMenu = ({
 
 export default SliderMenu;
 
-export function PanelsText({ maxPositions, onColorButtonClick }) {
+export function PanelsText({ maxPositions, onColorButtonClick, onFontsButtonClick }) {
   const { selectedLayer, initSize } = useSelector(
     (state) => state.stage.stageData
   );
@@ -130,6 +130,7 @@ export function PanelsText({ maxPositions, onColorButtonClick }) {
             <Tooltip title="Chọn phông chữ" placement="bottom">
               <Button
                 type="text"
+                onClick={() => onFontsButtonClick()}
                 className="flex items-center rounded-lg border border-slate-400">
                 <p className="w-[125px] flex items-start text-lg font-bold">
                   Open Sans

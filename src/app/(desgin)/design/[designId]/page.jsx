@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
 import { PanelsText } from "./components/Panels/PanelsText";
-import useFonts from "../../../../hooks/useLoadFont"; // Corrected import path
+import useFonts from "../../../../hooks/useLoadFont";
 
 
 const Page = () => {
@@ -30,7 +30,6 @@ const Page = () => {
   const [activeTool, setActiveTool] = useState("Layer");
 
   const { fonts, loading } = useFonts();
-  console.log("Loaded fonts:", fonts); // Debugging log
   const [maxPositions, setMaxPositions] = useState({
     maxLeft: null,
     maxTop: null,
@@ -131,7 +130,8 @@ const Page = () => {
             <div>
               <PanelsText
                 maxPositions={maxPositions}
-                onColorButtonClick={() => setActiveTool("Color")}
+                  onColorButtonClick={() => setActiveTool("Color")}
+                  onFontsButtonClick={() => setActiveTool("Fonts")}
               />
             </div>
           ) : (
