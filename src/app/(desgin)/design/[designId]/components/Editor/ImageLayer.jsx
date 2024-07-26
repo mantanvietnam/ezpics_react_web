@@ -6,7 +6,8 @@ import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 
 export default function ImageLayer(props) {
-  const { data, designSize, id, onMaxPositionUpdate } = props;
+  const { data, designSize, id, isSelected, onSelect, onMaxPositionUpdate } =
+    props;
   const {
     postion_left,
     postion_top,
@@ -29,7 +30,7 @@ export default function ImageLayer(props) {
   const trRef = useRef();
 
   const [image] = useImage(data.banner, "anonymous"); // Set crossOrigin to 'anonymous'
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
 
   // Convert vw to px
   const widthValue = parseFloat(data.width?.replace("vw", ""));
@@ -127,19 +128,11 @@ export default function ImageLayer(props) {
     e.target.scaleY(1);
   };
 
-  const handleSelect = () => {
-    if (lock || !Boolean(status)) {
-      setIsSelected(false);
-    } else {
-      setIsSelected(true);
-    }
-  };
-
    useEffect(() => {
      if ((!lock == false) || (Boolean(status) == false)) {
-       setIsSelected(true);
+       setIsSelectLayer(true);
     } else {
-      setIsSelected(false);
+      setIsSelectLayer(false);
     }
   }, [lock, status]);
 
@@ -160,8 +153,8 @@ export default function ImageLayer(props) {
         scaleY={scaleY}
         draggable={!lock}
         visible={Boolean(status)}
-        onClick={handleSelect}
-        onTap={handleSelect}
+        onClick={onSelect}
+        onTap={onSelect}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       />

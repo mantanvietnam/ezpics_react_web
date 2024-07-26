@@ -185,6 +185,7 @@ export const {
   sendLayerBack,
   bringLayerForward,
   flipLayerHorizontally,
+  flipLayerVertically,
   addLayerText,
 } = stageSlice.actions;
 export default stageSlice.reducer;
