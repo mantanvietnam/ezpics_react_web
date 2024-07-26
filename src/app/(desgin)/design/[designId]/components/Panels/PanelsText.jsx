@@ -69,7 +69,7 @@ const SliderMenu = ({
 
 export default SliderMenu;
 
-export function PanelsText({ maxPositions }) {
+export function PanelsText({ maxPositions, onColorButtonClick }) {
   const { selectedLayer, initSize } = useSelector(
     (state) => state.stage.stageData
   );
@@ -166,7 +166,10 @@ export function PanelsText({ maxPositions }) {
 
           <div className="pl-1">
             <Tooltip title="Chọn màu chữ" placement="bottom">
-              <Button type="text" className="flex items-center px-2">
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                onClick={() => onColorButtonClick()}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[18px] font-bold h-6">A</p>
                   <div className="w-6 h-2 mt-1 bg-red-600 rounded"></div>
