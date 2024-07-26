@@ -1,29 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react'
+import React from "react";
 
 export default function AuthorInfo(props) {
-  const { user } = props
-  const isoString = user?.created_at
-  const date = new Date(isoString)
+  const { user } = props;
+  const isoString = user?.created_at;
+  const date = new Date(isoString);
 
-  const day = date.getDate()
-  const month = date.getMonth() + 1
-  const year = date.getFullYear()
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
 
-  const formattedDate = `Ngày ${day} Tháng ${month} Năm ${year}`
+  const formattedDate = `Ngày ${day} Tháng ${month} Năm ${year}`;
 
   return (
-    <div className='flex flex-col gap-5 w-full'>
-      <h2 className='text-lg font-semibold'>Chi tiết tác giả</h2>
-      <div className='flex w-fit xl:flex-row flex-col justify-between items-start w-full gap-8'>
+    <div className="flex flex-col gap-5 w-full">
+      <h2 className="text-lg font-semibold">Chi tiết tác giả</h2>
+      <div className="flex w-fit xl:flex-row flex-col justify-between items-start w-full gap-8">
         <div className="flex justify-start">
-          <div className='w-[65px] h-[65px]'>
-            <img className='object-cover rounded-full mr-4' src={user?.avatar} alt="" />
+          <div className="w-[65px] h-[65px]">
+            <img
+              className="object-cover rounded-full"
+              src={user?.avatar}
+              alt=""
+            />
           </div>
-          <div className='flex flex-col gap-2'>
-            <div className='text-lg font-semibold'>{user?.name}</div>
-            <div className='text-sm'>Email: {user?.email}</div>
-            <div
+          <div className="flex flex-col gap-2">
+            <div className="text-lg font-semibold">{user?.name}</div>
+            <div className="text-sm">Email: {user?.email}</div>
+            {/* <div
               className='flex gap-1 items-center justify-center'
               style={{
                 backgroundColor: 'rgb(255, 245, 241)',
@@ -54,23 +58,37 @@ export default function AuthorInfo(props) {
                 ></path>
               </svg>
               <div>Xem tác giả</div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex xl:flex-row flex-col w-full justify-around">
-          <div className='flex flex-col gap-2'>
-            <div className='text-sm'>Số lượng theo dõi: <span className='text-red-500'>{user?.quantityFollow}</span></div>
-            <div className='text-sm'>Số lượng sản phẩm: <span className='text-red-500'>{user?.quantityProduct}</span></div>
+          <div className="flex flex-col gap-2">
+            <div className="text-sm">
+              Số lượng theo dõi:{" "}
+              <span className="text-red-500">{user?.quantityFollow}</span>
+            </div>
+            <div className="text-sm">
+              Số lượng sản phẩm:{" "}
+              <span className="text-red-500">{user?.quantityProduct}</span>
+            </div>
           </div>
-          <div className='flex flex-col gap-2 xl:py-0 py-3'>
-            <div className='text-sm'>Số lượng đã bán: <span className='text-red-500'>{user?.quantitySell}</span></div>
-            <div className='text-sm'>Thành tiền: <span className='text-red-500'>{user?.sellingMoney}</span></div>
+          <div className="flex flex-col gap-2 xl:py-0 py-3">
+            <div className="text-sm">
+              Số lượng đã bán:{" "}
+              <span className="text-red-500">{user?.quantitySell}</span>
+            </div>
+            <div className="text-sm">
+              Thành tiền:{" "}
+              <span className="text-red-500">{user?.sellingMoney}</span>
+            </div>
           </div>
-          <div className=''>
-            <div className='text-sm'>Ngày tạo: <span className='text-red-500'>{formattedDate}</span></div>
+          <div className="">
+            <div className="text-sm">
+              Ngày tạo: <span className="text-red-500">{formattedDate}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div >
-  )
+    </div>
+  );
 }
