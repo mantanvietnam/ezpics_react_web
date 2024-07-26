@@ -3,6 +3,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
+import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
+import { addLayerImageUrlAPI } from "@/api/design";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 function checkTokenCookie() {
   const allCookies = document.cookie.split("; ");
@@ -15,7 +19,8 @@ export default function Graphic() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const network = useAppSelector((state) => state.network.ipv4Address);
-  const idProduct = useAppSelector((state) => state.token.id);
+  const stageData = useSelector((state) => state.stage.stageData);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -60,20 +65,34 @@ export default function Graphic() {
     fetchAllItems();
   }, [network]);
 
+  //   const handleImage  = (item) => {
+  //   const addLayer = async () => {
+  //     try {
+  //       const res = await addLayerImageUrlAPI({
+  //         idproduct: stageData.design.id,
+  //         token: checkTokenCookie(),
+  //         imageUrl: item.link,
+  //         page: 0,
+  //       });
+  //       dispatch(addLayerText(res.data));
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   addLayer();
+  // };
   const handleImage = async (item) => {
     try {
-      const response = await axios.post(`${network}/addLayerImageUrlAPI`, {
-        idproduct: idProduct,
+      const res = await addLayerImageUrlAPI({
+        idproduct: stageData.design.id,
         token: checkTokenCookie(),
         imageUrl: item.image,
-        page: parseGraphicJSON(),
+        page: 0,
       });
-      if (response.data.code === 1) {
-        const content = response.data.data.content;
-        console.log("Image handled:", content);
-      }
+      console.log("add imageeeeeeeee",item, res)
+      dispatch(addLayerImage(res.data));
     } catch (error) {
-      console.error("Error handling image:", error);
+      console.log(error);
     }
   };
 
@@ -141,7 +160,6 @@ function ImageItem({ preview, onClick }) {
       className="relative bg-gray-100 cursor-pointer rounded-lg overflow-hidden">
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100 bg-gradient-to-b from-transparent to-black/45"></div>
       <img src={preview} alt="" className="w-full h-full object-contain" />
-      {console.log(preview)}
     </div>
   );
 }

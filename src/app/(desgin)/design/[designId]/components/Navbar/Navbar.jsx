@@ -4,7 +4,7 @@ import imageIcon from "./save.png";
 import exportIcon from "./Layer 2.png";
 import { useSelector } from "react-redux";
 import { checkTokenCookie } from "@/utils";
-import { saveListLayer } from "@/api/design";
+import { downloadListLayer, saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
@@ -16,7 +16,6 @@ const Navbar = () => {
         throw new Error("Invalid stageData or designLayers not found");
       }
 
-      console.log(stageData.designLayers);
 
       const data = stageData.designLayers.map((layer) => ({
         id: layer.id,
@@ -27,8 +26,6 @@ const Navbar = () => {
         },
         sort: layer.sort,
       }));
-
-      console.log(data);
 
       const jsonData = JSON.stringify(data);
 
@@ -41,6 +38,26 @@ const Navbar = () => {
         toast.success("Bạn đã lưu thiết kế thành công");
       } else {
         toast.error("Lưu thiết kế thất bại!");
+      }
+    } catch (error) {
+      console.error("Error saving design:", error);
+    }
+  };
+
+  const handleDownLoadDesign = async () => {
+    try {
+      if (!stageData || !stageData.designLayers) {
+        throw new Error("Invalid stageData or designLayers not found");
+      }
+
+    const response = await downloadListLayer({
+     id: stageData.design.id,
+    });
+      if (response.success == "Thành công") {
+        toast.success("Bạn đã tải thiết kế thành công");
+        window.open(response.link, '_blank');
+      } else {
+        toast.error("Tải thiết kế thất bại!");
       }
     } catch (error) {
       console.error("Error saving design:", error);
@@ -109,7 +126,9 @@ const Navbar = () => {
                 display: "flex",
                 alignItems: "center",
                 fontSize: "18px",
-              }}>
+              }}
+              onClick={handleDownLoadDesign}
+            >
               <Image
                 alt=""
                 src={exportIcon}
