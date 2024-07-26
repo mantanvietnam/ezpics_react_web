@@ -69,7 +69,12 @@ const SliderMenu = ({
 
 export default SliderMenu;
 
-export function PanelsText({ maxPositions, onColorButtonClick, onFontsButtonClick }) {
+export function PanelsText({
+  maxPositions,
+  onColorButtonClick,
+  onFontsButtonClick,
+  onDuplicateLayer,
+}) {
   const { selectedLayer, initSize } = useSelector(
     (state) => state.stage.stageData
   );
@@ -173,30 +178,46 @@ export function PanelsText({ maxPositions, onColorButtonClick, onFontsButtonClic
                 onClick={() => onColorButtonClick()}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[18px] font-bold h-6">A</p>
-                  <div className="w-6 h-2 mt-1 bg-red-600 rounded"></div>
+                  <div
+                    className="w-6 h-2 mt-1 rounded"
+                    style={{ backgroundColor: selectedLayer.content.color }} // Áp dụng màu sắc bằng inline CSS
+                  ></div>
                 </div>
               </Button>
             </Tooltip>
           </div>
 
-          <div>
+          <div className="px-1">
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
               <Button
                 type="text"
-                className="flex items-center px-2"
+                className={`flex items-center px-2 ${
+                  fontStyle.bold === "bold" || fontStyle.bold === "bolder"
+                    ? "bg-gray-300"
+                    : ""
+                }`}
                 onClick={() => handleFontStyleChange("bold", "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
-                  <p className="text-[20px] font-bold">B</p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    fill="currentColor"
+                    width="20"
+                    height="20">
+                    <path d="M177.08 114.46A48 48 0 0 0 140 36H72a12 12 0 0 0-12 12v152a12 12 0 0 0 12 12h80a52 52 0 0 0 25.08-97.54ZM84 60h56a24 24 0 0 1 0 48H84Zm68 128H84v-56h68a28 28 0 0 1 0 56Z"></path>
+                  </svg>
                 </div>
               </Button>
             </Tooltip>
           </div>
 
-          <div>
+          <div className="px-1">
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
               <Button
                 type="text"
-                className="flex items-center px-2"
+                className={`flex items-center px-2 ${
+                  fontStyle.italic === "italic" ? "bg-gray-300" : ""
+                }`}
                 onClick={() => handleFontStyleChange("italic", "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -213,11 +234,13 @@ export function PanelsText({ maxPositions, onColorButtonClick, onFontsButtonClic
             </Tooltip>
           </div>
 
-          <div>
+          <div className="px-1">
             <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
               <Button
                 type="text"
-                className="flex items-center px-2"
+                className={`flex items-center px-2 ${
+                  fontStyle.underline === "underline" ? "bg-gray-300" : ""
+                }`}
                 onClick={() => handleFontStyleChange("underline", "underline")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -368,7 +391,10 @@ export function PanelsText({ maxPositions, onColorButtonClick, onFontsButtonClic
         </div>
 
         <div>
-          <PanelsCommon maxPositions={maxPositions} />
+          <PanelsCommon
+            maxPositions={maxPositions}
+            onDuplicateLayer={onDuplicateLayer}
+          />
         </div>
       </div>
     </div>

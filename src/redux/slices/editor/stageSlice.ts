@@ -31,8 +31,8 @@ const stageSlice = createSlice({
       const maxSort =
         state.stageData.designLayers.length > 0
           ? Math.max(
-              ...state.stageData.designLayers.map((layer: any) => layer.sort)
-            )
+            ...state.stageData.designLayers.map((layer: any) => layer.sort)
+          )
           : 0;
 
       // Tạo phần tử mới với giá trị sort được cập nhật
@@ -60,9 +60,9 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: { ...layer.content, ...action.payload.data },
-              }
+              ...layer,
+              content: { ...layer.content, ...action.payload.data },
+            }
             : layer
       );
     },
@@ -79,12 +79,12 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: {
-                  ...layer.content,
-                  scaleX: -layer.content.scaleX || -1,
-                },
-              }
+              ...layer,
+              content: {
+                ...layer.content,
+                scaleX: -layer.content.scaleX || -1,
+              },
+            }
             : layer
       );
     },
@@ -94,12 +94,12 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: {
-                  ...layer.content,
-                  scaleY: -layer.content.scaleY || -1,
-                },
-              }
+              ...layer,
+              content: {
+                ...layer.content,
+                scaleY: -layer.content.scaleY || -1,
+              },
+            }
             : layer
       );
     },
