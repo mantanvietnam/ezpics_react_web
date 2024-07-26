@@ -69,12 +69,12 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-export function PanelsImage({ selectedId, maxPositions }) {
+export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
-  let dataInforUser
-  const token= checkTokenCookie()
+  let dataInforUser;
+  const token = checkTokenCookie();
   const authentication = checkAvailableLogin();
   const stageData = useSelector((state) => state.stage.stageData);
   const [imgSrc, setImgSrc] = useState("");
@@ -86,7 +86,6 @@ export function PanelsImage({ selectedId, maxPositions }) {
     dataInforUser = null;
   }
 
-
   useEffect(() => {
     if (stageData && stageData.selectedLayer) {
       const srcAttributeValue = stageData.selectedLayer.content.banner;
@@ -96,24 +95,24 @@ export function PanelsImage({ selectedId, maxPositions }) {
 
   // States for sliders
   const [valueBrightness, setValueBrightness] = useState(
-    (selectedLayer?.content.brightness) / 2 || 100
+    selectedLayer?.content.brightness / 2 || 100
   );
   const [valueOpacity, setValueOpacity] = useState(
     selectedLayer?.content.opacity * 100 || 100
   );
   const [valueContrast, setValueContrast] = useState(
-    (selectedLayer?.content.contrast) / 2 || 100
+    selectedLayer?.content.contrast / 2 || 100
   );
   const [valueSaturate, setValueSaturate] = useState(
-    (selectedLayer?.content.saturate) / 2 || 100
+    selectedLayer?.content.saturate / 2 || 100
   );
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
-      setValueContrast((selectedLayer.content.contrast) / 2);
-      setValueContrast((selectedLayer.content.brightness) / 2 || 100);
-      setValueSaturate((selectedLayer.content.saturate) / 2);
+      setValueContrast(selectedLayer.content.contrast / 2);
+      setValueContrast(selectedLayer.content.brightness / 2 || 100);
+      setValueSaturate(selectedLayer.content.saturate / 2);
     }
   }, [selectedLayer]);
 
@@ -121,15 +120,23 @@ export function PanelsImage({ selectedId, maxPositions }) {
     if (selectedLayer) {
       const data = {
         opacity: valueOpacity / 100,
-        contrast: (valueContrast) * 2, 
-        saturate: (valueSaturate) * 2, 
+        contrast: valueContrast * 2,
+        saturate: valueSaturate * 2,
         brightness: valueBrightness * 2,
       };
 
       dispatch(updateLayer({ id: selectedLayer.id, data: data }));
     }
-  }, [selectedLayer.id, valueOpacity, valueBrightness, valueContrast, valueSaturate, selectedLayer, dispatch]);
-  
+  }, [
+    selectedLayer.id,
+    valueOpacity,
+    valueBrightness,
+    valueContrast,
+    valueSaturate,
+    selectedLayer,
+    dispatch,
+  ]);
+
   // States for popover visibility
   const [visibleEditImage, setVisibleEditImage] = useState(false);
   const [visibleChangeImage, setVisibleChangeImage] = useState(false);
@@ -220,90 +227,92 @@ export function PanelsImage({ selectedId, maxPositions }) {
   });
 
   const HandleRemoveBackground = async () => {
-  let proUser = false;
+    let proUser = false;
 
-  if (!authentication) {
-    toast.error("Bạn chưa là pro. Hãy nâng cấp tài khoản để thực hiện chức năng này !!!");
-    return;
-  } else if (dataInforUser.member_pro === 1) {
-    proUser = true;
-  }
-
-  if (proUser) {
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "*",
-      "Content-Type": "multipart/form-data",
-    };
-    const config = {
-      headers: headers,
-    };
-
-    const formData = new FormData();
-
-    try {
-      // Convert image URL to Blob
-      const response = await fetch(imgSrc);
-      const blob = await response.blob();
-      const file = new File([blob], "image.jpg", { type: blob.type });
-
-      formData.append("image", file);
-      formData.append("token", checkTokenCookie());
-
-      const responseRemoveBackground = await axios.post(
-        `https://apis.ezpics.vn/apis/removeBackgroundImageAPI`,
-        formData,
-        config
+    if (!authentication) {
+      toast.error(
+        "Bạn chưa là pro. Hãy nâng cấp tài khoản để thực hiện chức năng này !!!"
       );
-
-      // Convert the response image URL to Blob
-      const response2 = await fetch(responseRemoveBackground.data.linkOnline);
-      const blob2 = await response2.blob();
-      const file2 = new File([blob2], "image2.jpg", { type: blob2.type });
-
-      const formData2 = new FormData();
-      if (token) {
-        formData2.append("idproduct", stageData.design.id);
-        formData2.append("token", token);
-        formData2.append("idlayer", stageData.selectedLayer.id);
-        formData2.append("file", file2);
-      }
-
-      const responseChangeImage = await axios.post(
-        "https://apis.ezpics.vn/apis/changeLayerImageNew",
-        formData2,
-        config
-      );
-      console.log("responseChangeImage", responseChangeImage);
-
-      if (responseChangeImage && responseChangeImage?.data?.code === 1) {
-        const data = {
-          banner: responseRemoveBackground.data?.link,
-        };
-        dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
-        toast.success("Xóa nền ảnh thành công");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Lỗi khi xóa nền ảnh");
+      return;
+    } else if (dataInforUser.member_pro === 1) {
+      proUser = true;
     }
-  } else {
-    toast.error(
-      "Bạn chưa là tài khoản PRO nên không được truy cập, hãy nâng cấp để dùng nhé !",
-      {
-        position: "top-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+
+    if (proUser) {
+      const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Content-Type": "multipart/form-data",
+      };
+      const config = {
+        headers: headers,
+      };
+
+      const formData = new FormData();
+
+      try {
+        // Convert image URL to Blob
+        const response = await fetch(imgSrc);
+        const blob = await response.blob();
+        const file = new File([blob], "image.jpg", { type: blob.type });
+
+        formData.append("image", file);
+        formData.append("token", checkTokenCookie());
+
+        const responseRemoveBackground = await axios.post(
+          `https://apis.ezpics.vn/apis/removeBackgroundImageAPI`,
+          formData,
+          config
+        );
+
+        // Convert the response image URL to Blob
+        const response2 = await fetch(responseRemoveBackground.data.linkOnline);
+        const blob2 = await response2.blob();
+        const file2 = new File([blob2], "image2.jpg", { type: blob2.type });
+
+        const formData2 = new FormData();
+        if (token) {
+          formData2.append("idproduct", stageData.design.id);
+          formData2.append("token", token);
+          formData2.append("idlayer", stageData.selectedLayer.id);
+          formData2.append("file", file2);
+        }
+
+        const responseChangeImage = await axios.post(
+          "https://apis.ezpics.vn/apis/changeLayerImageNew",
+          formData2,
+          config
+        );
+        console.log("responseChangeImage", responseChangeImage);
+
+        if (responseChangeImage && responseChangeImage?.data?.code === 1) {
+          const data = {
+            banner: responseRemoveBackground.data?.link,
+          };
+          dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
+          toast.success("Xóa nền ảnh thành công");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Lỗi khi xóa nền ảnh");
       }
-    );
-    setLoading(false); // Set loading state to false if not a pro user
-  }
-};
+    } else {
+      toast.error(
+        "Bạn chưa là tài khoản PRO nên không được truy cập, hãy nâng cấp để dùng nhé !",
+        {
+          position: "top-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
+      setLoading(false); // Set loading state to false if not a pro user
+    }
+  };
 
   //Btn click lat anh
   const onFlipHorizontally = () => {
@@ -332,10 +341,12 @@ export function PanelsImage({ selectedId, maxPositions }) {
       <div className="h-[100%] flex items-center justify-between">
         <div className="flex items-center">
           <div className="px-1">
-             <Button type="text"
+            <Button
+              type="text"
               className="text-lg font-bold gap-0"
-              onClick={HandleRemoveBackground}
-            >  Xóa nền
+              onClick={HandleRemoveBackground}>
+              {" "}
+              Xóa nền
               <NextImage
                 src="/assets/premium.png"
                 style={{
@@ -440,7 +451,10 @@ export function PanelsImage({ selectedId, maxPositions }) {
         </div>
 
         <div>
-          <PanelsCommon maxPositions={maxPositions} />
+          <PanelsCommon
+            maxPositions={maxPositions}
+            onDuplicateLayer={onDuplicateLayer}
+          />
         </div>
       </div>
     </div>

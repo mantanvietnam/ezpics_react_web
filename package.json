@@ -2,7 +2,7 @@
   "name": "ezpics_web",
   "version": "0.1.0",
   "private": true,
- "scripts": {
+  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 5000",
@@ -78,7 +78,6 @@
     "use-debounce": "^10.0.0",
     "use-image": "^1.1.1",
     "use-latest": "^1.2.1",
-    "uuidv4": "^6.2.13",
     "yup": "^1.4.0"
   },
   "devDependencies": {

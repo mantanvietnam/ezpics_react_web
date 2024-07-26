@@ -22,8 +22,6 @@ const Navbar = () => {
         id: layer.id,
         content: {
           ...layer.content,
-          // lat_anh: layer.content.scaleX === -1 ? 0 : 1, // Set lat_anh based on scaleX
-          // lat_anh_doc: layer.content.scaleY === -1 ? 0 : 1, // Set lat_anh_doc based on scaleY
         },
         sort: layer.sort,
       }));

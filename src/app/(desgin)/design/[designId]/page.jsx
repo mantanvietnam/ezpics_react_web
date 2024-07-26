@@ -15,6 +15,8 @@ import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
 import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Page = () => {
   const params = useParams();
@@ -35,54 +37,53 @@ const Page = () => {
     centerY: null,
   });
 
-  console.log("🚀 ~ selectedLayer :", stageData);
   console.log("🚀 ~ selectedLayer :", stageData.selectedLayer);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getListLayerApi({
-          idproduct: designId,
-          token: checkTokenCookie(),
-        });
-        if (response.code === 1) {
-          const { width, height } = response.data;
+  const fetchData = async () => {
+    try {
+      const response = await getListLayerApi({
+        idproduct: designId,
+        token: checkTokenCookie(),
+      });
+      if (response.code === 1) {
+        const { width, height } = response.data;
 
-          let sizeFactor;
-          if (width >= 4000 || height >= 4000) {
-            sizeFactor = 7;
-          } else if (width >= 3000 || height >= 3000) {
-            sizeFactor = 5;
-          } else if (width >= 2500 || height >= 2500) {
-            sizeFactor = 3;
-          } else if (width >= 1920 || height >= 1920) {
-            sizeFactor = 2.5;
-          } else if (width >= 1600 || height >= 1600) {
-            sizeFactor = 1.5;
-          } else if (width >= 1000 || height >= 1000) {
-            sizeFactor = 1.5;
-          } else if (width >= 500 || height >= 500) {
-            sizeFactor = 1.5;
-          } else {
-            sizeFactor = 2;
-          }
-
-          dispatch(
-            setStageData({
-              initSize: {
-                width: width / sizeFactor,
-                height: height / sizeFactor,
-              },
-              design: response.data,
-              designLayers: response.data.productDetail,
-            })
-          );
+        let sizeFactor;
+        if (width >= 4000 || height >= 4000) {
+          sizeFactor = 7;
+        } else if (width >= 3000 || height >= 3000) {
+          sizeFactor = 5;
+        } else if (width >= 2500 || height >= 2500) {
+          sizeFactor = 3;
+        } else if (width >= 1920 || height >= 1920) {
+          sizeFactor = 2.5;
+        } else if (width >= 1600 || height >= 1600) {
+          sizeFactor = 1.5;
+        } else if (width >= 1000 || height >= 1000) {
+          sizeFactor = 1.5;
+        } else if (width >= 500 || height >= 500) {
+          sizeFactor = 1.5;
+        } else {
+          sizeFactor = 2;
         }
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
+        dispatch(
+          setStageData({
+            initSize: {
+              width: width / sizeFactor,
+              height: height / sizeFactor,
+            },
+            design: response.data,
+            designLayers: response.data.productDetail,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [designId]);
 
@@ -91,6 +92,27 @@ const Page = () => {
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
+  };
+
+  const handleDuplicateLayer = () => {
+    const copyLayer = async () => {
+      try {
+        const res = await axios.post(
+          `https://apis.ezpics.vn/apis/copyLayerAPI`,
+          {
+            idproduct: designId,
+            token: checkTokenCookie(),
+            idlayer: selectedId,
+          }
+        );
+        toast.success("Nhân bản layer đã chọn thành công");
+        fetchData();
+        dispatch();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    copyLayer();
   };
 
   const handleMaxPositionUpdate = useCallback(
@@ -122,6 +144,7 @@ const Page = () => {
               <PanelsImage
                 selectedId={selectedId}
                 maxPositions={maxPositions}
+                onDuplicateLayer={handleDuplicateLayer}
               />
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (

@@ -137,7 +137,7 @@ const CommonAlign = ({ maxPositions }) => {
     if (stageData && stageData.selectedLayer) {
       setSelectedLayer(stageData.selectedLayer);
     }
-  }, [stageData]);
+  }, [stageData, stageData.selectedLayer]);
 
   if (!maxPositions) return null; // Tránh lỗi nếu maxPositions chưa được khởi tạo
 
@@ -292,7 +292,9 @@ const CommonAlign = ({ maxPositions }) => {
 
 const LockUnlock = () => {
   const dispatch = useDispatch();
-  const selectedLayer = useSelector((state) => state.stage.stageData.selectedLayer);
+  const selectedLayer = useSelector(
+    (state) => state.stage.stageData.selectedLayer
+  );
   const [locked, setLocked] = useState(selectedLayer?.content?.lock === 0);
 
   useEffect(() => {
@@ -310,7 +312,12 @@ const LockUnlock = () => {
 
       setLocked(!locked);
       dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
-      console.log("selectedLayer :", selectedLayer, "updatedData :", updatedData);
+      console.log(
+        "selectedLayer :",
+        selectedLayer,
+        "updatedData :",
+        updatedData
+      );
     }
   };
 
@@ -333,7 +340,7 @@ const LockUnlock = () => {
   );
 };
 
-export default function PanelsCommon({ maxPositions }) {
+export default function PanelsCommon({ maxPositions, onDuplicateLayer }) {
   return (
     <div className="flex">
       <div className="px-1 w-[50px]">
@@ -348,8 +355,8 @@ export default function PanelsCommon({ maxPositions }) {
 
       <div className="px-1 w-[50px]">
         <Tooltip placement="bottom" title="Nhân bản layer đã chọn">
-          <Button size="small" type="text">
-             <DuplicateIcon size={25} />
+          <Button size="small" type="text" onClick={() => onDuplicateLayer()}>
+            <DuplicateIcon size={25} />
           </Button>
         </Tooltip>
       </div>
