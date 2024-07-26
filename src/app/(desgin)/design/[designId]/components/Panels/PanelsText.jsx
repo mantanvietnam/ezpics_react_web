@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Popover, List, Input, Tooltip, Slider } from "antd";
 import { DownOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import PanelsCommon from "./PanelsCommon";
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { updateLayer } from '@/redux/slices/editor/stageSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
 const fontSizes = [
   8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64,
@@ -71,25 +70,26 @@ const SliderMenu = ({
 export default SliderMenu;
 
 export function PanelsText({ maxPositions }) {
-  const { selectedLayer, initSize } = useSelector((state) => state.stage.stageData);
+  const { selectedLayer, initSize } = useSelector(
+    (state) => state.stage.stageData
+  );
   // Convert vw to px
   const [fontSize, setFontSize] = useState(12);
   const [fontStyle, setFontStyle] = useState({
-    bold: '',
-    italic: '',
-  })
+    bold: "",
+    italic: "",
+    underline: "",
+  });
 
   useEffect(() => {
-    const sizeValue = parseFloat(selectedLayer.content.size?.replace('vw', ''));
+    const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
     setFontStyle({
       bold: selectedLayer.content.indam,
       italic: selectedLayer.content.innghieng,
-    })
-    setFontSize(sizeValue)
-  }, [selectedLayer])
-
-
-
+      underline: selectedLayer.content.gachchan,
+    });
+    setFontSize(sizeValue);
+  }, [selectedLayer]);
 
   const dispatch = useDispatch();
 
@@ -104,11 +104,10 @@ export function PanelsText({ maxPositions }) {
   const decreaseFontSize = () => {
     setFontSize((prevSize) => prevSize - 1);
   };
-
   const handleFontStyleChange = (type, value) => {
     setFontStyle((prevFontStyle) => ({
       ...prevFontStyle,
-      [type]: prevFontStyle[type] === value ? 'normal' : value,
+      [type]: prevFontStyle[type] === value ? "normal" : value,
     }));
   };
 
@@ -116,11 +115,12 @@ export function PanelsText({ maxPositions }) {
     const data = {
       size: `${fontSize}vw`,
       indam: fontStyle.bold,
-      innghieng: fontStyle.italic
-    }
-    console.log('🚀 ~ useEffect ~ data:', data)
-    dispatch(updateLayer({ id: selectedLayer.id, data: data }))
-  }, [selectedLayer.id, fontSize, fontStyle])
+      innghieng: fontStyle.italic,
+      gachchan: fontStyle.underline,
+    };
+    console.log("🚀 ~ useEffect ~ data:", data);
+    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  }, [selectedLayer.id, fontSize, fontStyle]);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -151,13 +151,9 @@ export function PanelsText({ maxPositions }) {
                 trigger="click">
                 <Input
                   type="number"
-                  value={fontSize}
                   onChange={(e) => handleFontSizeChange(e.target.value)}
+                  value={fontSize}
                   className="w-[80px] text-lg font-bold text-center border-x rounded-none"
-                  style={{
-                    appearance: "none",
-                    MozAppearance: "textfield",
-                  }}
                 />
               </Popover>
               <Tooltip title="Tăng kích thước" placement="bottom">
@@ -170,10 +166,7 @@ export function PanelsText({ maxPositions }) {
 
           <div className="pl-1">
             <Tooltip title="Chọn màu chữ" placement="bottom">
-              <Button
-                type="text"
-                className="flex items-center px-2"
-              >
+              <Button type="text" className="flex items-center px-2">
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[18px] font-bold h-6">A</p>
                   <div className="w-6 h-2 mt-1 bg-red-600 rounded"></div>
@@ -184,7 +177,10 @@ export function PanelsText({ maxPositions }) {
 
           <div>
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
-              <Button type="text" className="flex items-center px-2" onClick={() => handleFontStyleChange('bold', "bolder")}>
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                onClick={() => handleFontStyleChange("bold", "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <p className="text-[20px] font-bold">B</p>
                 </div>
@@ -194,7 +190,10 @@ export function PanelsText({ maxPositions }) {
 
           <div>
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
-              <Button type="text" className="flex items-center px-2" onClick={() => handleFontStyleChange('italic', "italic")}>
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                onClick={() => handleFontStyleChange("italic", "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -209,6 +208,44 @@ export function PanelsText({ maxPositions }) {
               </Button>
             </Tooltip>
           </div>
+
+          <div>
+            <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                onClick={() => handleFontStyleChange("underline", "underline")}>
+                <div className="flex flex-col justify-center w-full h-8">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    fill="currentColor"
+                    width="20"
+                    height="20">
+                    <path d="M200 224a8 8 0 0 1-8 8H64a8 8 0 0 1 0-16h128a8 8 0 0 1 8 8Zm-72-24a64.07 64.07 0 0 0 64-64V56a8 8 0 0 0-16 0v80a48 48 0 0 1-96 0V56a8 8 0 0 0-16 0v80a64.07 64.07 0 0 0 64 64Z"></path>
+                  </svg>
+                </div>
+              </Button>
+            </Tooltip>
+          </div>
+
+          {/* <div>
+            <Tooltip title="Chọn kiểu chữ hoa/chữ thường" placement="bottom">
+              <Button
+                type="text"
+                className="flex items-center px-2"
+                >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  width="20"
+                  height="20">
+                  <path d="M87.24 52.59a8 8 0 0 0-14.48 0l-64 136a8 8 0 1 0 14.48 6.81L39.9 160h80.2l16.66 35.4a8 8 0 1 0 14.48-6.81ZM47.43 144 80 74.79 112.57 144ZM200 96c-12.76 0-22.73 3.47-29.63 10.32a8 8 0 0 0 11.26 11.36c3.8-3.77 10-5.68 18.37-5.68 13.23 0 24 9 24 20v3.22a42.76 42.76 0 0 0-24-7.22c-22.06 0-40 16.15-40 36s17.94 36 40 36a42.73 42.73 0 0 0 24-7.25 8 8 0 0 0 16-.75v-60c0-19.85-17.94-36-40-36Zm0 88c-13.23 0-24-9-24-20s10.77-20 24-20 24 9 24 20-10.77 20-24 20Z"></path>
+                </svg>
+              </Button>
+            </Tooltip>
+          </div> */}
 
           <div className="px-1">
             <div className="w-[1px] h-[24px] bg-black"></div>

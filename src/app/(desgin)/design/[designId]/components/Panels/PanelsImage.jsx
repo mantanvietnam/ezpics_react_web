@@ -311,11 +311,22 @@ export function PanelsImage({ selectedId, maxPositions }) {
       dispatch(flipLayerHorizontally({ id: selectedId }));
     }
   };
+
   const onFlipVertically = () => {
     if (selectedLayer) {
       dispatch(flipLayerVertically({ id: selectedId }));
     }
   };
+
+  useEffect(() => {
+    const data = {
+      lat_anh: selectedLayer.content.scaleX === -1 ? 1 : 0,
+      lat_anh_doc: selectedLayer.content.scaleY === -1 ? 1 : 0,
+    };
+    console.log("🚀 ~ useEffect ~ data:", data);
+    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
+  }, [selectedLayer]);
+
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
       <div className="h-[100%] flex items-center justify-between">
@@ -590,7 +601,7 @@ export function ModalImageCrop({ isOpen, onCancel }) {
         onCancel={onCancel}
         footer={null}
         width={600}
-        bodyStyle={{
+        styles={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -605,6 +616,7 @@ export function ModalImageCrop({ isOpen, onCancel }) {
             width: "100%",
             height: "100%",
             padding: "10px",
+            backgroundColor: "#ccc",
           }}>
           <ReactCrop
             crop={crop}
@@ -621,15 +633,19 @@ export function ModalImageCrop({ isOpen, onCancel }) {
             />
           </ReactCrop>
         </div>
-        {loading ? (
-          <Button className="text-lg" type="primary" loading>
-            Loading
-          </Button>
-        ) : (
-          <Button className="text-lg" onClick={cropCompleteImage}>
-            Cắt ảnh
-          </Button>
-        )}
+        <div className="flex justify-center">
+          {loading ? (
+            <Button className="text-lg" type="primary" loading>
+              Loading
+            </Button>
+          ) : (
+            <button
+              className="text-lg font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
+              onClick={cropCompleteImage}>
+              Cắt ảnh
+            </button>
+          )}
+        </div>
       </Modal>
     </>
   );
@@ -662,6 +678,11 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
 
   async function onChangeImageNew() {
     setLoading(true);
+    if (imgSrc === "") {
+      toast.error("Vui lòng chọn ảnh");
+      setLoading(false);
+      return;
+    }
     const imageBlob = dataURLToBlob(imgSrc);
     const token = checkTokenCookie();
     const formData = new FormData();
@@ -786,15 +807,19 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
           )}
         </div>
 
-        {loading ? (
-          <Button className="text-lg mt-2" type="primary" loading>
-            Loading
-          </Button>
-        ) : (
-          <Button className="text-lg mt-2" onClick={() => onChangeImageNew()}>
-            Thay ảnh
-          </Button>
-        )}
+        <div className="flex justify-center">
+          {loading ? (
+            <Button className="text-lg mt-2 p-2" type="primary" loading>
+              Loading
+            </Button>
+          ) : (
+            <button
+              className="text-lg font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
+              onClick={() => onChangeImageNew()}>
+              Thay ảnh
+            </button>
+          )}
+        </div>
       </Modal>
     </>
   );

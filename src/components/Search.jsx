@@ -16,6 +16,14 @@ function Search({ searchAPI, searchParams }) {
   const inputRef = useRef();
   const containerRef = useRef();
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      // Chuyển hướng đến một liên kết khác
+      window.location.href = "https://ezpics.vn/dashboard-search"; // Thay đổi liên kết theo nhu cầu của bạn
+    }
+  };
+
   useEffect(() => {
     if (!debounced) {
       setSearchResult([]);
@@ -92,6 +100,7 @@ function Search({ searchAPI, searchParams }) {
                 className="ml-2 w-full h-full bg-transparent outline-none"
                 ref={inputRef}
                 value={searchValue}
+                onKeyDown={handleKeyDown}
                 placeholder="Tìm kiếm nội dung trên Ezpics"
                 spellCheck={false}
                 onChange={(e) => setSearchValue(e.target.value.trimStart())}

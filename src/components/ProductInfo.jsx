@@ -186,6 +186,8 @@ export default function ProductInfo(props) {
     setType(e.target.value);
   };
 
+  console.log(data);
+
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
@@ -307,23 +309,25 @@ export default function ProductInfo(props) {
               ""
             )}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-sm product-details-e">Khuyến mãi</div>
-            <div
-              style={{
-                backgroundColor: "rgb(255, 245, 241)",
-                border: "1px solid rgb(255, 66, 78)",
-                color: "rgb(255, 66, 78)",
-                padding: "2px",
-                fontWeight: "semibold",
-              }}>
-              {data?.sale_price
-                ? `Lên đến ${Math.round(
-                    100 - (data?.sale_price / data?.price) * 100
-                  )}%`
-                : "Miễn Phí"}
+          {data?.price !== 0 && (
+            <div className="flex items-center gap-3">
+              <div className="text-sm product-details-e">Khuyến mãi</div>
+              <div
+                style={{
+                  backgroundColor: "rgb(255, 245, 241)",
+                  border: "1px solid rgb(255, 66, 78)",
+                  color: "rgb(255, 66, 78)",
+                  padding: "2px",
+                  fontWeight: "semibold",
+                }}>
+                {data?.sale_price
+                  ? `Lên đến ${Math.round(
+                      100 - (data?.sale_price / data?.price) * 100
+                    )}%`
+                  : "Miễn Phí"}
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
             <div className="w-[35px] h-[35px]">
