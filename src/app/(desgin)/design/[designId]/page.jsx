@@ -151,6 +151,7 @@ const Page = () => {
             <div>
               <PanelsText
                 maxPositions={maxPositions}
+                onDuplicateLayer={handleDuplicateLayer}
                 onColorButtonClick={() => setActiveTool("Color")}
               />
             </div>

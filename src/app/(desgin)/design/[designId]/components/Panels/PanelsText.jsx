@@ -69,7 +69,11 @@ const SliderMenu = ({
 
 export default SliderMenu;
 
-export function PanelsText({ maxPositions, onColorButtonClick }) {
+export function PanelsText({
+  maxPositions,
+  onColorButtonClick,
+  onDuplicateLayer,
+}) {
   const { selectedLayer, initSize } = useSelector(
     (state) => state.stage.stageData
   );
@@ -385,7 +389,10 @@ export function PanelsText({ maxPositions, onColorButtonClick }) {
         </div>
 
         <div>
-          <PanelsCommon maxPositions={maxPositions} />
+          <PanelsCommon
+            maxPositions={maxPositions}
+            onDuplicateLayer={onDuplicateLayer}
+          />
         </div>
       </div>
     </div>
