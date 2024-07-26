@@ -6,8 +6,7 @@ import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import Image from "next/image";
 import images from "public/images/index2";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addLayerImage } from "@/redux/slices/editor/stageSlice";
 
 async function LoadFonts(fonts) {
@@ -100,7 +99,35 @@ export default function Text() {
     getAllText();
   }, [network, token]);
 
-  const addObject = async () => {};
+const addObject = async () => {
+  const defaultFont = {
+    name: "Open Sans",
+    url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
+  };
+
+  try {
+    await LoadFonts([defaultFont]);
+
+    const res = await axios.post(`${network}/addLayerText`, {
+      idproduct: stageData.design.id,
+      token: token,
+      text: "Thêm chữ",
+      color: "#333333",
+      size: "10px",
+      font: defaultFont.name,
+    });
+
+    if (res.data.code === 1) {
+      dispatch(addLayerImage(res.data.data));
+    } else {
+      console.error("Failed to add text layer:", res.data);
+    }
+  } catch (error) {
+    console.log("Error adding text layer:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleAddText = async (item) => {
     const font = fonts.find((f) => f.name === item.content.font);
@@ -126,7 +153,8 @@ export default function Text() {
     <>
       <Block
         className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto px-4"
-        style={{ scrollbarWidth: "thin" }}>
+        style={{ scrollbarWidth: "thin" }}
+      >
         <Block
           $style={{
             display: "flex",
@@ -135,14 +163,16 @@ export default function Text() {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}>
+          }}
+        >
           <Block>
             <h4
               style={{
                 fontFamily: "Helvetica, Arial, sans-serif",
                 marginBottom: "10px",
                 marginTop: "10px",
-              }}>
+              }}
+            >
               Kiểu chữ
             </h4>
           </Block>
@@ -160,8 +190,9 @@ export default function Text() {
                     width: "100%",
                   },
                 },
-              }}>
-              Thêm chữ
+              }}
+            >
+              Thêm 
             </Button>
 
             <div
@@ -170,7 +201,8 @@ export default function Text() {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}>
+              }}
+            >
               {allText.map((text) => (
                 <div
                   key={text.id}
@@ -182,7 +214,8 @@ export default function Text() {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}>
+                  onClick={() => handleAddText(text)}
+                >
                   <p
                     style={{
                       color: text.content.color,
@@ -191,7 +224,8 @@ export default function Text() {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}>
+                    }}
+                  >
                     {text.content.text}
                   </p>
                 </div>
@@ -208,7 +242,8 @@ export default function Text() {
             backgroundColor: "rgba(0,0,0,0.7)",
             position: "absolute",
             zIndex: 20000000000,
-          }}>
+          }}
+        >
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
             <div className="ldio-4qpid53rus9">
               <div></div>
