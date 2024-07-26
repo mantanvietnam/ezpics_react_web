@@ -28,9 +28,12 @@ const stageSlice = createSlice({
     },
     addLayerText: (state, action: PayloadAction<any>) => {
       // Tìm giá trị sort lớn nhất hiện tại trong designLayers
-      const maxSort = state.stageData.designLayers.length > 0
-        ? Math.max(...state.stageData.designLayers.map((layer: any) => layer.sort))
-        : 0;
+      const maxSort =
+        state.stageData.designLayers.length > 0
+          ? Math.max(
+              ...state.stageData.designLayers.map((layer: any) => layer.sort)
+            )
+          : 0;
 
       // Tạo phần tử mới với giá trị sort được cập nhật
       const newLayer = {
@@ -45,49 +48,73 @@ const stageSlice = createSlice({
       ];
     },
     updateListLayers: (state, action: PayloadAction<any>) => {
-      state.stageData.designLayers = action.payload
+      state.stageData.designLayers = action.payload;
     },
     removeLayer: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = state.stageData.designLayers.filter(
         (layer: any) => layer.id !== action.payload
       );
     },
-    updateLayer: (state, action: PayloadAction<{ id: string, data: any }>) => {
-      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
-        layer.id === action.payload.id ? { ...layer, content: { ...layer.content, ...action.payload.data } } : layer
+    updateLayer: (state, action: PayloadAction<{ id: string; data: any }>) => {
+      state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: { ...layer.content, ...action.payload.data },
+              }
+            : layer
       );
     },
     selectLayer: (state, action: PayloadAction<{ id: string }>) => {
-      const layer = state.stageData.designLayers.find((layer: any) => layer.id === action.payload.id);
+      const layer = state.stageData.designLayers.find(
+        (layer: any) => layer.id === action.payload.id
+      );
       if (layer) {
         state.stageData.selectedLayer = { ...layer };
       }
     },
     flipLayerHorizontally: (state, action: PayloadAction<{ id: string }>) => {
-      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
-        layer.id === action.payload.id
-          ? { ...layer, content: { ...layer.content, scaleX: -layer.content.scaleX || -1 } }
-          : layer
+      state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: {
+                  ...layer.content,
+                  scaleX: -layer.content.scaleX || -1,
+                },
+              }
+            : layer
       );
     },
 
     flipLayerVertically: (state, action: PayloadAction<{ id: string }>) => {
-      state.stageData.designLayers = state.stageData.designLayers.map((layer: any) =>
-        layer.id === action.payload.id
-          ? { ...layer, content: { ...layer.content, scaleY: -layer.content.scaleY || -1 } }
-          : layer
+      state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: {
+                  ...layer.content,
+                  scaleY: -layer.content.scaleY || -1,
+                },
+              }
+            : layer
       );
     },
 
     moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
-      )
+      );
       if (layerIndex > -1) {
         const layer = state.stageData.designLayers[layerIndex];
         const updatedLayers = [
           layer,
-          ...state.stageData.designLayers.filter((_: any, index: any) => index !== layerIndex),
+          ...state.stageData.designLayers.filter(
+            (_: any, index: any) => index !== layerIndex
+          ),
         ].map((layer, index) => ({ ...layer, sort: index + 1 }));
 
         state.stageData.designLayers = updatedLayers;
@@ -100,7 +127,9 @@ const stageSlice = createSlice({
       if (layerIndex > -1) {
         const layer = state.stageData.designLayers[layerIndex];
         const updatedLayers = [
-          ...state.stageData.designLayers.filter((_: any, index: any) => index !== layerIndex),
+          ...state.stageData.designLayers.filter(
+            (_: any, index: any) => index !== layerIndex
+          ),
           layer,
         ].map((layer, index) => ({ ...layer, sort: index + 1 }));
 
@@ -157,5 +186,6 @@ export const {
   bringLayerForward,
   flipLayerHorizontally,
   flipLayerVertically,
-  addLayerText } = stageSlice.actions;
+  addLayerText,
+} = stageSlice.actions;
 export default stageSlice.reducer;

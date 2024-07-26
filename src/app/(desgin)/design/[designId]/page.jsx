@@ -35,6 +35,7 @@ const Page = () => {
     centerY: null,
   });
 
+  console.log("🚀 ~ selectedLayer :", stageData);
   console.log("🚀 ~ selectedLayer :", stageData.selectedLayer);
 
   useEffect(() => {

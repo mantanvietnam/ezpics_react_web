@@ -40,11 +40,10 @@ const Footer = () => {
   ];
 
   const pageItems = [
-    { label: "Trang chủ", link: "/" },
-    { label: "Thiết kế mới", link: "/new-product" },
-    { label: "Bảng giá", link: "/pricing-compare" },
-    { label: "Hướng dẫn", link: "/" },
-    { label: "Tin tức", link: "/post" },
+    { label: "Chính sách quyền riêng tư", link: "https://ezpics.vn/post/27" },
+    { label: "Hình thức thanh toán", link: " https://ezpics.vn/post/28" },
+    { label: "Chính sách bảo mật", link: "https://ezpics.vn/post/29" },
+    { label: "Hướng dẫn sử dụng ", link: "https://www.youtube.com/playlist?list=PLngg14zy8vvwLxThvcL8g35G0F9VlNXUh" },
   ];
 
   return (
@@ -81,7 +80,7 @@ const Footer = () => {
                 Bạn cần hỗ trợ
               </p>
               <p className="footer_text text-2xl font-bold text_white pb-5">
-                081656 0000
+                081.656.0000
               </p>
               <p className="footer_text text_white pb-7">
                 <strong>Địa chỉ: </strong>số 12 ngách 22/88 Kim Quan, Phường
@@ -106,7 +105,7 @@ const Footer = () => {
           </div>
 
           <div className="contact flex flex-col items-center sm:items-start">
-            <p className="font-semibold text-lg text-red-400 pb-7">
+            <p className="font-semibold text-lg pb-7">
               Follow Us On Social Media
             </p>
             <div className="flex space-x-4">

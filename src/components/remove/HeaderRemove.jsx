@@ -37,8 +37,6 @@ const HeaderRemove = () => {
     dataInforUser = null;
   }
 
-  console.log(dataInforUser);
-
   const handleCloseModalFreeExtend = () => {
     setModalExtend(false);
     // Trigger a re-render by updating the reloadKey state
@@ -188,9 +186,6 @@ const HeaderRemove = () => {
 
     // Nếu người dùng chưa đăng nhập (authentication là false)
     if (!authentication) {
-      // In ra giá trị của authentication (sẽ là false)
-      console.log(authentication);
-
       // Điều hướng người dùng đến trang đăng nhập
       router.push("/sign-in");
     } else if (dataInforUser.member_pro === 1) {
