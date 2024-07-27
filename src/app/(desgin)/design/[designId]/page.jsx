@@ -30,6 +30,7 @@ const Page = () => {
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
+  const [isTransformerVisible, setTransformerVisible] = useState(true);
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -39,6 +40,7 @@ const Page = () => {
     centerY: null,
   });
 
+  console.log("🚀 ~ designLayers :", designLayers);
   console.log("🚀 ~ selectedLayer :", stageData.selectedLayer);
 
   const fetchData = async () => {
@@ -126,13 +128,12 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        stageRef={stageRef}
+        setTransformerVisible={setTransformerVisible}
+      />
       <div className="h-screen pt-[65px] overflow-hidden">
-        <Toolbox
-          onToolChange={setActiveTool}
-          stageRef={stageRef}
-          activeTool={activeTool}
-        />
+        <Toolbox onToolChange={setActiveTool} activeTool={activeTool} />
         <div
           className={`
           relative ${
@@ -197,6 +198,7 @@ const Page = () => {
                               dispatch(selectLayer({ id: layer.id }));
                             }}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
+                            isTransformerVisible={isTransformerVisible}
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -214,6 +216,7 @@ const Page = () => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
+                            isTransformerVisible={isTransformerVisible}
                           />
                         );
                       }

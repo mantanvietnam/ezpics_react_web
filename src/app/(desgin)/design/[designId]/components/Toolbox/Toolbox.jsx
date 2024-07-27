@@ -13,7 +13,7 @@ import TextFill from "./TextFill";
 import TextFonts from "./TextFonts";
 import { LeftOutlined } from "@ant-design/icons";
 
-const Toolbox = ({ onToolChange, stageRef, activeTool }) => {
+const Toolbox = ({ onToolChange, activeTool }) => {
   const [isToolboxVisible, setIsToolboxVisible] = useState(true);
   // const [activeTool, setActiveTool] = useState("Layer");
 
@@ -160,7 +160,7 @@ const Toolbox = ({ onToolChange, stageRef, activeTool }) => {
 
       {activeTool === "Layer" && <Layer />}
       {activeTool === "Text" && <Text />}
-      {activeTool === "Photos" && <Photos stageRef={stageRef} />}
+      {activeTool === "Photos" && <Photos />}
       {activeTool === "Element" && <Element />}
       {activeTool === "Customize" && <Customize />}
 

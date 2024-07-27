@@ -332,7 +332,7 @@ export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
       lat_anh: selectedLayer.content.scaleX === -1 ? 1 : 0,
       lat_anh_doc: selectedLayer.content.scaleY === -1 ? 1 : 0,
     };
-    console.log("🚀 ~ useEffect ~ data:", data);
+    // console.log("🚀 ~ useEffect ~ data:", data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   }, [dispatch, selectedLayer]);
 

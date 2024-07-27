@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import imageIcon from "./save.png";
 import exportIcon from "./Layer 2.png";
@@ -6,16 +6,45 @@ import { useSelector } from "react-redux";
 import { checkTokenCookie } from "@/utils";
 import { downloadListLayer, saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
+import { Modal, Button } from "antd";
 
-const Navbar = () => {
+const Navbar = ({ stageRef, setTransformerVisible }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageURL, setImageURL] = useState("");
   const stageData = useSelector((state) => state.stage.stageData);
+
+  const downloadURI = (url, name) => {
+    const link = document.createElement("a");
+    link.download = name;
+    link.href = url;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleDownLoadDesign = () => {
+    setTransformerVisible(false); // Hide Transformer before showing the modal
+    setTimeout(() => {
+      const dataURL = stageRef.current.toDataURL({ pixelRatio: 1 });
+      setImageURL(dataURL); // Set the URL for the modal
+      setIsModalOpen(true); // Show the modal
+      setTransformerVisible(true); // Ensure Transformer is shown again after modal
+    }, 100); // Delay to ensure Transformer is hidden
+  };
+
+  const handleDownloadFromModal = () => {
+    if (imageURL) {
+      downloadURI(imageURL, "download.png");
+      setIsModalOpen(false); // Close the modal after download
+    }
+  };
 
   const handleSaveDesign = async () => {
     try {
       if (!stageData || !stageData.designLayers) {
         throw new Error("Invalid stageData or designLayers not found");
       }
-
 
       const data = stageData.designLayers.map((layer) => ({
         id: layer.id,
@@ -36,26 +65,6 @@ const Navbar = () => {
         toast.success("Bạn đã lưu thiết kế thành công");
       } else {
         toast.error("Lưu thiết kế thất bại!");
-      }
-    } catch (error) {
-      console.error("Error saving design:", error);
-    }
-  };
-
-  const handleDownLoadDesign = async () => {
-    try {
-      if (!stageData || !stageData.designLayers) {
-        throw new Error("Invalid stageData or designLayers not found");
-      }
-
-    const response = await downloadListLayer({
-     id: stageData.design.id,
-    });
-      if (response.success == "Thành công") {
-        toast.success("Bạn đã tải thiết kế thành công");
-        window.open(response.link, '_blank');
-      } else {
-        toast.error("Tải thiết kế thất bại!");
       }
     } catch (error) {
       console.error("Error saving design:", error);
@@ -125,8 +134,7 @@ const Navbar = () => {
                 alignItems: "center",
                 fontSize: "18px",
               }}
-              onClick={handleDownLoadDesign}
-            >
+              onClick={handleDownLoadDesign}>
               <Image
                 alt=""
                 src={exportIcon}
@@ -137,6 +145,26 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal for previewing and downloading image */}
+      <Modal
+        title="Preview Image"
+        visible={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={[
+          <Button
+            key="download"
+            type="primary"
+            onClick={handleDownloadFromModal}>
+            Tải xuống
+          </Button>,
+          <Button key="close" onClick={() => setIsModalOpen(false)}>
+            Hủy
+          </Button>,
+        ]}
+        style={{ textAlign: "center" }}>
+        <img src={imageURL} alt="Preview" style={{ maxWidth: "100%" }} />
+      </Modal>
     </>
   );
 };
