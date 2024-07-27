@@ -24,7 +24,7 @@ const basicColors = [
 
 const TextFill = () => {
   const { selectedLayer } = useSelector((state) => state.stage.stageData);
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState(selectedLayer.content.color);
 
   useEffect(() => {
     if (selectedLayer.content.type === "text")
