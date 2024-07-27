@@ -4,8 +4,25 @@ import { Text, Transformer } from "react-konva";
 import { useDispatch } from "react-redux";
 
 export default function TextLayer(props) {
-  const { data, designSize, isSelected, onSelect, onTextChange, id } = props;
-  const { postion_left, postion_top, size, lock, status, indam, innghieng, gachchan } = data;
+  const {
+    data,
+    designSize,
+    isSelected,
+    onSelect,
+    onTextChange,
+    id,
+    isTransformerVisible,
+  } = props;
+  const {
+    postion_left,
+    postion_top,
+    size,
+    lock,
+    status,
+    indam,
+    innghieng,
+    gachchan,
+  } = data;
 
   const dispatch = useDispatch();
   const shapeRef = useRef();
@@ -187,7 +204,7 @@ export default function TextLayer(props) {
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       />
-      {isSelected && (
+      {isSelected && isTransformerVisible && (
         <Transformer
           ref={trRef}
           anchorStyleFunc={(anchor) => {

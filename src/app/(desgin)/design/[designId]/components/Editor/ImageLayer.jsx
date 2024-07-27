@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Image, Transformer } from "react-konva";
 import useImage from "use-image";
 import { useDispatch } from "react-redux";
@@ -6,8 +6,15 @@ import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 
 export default function ImageLayer(props) {
-  const { data, designSize, id, isSelected, onSelect, onMaxPositionUpdate } =
-    props;
+  const {
+    data,
+    designSize,
+    id,
+    isSelected,
+    onSelect,
+    onMaxPositionUpdate,
+    isTransformerVisible,
+  } = props;
   const {
     postion_left,
     postion_top,
@@ -29,7 +36,11 @@ export default function ImageLayer(props) {
   const shapeRef = useRef();
   const trRef = useRef();
 
-  const [image] = useImage(data.banner, "anonymous"); // Set crossOrigin to 'anonymous'
+  // console.log("isTransformerVisible: ", isTransformerVisible);
+  // console.log("isSelected: ", isSelected);
+
+  const [image] = useImage(data.banner, "anonymous");
+
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
 
   // Convert vw to px
@@ -47,7 +58,8 @@ export default function ImageLayer(props) {
 
   // Max X and Max Y
   const maxPositionLeft = ((designSize.width - width) / designSize.width) * 100;
-  const maxPositionTop = ((designSize.height - heightSize) / designSize.height) * 100;
+  const maxPositionTop =
+    ((designSize.height - heightSize) / designSize.height) * 100;
 
   const centerLeft = (designSize.width - width) / 2;
   const centerTop = (designSize.height - heightSize) / 2;
@@ -58,9 +70,20 @@ export default function ImageLayer(props) {
 
   useEffect(() => {
     if (onMaxPositionUpdate) {
-      onMaxPositionUpdate(maxPositionLeft, maxPositionTop, centerPositionX, centerPositionY);
+      onMaxPositionUpdate(
+        maxPositionLeft,
+        maxPositionTop,
+        centerPositionX,
+        centerPositionY
+      );
     }
-  }, [maxPositionLeft, maxPositionTop, centerPositionX, centerPositionY, onMaxPositionUpdate]);
+  }, [
+    maxPositionLeft,
+    maxPositionTop,
+    centerPositionX,
+    centerPositionY,
+    onMaxPositionUpdate,
+  ]);
 
   // Show transform manually
   useEffect(() => {
@@ -120,7 +143,9 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width}vw`,
+      width: `${
+        (e.target.width() * e.target.scaleX() * 100) / designSize.width
+      }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -128,9 +153,9 @@ export default function ImageLayer(props) {
     e.target.scaleY(1);
   };
 
-   useEffect(() => {
-     if ((!lock == false) || (Boolean(status) == false)) {
-       setIsSelectLayer(true);
+  useEffect(() => {
+    if (!lock == false || Boolean(status) == false) {
+      setIsSelectLayer(true);
     } else {
       setIsSelectLayer(false);
     }
@@ -158,19 +183,25 @@ export default function ImageLayer(props) {
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       />
-      {isSelected && (
+      {isSelected && isTransformerVisible && (
         <Transformer
           ref={trRef}
           flipEnabled={false}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
-            if (anchor.hasName("top-center") || anchor.hasName("bottom-center")) {
+            if (
+              anchor.hasName("top-center") ||
+              anchor.hasName("bottom-center")
+            ) {
               anchor.height(6);
               anchor.offsetY(3);
               anchor.width(30);
               anchor.offsetX(15);
             }
-            if (anchor.hasName("middle-left") || anchor.hasName("middle-right")) {
+            if (
+              anchor.hasName("middle-left") ||
+              anchor.hasName("middle-right")
+            ) {
               anchor.height(30);
               anchor.offsetY(15);
               anchor.width(6);

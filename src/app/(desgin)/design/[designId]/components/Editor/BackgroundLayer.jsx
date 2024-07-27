@@ -4,7 +4,7 @@ import useImage from "use-image";
 
 export default function BackgroundLayer(props) {
   const { src, width, height } = props;
-  const [image] = useImage(src);
+  const [image] = useImage(src, "Anonymous");
   return (
     <Image
       image={image}

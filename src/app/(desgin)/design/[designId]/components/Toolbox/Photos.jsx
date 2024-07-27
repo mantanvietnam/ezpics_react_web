@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
 
-const Photos = ({ stageRef }) => {
+const Photos = () => {
   const [photos, setPhotos] = useState([]);
   const inputFileRef = React.useRef(null);
 
