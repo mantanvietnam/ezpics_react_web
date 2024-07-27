@@ -39,11 +39,26 @@ module.exports = {
         slideInFromLeft: "slideInFromLeft 0.75s ease-in-out",
         animloader: "animloader 2s linear infinite",
       },
-
       screens: {
         mobile: "480px",
       },
+      borderColor: {
+        "gradient-7":
+          "linear-gradient(45deg, #FF5733, #FFBD33, #75FF33, #33FF57, #33FFBD, #337BFF, #8E33FF)",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities(
+        {
+          ".border-gradient-7": {
+            borderImage:
+              "linear-gradient(45deg, #FF5733, #FFBD33, #75FF33, #33FF57, #33FFBD, #337BFF, #8E33FF) 1",
+          },
+        },
+        ["responsive", "hover"]
+      );
+    },
+  ],
 };

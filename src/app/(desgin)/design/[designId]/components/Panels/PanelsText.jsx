@@ -86,6 +86,8 @@ export function PanelsText({
     underline: "",
   });
 
+  const [color, setColor] = useState(selectedLayer.content.color);
+
   useEffect(() => {
     const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
     setFontStyle({
@@ -94,6 +96,7 @@ export function PanelsText({
       underline: selectedLayer.content.gachchan,
     });
     setFontSize(sizeValue);
+    setColor(selectedLayer.content.color);
   }, [selectedLayer]);
 
   const dispatch = useDispatch();
@@ -138,7 +141,7 @@ export function PanelsText({
                 onClick={() => onFontsButtonClick()}
                 className="flex items-center rounded-lg border border-slate-400">
                 <p className="w-[125px] flex items-start text-lg font-bold">
-                  Open Sans
+                  {selectedLayer.content.font}
                 </p>
                 <DownOutlined />
               </Button>
@@ -180,8 +183,9 @@ export function PanelsText({
                   <p className="text-[18px] font-bold h-6">A</p>
                   <div
                     className="w-6 h-2 mt-1 rounded"
-                    style={{ backgroundColor: selectedLayer.content.color }} // Áp dụng màu sắc bằng inline CSS
-                  ></div>
+                    style={{
+                      backgroundColor: color,
+                    }}></div>
                 </div>
               </Button>
             </Tooltip>
