@@ -69,7 +69,12 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
+export function PanelsImage({
+  selectedId,
+  maxPositions,
+  onDuplicateLayer,
+  onMasksButtonClick,
+}) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
@@ -310,7 +315,6 @@ export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
           theme: "dark",
         }
       );
-      setLoading(false); // Set loading state to false if not a pro user
     }
   };
 
@@ -447,6 +451,15 @@ export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
               isOpen={isModalCropOpen}
               onCancel={closeModalCrop}
             />
+          </div>
+
+          <div className="px-1">
+            <Button
+              type="text"
+              className="text-lg font-bold"
+              onClick={() => onMasksButtonClick()}>
+              Appy Masks
+            </Button>
           </div>
         </div>
 

@@ -60,6 +60,8 @@ const TextFill = () => {
     document.getElementById("colorPicker").click();
   };
 
+  console.log("color texfill:", color);
+
   return (
     <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
       <div className="relative">

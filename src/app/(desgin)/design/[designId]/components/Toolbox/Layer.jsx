@@ -13,17 +13,30 @@ import Drapdrop from "../../Icon/Drapdrop";
 import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import {
+  addLayerText,
   removeLayer,
   selectLayer,
   updateLayer,
   updateListLayers,
 } from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
-import { Button, Tooltip } from "antd";
+import { Button, Tooltip, Popover, Input } from "antd";
 
 const Layer = () => {
-  const { designLayers, selectedLayer } = useSelector((state) => state.stage.stageData);
+  const { designLayers, selectedLayer, design } = useSelector(
+    (state) => state.stage.stageData
+  );
   const dispatch = useDispatch();
+  // State for both forms
+  const [textForm, setTextForm] = useState({
+    displayName: "",
+    variableName: "",
+  });
+
+  const [imageForm, setImageForm] = useState({
+    displayName: "",
+    variableName: "",
+  });
 
   const onDragEnd = (result) => {
     if (!result.destination) {
@@ -60,8 +73,148 @@ const Layer = () => {
     deleteLayerApi();
   };
 
+  //Btn tạo biến
+  const network = useSelector((state) => state.network.ipv4Address);
+
+  const handleCreateVariableText = async () => {
+    console.log("Text Variable Info:", textForm);
+
+    const defaultFont = {
+      name: "Open Sans",
+      url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
+    };
+
+    try {
+      const res = await axios.post(`${network}/addLayerText`, {
+        idproduct: design.id,
+        token: checkTokenCookie(),
+        text: `%${textForm.variableName}%`,
+        color: "#333333",
+        size: "10px",
+        font: defaultFont.name,
+      });
+
+      if (res.data.code === 1) {
+        const newLayer = res.data.data;
+        dispatch(addLayerText(newLayer));
+
+        const data = {
+          variable: textForm.variableName,
+          variableLabel: textForm.displayName,
+        };
+        dispatch(updateLayer({ id: newLayer.id, data: data }));
+      } else {
+        console.error("Failed to add text layer:", res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching fonts:", error);
+      return;
+    }
+  };
+
+  const handleCreateVariableImage = async () => {
+    console.log("Image Variable Info:", imageForm);
+
+    try {
+      const res = await axios.post(`${network}/addLayerImageUrlAPI`, {
+        idproduct: design.id,
+        token: checkTokenCookie(),
+        text: `%${textForm.variableName}%`,
+        imageUrl:
+          "https://apis.ezpics.vn//upload/admin/images/4274/4274_2024_07_29_17_20_27_2905.jpg",
+        page: 0,
+      });
+
+      if (res.data.code === 1) {
+        const newLayer = res.data.data;
+        dispatch(addLayerText(newLayer));
+
+        const data = {
+          variable: imageForm.variableName,
+          variableLabel: imageForm.displayName,
+        };
+        dispatch(updateLayer({ id: newLayer.id, data: data }));
+      } else {
+        console.error("Failed to add text layer:", res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching fonts:", error);
+      return;
+    }
+  };
+
   return (
     <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
+      {design?.type === "user_series" && (
+        <div>
+          <Popover
+            placement="rightBottom"
+            trigger="click"
+            autoFocus
+            returnFocus
+            content={
+              <div className="w-[200px] h-fit p-2">
+                <h4 className="text-base pb-2">Tên trường hiển thị biến:</h4>
+                <Input
+                  value={textForm.displayName}
+                  onChange={(e) =>
+                    setTextForm({ ...textForm, displayName: e.target.value })
+                  }
+                />
+                <h4 className="text-base py-2">Tên biến:</h4>
+                <Input
+                  value={textForm.variableName}
+                  onChange={(e) =>
+                    setTextForm({ ...textForm, variableName: e.target.value })
+                  }
+                />
+                <h4 className="text-base py-2">Nội dung chữ:</h4>
+                <Input value={`%${textForm.variableName}%`} />
+                <button
+                  className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300"
+                  onClick={handleCreateVariableText}>
+                  Tạo biến chữ
+                </button>
+              </div>
+            }>
+            <button className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
+              Tạo layer biến chữ
+            </button>
+          </Popover>
+          <Popover
+            placement="rightBottom"
+            trigger="click"
+            autoFocus
+            returnFocus
+            content={
+              <div className="w-[200px] h-fit p-2">
+                <h4 className="text-base pb-2">Tên trường hiển thị biến:</h4>
+                <Input
+                  value={imageForm.displayName}
+                  onChange={(e) =>
+                    setImageForm({ ...imageForm, displayName: e.target.value })
+                  }
+                />
+                <h4 className="text-base py-2">Tên biến:</h4>
+                <Input
+                  value={imageForm.variableName}
+                  onChange={(e) =>
+                    setImageForm({ ...imageForm, variableName: e.target.value })
+                  }
+                />
+                <button
+                  className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300"
+                  onClick={handleCreateVariableImage}>
+                  Tạo biến ảnh
+                </button>
+              </div>
+            }>
+            <button className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 mb-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
+              Tạo layer biến ảnh
+            </button>
+          </Popover>
+        </div>
+      )}
       <div
         className="flex-1 flex flex-col h-[100%] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}>
@@ -210,6 +363,5 @@ const VisibilityToggle = ({ layer }) => {
     </>
   );
 };
-
 
 export default Layer;

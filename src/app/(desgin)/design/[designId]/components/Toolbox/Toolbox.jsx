@@ -3,7 +3,7 @@ import LayerIcon from "../../Icon/Layer";
 import TextIcon from "../../Icon/Text";
 import PhotoIcon from "../../Icon/Photo";
 import ElementIcon from "../../Icon/Element";
-import CustomizeIcon from "../../Icon/Customize";
+import SettingIcon from "../../Icon/Setting";
 import Layer from "./Layer";
 import Text from "./Text";
 import Photos from "./Photos";
@@ -11,6 +11,7 @@ import Element from "./Element";
 import Customize from "./Customize";
 import TextFill from "./TextFill";
 import TextFonts from "./TextFonts";
+import ImageMask from "./ImageMask";
 import { LeftOutlined } from "@ant-design/icons";
 
 const Toolbox = ({ onToolChange, activeTool }) => {
@@ -136,8 +137,8 @@ const Toolbox = ({ onToolChange, activeTool }) => {
               setIsToolboxVisible(false);
             }
           }}>
-          <CustomizeIcon size={20} />
-          <p>Dự án</p>
+          <SettingIcon size={20} />
+          <p>Cài đặt</p>
         </div>
       </div>
 
@@ -163,10 +164,9 @@ const Toolbox = ({ onToolChange, activeTool }) => {
       {activeTool === "Photos" && <Photos />}
       {activeTool === "Element" && <Element />}
       {activeTool === "Customize" && <Customize />}
-
-      {/* Display the color picker when the active tool is "Color" */}
       {activeTool === "Color" && <TextFill />}
       {activeTool === "Fonts" && <TextFonts />}
+      {activeTool === "Masks" && <ImageMask />}
     </div>
   );
 };

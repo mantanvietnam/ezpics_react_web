@@ -37,7 +37,11 @@ export default function ImageLayer(props) {
   const [image] = useImage(data.banner, "anonymous");
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
 
-  const widthValue = parseFloat(data.width?.replace("vw", ""));
+  // Convert vw to px
+  // const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
+  const widthValue = parseFloat(
+    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  );
   const width = designSize.width * (widthValue / 100);
   const heightSize = useMemo(() => (naturalHeight * width) / naturalWidth, [naturalHeight, naturalWidth, width]);
   const postionX = useMemo(() => designSize.width * (postion_left / 100), [designSize.width, postion_left]);
@@ -151,6 +155,8 @@ export default function ImageLayer(props) {
         <Transformer
           ref={trRef}
           flipEnabled={false}
+          useSingleNodeRotation={false}
+          rotation={45}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
             if (
