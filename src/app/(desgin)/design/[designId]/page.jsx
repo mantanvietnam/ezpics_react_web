@@ -40,7 +40,7 @@ const Page = () => {
     centerY: null,
   });
 
-  console.log("🚀 ~ designLayers :", designLayers);
+  console.log("🚀 ~ design :", design);
   console.log("🚀 ~ selectedLayer :", stageData.selectedLayer);
 
   const fetchData = async () => {
@@ -148,6 +148,7 @@ const Page = () => {
                 selectedId={selectedId}
                 maxPositions={maxPositions}
                 onDuplicateLayer={handleDuplicateLayer}
+                onMasksButtonClick={() => setActiveTool("Masks")}
               />
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (

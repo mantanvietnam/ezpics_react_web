@@ -24,7 +24,7 @@ const basicColors = [
 
 const TextFill = () => {
   const { selectedLayer } = useSelector((state) => state.stage.stageData);
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState(selectedLayer.content.color);
 
   useEffect(() => {
     if (selectedLayer.content.type === "text")
@@ -59,6 +59,8 @@ const TextFill = () => {
   const triggerColorPicker = () => {
     document.getElementById("colorPicker").click();
   };
+
+  console.log("color texfill:", color);
 
   return (
     <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">

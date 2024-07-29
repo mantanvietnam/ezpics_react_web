@@ -13,6 +13,8 @@ export default function DefaultPage({ getData, searchValue }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // console.log(products);
+
   useEffect(() => {
     const fetchData = async () => {
       try {

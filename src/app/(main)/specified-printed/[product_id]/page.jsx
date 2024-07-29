@@ -17,6 +17,8 @@ export default function Page({ params }) {
   const [dataLayer, setdataLayer] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(data);
+
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
