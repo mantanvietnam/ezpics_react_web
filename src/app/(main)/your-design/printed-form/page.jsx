@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { getMyProductSeriesAPI } from "@/api/product";
+import { getMyProductApi } from "@/api/product";
 import DefaultPage from "@/components/YourProduct/DefaultPage";
 import { checkTokenCookie } from "@/utils/cookie";
 import { Button, Flex, Spin } from "antd";
@@ -17,7 +17,6 @@ export default function Page() {
     token: checkTokenCookie(),
     name: searchTerm,
     type: "user_series",
-    color: "",
   });
   // const getMyProductData = async () => {
   //   return await getMyProductSeriesAPI({

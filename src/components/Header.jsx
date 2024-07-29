@@ -208,6 +208,18 @@ const Header = ({ toggleNavbar }) => {
     document.body.style.overflowY = "auto";
   };
 
+  //Popup modal btn in hàng loạt
+  const [openModalCreatingPrint, setOpenModalCreatingPrint] = useState(false);
+
+  const handleShowModalCreatingPrint = () => {
+    setOpenModalCreatingPrint(true);
+  };
+  const handleCanCelModalCreatingPrint = () => {
+    setOpenModalCreatingPrint(false);
+    setSelectedFile(false);
+    document.body.style.overflowY = "auto";
+  };
+
   //Loading spin
   const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
     useState(false);
@@ -227,6 +239,57 @@ const Header = ({ toggleNavbar }) => {
           {
             token: checkTokenCookie(),
             type: "user_create",
+            category_id: 0,
+            sale_price: 0,
+            name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
+            background: selectedFile,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log(response);
+
+        if (response && response.data && response.data.code === 0) {
+          setLoadingButtonModalCreate(false);
+          setOpenModalCreating(false);
+          document.body.style.overflowY = "auto";
+          toast.success("Tạo thiết kế thành công, xin chờ giây lát");
+
+          setTimeout(function () {
+            router.push(`/design/${response.data.product_id}`);
+          }, 1500);
+        } else {
+          // Handle unexpected response structure or error code
+          console.error("Unexpected response:", response);
+          setLoadingButtonModalCreate(false);
+        }
+      } else {
+        console.log("Không thấy ảnh");
+        setLoadingButtonModalCreate(false);
+      }
+    } catch (error) {
+      console.error("Error creating custom product:", error);
+      // Handle error (e.g., show error message to the user)
+      setLoadingButtonModalCreate(false);
+    }
+  };
+
+  //Button tạo thiết kế in hàng loạt
+  const handleCreatePrint = async (e) => {
+    e.preventDefault();
+    setLoadingButtonModalCreate(true);
+
+    try {
+      if (selectedFile) {
+        const response = await axios.post(
+          `https://apis.ezpics.vn/apis/createProductAPI`,
+          {
+            token: checkTokenCookie(),
+            type: "user_series",
             category_id: 0,
             sale_price: 0,
             name: `Mẫu thiết kế ${Math.floor(Math.random() * 100001)}`,
@@ -648,7 +711,13 @@ const Header = ({ toggleNavbar }) => {
                   </svg>
                   <p className="item-text">Cỡ tùy chỉnh</p>
                 </div>
-                <div className="list-item border-b-[0.5px] border-[#BFC4C8]">
+                <div
+                  className="list-item border-b-[0.5px] border-[#BFC4C8]"
+                  onClick={() => {
+                    setCreatingBucket(false);
+                    handleShowModalCreatingPrint();
+                    document.body.style.overflowY = "hidden";
+                  }}>
                   <Image
                     src={designIcon.paperRolls}
                     alt=""
@@ -868,6 +937,146 @@ const Header = ({ toggleNavbar }) => {
                     justifyContent: "center",
                   }}
                   onClick={(e) => handleCreateCustom(e)}>
+                  {loadingButtonModalCreate ? (
+                    <span>
+                      <Spin
+                        indicator={
+                          <LoadingOutlined
+                            style={{
+                              fontSize: 24,
+                              color: "#fff",
+                            }}
+                            spin
+                          />
+                        }
+                      />
+                    </span>
+                  ) : (
+                    "Bắt đầu tạo mẫu"
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
+                  disabled>
+                  Bắt đầu tạo mẫu
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="px-4 text-center text-sm text-gray-500">
+            <p>
+              Nếu bạn chưa có thông tin, hãy tham khảo
+              <a href="#" className="block text-purple-600 no-underline">
+                Mẫu thiết kế có sẵn
+              </a>
+            </p>
+          </div>
+        </Modal>
+
+        <Modal
+          open={openModalCreatingPrint}
+          onCancel={handleCanCelModalCreatingPrint}
+          footer={null}
+          width={"30%"}>
+          <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
+            <h1 className="text-2xl font-bold text-[#735400] ml-[14px] mt-10">
+              Bắt đầu tạo mẫu in hàng loạt
+            </h1>
+            <br></br>
+            <h1 style={{ fontSize: 15 }} className="ml-[22px]">
+              Hãy điền đầy đủ thông tin trước khi tạo nhé
+            </h1>
+          </div>
+          {selectedFile ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "24px",
+              }}>
+              <img
+                src={urlSelectedFile}
+                alt=""
+                style={{
+                  width: 200,
+                  height: "auto",
+                  alignSelf: "center",
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-col relative pt-4">
+              <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
+              <form
+                id="file-upload-form"
+                className="block clear-both mx-auto w-full max-w-600"
+                style={{ marginTop: 40 }}>
+                <input
+                  className="hidden"
+                  id="file-upload"
+                  type="file"
+                  name="fileUpload"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+
+                <label
+                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  htmlFor="file-upload"
+                  id="file-drag"
+                  style={{ height: 200, cursor: "pointer" }}>
+                  <img
+                    id="file-image"
+                    src="#"
+                    alt="Preview"
+                    className="hidden"
+                  />
+                  <div id="">
+                    <img
+                      src="/images/direct-download.png"
+                      alt=""
+                      style={{
+                        width: 30,
+                        height: 30,
+                        alignSelf: "center",
+                        margin: "0 auto",
+                        marginBottom: "2%",
+                      }}
+                    />
+                    <div id="notimage" className="hidden">
+                      Hãy chọn ảnh
+                    </div>
+                    <span id="file-upload-btn" className="">
+                      {selectedFile === null ? "Chọn ảnh" : "Chọn lại"}
+                    </span>
+                  </div>
+                  <div id="response" className="hidden">
+                    <div id="messages"></div>
+                    <progress className="progress" id="file-progress" value="0">
+                      <span>0</span>%
+                    </progress>
+                  </div>
+                </label>
+              </form>
+            </div>
+          )}
+          <div>
+            {selectedFile !== null ? (
+              <div>
+                <button
+                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  onClick={(e) => handleCreatePrint(e)}>
                   {loadingButtonModalCreate ? (
                     <span>
                       <Spin

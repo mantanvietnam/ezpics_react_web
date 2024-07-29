@@ -86,7 +86,14 @@ export function PanelsText({
     underline: "",
   });
 
-  const [color, setColor] = useState(selectedLayer.content.color);
+  const stageData = useSelector((state) => state.stage.stageData);
+  const [color, setColor] = useState("");
+
+  useEffect(() => {
+    if (selectedLayer) {
+      setColor(selectedLayer.content.color);
+    }
+  }, [stageData]);
 
   useEffect(() => {
     const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
@@ -96,7 +103,6 @@ export function PanelsText({
       underline: selectedLayer.content.gachchan,
     });
     setFontSize(sizeValue);
-    setColor(selectedLayer.content.color);
   }, [selectedLayer]);
 
   const dispatch = useDispatch();
@@ -125,10 +131,13 @@ export function PanelsText({
       indam: fontStyle.bold,
       innghieng: fontStyle.italic,
       gachchan: fontStyle.underline,
+      color: color,
     };
     console.log("🚀 ~ useEffect ~ data:", data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [selectedLayer.id, fontSize, fontStyle]);
+  }, [selectedLayer.id, fontSize, fontStyle, color, dispatch]);
+
+  // console.log("color panestext:", color);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -140,7 +149,7 @@ export function PanelsText({
                 type="text"
                 onClick={() => onFontsButtonClick()}
                 className="flex items-center rounded-lg border border-slate-400">
-                <p className="w-[125px] flex items-start text-lg font-bold">
+                <p className="w-[125px] flex items-start text-lg font-bold overflow-hidden text-ellipsis whitespace-nowrap">
                   {selectedLayer.content.font}
                 </p>
                 <DownOutlined />
