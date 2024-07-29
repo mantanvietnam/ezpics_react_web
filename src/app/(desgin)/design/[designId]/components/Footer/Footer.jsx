@@ -6,9 +6,9 @@ import ZoomIn from "../../Icon/ZoomIn";
 import ZoomOut from "../../Icon/ZoomOut";
 import Minus from "../../Icon/Minus";
 import Plus from "../../Icon/Plus";
-import { Col, InputNumber, Row, Slider } from "antd";
+import { Button, Col, InputNumber, Row, Slider, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { setStageData } from "@/redux/slices/editor/stageSlice";
+import { setStageData, updateListLayers } from "@/redux/slices/editor/stageSlice";
 
 const scales = [5, 4, 3, 2.5, 2, 1.5, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.05];
 
@@ -81,8 +81,61 @@ const Footer = ({ containerRef }) => {
     }
   }, [currentScaleIdx]);
 
+const LockUnlock = () => {
+  const dispatch = useDispatch();
+  const stage = useSelector((state) => state.stage.stageData);
+  const [locked, setLocked] = useState(true);
+
+  const items = Array.from(stage.designLayers);
+  useEffect(() => {
+    if (Array.isArray(items)) {
+      setLocked(items.every(layer => layer.content.lock === 1));
+    }
+  }, [items]);
+
+  const onChangeLocked = () => {
+    const newLockState = locked ? 0 : 1;
+
+    const updatedLayers = items.map((layer) => ({
+      ...layer,
+      content: {
+        ...layer.content,
+        lock: newLockState,
+        draggable: newLockState === 0,
+      },
+    }));
+
+    setLocked(!locked);
+    dispatch(updateListLayers(updatedLayers ));
+    console.log("updatedLayers :", updatedLayers);
+  };
+
   return (
-    <div className="flex flex-row justify-between items-center h-[50px] border-l border-slate-300 px-5 bg-white">
+    <>
+      {locked ? (
+        <div className="bg-[#ccc] rounded-md">
+          <Tooltip placement="bottom" title="Mở khóa Layers">
+            <Button onClick={onChangeLocked} size="small" type="text">
+              <Return size={20} className="cursor-pointer" />
+            </Button>
+          </Tooltip>
+        </div>
+      ) : (
+          <Tooltip placement="bottom" title="Khóa Layers">
+            <Button onClick={onChangeLocked} size="small" type="text">
+              <Return size={20} className="cursor-pointer" />
+            </Button>
+          </Tooltip>
+      )}
+    </>
+  );
+};
+
+
+
+
+  return (
+    <div className="flex flex-row justify-between items-center h-[50px] border-l border-slate-300 px-8 bg-white">
       <div className="flex flex-row items-center">
         <LayerIcon size={20} />
         <p className="pl-2">Trang</p>
@@ -124,7 +177,7 @@ const Footer = ({ containerRef }) => {
         </Row>
       </div>
       <div className="flex flex-row items-center">
-        <Return size={20} className="cursor-pointer" />
+        <LockUnlock />
       </div>
     </div>
   );
