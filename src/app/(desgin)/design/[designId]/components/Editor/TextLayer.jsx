@@ -1,6 +1,7 @@
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
+import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
 
 export default function TextLayer(props) {
@@ -26,8 +27,12 @@ export default function TextLayer(props) {
   } = data;
 
   const dispatch = useDispatch();
+
+  const { selectedLayer } = useSelector((state) => state.stage.stageData)
+
   const shapeRef = useRef();
   const trRef = useRef();
+
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(data?.text);
 
@@ -109,8 +114,6 @@ export default function TextLayer(props) {
 
   const handleTransformEnd = (e) => {
     const node = shapeRef.current;
-    console.log('🚀 ~ handleTransformEnd ~ node.width():', node.width())
-    console.log('🚀 ~ handleTransformEnd ~ node.rotation():', node.rotation())
 
     const data = {
       position_left: (node.x() / designSize.width) * 100,
@@ -163,6 +166,7 @@ export default function TextLayer(props) {
     textarea.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         setTextValue(textarea.value);
+        dispatch(updateLayer({ id: selectedLayer.id, data: { text: textarea.value } }))
         if (document.body.contains(textarea)) {
           document.body.removeChild(textarea);
         }
