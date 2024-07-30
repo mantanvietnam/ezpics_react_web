@@ -146,9 +146,8 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        (e.target.width() * e.target.scaleX() * 100) / designSize.width
-      }vw`,
+      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
+        }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -190,14 +189,13 @@ export default function ImageLayer(props) {
         <Transformer
           ref={trRef}
           flipEnabled={false}
-          useSingleNodeRotation={false}
-          rotation={45}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
             if (
               anchor.hasName("top-center") ||
               anchor.hasName("bottom-center")
             ) {
+              anchor.visible(false);
               anchor.height(6);
               anchor.offsetY(3);
               anchor.width(30);
@@ -207,6 +205,7 @@ export default function ImageLayer(props) {
               anchor.hasName("middle-left") ||
               anchor.hasName("middle-right")
             ) {
+              anchor.visible(false);
               anchor.height(30);
               anchor.offsetY(15);
               anchor.width(6);
@@ -220,6 +219,7 @@ export default function ImageLayer(props) {
             }
             return newBox;
           }}
+          attachTo={shapeRef.current} // Gắn Transformer với đối tượng Image
         />
       )}
     </>
