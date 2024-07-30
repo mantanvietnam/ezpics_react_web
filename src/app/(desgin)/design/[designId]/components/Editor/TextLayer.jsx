@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
+import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
@@ -22,11 +23,17 @@ export default function TextLayer(props) {
     indam,
     innghieng,
     gachchan,
+    rotate,
+    text_align
   } = data;
 
   const dispatch = useDispatch();
+
+  const { selectedLayer } = useSelector((state) => state.stage.stageData)
+
   const shapeRef = useRef();
   const trRef = useRef();
+
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(data?.text);
 
@@ -37,6 +44,15 @@ export default function TextLayer(props) {
   // Convert vw to px
   const sizeValue = parseFloat(size?.replace("vw", ""));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
+
+  //wid
+  const widthValue = parseFloat(
+    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  );
+  const width = designSize.width * (widthValue / 100);
+
+  // Rotation
+  const rotationValue = parseFloat(rotate?.replace("deg", ""));
 
   useEffect(() => {
     if (isSelected) {
@@ -73,16 +89,25 @@ export default function TextLayer(props) {
     dispatch(updateLayer({ id, data }));
   };
 
+  const handleTransform = (e) => {
+    const node = shapeRef.current;
+    const newScaleX = node.scaleX();
+    const newScaleY = node.scaleY();
+    // If dragging sides, change width only
+    const newWidth = node.width() * newScaleX;
+    node.width(newWidth);
+    node.scaleX(1);
+  };
+
   const handleTransformEnd = (e) => {
-    if (lock) return; // Prevent transforming if locked
+    const node = shapeRef.current;
 
     const data = {
-      postion_left: (e.target.x() / designSize.width) * 100,
-      postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        ((e.target.width() * e.target.scaleX()) / designSize.width) * 100
-      }vw`,
-      rotate: `${e.target.rotation()}deg`,
+      position_left: (node.x() / designSize.width) * 100,
+      position_top: (node.y() / designSize.height) * 100,
+      rotate: `${node.rotation()}deg`,
+      width: `${((node.width() * node.scaleX()) / designSize.width) * 100
+        }vw`
     };
     dispatch(updateLayer({ id, data }));
     e.target.scaleX(1);
@@ -126,6 +151,10 @@ export default function TextLayer(props) {
       if (e.key === "Enter" && !e.shiftKey) {
         setTextValue(textarea.value);
         document.body.removeChild(textarea);
+        dispatch(updateLayer({ id: selectedLayer.id, data: { text: textarea.value } }))
+        if (document.body.contains(textarea)) {
+          document.body.removeChild(textarea);
+        }
         setIsEditing(false);
       }
       if (e.key === "Escape") {
@@ -162,6 +191,14 @@ export default function TextLayer(props) {
     return fontStyle.trim();
   };
 
+  useEffect(() => {
+    const tr = trRef.current;
+    if (tr) {
+      tr.setNode(shapeRef.current);
+      tr.getLayer().batchDraw();
+    }
+  }, [isSelected]);
+
   return (
     <>
       <Text
@@ -172,6 +209,9 @@ export default function TextLayer(props) {
         draggable={!lock}
         visible={Boolean(status)}
         fill={data?.color}
+        width={width}
+        align={text_align}
+        rotation={rotationValue}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
@@ -181,6 +221,7 @@ export default function TextLayer(props) {
         onDblClick={!lock ? handleDblClick : null}
         onDblTap={!lock ? handleDblClick : null}
         onDragEnd={handleDragEnd}
+        onTransform={handleTransform}
         onTransformEnd={handleTransformEnd}
       />
       {isSelected && isTransformerVisible && !lock && (
