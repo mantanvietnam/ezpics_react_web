@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import NextImage from "next/image";
-import { Button, Slider, Popover, Modal } from "antd";
+import { Button, Slider, Popover, Modal, Input } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
 import {
@@ -23,31 +23,87 @@ import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
 
 const SliderMenu = ({
-  valueSaturate,
   valueBrightness,
-  valueContrast,
   valueOpacity,
+  valueContrast,
+  valueSaturate,
   onChangeBrightness,
   onChangeOpacity,
   onChangeContrast,
   onChangeSaturate,
 }) => (
-  <div className="w-[250px]">
-    <div className="p-2">
-      <span>Độ sáng</span>
-      <Slider onChange={onChangeBrightness} value={valueBrightness} />
+  <div className="w-[300px]">
+    <div className="p-2 flex items-center">
+      <span className="w-[80px]">Độ sáng</span>
+      <Slider
+        onChange={onChangeBrightness}
+        value={valueBrightness}
+        className="flex-grow"
+        min={0}
+        max={100}
+      />
+      <Input
+        type="number"
+        value={valueBrightness}
+        onChange={(e) => onChangeBrightness(parseInt(e.target.value))}
+        className="w-16 ml-2"
+        min={0}
+        max={100}
+      />
     </div>
-    <div className="p-2">
-      <span>Độ trong</span>
-      <Slider onChange={onChangeOpacity} value={valueOpacity} />
+    <div className="p-2 flex items-center">
+      <span className="w-[80px]">Độ trong</span>
+      <Slider
+        onChange={onChangeOpacity}
+        value={valueOpacity}
+        className="flex-grow"
+        min={0}
+        max={100}
+      />
+      <Input
+        type="number"
+        value={valueOpacity}
+        onChange={(e) => onChangeOpacity(parseInt(e.target.value))}
+        className="w-16 ml-2"
+        min={0}
+        max={100}
+      />
     </div>
-    <div className="p-2">
-      <span>Độ tương phản</span>
-      <Slider onChange={onChangeContrast} value={valueContrast} />
+    <div className="p-2 flex items-center">
+      <span className="w-[80px]">Độ tương phản</span>
+      <Slider
+        onChange={onChangeContrast}
+        value={valueContrast}
+        className="flex-grow"
+        min={0}
+        max={100}
+      />
+      <Input
+        type="number"
+        value={valueContrast}
+        onChange={(e) => onChangeContrast(parseInt(e.target.value))}
+        className="w-16 ml-2"
+        min={0}
+        max={100}
+      />
     </div>
-    <div className="p-2">
-      <span>Độ bão hòa</span>
-      <Slider onChange={onChangeSaturate} value={valueSaturate} />
+    <div className="p-2 flex items-center">
+      <span className="w-[80px]">Độ bão hòa</span>
+      <Slider
+        onChange={onChangeSaturate}
+        value={valueSaturate}
+        className="flex-grow"
+        min={0}
+        max={200}
+      />
+      <Input
+        type="number"
+        value={valueSaturate}
+        onChange={(e) => onChangeSaturate(parseInt(e.target.value))}
+        className="w-16 ml-2"
+        min={0}
+        max={200}
+      />
     </div>
   </div>
 );
@@ -283,16 +339,17 @@ export function PanelsImage({
           formData2.append("file", file2);
         }
 
-        const responseChangeImage = await axios.post(
-          "https://apis.ezpics.vn/apis/changeLayerImageNew",
-          formData2,
-          config
-        );
-        console.log("responseChangeImage", responseChangeImage);
+        // const responseChangeImage = await axios.post(
+        //   "https://apis.ezpics.vn/apis/changeLayerImageNew",
+        //   formData2,
+        //   config
+        // );
+        // console.log("responseChangeImage", responseChangeImage);
 
-        if (responseChangeImage && responseChangeImage?.data?.code === 1) {
+        console.log("responseRemoveBackground.data?.link",responseRemoveBackground.data)
+        if (responseRemoveBackground.data.code === 0) {
           const data = {
-            banner: responseRemoveBackground.data?.link,
+            banner: responseRemoveBackground.data.linkOnline,
           };
           dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
           toast.success("Xóa nền ảnh thành công");
