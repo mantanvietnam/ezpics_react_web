@@ -38,7 +38,6 @@ export default function Customize() {
   const idProduct = designId
   const network = useAppSelector((state) => state.network.ipv4Address);
   const stageData = useSelector((state) => state.stage.stageData);
-  console.log('🚀 ~ Customize ~ stageData:', stageData)
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -137,8 +136,6 @@ export default function Customize() {
     handleChange("status", event.target.value)
   };
 
-  console.log('🚀 ~ Customize ~ state:', state)
-
   const optionsDisplay = [
     { value: "", label: "Chọn trạng thái" },
     { value: "1", label: "Đã hoàn thành" },
@@ -176,7 +173,6 @@ export default function Customize() {
       return;
     }
     setSelectedFiles(file);
-    console.log('🚀 ~ handleChangeInputFileBackground ~ file:', file)
     handleChange("background", file)
   };
 
