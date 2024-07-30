@@ -207,20 +207,59 @@ const EditPrint = ({ stageRef }) => {
     });
   };
 
-  function onSelectFile(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () =>
-        setImgSrc(reader.result?.toString() || "")
-      );
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  }
-
   // Lọc các layer có biến 'variable' không phải là chuỗi rỗng
   const filteredLayers = designLayers.filter(
     (layer) => layer.content.variable && layer.content.variable.trim() !== ""
   );
+
+  function onSelectFile(e) {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        const newImgSrc = reader.result?.toString() || "";
+        setImgSrc(newImgSrc);
+
+        filteredLayers.forEach((layer) => {
+          if (layer.content.type === "image") {
+            const data = {
+              ...layer.content,
+              banner: newImgSrc,
+            };
+            dispatch(
+              updateLayer({
+                id: layer.id,
+                data: data,
+              })
+            );
+          }
+        });
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  const handleTextChange = (e) => {
+    const newTextValue = e.target.value;
+    setExportValue({ ...exportValue, valueText: newTextValue });
+
+    filteredLayers.forEach((layer) => {
+      if (layer.content.type === "text") {
+        const data = {
+          ...layer.content,
+          text: newTextValue,
+        };
+        dispatch(
+          updateLayer({
+            id: layer.id,
+            data: data,
+          })
+        );
+      }
+    });
+  };
 
   // Xử lý khi nhấn nút "In ảnh"
   const exportButtonClick = () => {
@@ -346,9 +385,7 @@ const EditPrint = ({ stageRef }) => {
               </h4>
               <Input
                 value={exportValue.valueText}
-                onChange={(e) =>
-                  setExportValue({ ...exportValue, valueText: e.target.value })
-                }
+                onChange={handleTextChange}
               />
             </div>
           );
@@ -377,11 +414,11 @@ const EditPrint = ({ stageRef }) => {
           In ảnh
         </button>
       </Popover>
-      <button
+      {/* <button
         className="mt-4 p-2 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
         onClick={exportButtonClick}>
         Áp dụng
-      </button>
+      </button> */}
       <button
         className="mt-4 mx-2 p-2 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
         onClick={handleCancel}>
