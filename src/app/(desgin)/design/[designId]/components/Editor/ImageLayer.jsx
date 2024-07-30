@@ -44,10 +44,10 @@ export default function ImageLayer(props) {
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
 
   // Convert vw to px
-  // const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
-  const widthValue = parseFloat(
-    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
-  );
+  const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
+  // const widthValue = parseFloat(
+  //   typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  // );
   const width = designSize.width * (widthValue / 100);
 
   const heightSize = (naturalHeight * width) / naturalWidth;
@@ -190,7 +190,7 @@ export default function ImageLayer(props) {
         <Transformer
           ref={trRef}
           flipEnabled={false}
-          useSingleNodeRotation={false}
+          // useSingleNodeRotation={false}
           rotation={45}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);

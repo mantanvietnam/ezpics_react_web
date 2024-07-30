@@ -125,14 +125,14 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
   const [fileType, setFileType] = useState("png");
   const [pixelRatio, setPixelRatio] = useState(1);
   const stageData = useSelector((state) => state.stage.stageData);
-  const [isProMember, setIsProMember] = useState(false);
+  const [isProMember, setIsProMember] = useState(true);
 
-  useEffect(() => {
-    const dataInfoUser = getUserInfo();
-    if (dataInfoUser && dataInfoUser.member_pro === 1) {
-      setIsProMember(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const dataInfoUser = getUserInfo();
+  //   if (dataInfoUser && dataInfoUser.member_pro === 1) {
+  //     setIsProMember(true);
+  //   }
+  // }, []);
 
   const downloadURI = (url, name) => {
     const link = document.createElement("a");
