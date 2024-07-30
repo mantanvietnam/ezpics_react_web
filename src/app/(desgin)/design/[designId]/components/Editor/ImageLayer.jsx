@@ -32,15 +32,9 @@ export default function ImageLayer(props) {
   } = data;
 
   const dispatch = useDispatch();
-
   const shapeRef = useRef();
   const trRef = useRef();
-
-  // console.log("isTransformerVisible: ", isTransformerVisible);
-  // console.log("isSelected: ", isSelected);
-
   const [image] = useImage(data.banner, "anonymous");
-
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
 
   // Convert vw to px
@@ -49,65 +43,39 @@ export default function ImageLayer(props) {
     typeof data.width === "string" ? data.width.replace("vw", "") : data.width
   );
   const width = designSize.width * (widthValue / 100);
-
-  const heightSize = (naturalHeight * width) / naturalWidth;
-
-  // Position
-  const postionX = designSize.width * (postion_left / 100);
-  const postionY = designSize.height * (postion_top / 100);
-
-  // Rotation
-  const rotation = parseFloat(rotate?.replace("deg", ""));
-
-  // Max X and Max Y
-  const maxPositionLeft = ((designSize.width - width) / designSize.width) * 100;
-  const maxPositionTop =
-    ((designSize.height - heightSize) / designSize.height) * 100;
-
-  const centerLeft = (designSize.width - width) / 2;
-  const centerTop = (designSize.height - heightSize) / 2;
-
-  // Convert center position to percentage
-  const centerPositionX = (centerLeft / designSize.width) * 100;
-  const centerPositionY = (centerTop / designSize.height) * 100;
+  const heightSize = useMemo(() => (naturalHeight * width) / naturalWidth, [naturalHeight, naturalWidth, width]);
+  const postionX = useMemo(() => designSize.width * (postion_left / 100), [designSize.width, postion_left]);
+  const postionY = useMemo(() => designSize.height * (postion_top / 100), [designSize.height, postion_top]);
+  const rotation = useMemo(() => parseFloat(rotate?.replace("deg", "")), [rotate]);
+  const maxPositionLeft = useMemo(() => ((designSize.width - width) / designSize.width) * 100, [designSize.width, width]);
+  const maxPositionTop = useMemo(() => ((designSize.height - heightSize) / designSize.height) * 100, [designSize.height, heightSize]);
+  const centerLeft = useMemo(() => (designSize.width - width) / 2, [designSize.width, width]);
+  const centerTop = useMemo(() => (designSize.height - heightSize) / 2, [designSize.height, heightSize]);
+  const centerPositionX = useMemo(() => (centerLeft / designSize.width) * 100, [centerLeft, designSize.width]);
+  const centerPositionY = useMemo(() => (centerTop / designSize.height) * 100, [centerTop, designSize.height]);
 
   useEffect(() => {
     if (onMaxPositionUpdate) {
-      onMaxPositionUpdate(
-        maxPositionLeft,
-        maxPositionTop,
-        centerPositionX,
-        centerPositionY
-      );
+      onMaxPositionUpdate(maxPositionLeft, maxPositionTop, centerPositionX, centerPositionY);
     }
-  }, [
-    maxPositionLeft,
-    maxPositionTop,
-    centerPositionX,
-    centerPositionY,
-    onMaxPositionUpdate,
-  ]);
+  }, [maxPositionLeft, maxPositionTop, centerPositionX, centerPositionY, onMaxPositionUpdate]);
 
-  // Show transform manually
   useEffect(() => {
     if (isSelected) {
-      // Attach transformer manually
       trRef.current?.nodes([shapeRef.current]);
       trRef.current?.getLayer().batchDraw();
     }
   }, [isSelected]);
 
-  // Brightness
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.Brighten]);
-      shapeRef.current.brightness(brightness / 100 - 1); // Set brightness
+      shapeRef.current.brightness(brightness / 100 - 1);
       shapeRef.current.getLayer().batchDraw();
     }
-  }, [image, brightness]);
+  }, [brightness, image]);
 
-  // Contrast
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
@@ -117,7 +85,6 @@ export default function ImageLayer(props) {
     }
   }, [contrast, image]);
 
-  // Apply HSL filter
   useEffect(() => {
     if (shapeRef.current) {
       shapeRef.current.cache();
@@ -135,6 +102,8 @@ export default function ImageLayer(props) {
   }, [lock, postionX, postionY]);
 
   const handleDragEnd = (e) => {
+    if (lock) return; // Prevent dragging if locked
+
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
@@ -143,6 +112,8 @@ export default function ImageLayer(props) {
   };
 
   const handleTransformEnd = (e) => {
+    if (lock) return; 
+
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
@@ -156,11 +127,7 @@ export default function ImageLayer(props) {
   };
 
   useEffect(() => {
-    if (!lock == false || Boolean(status) == false) {
-      setIsSelectLayer(true);
-    } else {
-      setIsSelectLayer(false);
-    }
+    setIsSelectLayer(!lock && Boolean(status));
   }, [lock, status]);
 
   return (
@@ -180,12 +147,12 @@ export default function ImageLayer(props) {
         scaleY={scaleY}
         draggable={!lock}
         visible={Boolean(status)}
-        onClick={onSelect}
-        onTap={onSelect}
+        onClick={lock ? null : onSelect} 
+        onTap={lock ? null : onSelect}  
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       />
-      {isSelected && isTransformerVisible && (
+      {isSelected && isTransformerVisible && !lock && (
         <Transformer
           ref={trRef}
           flipEnabled={false}

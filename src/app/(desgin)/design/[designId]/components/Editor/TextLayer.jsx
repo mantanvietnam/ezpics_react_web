@@ -1,8 +1,8 @@
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
 import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
+import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
 export default function TextLayer(props) {
   const {
@@ -36,22 +36,6 @@ export default function TextLayer(props) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(data?.text);
-
-  // State for dynamic offsets
-  const [offsetX, setOffsetX] = useState(window.innerWidth * 0.1); // 10% of viewport width
-  const [offsetY, setOffsetY] = useState(window.innerHeight * 0.05); // 5% of viewport height
-
-  // Function to update offsets based on viewport size
-  const updateOffsets = () => {
-    setOffsetX(window.innerWidth * 0.1); // 10% of viewport width
-    setOffsetY(window.innerHeight * 0.05); // 5% of viewport height
-  };
-
-  useEffect(() => {
-    // Add resize event listener to update offsets
-    window.addEventListener("resize", updateOffsets);
-    return () => window.removeEventListener("resize", updateOffsets);
-  }, []);
 
   // Position of the text
   const positionX = designSize.width * (postion_left / 100);
@@ -96,11 +80,13 @@ export default function TextLayer(props) {
   }, [isEditing, textValue, onTextChange]);
 
   const handleDragEnd = (e) => {
+    if (lock) return; // Prevent dragging if locked
+
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
     };
-    dispatch(updateLayer({ id: id, data: data }));
+    dispatch(updateLayer({ id, data }));
   };
 
   const handleTransform = (e) => {
@@ -123,32 +109,29 @@ export default function TextLayer(props) {
       width: `${((node.width() * node.scaleX()) / designSize.width) * 100
         }vw`
     };
-    dispatch(updateLayer({ id: id, data: data }));
+    dispatch(updateLayer({ id, data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
   };
 
   const handleDblClick = () => {
+    if (lock) return; // Prevent editing if locked
+
     setIsEditing(true);
 
-    const textPosition = shapeRef.current.absolutePosition();
-    const areaPosition = {
-      x: textPosition.x,
-      y: textPosition.y,
-    };
-
+    const textPosition = shapeRef.current.getClientRect();
     const textarea = document.createElement("textarea");
     document.body.appendChild(textarea);
 
     textarea.value = textValue;
     textarea.style.position = "absolute";
-    textarea.style.top = `${textPosition.y + offsetY}px`;
-    textarea.style.left = `${textPosition.x + offsetX}px`;
+    textarea.style.top = `${textPosition.y}px`;
+    textarea.style.left = `${textPosition.x}px`;
     textarea.style.width =
-      shapeRef.current.width() - shapeRef.current.padding() * 2 + "px";
+      shapeRef.current.width() * shapeRef.current.scaleX() - shapeRef.current.padding() * 2 + "px";
     textarea.style.height =
-      shapeRef.current.height() - shapeRef.current.padding() * 2 + "px";
-    textarea.style.fontSize = shapeRef.current.fontSize() + "px";
+      shapeRef.current.height() * shapeRef.current.scaleY() - shapeRef.current.padding() * 2 + "px";
+    textarea.style.fontSize = shapeRef.current.fontSize() * shapeRef.current.scaleX() + "px";
     textarea.style.border = "none";
     textarea.style.padding = "0px";
     textarea.style.margin = "0px";
@@ -164,9 +147,10 @@ export default function TextLayer(props) {
 
     textarea.focus();
 
-    textarea.addEventListener("keydown", (e) => {
+    const handleKeyDown = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         setTextValue(textarea.value);
+        document.body.removeChild(textarea);
         dispatch(updateLayer({ id: selectedLayer.id, data: { text: textarea.value } }))
         if (document.body.contains(textarea)) {
           document.body.removeChild(textarea);
@@ -174,29 +158,25 @@ export default function TextLayer(props) {
         setIsEditing(false);
       }
       if (e.key === "Escape") {
-        if (document.body.contains(textarea)) {
-          document.body.removeChild(textarea);
-        }
-        setIsEditing(false);
-      }
-    });
-
-    const handleOutsideClick = (e) => {
-      if (e.target !== textarea) {
-        setTextValue(textarea.value);
-        if (document.body.contains(textarea)) {
-          document.body.removeChild(textarea);
-        }
+        document.body.removeChild(textarea);
         setIsEditing(false);
       }
     };
 
+    const handleOutsideClick = (e) => {
+      if (e.target !== textarea) {
+        setTextValue(textarea.value);
+        document.body.removeChild(textarea);
+        setIsEditing(false);
+      }
+    };
+
+    textarea.addEventListener("keydown", handleKeyDown);
     setTimeout(() => {
       window.addEventListener("click", handleOutsideClick);
-    });
+    }, 0);
   };
 
-  // Hàm để tạo giá trị fontStyle dựa trên các cờ
   const getFontStyle = (indam, innghieng) => {
     let fontStyle = "";
 
@@ -236,20 +216,19 @@ export default function TextLayer(props) {
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
-        onClick={onSelect}
-        onTap={onSelect}
-        onDblClick={handleDblClick}
-        onDblTap={handleDblClick}
+        onClick={!lock ? onSelect : null}
+        onTap={!lock ? onSelect : null}
+        onDblClick={!lock ? handleDblClick : null}
+        onDblTap={!lock ? handleDblClick : null}
         onDragEnd={handleDragEnd}
         onTransform={handleTransform}
         onTransformEnd={handleTransformEnd}
       />
-      {isSelected && isTransformerVisible && (
+      {isSelected && isTransformerVisible && !lock && (
         <Transformer
           ref={trRef}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
-            // Hide anchors for height adjustment
             if (
               anchor.hasName("top-left") ||
               anchor.hasName("top-right") ||
@@ -258,14 +237,12 @@ export default function TextLayer(props) {
             ) {
               anchor.visible(false);
             }
-            // Hide anchors for height adjustment
             if (
               anchor.hasName("top-center") ||
               anchor.hasName("bottom-center")
             ) {
               anchor.visible(false);
             }
-            // Show anchors for width adjustment
             if (
               anchor.hasName("middle-left") ||
               anchor.hasName("middle-right")
@@ -278,7 +255,6 @@ export default function TextLayer(props) {
             }
           }}
           boundBoxFunc={(oldBox, newBox) => {
-            // Limit resize to width only
             newBox.height = oldBox.height;
             if (Math.abs(newBox.width) < 5) {
               return oldBox;
