@@ -259,7 +259,7 @@ const EditPrint = ({ stageRef }) => {
       {filteredLayers.map((layer) => {
         if (layer.content?.type === "image") {
           return (
-            <div className="w-[400px] h-fit">
+            <div className="w-[400px] h-fit" key = {layer.id} >
               <h4 className="text-lg font-bold py-2 text-white">
                 {layer.content.variableLabel}
               </h4>
@@ -340,7 +340,7 @@ const EditPrint = ({ stageRef }) => {
           );
         } else if (layer.content?.type === "text") {
           return (
-            <div>
+            <div key = {layer.id}>
               <h4 className="text-lg font-bold py-2 text-white">
                 {layer.content.variableLabel}
               </h4>
