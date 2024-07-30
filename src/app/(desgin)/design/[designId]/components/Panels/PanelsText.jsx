@@ -362,7 +362,7 @@ export function PanelsText({
             <div className="w-[1px] h-[24px] bg-black"></div>
           </div>
 
-          <div className="px-1">
+          {/* <div className="px-1">
             <Tooltip title="Danh sách" placement="bottom">
               <Button type="text" className="text-lg font-bold px-1">
                 <svg
@@ -390,7 +390,7 @@ export function PanelsText({
                 </svg>
               </Button>
             </Tooltip>
-          </div>
+          </div> */}
 
           <div className="px-1">
             <Popover content={<SliderMenu />} trigger="click">
