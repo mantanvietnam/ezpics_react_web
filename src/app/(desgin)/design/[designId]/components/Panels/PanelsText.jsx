@@ -79,7 +79,8 @@ export function PanelsText({
     (state) => state.stage.stageData
   );
   // Convert vw to px
-  const [fontSize, setFontSize] = useState(12);
+  const [fontSize, setFontSize] = useState(12)
+  const [postionText, setPostionText] = useState('left')
   const [fontStyle, setFontStyle] = useState({
     bold: "",
     italic: "",
@@ -103,6 +104,7 @@ export function PanelsText({
       underline: selectedLayer.content.gachchan,
     });
     setFontSize(sizeValue);
+    setPostionText(selectedLayer.content.text_align)
   }, [selectedLayer]);
 
   const dispatch = useDispatch();
@@ -125,6 +127,10 @@ export function PanelsText({
     }));
   };
 
+  const handleTextCenter = (textAlign) => {
+    setPostionText(textAlign)
+  }
+
   useEffect(() => {
     const data = {
       size: `${fontSize}vw`,
@@ -132,10 +138,10 @@ export function PanelsText({
       innghieng: fontStyle.italic,
       gachchan: fontStyle.underline,
       color: color,
+      text_align: postionText
     };
-    console.log("🚀 ~ useEffect ~ data:", data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [selectedLayer.id, fontSize, fontStyle, color, dispatch]);
+  }, [selectedLayer.id, fontSize, fontStyle, color, postionText, dispatch]);
 
   // console.log("color panestext:", color);
 
@@ -204,11 +210,10 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.bold === "bold" || fontStyle.bold === "bolder"
-                    ? "bg-gray-300"
-                    : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.bold === "bold" || fontStyle.bold === "bolder"
+                  ? "bg-gray-300"
+                  : ""
+                  }`}
                 onClick={() => handleFontStyleChange("bold", "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -228,9 +233,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.italic === "italic" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.italic === "italic" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("italic", "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -251,9 +255,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.underline === "underline" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.underline === "underline" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("underline", "underline")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -293,7 +296,7 @@ export function PanelsText({
 
           <div className="px-1">
             <Tooltip title="Căn trái" placement="bottom">
-              <Button type="text" className="text-lg font-bold px-1">
+              <Button type="text" className="text-lg font-bold px-1" onClick={() => handleTextCenter('left')}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -308,7 +311,11 @@ export function PanelsText({
 
           <div className="px-1">
             <Tooltip title="Căn giữa" placement="bottom">
-              <Button type="text" className="text-lg font-bold px-1">
+              <Button
+                type="text"
+                className="text-lg font-bold px-1"
+                onClick={() => handleTextCenter('center')}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -323,7 +330,7 @@ export function PanelsText({
 
           <div className="px-1">
             <Tooltip title="Căn phải" placement="bottom">
-              <Button type="text" className="text-lg font-bold px-1">
+              <Button type="text" className="text-lg font-bold px-1" onClick={() => handleTextCenter('right')}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -336,7 +343,7 @@ export function PanelsText({
             </Tooltip>
           </div>
 
-          <div className="px-1">
+          {/* <div className="px-1">
             <Tooltip title="Căn hai bên" placement="bottom">
               <Button type="text" className="text-lg font-bold px-1">
                 <svg
@@ -349,7 +356,7 @@ export function PanelsText({
                 </svg>
               </Button>
             </Tooltip>
-          </div>
+          </div> */}
 
           <div className="px-1">
             <div className="w-[1px] h-[24px] bg-black"></div>

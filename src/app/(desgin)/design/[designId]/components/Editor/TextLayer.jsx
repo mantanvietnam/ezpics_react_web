@@ -23,7 +23,8 @@ export default function TextLayer(props) {
     indam,
     innghieng,
     gachchan,
-    rotate
+    rotate,
+    text_align
   } = data;
 
   const dispatch = useDispatch();
@@ -229,6 +230,7 @@ export default function TextLayer(props) {
         visible={Boolean(status)}
         fill={data?.color}
         width={width}
+        align={text_align}
         rotation={rotationValue}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
