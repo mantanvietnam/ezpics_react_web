@@ -1,22 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
 const ImageMask = () => {
   const dispatch = useDispatch();
   const { selectedLayer } = useSelector((state) => state.stage.stageData);
+  const [imageLink, setImageLink] = useState("");
 
   const handleMaskClick = () => {
-    console.log("btn mask");
     if (selectedLayer && selectedLayer.content.type === "image") {
-      // Cập nhật layer để đặt hình ảnh vào khung
       const updatedLayer = {
-        postion_left: 0, // Cập nhật vị trí x
-        postion_top: 0, // Cập nhật vị trí y
         width: 50,
         height: 50,
       };
-      dispatch(updateLayer({ id: selectedLayer.id, data: updatedLayer }));
+      // dispatch(updateLayer({ id: selectedLayer.id, data: updatedLayer }));
+      console.log("selectedLayer.content.banner", selectedLayer.content.banner)
+      setImageLink(selectedLayer.content.banner);
     }
   };
 
@@ -26,32 +25,26 @@ const ImageMask = () => {
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="50"
-          height="50"
+          width="240"
+          height="240"
           onClick={handleMaskClick}>
           <defs>
-            <clipPath id="clip-0.49034285747025574">
-              <path d="M 0 0 L 300 0 L 300 300 L 0 300 Z" />
+            <clipPath id="circleView">
+              <circle cx="120" cy="120" r="100" />
             </clipPath>
           </defs>
-
-          {/* <!-- Path for the fill --> */}
-          <path
-            d="M 0 0 L 300 0 L 300 300 L 0 300 Z"
-            fill="lightgray"
-            transform="scale(1, 1)"
-          />
-
-          {/* <!-- Path for the stroke, clipped by the star path --> */}
-          <path
-            d="M 0 0 L 300 0 L 300 300 L 0 300 Z"
-            fill="none"
-            stroke="#0c0c0c"
-            stroke-width="0"
-            clip-path="url(#clip-0.49034285747025574)"
-            transform="scale(1, 1)"
-            stroke-dasharray=""
-          />
+          {imageLink ? (
+            <image 
+              width="240" 
+              height="240" 
+              xlinkHref={imageLink}
+              clipPath="url(#circleView)"
+            />
+          ) : (
+            <g clipPath="url(#circleView)">
+              <rect width="240" height="240" fill="black" />
+            </g>
+          )}
         </svg>
       </div>
     </div>
