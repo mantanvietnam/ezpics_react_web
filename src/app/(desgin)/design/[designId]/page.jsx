@@ -66,7 +66,7 @@ const Page = () => {
         } else if (width >= 1000 || height >= 1000) {
           sizeFactor = 1;
         } else if (width >= 500 || height >= 500) {
-          sizeFactor = 0.5;
+          sizeFactor = 1;
         } else {
           sizeFactor = 2;
         }
