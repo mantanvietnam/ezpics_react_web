@@ -171,7 +171,7 @@ export function PanelsImage({
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
       setValueContrast(selectedLayer.content.contrast / 2);
-      setValueContrast(selectedLayer.content.brightness / 2 || 100);
+      setValueBrightness(selectedLayer.content.brightness / 2 || 100);
       setValueSaturate(selectedLayer.content.saturate / 2);
     }
   }, [selectedLayer]);
@@ -345,7 +345,7 @@ export function PanelsImage({
         // );
         // console.log("responseChangeImage", responseChangeImage);
 
-        console.log("responseRemoveBackground.data?.link",responseRemoveBackground.data)
+        console.log("responseRemoveBackground.data?.link", responseRemoveBackground.data)
         if (responseRemoveBackground.data.code === 0) {
           const data = {
             banner: responseRemoveBackground.data.linkOnline,
