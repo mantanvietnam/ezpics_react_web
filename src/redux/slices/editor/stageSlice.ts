@@ -26,13 +26,19 @@ const stageSlice = createSlice({
         action.payload,
       ];
     },
+    // addLayerSVG: (state, action: PayloadAction<string>) => {
+    //   state.stageData.designLayers = [
+    //     ...state.stageData.designLayers,
+    //     { type: "svg", content: action.payload },
+    //   ];
+    // },
     addLayerText: (state, action: PayloadAction<any>) => {
       // Tìm giá trị sort lớn nhất hiện tại trong designLayers
       const maxSort =
         state.stageData.designLayers.length > 0
           ? Math.max(
-            ...state.stageData.designLayers.map((layer: any) => layer.sort)
-          )
+              ...state.stageData.designLayers.map((layer: any) => layer.sort)
+            )
           : 0;
 
       // Tạo phần tử mới với giá trị sort được cập nhật
@@ -60,9 +66,9 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-              ...layer,
-              content: { ...layer.content, ...action.payload.data },
-            }
+                ...layer,
+                content: { ...layer.content, ...action.payload.data },
+              }
             : layer
       );
     },
@@ -79,12 +85,12 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-              ...layer,
-              content: {
-                ...layer.content,
-                scaleX: -layer.content.scaleX || -1,
-              },
-            }
+                ...layer,
+                content: {
+                  ...layer.content,
+                  scaleX: -layer.content.scaleX || -1,
+                },
+              }
             : layer
       );
     },
@@ -94,12 +100,12 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-              ...layer,
-              content: {
-                ...layer.content,
-                scaleY: -layer.content.scaleY || -1,
-              },
-            }
+                ...layer,
+                content: {
+                  ...layer.content,
+                  scaleY: -layer.content.scaleY || -1,
+                },
+              }
             : layer
       );
     },
@@ -176,6 +182,7 @@ const stageSlice = createSlice({
 export const {
   setStageData,
   addLayerImage,
+  // addLayerSVG,
   removeLayer,
   updateLayer,
   selectLayer,

@@ -133,7 +133,7 @@ const Page = () => {
         setTransformerVisible={setTransformerVisible}
       />
       <div className="h-screen pt-[65px] overflow-hidden">
-        <Toolbox onToolChange={setActiveTool} activeTool={activeTool} />
+        <Toolbox onToolChange={setActiveTool} activeTool={activeTool} stageRef={stageRef} />
         <div
           className={`
           relative ${
