@@ -146,7 +146,7 @@ const Layer = () => {
   return (
     <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
       {design?.type === "user_series" && (
-        <div>
+        <div className="flex justify-between">
           <Popover
             placement="rightBottom"
             trigger="click"
@@ -177,7 +177,7 @@ const Layer = () => {
                 </button>
               </div>
             }>
-            <button className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
+            <button className="w-[48%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
               Tạo layer biến chữ
             </button>
           </Popover>
@@ -209,7 +209,7 @@ const Layer = () => {
                 </button>
               </div>
             }>
-            <button className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 mb-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
+            <button className="w-[48%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
               Tạo layer biến ảnh
             </button>
           </Popover>
