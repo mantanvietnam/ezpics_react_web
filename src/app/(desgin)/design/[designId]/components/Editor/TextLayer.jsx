@@ -9,6 +9,7 @@ export default function TextLayer(props) {
     data,
     designSize,
     isSelected,
+    isSelectedFromToolbox,
     onSelect,
     onTextChange,
     id,
@@ -56,6 +57,7 @@ export default function TextLayer(props) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [textValue, setTextValue] = useState(data?.text);
+  const [localIsSelected, setLocalIsSelected] = useState(false);
 
   // Position of the text
   const positionX = designSize.width * (postion_left / 100);
@@ -74,12 +76,13 @@ export default function TextLayer(props) {
   // Rotation
   const rotationValue = parseFloat(rotate?.replace("deg", ""));
 
+  //Vẽ ra transform
   useEffect(() => {
-    if (isSelected) {
-      trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+    if (localIsSelected) {
+      trRef.current?.nodes([shapeRef.current]);
+      trRef.current?.getLayer().batchDraw();
     }
-  }, [isSelected]);
+  }, [localIsSelected]);
 
   useEffect(() => {
     if (isEditing) {
@@ -270,6 +273,10 @@ export default function TextLayer(props) {
     }
   }, [isSelected]);
 
+  useEffect(() => {
+    setLocalIsSelected(isSelected || isSelectedFromToolbox);
+  }, [isSelected, isSelectedFromToolbox]);
+
   return (
     <>
       <Text
@@ -297,7 +304,7 @@ export default function TextLayer(props) {
         onTransform={handleTransform}
         onTransformEnd={handleTransformEnd}
       />
-      {isSelected && isTransformerVisible && !lock && (
+      {(isTransformerVisible && !lock && localIsSelected) && (
         <Transformer
           ref={trRef}
           node={shapeRef.current}

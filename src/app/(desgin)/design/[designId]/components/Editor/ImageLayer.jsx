@@ -11,6 +11,7 @@ export default function ImageLayer(props) {
     designSize,
     id,
     isSelected,
+    isSelectedFromToolbox,
     onSelect,
     onMaxPositionUpdate,
     isTransformerVisible,
@@ -36,6 +37,7 @@ export default function ImageLayer(props) {
   const trRef = useRef();
   const [image] = useImage(data.banner, "anonymous");
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
+  const [localIsSelected, setLocalIsSelected] = useState(false);
 
   // Convert vw to px
   const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
@@ -101,12 +103,13 @@ export default function ImageLayer(props) {
     onMaxPositionUpdate,
   ]);
 
+  //Vẽ ra transform
   useEffect(() => {
-    if (isSelected) {
+    if (localIsSelected) {
       trRef.current?.nodes([shapeRef.current]);
       trRef.current?.getLayer().batchDraw();
     }
-  }, [isSelected]);
+  }, [localIsSelected]);
 
   useEffect(() => {
     if (shapeRef.current) {
@@ -158,9 +161,8 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        (e.target.width() * e.target.scaleX() * 100) / designSize.width
-      }vw`,
+      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
+        }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -171,6 +173,13 @@ export default function ImageLayer(props) {
   useEffect(() => {
     setIsSelectLayer(!lock && Boolean(status));
   }, [lock, status]);
+
+  useEffect(() => {
+    setLocalIsSelected(isSelected || isSelectedFromToolbox);
+  }, [isSelected, isSelectedFromToolbox]);
+  console.log('🚀 ~ useEffect ~ isSelectedFromToolbox:', isSelectedFromToolbox)
+
+  console.log('🚀 ~ ImageLayer ~ localIsSelected:', localIsSelected, 'id:', id)
 
   return (
     <>
@@ -194,7 +203,7 @@ export default function ImageLayer(props) {
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       />
-      {isSelected && isTransformerVisible && !lock && (
+      {(isTransformerVisible && !lock && localIsSelected) && (
         <Transformer
           ref={trRef}
           flipEnabled={false}

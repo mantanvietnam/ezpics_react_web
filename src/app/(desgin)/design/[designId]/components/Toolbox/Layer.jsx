@@ -28,6 +28,7 @@ const Layer = () => {
   );
   const dispatch = useDispatch();
   // State for both forms
+  console.log('🚀 ~ Layer ~ selectedLayer:', selectedLayer)
   const [textForm, setTextForm] = useState({
     displayName: "",
     variableName: "",
@@ -231,18 +232,24 @@ const Layer = () => {
                       <Draggable
                         key={layer.id}
                         draggableId={layer.id.toString()}
-                        index={index}>
+                        index={index}
+                      >
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]">
+                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
+                            onClick={() => {
+                              dispatch(selectLayer({ id: layer.id }))
+                            }}
+                          >
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
                             </button>
                             {layer.content.type === "text" ? (
-                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
+                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]"
+                              >
                                 {layer.content.text}
                               </div>
                             ) : (
