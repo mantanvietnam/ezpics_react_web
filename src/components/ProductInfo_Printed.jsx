@@ -172,6 +172,7 @@ export default function ProductInfoPrinted(props) {
     };
     checkFavorited();
   }, [data]);
+
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
@@ -279,15 +280,17 @@ export default function ProductInfoPrinted(props) {
               <span>{data?.author}</span>
             </div>
           </div>
-          {data?.color && <div className="flex items-center gap-3">
-            <div className="product-details-e">Màu chủ đạo</div>
-            <div
-              style={{
-                width: "30px",
-                height: "30px",
-                backgroundColor: `${data?.color}`,
-              }}></div>
-          </div>}
+          {data?.color && (
+            <div className="flex items-center gap-3">
+              <div className="product-details-e">Màu chủ đạo</div>
+              <div
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  backgroundColor: `${data?.color}`,
+                }}></div>
+            </div>
+          )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Lượt xem:</div>
             <div>
@@ -376,7 +379,9 @@ export default function ProductInfoPrinted(props) {
               )}
             </button>
             <button
-              onClick={showModal}
+              onClick={() => {
+                router.push(`/printed/${id_param}`);
+              }}
               style={{
                 backgroundColor: "rgb(255, 66, 78)",
                 color: "white",
