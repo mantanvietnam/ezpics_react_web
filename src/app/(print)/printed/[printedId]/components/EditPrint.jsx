@@ -2,6 +2,10 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, Popover, Select, Slider } from "antd";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import ArrowTopIcon from "../icon/ArrowTop";
+import ArrowBottomIcon from "../icon/ArrowBottom";
+import ArrowLeftIcon from "../icon/ArrowLeft";
+import ArrowRightIcon from "../icon/ArrowRight";
 
 const DownLoadMenu = ({
   handleDownload,
@@ -293,38 +297,96 @@ const EditPrint = ({ stageRef }) => {
     });
   };
 
+  const moveLayer = (layerId, direction) => {
+    filteredLayers.forEach((layer) => {
+      if (layer.id === layerId) {
+        const newContent = { ...layer.content };
+        const moveAmount = 0.5; // Kích thước di chuyển, bạn có thể điều chỉnh giá trị này
+
+        // Cập nhật vị trí dựa trên hướng
+        switch (direction) {
+          case "left":
+            newContent.postion_left -= moveAmount;
+            break;
+          case "right":
+            newContent.postion_left += moveAmount;
+            break;
+          case "up":
+            newContent.postion_top -= moveAmount;
+            break;
+          case "down":
+            newContent.postion_top += moveAmount;
+            break;
+          default:
+            break;
+        }
+
+        dispatch(
+          updateLayer({
+            id: layerId,
+            data: newContent,
+          })
+        );
+      }
+    });
+  };
+
   return (
     <div>
       {filteredLayers.map((layer) => {
         if (layer.content?.type === "image") {
           return (
-            <div className="w-[400px] h-fit" key = {layer.id} >
+            <div className="w-[400px] h-fit" key={layer.id}>
               <h4 className="text-lg font-bold py-2 text-white">
                 {layer.content.variableLabel}
               </h4>
               <div>
                 {imgSrc ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: "24px",
-                      position: "relative",
-                      backgroundColor: "#f0f0f0", // Màu nền xám
-                      overflow: "hidden", // Ẩn phần ảnh bị tràn
-                      width: "100%",
-                      height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
-                    }}>
-                    <img
-                      src={imgSrc}
-                      alt=""
+                  <div>
+                    <div
                       style={{
-                        maxWidth: "100%",
-                        maxHeight: "100%",
-                        objectFit: "contain", // Đảm bảo ảnh không bị méo
-                      }}
-                    />
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: "24px",
+                        position: "relative",
+                        backgroundColor: "#f0f0f0", // Màu nền xám
+                        overflow: "hidden", // Ẩn phần ảnh bị tràn
+                        width: "100%",
+                        height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
+                      }}>
+                      <img
+                        src={imgSrc}
+                        alt=""
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          objectFit: "contain", // Đảm bảo ảnh không bị méo
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-100 p-4 mt-2 rounded-lg shadow-md">
+                      <div
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        onClick={() => moveLayer(layer.id, "left")}>
+                        <ArrowLeftIcon size={30} />
+                      </div>
+                      <div
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        onClick={() => moveLayer(layer.id, "up")}>
+                        <ArrowTopIcon size={30} />
+                      </div>
+                      <div
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        onClick={() => moveLayer(layer.id, "right")}>
+                        <ArrowRightIcon size={30} />
+                      </div>
+                      <div
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        onClick={() => moveLayer(layer.id, "down")}>
+                        <ArrowBottomIcon size={30} />
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-col relative pt-4">
@@ -379,7 +441,7 @@ const EditPrint = ({ stageRef }) => {
           );
         } else if (layer.content?.type === "text") {
           return (
-            <div key = {layer.id}>
+            <div key={layer.id}>
               <h4 className="text-lg font-bold py-2 text-white">
                 {layer.content.variableLabel}
               </h4>
@@ -387,6 +449,30 @@ const EditPrint = ({ stageRef }) => {
                 value={exportValue.valueText}
                 onChange={handleTextChange}
               />
+              {exportValue.valueText !== "" && (
+                <div className="flex justify-between items-center bg-gray-100 p-4 mt-2 rounded-lg shadow-md">
+                  <div
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    onClick={() => moveLayer(layer.id, "left")}>
+                    <ArrowLeftIcon size={30} />
+                  </div>
+                  <div
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    onClick={() => moveLayer(layer.id, "up")}>
+                    <ArrowTopIcon size={30} />
+                  </div>
+                  <div
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    onClick={() => moveLayer(layer.id, "right")}>
+                    <ArrowRightIcon size={30} />
+                  </div>
+                  <div
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    onClick={() => moveLayer(layer.id, "down")}>
+                    <ArrowBottomIcon size={30} />
+                  </div>
+                </div>
+              )}
             </div>
           );
         }
