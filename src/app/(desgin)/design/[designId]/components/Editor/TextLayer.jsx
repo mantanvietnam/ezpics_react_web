@@ -39,7 +39,6 @@ export default function TextLayer(props) {
   const [textValue, setTextValue] = useState(data?.text);
   const [localIsSelected, setLocalIsSelected] = useState(false);
 
-
   // Position of the text
   const positionX = designSize.width * (postion_left / 100);
   const positionY = designSize.height * (postion_top / 100);
@@ -57,12 +56,13 @@ export default function TextLayer(props) {
   // Rotation
   const rotationValue = parseFloat(rotate?.replace("deg", ""));
 
+  //Vẽ ra transform
   useEffect(() => {
-    if (isSelected) {
-      trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+    if (localIsSelected) {
+      trRef.current?.nodes([shapeRef.current]);
+      trRef.current?.getLayer().batchDraw();
     }
-  }, [isSelected]);
+  }, [localIsSelected]);
 
   useEffect(() => {
     if (isEditing) {
@@ -195,11 +195,12 @@ export default function TextLayer(props) {
   };
 
   useEffect(() => {
-    if (localIsSelected) {
-      trRef.current?.nodes([shapeRef.current]);
-      trRef.current?.getLayer().batchDraw();
+    const tr = trRef.current;
+    if (tr) {
+      tr.setNode(shapeRef.current);
+      tr.getLayer().batchDraw();
     }
-  }, [localIsSelected]);
+  }, [isSelected]);
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
