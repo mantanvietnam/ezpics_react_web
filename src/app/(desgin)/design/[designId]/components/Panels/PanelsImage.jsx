@@ -129,7 +129,6 @@ export function PanelsImage({
   selectedId,
   maxPositions,
   onDuplicateLayer,
-  onMasksButtonClick,
 }) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
@@ -508,15 +507,6 @@ export function PanelsImage({
               isOpen={isModalCropOpen}
               onCancel={closeModalCrop}
             />
-          </div>
-
-          <div className="px-1">
-            <Button
-              type="text"
-              className="text-lg font-bold"
-              onClick={() => onMasksButtonClick()}>
-              Appy Masks
-            </Button>
           </div>
         </div>
 

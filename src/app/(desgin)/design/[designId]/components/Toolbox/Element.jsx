@@ -89,7 +89,6 @@ export default function Graphic() {
         imageUrl: item.image,
         page: 0,
       });
-      console.log("add imageeeeeeeee",item, res)
       dispatch(addLayerImage(res.data));
     } catch (error) {
       console.log(error);
