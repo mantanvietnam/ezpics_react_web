@@ -8,6 +8,7 @@ import Image from "next/image";
 import images from "public/images/index2";
 import { useSelector, useDispatch } from "react-redux";
 import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+import "@/styles/loading.css";
 
 async function LoadFonts(fonts) {
   const styleElement = document.createElement("style");
@@ -99,35 +100,35 @@ export default function Text() {
     getAllText();
   }, [network, token]);
 
-const addObject = async () => {
-  const defaultFont = {
-    name: "Open Sans",
-    url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
-  };
+  const addObject = async () => {
+    const defaultFont = {
+      name: "Open Sans",
+      url: "https://fonts.gstatic.com/s/opensans/v27/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0C4nY1M2xLER.ttf",
+    };
 
-  try {
-    await LoadFonts([defaultFont]);
+    try {
+      await LoadFonts([defaultFont]);
 
-    const res = await axios.post(`${network}/addLayerText`, {
-      idproduct: stageData.design.id,
-      token: token,
-      text: "Thêm chữ",
-      color: "#333333",
-      size: "10px",
-      font: defaultFont.name,
-    });
+      const res = await axios.post(`${network}/addLayerText`, {
+        idproduct: stageData.design.id,
+        token: token,
+        text: "Thêm chữ",
+        color: "#333333",
+        size: "10px",
+        font: defaultFont.name,
+      });
 
-    if (res.data.code === 1) {
-      dispatch(addLayerImage(res.data.data));
-    } else {
-      console.error("Failed to add text layer:", res.data);
+      if (res.data.code === 1) {
+        dispatch(addLayerImage(res.data.data));
+      } else {
+        console.error("Failed to add text layer:", res.data);
+      }
+    } catch (error) {
+      console.log("Error adding text layer:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.log("Error adding text layer:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleAddText = async (item) => {
     const font = fonts.find((f) => f.name === item.content.font);
@@ -153,8 +154,7 @@ const addObject = async () => {
     <>
       <Block
         className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto px-4"
-        style={{ scrollbarWidth: "thin" }}
-      >
+        style={{ scrollbarWidth: "thin" }}>
         <Block
           $style={{
             display: "flex",
@@ -163,16 +163,14 @@ const addObject = async () => {
             justifyContent: "space-between",
             paddingLeft: "1.5rem",
             paddingRight: "1.5rem",
-          }}
-        >
+          }}>
           <Block>
             <h4
               style={{
                 fontFamily: "Helvetica, Arial, sans-serif",
                 marginBottom: "10px",
                 marginTop: "10px",
-              }}
-            >
+              }}>
               Kiểu chữ
             </h4>
           </Block>
@@ -190,9 +188,8 @@ const addObject = async () => {
                     width: "100%",
                   },
                 },
-              }}
-            >
-              Thêm 
+              }}>
+              Thêm
             </Button>
 
             <div
@@ -201,8 +198,7 @@ const addObject = async () => {
                 gap: "0.5rem",
                 gridTemplateColumns: "1fr 1fr",
                 width: "100%",
-              }}
-            >
+              }}>
               {allText.map((text) => (
                 <div
                   key={text.id}
@@ -214,8 +210,7 @@ const addObject = async () => {
                     justifyContent: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleAddText(text)}
-                >
+                  onClick={() => handleAddText(text)}>
                   <p
                     style={{
                       color: text.content.color,
@@ -224,8 +219,7 @@ const addObject = async () => {
                       fontWeight:
                         text.content.indam === "normal" ? "bold" : "400",
                       fontSize: 25,
-                    }}
-                  >
+                    }}>
                     {text.content.text}
                   </p>
                 </div>
@@ -233,38 +227,42 @@ const addObject = async () => {
             </div>
           </Block>
         </div>
-      </Block>
-      {loading && (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.7)",
-            position: "absolute",
-            zIndex: 20000000000,
-          }}
-        >
-          <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
-            <div className="ldio-4qpid53rus9">
-              <div></div>
-              <div>
+        {loading && (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#fff",
+              position: "absolute",
+              zIndex: 20000000000,
+              top: "-50px",
+            }}>
+            <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
+              <div className="ldio-4qpid53rus92">
                 <div></div>
+                <div>
+                  <div></div>
+                </div>
               </div>
+              <Image
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 17,
+                  width: 40,
+                  height: 40,
+                  // alignSelf: 'center',
+                  zIndex: 999999,
+                }}
+                alt=""
+                width={50}
+                height={50}
+                src="/images/EZPICS.png"
+              />
             </div>
-            <Image
-              style={{
-                position: "absolute",
-                top: "12%",
-                left: "16%",
-              }}
-              alt=""
-              width={40}
-              height={40}
-              src={images.logo}
-            />
           </div>
-        </div>
-      )}
+        )}
+      </Block>
     </>
   );
 }

@@ -9,9 +9,12 @@ import { Tabs, Tab } from "baseui/tabs";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
 import { toast } from "react-toastify";
-import { useSelector } from 'react-redux';
-import { useParams } from 'next/navigation';
-import { updateDesign } from '@/api/design';
+import { useSelector } from "react-redux";
+import { useParams } from "next/navigation";
+import { updateDesign } from "@/api/design";
+
+import "@/styles/loading.css";
+import Image from "next/image";
 
 function checkTokenCookie() {
   const tokenCookie = document.cookie
@@ -35,7 +38,7 @@ const colors = [
 export default function Customize() {
   const params = useParams();
   const { designId } = params;
-  const idProduct = designId
+  const idProduct = designId;
   const network = useAppSelector((state) => state.network.ipv4Address);
   const stageData = useSelector((state) => state.stage.stageData);
 
@@ -120,7 +123,7 @@ export default function Customize() {
 
   const handleSelectChange = (event) => {
     setCategoryId(event.target.value);
-    handleChange("category_id", event.target.value)
+    handleChange("category_id", event.target.value);
   };
 
   const handleChange = (type, value) => {
@@ -133,7 +136,7 @@ export default function Customize() {
 
   const handleSelectChangeStatusDisplay = (event) => {
     setSelectedOptionDisplay(event.target.value);
-    handleChange("status", event.target.value)
+    handleChange("status", event.target.value);
   };
 
   const optionsDisplay = [
@@ -144,13 +147,13 @@ export default function Customize() {
 
   const categories = categoryList.map((category) => ({
     value: category.id,
-    label: category.name
-  }))
+    label: category.name,
+  }));
 
   const optionsCategories = [
     { value: 0, label: "Chưa chọn categorie" },
-    ...categories
-  ]
+    ...categories,
+  ];
 
   const inputFileRef = React.useRef(null);
   const inputFileRefThumn = React.useRef(null);
@@ -173,24 +176,24 @@ export default function Customize() {
       return;
     }
     setSelectedFiles(file);
-    handleChange("background", file)
+    handleChange("background", file);
   };
 
   const handleSaveInformation = async () => {
     if (!name) {
-      toast.error('Vui lòng nhập tên thiết kế')
+      toast.error("Vui lòng nhập tên thiết kế");
     } else {
       try {
         const res = await updateDesign({
           token: checkTokenCookie(),
           idProduct: idProduct,
-          ...state
-        })
+          ...state,
+        });
         if (res.code === 1) {
-          toast.success('Bạn đã lưu thông tin mẫu thiết kế thành công')
+          toast.success("Bạn đã lưu thông tin mẫu thiết kế thành công");
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   };
@@ -230,8 +233,8 @@ export default function Customize() {
                 type="text"
                 value={name}
                 onChange={(e) => {
-                  setName(e.target.value)
-                  handleChange("name", e.target.value)
+                  setName(e.target.value);
+                  handleChange("name", e.target.value);
                 }}
                 className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
@@ -242,18 +245,19 @@ export default function Customize() {
                 type="text"
                 value={description}
                 onChange={(e) => {
-                  setDescription(e.target.value)
-                  handleChange("description", e.target.value)
+                  setDescription(e.target.value);
+                  handleChange("description", e.target.value);
                 }}
                 className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
 
-
             {typeUser !== "user_edit" && (
               <>
                 <div>
-                  <label className="block">Chế độ hiển thị lên thị trường</label>
+                  <label className="block">
+                    Chế độ hiển thị lên thị trường
+                  </label>
                   <select
                     value={selectedOptionDisplay}
                     onChange={handleSelectChangeStatusDisplay}
@@ -271,8 +275,8 @@ export default function Customize() {
                     type="number"
                     value={price}
                     onChange={(e) => {
-                      setPrice(parseInt(e.target.value))
-                      handleChange("price", e.target.value)
+                      setPrice(parseInt(e.target.value));
+                      handleChange("price", e.target.value);
                     }}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
@@ -283,8 +287,8 @@ export default function Customize() {
                     type="number"
                     value={sessPrice}
                     onChange={(e) => {
-                      setsessPrice(parseInt(e.target.value))
-                      handleChange("sale_price", e.target.value)
+                      setsessPrice(parseInt(e.target.value));
+                      handleChange("sale_price", e.target.value);
                     }}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
@@ -335,7 +339,6 @@ export default function Customize() {
                     </div>
                   ))}
                 </div>
-
               </>
             )}
             <Button
@@ -349,14 +352,37 @@ export default function Customize() {
       </div>
 
       {loading && (
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 z-50">
-          <div className="loadingio-spinner-dual-ring-hz44svgc0ld">
-            <div className="ldio-4qpid53rus9">
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#fff",
+            position: "absolute",
+            zIndex: 20000000000,
+            top: "-50px",
+          }}>
+          <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
+            <div className="ldio-4qpid53rus92">
               <div></div>
               <div>
                 <div></div>
               </div>
             </div>
+            <Image
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 17,
+                width: 40,
+                height: 40,
+                // alignSelf: 'center',
+                zIndex: 999999,
+              }}
+              alt=""
+              width={50}
+              height={50}
+              src="/images/EZPICS.png"
+            />
           </div>
         </div>
       )}

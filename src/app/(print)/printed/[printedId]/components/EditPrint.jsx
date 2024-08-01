@@ -6,6 +6,9 @@ import ArrowTopIcon from "../icon/ArrowTop";
 import ArrowBottomIcon from "../icon/ArrowBottom";
 import ArrowLeftIcon from "../icon/ArrowLeft";
 import ArrowRightIcon from "../icon/ArrowRight";
+import jsPDF from "jspdf";
+import PrintedIcon from "../icon/PrintedIcon";
+import CancelIcon from "../icon/CancelIcon";
 
 const DownLoadMenu = ({
   handleDownload,
@@ -94,7 +97,7 @@ const DownLoadMenu = ({
         </div>
       )}
       <button
-        className="mt-4 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+        className="mt-4 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
         onClick={handleDownload}>
         Tải xuống
       </button>
@@ -342,7 +345,7 @@ const EditPrint = ({ stageRef }) => {
               </h4>
               <div>
                 {imgSrc ? (
-                  <div>
+                  <div className="flex flex-col justify-center items-center bg-gray-100">
                     <div
                       style={{
                         display: "flex",
@@ -352,7 +355,7 @@ const EditPrint = ({ stageRef }) => {
                         position: "relative",
                         backgroundColor: "#f0f0f0", // Màu nền xám
                         overflow: "hidden", // Ẩn phần ảnh bị tràn
-                        width: "100%",
+                        width: "30%",
                         height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
                       }}>
                       <img
@@ -365,7 +368,7 @@ const EditPrint = ({ stageRef }) => {
                         }}
                       />
                     </div>
-                    <div className="flex justify-between items-center bg-gray-100 p-4 mt-2 rounded-lg shadow-md">
+                    <div className="w-full flex justify-between items-center bg-gray-100 p-4 mt-2 rounded-lg shadow-md">
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
                         onClick={() => moveLayer(layer.id, "left")}>
@@ -477,39 +480,38 @@ const EditPrint = ({ stageRef }) => {
           );
         }
       })}
-      <Popover
-        placement="left"
-        trigger="click"
-        autoFocus
-        returnFocus
-        content={
-          <DownLoadMenu
-            handleDownload={handleDownload}
-            fileType={fileType}
-            setFileType={setFileType}
-            pixelRatio={pixelRatio}
-            setPixelRatio={setPixelRatio}
-            isProMember={isProMember}
-          />
-        }
-        open={isPopoverOpen}
-        onOpenChange={setIsPopoverOpen}>
+      <div className="flex">
+        <Popover
+          placement="left"
+          trigger="click"
+          autoFocus
+          returnFocus
+          content={
+            <DownLoadMenu
+              handleDownload={handleDownload}
+              fileType={fileType}
+              setFileType={setFileType}
+              pixelRatio={pixelRatio}
+              setPixelRatio={setPixelRatio}
+              isProMember={isProMember}
+            />
+          }
+          open={isPopoverOpen}
+          onOpenChange={setIsPopoverOpen}>
+          <button
+            className="flex items-center mt-4 mr-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+            onClick={handleDownLoadDesign}>
+            <PrintedIcon size={25} />
+            <p className="pl-2">In ảnh</p>
+          </button>
+        </Popover>
         <button
-          className="mt-4 mx-2 p-2 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-          onClick={handleDownLoadDesign}>
-          In ảnh
+          className="flex items-center mt-4 mx-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+          onClick={handleCancel}>
+          <CancelIcon size={25} />
+          <p className="pl-2">Nhập lại</p>
         </button>
-      </Popover>
-      {/* <button
-        className="mt-4 p-2 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-        onClick={exportButtonClick}>
-        Áp dụng
-      </button> */}
-      <button
-        className="mt-4 mx-2 p-2 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-        onClick={handleCancel}>
-        Hủy
-      </button>
+      </div>
     </div>
   );
 };

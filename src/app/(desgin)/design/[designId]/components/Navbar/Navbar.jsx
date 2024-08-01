@@ -10,7 +10,6 @@ import { jsPDF } from "jspdf";
 import { checkTokenCookie, getCookie } from "@/utils";
 
 const DownLoadMenu = ({
-  imageURL,
   handleDownload,
   fileType,
   setFileType,
@@ -19,7 +18,6 @@ const DownLoadMenu = ({
   isProMember,
 }) => (
   <div className="w-[500px] h-fit p-3">
-    <img src={imageURL} alt="Preview" style={{ maxWidth: "100%" }} />
     <div className="mt-4 flex flex-col">
       <label htmlFor="fileType" className="mb-2 text-lg">
         Chọn loại tệp:
@@ -302,7 +300,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               returnFocus
               content={
                 <DownLoadMenu
-                  imageURL={imageURL}
                   handleDownload={handleDownload}
                   fileType={fileType}
                   setFileType={setFileType}

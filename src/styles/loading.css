@@ -1,0 +1,85 @@
+@keyframes ldio-4qpid53rus92 {
+    0% {
+        transform: rotate(0)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+.ldio-4qpid53rus92 div {
+    box-sizing: border-box !important;
+
+}
+
+.ldio-4qpid53rus92>div {
+    position: absolute;
+    width: 74.57999999999998px;
+    height: 74.57999999999998px;
+    top: '50%';
+    left: '50%';
+    border-radius: 50%;
+    border: 8.12px solid #000;
+    border-color: rgb(204, 157, 46) transparent rgb(204, 157, 46) transparent;
+    animation: ldio-4qpid53rus92 0.4484304932735426s linear infinite;
+}
+
+.ldio-4qpid53rus92>div:nth-child(2) {
+    border-color: transparent
+}
+
+.ldio-4qpid53rus92>div:nth-child(2) div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(45deg);
+}
+
+.ldio-4qpid53rus92>div:nth-child(2) div:before,
+.ldio-4qpid53rus92>div:nth-child(2) div:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 8.12px;
+    height: 8.12px;
+    top: -8.12px;
+    left: 75.11px;
+    background: rgb(204, 157, 46);
+    border-radius: 50%;
+    box-shadow: 0 166.45999999999998px 0 0 rgb(204, 157, 46);
+}
+
+.ldio-4qpid53rus92>div:nth-child(2) div:after {
+    left: -8.12px;
+    top: 75.11px;
+    box-shadow: 166.45999999999998px 0 0 0 rgb(204, 157, 46);
+}
+
+.loadingio-spinner-dual-ring-hz44svgc0ld2 {
+    width: 103px;
+    height: 103px;
+    display: inline-block;
+    overflow: hidden;
+    background: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index:9999999;
+    /* margin-top: 50%; */
+}
+
+.ldio-4qpid53rus92 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0;
+
+    /* see note above */
+}
+
+.ldio-4qpid53rus92 div {
+    box-sizing: content-box;
+}

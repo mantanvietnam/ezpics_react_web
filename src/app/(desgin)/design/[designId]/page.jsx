@@ -27,6 +27,10 @@ const Page = () => {
   const draggableDivRef = useRef(null); // New ref for the draggable div
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
+  console.log(
+    "================================================",
+    stageData?.selectedLayer?.id
+  );
   const [locked, setLocked] = useState(true);
   const { design, designLayers, initSize } = stageData;
 
@@ -36,6 +40,8 @@ const Page = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+
+  console.log("🚀 ~ Layer ~ selectedLayer:", stageData.selectedLayer);
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -131,16 +137,23 @@ const Page = () => {
   useEffect(() => {
     const items = Array.from(stageData.designLayers);
     if (Array.isArray(items)) {
-      const allLocked = items.every(layer => layer.content.lock === 1);
+      const allLocked = items.every((layer) => layer.content.lock === 1);
       setIsDragging(!allLocked);
-      setLocked(allLocked)
+      setLocked(allLocked);
     }
   }, [stageData.designLayers]);
 
   const handleMouseDown = (e) => {
-    if (draggableDivRef.current && draggableDivRef.current.contains(e.target) && locked) {
+    if (
+      draggableDivRef.current &&
+      draggableDivRef.current.contains(e.target) &&
+      locked
+    ) {
       setIsDragging(true);
-      setDragStart({ x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y });
+      setDragStart({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y,
+      });
     }
   };
 
@@ -164,20 +177,25 @@ const Page = () => {
         setTransformerVisible={setTransformerVisible}
       />
       <div className="h-screen pt-[65px] overflow-hidden">
-        <Toolbox onToolChange={setActiveTool} activeTool={activeTool} stageRef={stageRef} />
+        <Toolbox
+          onToolChange={setActiveTool}
+          activeTool={activeTool}
+          stageRef={stageRef}
+        />
         <div
           className={`
-          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-            } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
-            }`}>
+          relative ${
+            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+          } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
+            activeTool ? "ml-[408px]" : "ml-[108px]"
+          }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
                 selectedId={selectedId}
                 maxPositions={maxPositions}
                 onDuplicateLayer={handleDuplicateLayer}
-                onMasksButtonClick={() => setActiveTool("Masks")}
               />
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (
@@ -194,22 +212,22 @@ const Page = () => {
           <div
             className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center"
             style={{
-              cursor: isDragging ? "grabbing" : "default", 
+              cursor: isDragging ? "grabbing" : "default",
             }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-          >
+            onMouseLeave={handleMouseUp}>
             <div ref={containerRef}>
-              <div 
+              <div
                 ref={draggableDivRef}
-                style={{ 
-                  width: initSize.width, 
+                style={{
+                  width: initSize.width,
                   height: initSize.height,
-                  transform: locked ? `translate(${dragOffset.x}px, ${dragOffset.y}px)` : 'none', 
-                }}
-              >
+                  transform: locked
+                    ? `translate(${dragOffset.x}px, ${dragOffset.y}px)`
+                    : "none",
+                }}>
                 <Stage
                   ref={stageRef}
                   width={initSize.width}
@@ -239,9 +257,11 @@ const Page = () => {
                             id={layer.id}
                             data={layer.content}
                             isSelected={layer.id === selectedId}
-                            isSelectedFromToolbox={layer.id === stageData?.selectedLayer?.id}
+                            isSelectedFromToolbox={
+                              layer.id === stageData?.selectedLayer?.id
+                            }
                             onSelect={() => {
-                              setSelectedId(layer.id)
+                              setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
@@ -259,7 +279,9 @@ const Page = () => {
                             id={layer.id}
                             data={layer.content}
                             isSelected={layer.id === selectedId}
-                            isSelectedFromToolbox={layer.id === stageData?.selectedLayer?.id}
+                            isSelectedFromToolbox={
+                              layer.id === stageData?.selectedLayer?.id
+                            }
                             onSelect={() => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
@@ -277,8 +299,9 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-              }`}>
+            className={`fixed bottom-0 z-10 ${
+              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

@@ -13,6 +13,7 @@ import EditPrint from "./components/EditPrint";
 import images from "../../../../../public/images/index2";
 import Link from "next/link";
 import Image from "next/image";
+import "@/styles/loading.css";
 
 const Page = () => {
   const params = useParams();
@@ -22,6 +23,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
   const { design, initSize } = stageData;
+  const [loading, setLoading] = useState(true);
 
   const [designLayers, setDesignLayer] = useState([]);
 
@@ -52,7 +54,7 @@ const Page = () => {
         } else if (width >= 1920 || height >= 1920) {
           sizeFactor = 2.5;
         } else if (width >= 1600 || height >= 1600) {
-          sizeFactor = 1.5;
+          sizeFactor = 2;
         } else if (width >= 1000 || height >= 1000) {
           sizeFactor = 1.5;
         } else if (width >= 500 || height >= 500) {
@@ -74,6 +76,8 @@ const Page = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,9 +151,48 @@ const Page = () => {
           </Stage>
         </div>
       </div>
-      <div>
-        <EditPrint stageRef={stageRef} />
-      </div>
+      {loading ? (
+        <div></div>
+      ) : (
+        <div>
+          <EditPrint stageRef={stageRef} />
+        </div>
+      )}
+
+      {loading && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.7)",
+            position: "absolute",
+            zIndex: 20000000000,
+          }}>
+          <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
+            <div className="ldio-4qpid53rus92">
+              <div></div>
+              <div>
+                <div></div>
+              </div>
+            </div>
+            <Image
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 17,
+                width: 40,
+                height: 40,
+                // alignSelf: 'center',
+                zIndex: 999999,
+              }}
+              alt=""
+              width={50}
+              height={50}
+              src="/images/EZPICS.png"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
