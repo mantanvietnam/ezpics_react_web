@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import Share_Social from "./Share_Social";
 import { SkeletonCustom } from "./Slide/CustomSlide";
 import { createImageSeriesAPI } from "@/api/product";
+import { SkeletonCustomProduct } from "./Slide/CustomSlide";
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
@@ -177,12 +178,12 @@ export default function ProductInfoPrinted(props) {
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
         {isLoading ? (
-          <SkeletonCustom>
+          <SkeletonCustomProduct>
             <Skeleton.Image
               className="w-full h-[100%] flex items-center justify-center"
               active="true"
             />
-          </SkeletonCustom>
+          </SkeletonCustomProduct>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <img

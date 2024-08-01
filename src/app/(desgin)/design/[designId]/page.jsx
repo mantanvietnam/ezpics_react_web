@@ -26,12 +26,17 @@ const Page = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
-  console.log('================================================', stageData?.selectedLayer?.id);
+  console.log(
+    "================================================",
+    stageData?.selectedLayer?.id
+  );
   const { design, designLayers, initSize } = stageData;
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
   const [isTransformerVisible, setTransformerVisible] = useState(true);
+
+  console.log("🚀 ~ Layer ~ selectedLayer:", stageData.selectedLayer);
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -134,17 +139,18 @@ const Page = () => {
         <Toolbox onToolChange={setActiveTool} activeTool={activeTool} />
         <div
           className={`
-          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-            } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
-            }`}>
+          relative ${
+            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+          } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
+            activeTool ? "ml-[408px]" : "ml-[108px]"
+          }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
                 selectedId={selectedId}
                 maxPositions={maxPositions}
                 onDuplicateLayer={handleDuplicateLayer}
-                onMasksButtonClick={() => setActiveTool("Masks")}
               />
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (
@@ -190,9 +196,11 @@ const Page = () => {
                             id={layer.id}
                             data={layer.content}
                             isSelected={layer.id === selectedId}
-                            isSelectedFromToolbox={layer.id === stageData?.selectedLayer?.id}
+                            isSelectedFromToolbox={
+                              layer.id === stageData?.selectedLayer?.id
+                            }
                             onSelect={() => {
-                              setSelectedId(layer.id)
+                              setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
@@ -210,7 +218,9 @@ const Page = () => {
                             id={layer.id}
                             data={layer.content}
                             isSelected={layer.id === selectedId}
-                            isSelectedFromToolbox={layer.id === stageData?.selectedLayer?.id}
+                            isSelectedFromToolbox={
+                              layer.id === stageData?.selectedLayer?.id
+                            }
                             onSelect={() => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
@@ -228,8 +238,9 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-              }`}>
+            className={`fixed bottom-0 z-10 ${
+              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

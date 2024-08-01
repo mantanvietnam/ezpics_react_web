@@ -125,12 +125,7 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-export function PanelsImage({
-  selectedId,
-  maxPositions,
-  onDuplicateLayer,
-  onMasksButtonClick,
-}) {
+export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
@@ -346,7 +341,10 @@ export function PanelsImage({
         // );
         // console.log("responseChangeImage", responseChangeImage);
 
-        console.log("responseRemoveBackground.data?.link", responseRemoveBackground.data)
+        console.log(
+          "responseRemoveBackground.data?.link",
+          responseRemoveBackground.data
+        );
         if (responseRemoveBackground.data.code === 0) {
           const data = {
             banner: responseRemoveBackground.data.linkOnline,
@@ -508,15 +506,6 @@ export function PanelsImage({
               isOpen={isModalCropOpen}
               onCancel={closeModalCrop}
             />
-          </div>
-
-          <div className="px-1">
-            <Button
-              type="text"
-              className="text-lg font-bold"
-              onClick={() => onMasksButtonClick()}>
-              Appy Masks
-            </Button>
           </div>
         </div>
 

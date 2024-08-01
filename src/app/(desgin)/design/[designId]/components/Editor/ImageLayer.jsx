@@ -39,6 +39,18 @@ export default function ImageLayer(props) {
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
 
+  useEffect(() => {
+    if (shapeRef.current && image) {
+      // Đảm bảo hình ảnh đã được tải
+      if (image.width > 0 && image.height > 0) {
+        shapeRef.current.cache();
+        shapeRef.current.getLayer().batchDraw();
+      } else {
+        console.error("Hình ảnh không hợp lệ.");
+      }
+    }
+  }, [image]);
+
   // Convert vw to px
   const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
   // const widthValue = parseFloat(
@@ -112,7 +124,7 @@ export default function ImageLayer(props) {
   }, [localIsSelected]);
 
   useEffect(() => {
-    if (shapeRef.current) {
+    if (shapeRef.current && image && image.width > 0 && image.height > 0) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.Brighten]);
       shapeRef.current.brightness(brightness / 100 - 1);
@@ -121,7 +133,7 @@ export default function ImageLayer(props) {
   }, [brightness, image]);
 
   useEffect(() => {
-    if (shapeRef.current) {
+    if (shapeRef.current && image && image.width > 0 && image.height > 0) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.Contrast]);
       shapeRef.current.contrast(contrast - 100);
@@ -130,7 +142,7 @@ export default function ImageLayer(props) {
   }, [contrast, image]);
 
   useEffect(() => {
-    if (shapeRef.current) {
+    if (shapeRef.current && image && image.width > 0 && image.height > 0) {
       shapeRef.current.cache();
       shapeRef.current.filters([Konva.Filters.HSL]);
       shapeRef.current.saturation(saturate / 100 - 1);
@@ -161,8 +173,9 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
-        }vw`,
+      width: `${
+        (e.target.width() * e.target.scaleX() * 100) / designSize.width
+      }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -177,9 +190,9 @@ export default function ImageLayer(props) {
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
-  console.log('🚀 ~ useEffect ~ isSelectedFromToolbox:', isSelectedFromToolbox)
+  console.log("🚀 ~ useEffect ~ isSelectedFromToolbox:", isSelectedFromToolbox);
 
-  console.log('🚀 ~ ImageLayer ~ localIsSelected:', localIsSelected, 'id:', id)
+  console.log("🚀 ~ ImageLayer ~ localIsSelected:", localIsSelected, "id:", id);
 
   return (
     <>
@@ -190,8 +203,8 @@ export default function ImageLayer(props) {
         alt="layer"
         x={postionX}
         y={postionY}
-        width={width}
-        height={heightSize}
+        width={width > 0 ? width : 200}
+        height={heightSize > 0 ? heightSize : 200}
         opacity={opacity}
         rotation={rotation}
         scaleX={scaleX}
@@ -203,7 +216,7 @@ export default function ImageLayer(props) {
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       />
-      {(isTransformerVisible && !lock && localIsSelected) && (
+      {isTransformerVisible && !lock && localIsSelected && (
         <Transformer
           ref={trRef}
           flipEnabled={false}

@@ -22,16 +22,21 @@ import {
 import { useSelector } from "react-redux";
 import { Button, Tooltip, Popover, Input } from "antd";
 
+import "@/styles/loading.css";
+import Image from "next/image";
+
 const Layer = () => {
   const { designLayers, selectedLayer, design } = useSelector(
     (state) => state.stage.stageData
   );
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   // State for both forms
-  console.log('🚀 ~ Layer ~ selectedLayer:', selectedLayer)
+  // console.log("🚀 ~ Layer ~ selectedLayer:", selectedLayer);
   const [textForm, setTextForm] = useState({
     displayName: "",
     variableName: "",
+    contentName: "",
   });
 
   const [imageForm, setImageForm] = useState({
@@ -74,6 +79,36 @@ const Layer = () => {
     deleteLayerApi();
   };
 
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [initialContent, setInitialContent] = useState("");
+
+  // Cập nhật giá trị nội dung chữ mặc định khi variableName thay đổi
+  useEffect(() => {
+    if (textForm.variableName) {
+      setInitialContent(`%${textForm.variableName}%`);
+    } else {
+      setInitialContent("");
+    }
+  }, [textForm.variableName]);
+
+  // Hàm xử lý khi nhấp vào ô input
+  const handleInputClick = (e) => {
+    e.target.select(); // Chọn toàn bộ văn bản khi nhấp vào ô input
+  };
+
+  // Hàm xử lý sự thay đổi nội dung
+  const handleContentChange = (e) => {
+    setTextForm({ ...textForm, contentName: e.target.value });
+  };
+
+  const getDisplayValue = () => {
+    if (textForm.contentName) {
+      return textForm.contentName;
+    }
+    return initialContent;
+  };
+
   //Btn tạo biến
   const network = useSelector((state) => state.network.ipv4Address);
 
@@ -89,7 +124,7 @@ const Layer = () => {
       const res = await axios.post(`${network}/addLayerText`, {
         idproduct: design.id,
         token: checkTokenCookie(),
-        text: `%${textForm.variableName}%`,
+        text: getDisplayValue(),
         color: "#333333",
         size: "10px",
         font: defaultFont.name,
@@ -102,8 +137,10 @@ const Layer = () => {
         const data = {
           variable: textForm.variableName,
           variableLabel: textForm.displayName,
+          text: getDisplayValue(),
         };
         dispatch(updateLayer({ id: newLayer.id, data: data }));
+        setTextForm({ displayName: "", variableName: "", contentName: "" });
       } else {
         console.error("Failed to add text layer:", res.data);
       }
@@ -120,7 +157,6 @@ const Layer = () => {
       const res = await axios.post(`${network}/addLayerImageUrlAPI`, {
         idproduct: design.id,
         token: checkTokenCookie(),
-        text: `%${textForm.variableName}%`,
         imageUrl:
           "https://apis.ezpics.vn//upload/admin/images/4274/4274_2024_07_29_17_20_27_2905.jpg",
         page: 0,
@@ -135,6 +171,7 @@ const Layer = () => {
           variableLabel: imageForm.displayName,
         };
         dispatch(updateLayer({ id: newLayer.id, data: data }));
+        setImageForm({ displayName: "", variableName: "" });
       } else {
         console.error("Failed to add text layer:", res.data);
       }
@@ -170,7 +207,11 @@ const Layer = () => {
                   }
                 />
                 <h4 className="text-base py-2">Nội dung chữ:</h4>
-                <Input value={`%${textForm.variableName}%`} />
+                <Input
+                  value={getDisplayValue()}
+                  onClick={handleInputClick}
+                  onChange={handleContentChange}
+                />
                 <button
                   className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300"
                   onClick={handleCreateVariableText}>
@@ -179,7 +220,7 @@ const Layer = () => {
               </div>
             }>
             <button className="w-[48%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
-              Tạo layer biến chữ
+              Biến chữ
             </button>
           </Popover>
           <Popover
@@ -211,7 +252,7 @@ const Layer = () => {
               </div>
             }>
             <button className="w-[48%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300">
-              Tạo layer biến ảnh
+              Biến ảnh
             </button>
           </Popover>
         </div>
@@ -232,8 +273,7 @@ const Layer = () => {
                       <Draggable
                         key={layer.id}
                         draggableId={layer.id.toString()}
-                        index={index}
-                      >
+                        index={index}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
@@ -241,15 +281,13 @@ const Layer = () => {
                             {...provided.dragHandleProps}
                             className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
                             onClick={() => {
-                              dispatch(selectLayer({ id: layer.id }))
-                            }}
-                          >
+                              dispatch(selectLayer({ id: layer.id }));
+                            }}>
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
                             </button>
                             {layer.content.type === "text" ? (
-                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]"
-                              >
+                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
                                 {layer.content.text}
                               </div>
                             ) : (
@@ -288,6 +326,41 @@ const Layer = () => {
           </Droppable>
         </DragDropContext>
       </div>
+      {loading && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#fff",
+            position: "absolute",
+            zIndex: 20000000000,
+            top: "-50px",
+          }}>
+          <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
+            <div className="ldio-4qpid53rus92">
+              <div></div>
+              <div>
+                <div></div>
+              </div>
+            </div>
+            <Image
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 17,
+                width: 40,
+                height: 40,
+                // alignSelf: 'center',
+                zIndex: 999999,
+              }}
+              alt=""
+              width={50}
+              height={50}
+              src="/images/EZPICS.png"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

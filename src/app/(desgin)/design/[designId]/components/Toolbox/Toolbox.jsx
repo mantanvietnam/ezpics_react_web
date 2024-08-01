@@ -140,6 +140,25 @@ const Toolbox = ({ onToolChange, activeTool }) => {
           <SettingIcon size={20} />
           <p>Cài đặt</p>
         </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            cursor: "pointer",
+            padding: "20px 10px",
+            ...toolStyle("Masks"),
+          }}
+          onClick={() => {
+            handleToolClick("Masks");
+            if (activeTool === "Masks") {
+              setIsToolboxVisible(false);
+            }
+          }}>
+          <LayerIcon size={20} />
+          <p>Frame</p>
+        </div>
       </div>
 
       <div

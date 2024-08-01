@@ -7,6 +7,8 @@ import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import "@/styles/loading.css";
+import Image from "next/image";
 
 function checkTokenCookie() {
   const allCookies = document.cookie.split("; ");
@@ -89,16 +91,16 @@ export default function Graphic() {
         imageUrl: item.image,
         page: 0,
       });
-      console.log("add imageeeeeeeee",item, res)
+      console.log("add imageeeeeeeee", item, res);
       dispatch(addLayerImage(res.data));
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (loading) {
-    return <LoadingOverlay />;
-  }
+  // if (loading) {
+  //   return <LoadingOverlay />;
+  // }
 
   return (
     <div
@@ -117,38 +119,80 @@ export default function Graphic() {
               categoryId={category.id}
               items={items}
               handleImage={handleImage}
+              loading={loading}
             />
           ))}
         </div>
       </div>
+      {loading && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#fff",
+            position: "absolute",
+            zIndex: 20000000000,
+            top: "-50px",
+          }}>
+          <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
+            <div className="ldio-4qpid53rus92">
+              <div></div>
+              <div>
+                <div></div>
+              </div>
+            </div>
+            <Image
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 17,
+                width: 40,
+                height: 40,
+                // alignSelf: 'center',
+                zIndex: 999999,
+              }}
+              alt=""
+              width={50}
+              height={50}
+              src="/images/EZPICS.png"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function CategorySection({ title, categoryId, items, handleImage }) {
+function CategorySection({ title, categoryId, items, handleImage, loading }) {
   const [showAll, setShowAll] = useState(false);
   const filteredItems = items.filter((item) => item.category_id === categoryId);
   const displayItems = showAll ? filteredItems : filteredItems.slice(0, 5);
 
   return (
     <div>
-      <div className="flex justify-between items-center py-2.5">
-        <h4 className="font-sans">{title}</h4>
-        <button
-          className="border-0 bg-white text-blue-700 cursor-pointer"
-          onClick={() => setShowAll(!showAll)}>
-          {showAll ? "Thu gọn" : "Xem thêm"}
-        </button>
-      </div>
-      <div className="grid gap-2 grid-cols-2">
-        {displayItems.map((item, index) => (
-          <ImageItem
-            key={index}
-            preview={item.image}
-            onClick={() => handleImage(item)}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div></div>
+      ) : (
+        <div>
+          <div className="flex justify-between items-center py-2.5">
+            <h4 className="font-sans">{title}</h4>
+            <button
+              className="border-0 bg-white text-blue-700 cursor-pointer"
+              onClick={() => setShowAll(!showAll)}>
+              {showAll ? "Thu gọn" : "Xem thêm"}
+            </button>
+          </div>
+          <div className="grid gap-2 grid-cols-2">
+            {displayItems.map((item, index) => (
+              <ImageItem
+                key={index}
+                preview={item.image}
+                onClick={() => handleImage(item)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

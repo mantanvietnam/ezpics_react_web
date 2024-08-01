@@ -7,10 +7,13 @@ import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
+import "@/styles/loading.css";
+import Image from "next/image";
 
 const Photos = () => {
   const [photos, setPhotos] = useState([]);
   const inputFileRef = React.useRef(null);
+  const [loading, setLoading] = useState(true);
 
   const stageData = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
@@ -24,6 +27,7 @@ const Photos = () => {
         }
       );
       setPhotos(response.data.data.reverse());
+      setLoading(false);
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu GET:", error);
     }
@@ -129,6 +133,41 @@ const Photos = () => {
             })}
           </div>
         </div>
+        {loading && (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#fff",
+              position: "absolute",
+              zIndex: 20000000000,
+              top: "-50px",
+            }}>
+            <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
+              <div className="ldio-4qpid53rus92">
+                <div></div>
+                <div>
+                  <div></div>
+                </div>
+              </div>
+              <Image
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  left: 17,
+                  width: 40,
+                  height: 40,
+                  // alignSelf: 'center',
+                  zIndex: 999999,
+                }}
+                alt=""
+                width={50}
+                height={50}
+                src="/images/EZPICS.png"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
