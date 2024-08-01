@@ -31,7 +31,7 @@ const Page = () => {
     }
   }, [stageData]);
 
-  console.log("🚀 ~ stageData :", designLayers);
+  // console.log("🚀 ~ stageData :", designLayers);
 
   const fetchData = async () => {
     try {
@@ -54,7 +54,7 @@ const Page = () => {
         } else if (width >= 1600 || height >= 1600) {
           sizeFactor = 1.5;
         } else if (width >= 1000 || height >= 1000) {
-          sizeFactor = 1;
+          sizeFactor = 1.5;
         } else if (width >= 500 || height >= 500) {
           sizeFactor = 1;
         } else {
@@ -116,7 +116,7 @@ const Page = () => {
               />
               {designLayers.map((layer) => {
                 if (layer.content?.type === "image") {
-                  console.log("Render image layer", layer.content);
+                  // console.log("Render image layer", layer.content);
                   return (
                     <ImageLayerPrint
                       key={layer.id}

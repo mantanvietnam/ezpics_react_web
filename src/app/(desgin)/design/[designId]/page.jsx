@@ -66,7 +66,7 @@ const Page = () => {
         } else if (width >= 1600 || height >= 1600) {
           sizeFactor = 1.5;
         } else if (width >= 1000 || height >= 1000) {
-          sizeFactor = 1;
+          sizeFactor = 1.5;
         } else if (width >= 500 || height >= 500) {
           sizeFactor = 1;
         } else {
@@ -265,6 +265,8 @@ const Page = () => {
                               dispatch(selectLayer({ id: layer.id }));
                             }}
                             isTransformerVisible={isTransformerVisible}
+                            containerRef={containerRef}
+                            stageRef={stageRef}
                           />
                         );
                       }

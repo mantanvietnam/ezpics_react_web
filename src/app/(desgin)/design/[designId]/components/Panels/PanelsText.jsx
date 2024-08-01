@@ -22,11 +22,11 @@ const ListFontStyle = ({ onSelect }) => (
 );
 
 const SliderMenu = ({
-  valueLetteringSpacing,
+  valueLetterSpacing,
   valueLineSpacing,
-  onChangeLetteringSpacing,
+  onChangeLetterSpacing,
   onChangeLineSpacing,
-  onChangeLetteringSpacingInput,
+  onChangeLetterSpacingInput,
   onChangeLineSpacingInput,
 }) => {
   return (
@@ -36,17 +36,24 @@ const SliderMenu = ({
           <span className="text-sm">Giãn cách chữ</span>
           <Input
             type="number"
-            value={valueLetteringSpacing}
-            onChange={onChangeLetteringSpacingInput}
+            value={valueLetterSpacing}
+            onChange={onChangeLetterSpacingInput}
             className="w-[70px] text-center"
             min={0}
             max={100}
           />
         </div>
         <Slider
-          onChange={onChangeLetteringSpacing}
-          value={valueLetteringSpacing}
+          onChange={onChangeLetterSpacing}
+          value={valueLetterSpacing}
           className="mb-4"
+          min={0}
+          max={100}
+          step={1}
+          marks={{
+            0: "0",
+            100: "100",
+          }}
         />
       </div>
       <div className="p-2">
@@ -57,11 +64,22 @@ const SliderMenu = ({
             value={valueLineSpacing}
             onChange={onChangeLineSpacingInput}
             className="w-[70px] text-center"
-            min={0}
-            max={100}
+            min={1}
+            max={5}
+            step={0.1}
           />
         </div>
-        <Slider onChange={onChangeLineSpacing} value={valueLineSpacing} />
+        <Slider
+          onChange={onChangeLineSpacing}
+          value={valueLineSpacing}
+          min={1}
+          max={5}
+          step={0.1}
+          marks={{
+            1: "1",
+            5: "5",
+          }}
+        />
       </div>
     </div>
   );
@@ -79,35 +97,56 @@ export function PanelsText({
     (state) => state.stage.stageData
   );
   // Convert vw to px
-  const [fontSize, setFontSize] = useState(12)
-  const [postionText, setPostionText] = useState('left')
+  const [fontSize, setFontSize] = useState(12);
+  const [postionText, setPostionText] = useState("left");
   const [fontStyle, setFontStyle] = useState({
     bold: "",
     italic: "",
     underline: "",
   });
 
+  //LetterSpacing
+  const [valueLetterSpacing, setValueLetterSpacing] = useState(0);
+  const [valueLineSpacing, setValueLineSpacing] = useState(1);
+
   const stageData = useSelector((state) => state.stage.stageData);
   const [color, setColor] = useState("");
 
   useEffect(() => {
     if (selectedLayer) {
+      const sizeValue = parseFloat(
+        selectedLayer.content.size?.replace("vw", "")
+      );
+      setFontStyle({
+        bold: selectedLayer.content.indam,
+        italic: selectedLayer.content.innghieng,
+        underline: selectedLayer.content.gachchan,
+      });
+      setFontSize(sizeValue);
+      setPostionText(selectedLayer.content.text_align);
       setColor(selectedLayer.content.color);
+      setValueLetterSpacing(selectedLayer.content.gianchu);
+      setValueLineSpacing(selectedLayer.content.giandong);
     }
-  }, [stageData]);
-
-  useEffect(() => {
-    const sizeValue = parseFloat(selectedLayer.content.size?.replace("vw", ""));
-    setFontStyle({
-      bold: selectedLayer.content.indam,
-      italic: selectedLayer.content.innghieng,
-      underline: selectedLayer.content.gachchan,
-    });
-    setFontSize(sizeValue);
-    setPostionText(selectedLayer.content.text_align)
   }, [selectedLayer]);
 
   const dispatch = useDispatch();
+
+  const handleSliderLetterSpacing = (newValue) => {
+    setValueLetterSpacing(newValue);
+  };
+  const onChangeLetterSpacingInput = (e) => {
+    const newValue = parseFloat(e.target.value) || 0;
+    setValueLetterSpacing(newValue);
+  };
+
+  const handleSliderLineSpacing = (newValue) => {
+    setValueLineSpacing(newValue);
+  };
+  const onChangeLineSpacingInput = (e) => {
+    const newValue = parseFloat(e.target.value) || 1;
+    setValueLineSpacing(newValue);
+  };
 
   const handleFontSizeChange = (size) => {
     setFontSize(size);
@@ -128,8 +167,8 @@ export function PanelsText({
   };
 
   const handleTextCenter = (textAlign) => {
-    setPostionText(textAlign)
-  }
+    setPostionText(textAlign);
+  };
 
   useEffect(() => {
     const data = {
@@ -138,10 +177,21 @@ export function PanelsText({
       innghieng: fontStyle.italic,
       gachchan: fontStyle.underline,
       color: color,
-      text_align: postionText
+      text_align: postionText,
+      gianchu: valueLetterSpacing,
+      giandong: valueLineSpacing,
     };
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [selectedLayer.id, fontSize, fontStyle, color, postionText, dispatch]);
+  }, [
+    selectedLayer.id,
+    fontSize,
+    fontStyle,
+    color,
+    postionText,
+    valueLetterSpacing,
+    valueLineSpacing,
+    dispatch,
+  ]);
 
   // console.log("color panestext:", color);
 
@@ -210,10 +260,11 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${fontStyle.bold === "bold" || fontStyle.bold === "bolder"
-                  ? "bg-gray-300"
-                  : ""
-                  }`}
+                className={`flex items-center px-2 ${
+                  fontStyle.bold === "bold" || fontStyle.bold === "bolder"
+                    ? "bg-gray-300"
+                    : ""
+                }`}
                 onClick={() => handleFontStyleChange("bold", "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -233,8 +284,9 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${fontStyle.italic === "italic" ? "bg-gray-300" : ""
-                  }`}
+                className={`flex items-center px-2 ${
+                  fontStyle.italic === "italic" ? "bg-gray-300" : ""
+                }`}
                 onClick={() => handleFontStyleChange("italic", "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -255,8 +307,9 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${fontStyle.underline === "underline" ? "bg-gray-300" : ""
-                  }`}
+                className={`flex items-center px-2 ${
+                  fontStyle.underline === "underline" ? "bg-gray-300" : ""
+                }`}
                 onClick={() => handleFontStyleChange("underline", "underline")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -296,7 +349,10 @@ export function PanelsText({
 
           <div className="px-1">
             <Tooltip title="Căn trái" placement="bottom">
-              <Button type="text" className="text-lg font-bold px-1" onClick={() => handleTextCenter('left')}>
+              <Button
+                type="text"
+                className="text-lg font-bold px-1"
+                onClick={() => handleTextCenter("left")}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -314,8 +370,7 @@ export function PanelsText({
               <Button
                 type="text"
                 className="text-lg font-bold px-1"
-                onClick={() => handleTextCenter('center')}
-              >
+                onClick={() => handleTextCenter("center")}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -330,7 +385,10 @@ export function PanelsText({
 
           <div className="px-1">
             <Tooltip title="Căn phải" placement="bottom">
-              <Button type="text" className="text-lg font-bold px-1" onClick={() => handleTextCenter('right')}>
+              <Button
+                type="text"
+                className="text-lg font-bold px-1"
+                onClick={() => handleTextCenter("right")}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -393,7 +451,18 @@ export function PanelsText({
           </div> */}
 
           <div className="px-1">
-            <Popover content={<SliderMenu />} trigger="click">
+            <Popover
+              content={
+                <SliderMenu
+                  valueLetterSpacing={valueLetterSpacing}
+                  onChangeLetterSpacing={handleSliderLetterSpacing}
+                  onChangeLetterSpacingInput={onChangeLetterSpacingInput}
+                  valueLineSpacing={valueLineSpacing}
+                  onChangeLineSpacing={handleSliderLineSpacing}
+                  onChangeLineSpacingInput={onChangeLineSpacingInput}
+                />
+              }
+              trigger="click">
               <Tooltip title="Giãn cách" placement="bottom">
                 <Button type="text" className="text-lg font-bold px-1">
                   <svg
