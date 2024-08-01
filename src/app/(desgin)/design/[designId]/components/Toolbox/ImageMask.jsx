@@ -2,8 +2,42 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addLayerImage } from "@/redux/slices/editor/stageSlice";
 import { checkTokenCookie } from "@/utils";
+import axios from "axios";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { getSVGDefinitions, getSVGSampleDefinitions, SVG_TYPES } from "../../../../../../../public/svg/svgDefinitions";
+
+
+const dataURLToBlob = (dataURL) => {
+  // Check if the dataURL is valid
+  if (!dataURL || typeof dataURL !== 'string') {
+    throw new Error("Invalid data URL");
+  }
+
+  const [header, data] = dataURL.split(",");
+  
+  // Ensure the header part is correctly formatted
+  if (!header || !data) {
+    throw new Error("Invalid data URL format");
+  }
+
+  // Extract MIME type from the header
+  const mimeMatch = header.match(/data:(.*?);base64/);
+  if (!mimeMatch || !mimeMatch[1]) {
+    throw new Error("Invalid MIME type");
+  }
+
+  const mime = mimeMatch[1];
+  const binary = atob(data);
+  const arrayBuffer = new ArrayBuffer(binary.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < binary.length; i++) {
+    uint8Array[i] = binary.charCodeAt(i);
+  }
+
+  return new Blob([uint8Array], { type: mime });
+};
+
 
 const ImageMask = () => {
   const dispatch = useDispatch();
@@ -14,22 +48,40 @@ const ImageMask = () => {
 
   const handleMaskClick = async (type) => {
     setSvgType(type);
-    if (selectedLayer && selectedLayer.content.type === "image") {
       try {
-        const res = await addLayerImageUrlAPI({
-          idproduct: stageData.design.id,
-          token: checkTokenCookie(),
-          imageUrl: selectedLayer.content.banner,
-          page: 0,
-        });
-        console.log("res.data.data", res.data);
-        const svgString = createSVGString(res.data.imageUrl, type);
-        dispatch(addLayerImage({ svgString }));
-        setImageLink(selectedLayer.content.banner);
+        const svgString = createSVGString(selectedLayer.content.banner, type);
+        const imageBlob = dataURLToBlob(svgStringToDataURL(svgString));
+        
+        const token = checkTokenCookie();
+        const formData = new FormData();
+        if (token) {
+          formData.append("idproduct", stageData.design.id);
+          formData.append("token", token);
+          formData.append("idlayer", stageData.selectedLayer.id);
+          formData.append("file", imageBlob);
+
+          const headers = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Content-Type": "multipart/form-data",
+          };
+
+          const config = {
+            headers: headers,
+          };
+
+          const response = await axios.post(
+            "https://apis.ezpics.vn/apis/changeLayerImageNew",
+            formData,
+            config
+          );
+
+          console.log(response);
+          setImageLink(selectedLayer.content.banner);
+        }
       } catch (error) {
         console.log(error);
       }
-    }
   };
 
   const createSVGString = (imageUrl, type) => {
@@ -43,6 +95,10 @@ const ImageMask = () => {
         <image width="240" height="240" xlinkHref="${imageUrl}" clipPath="url(#${type}View)" />
       </svg>
     `;
+  };
+
+  const svgStringToDataURL = (svgString) => {
+    return `data:image/svg+xml;base64,${btoa(svgString)}`;
   };
 
   return (
@@ -78,7 +134,8 @@ const ImageMask = () => {
           width="240"
           height="240"
           viewBox="0 0 240 240"
-          onClick={() => handleMaskClick(svgType)}>
+          onClick={() => handleMaskClick(svgType)}
+        >
           <defs>
             {getSVGDefinitions(svgType)}
           </defs>
