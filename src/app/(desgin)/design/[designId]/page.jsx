@@ -24,17 +24,22 @@ const Page = () => {
   const { designId } = params;
   const stageRef = useRef(null);
   const containerRef = useRef(null);
+  const draggableDivRef = useRef(null); // New ref for the draggable div
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
   console.log(
     "================================================",
     stageData?.selectedLayer?.id
   );
+  const [locked, setLocked] = useState(true);
   const { design, designLayers, initSize } = stageData;
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
   const [isTransformerVisible, setTransformerVisible] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   console.log("🚀 ~ Layer ~ selectedLayer:", stageData.selectedLayer);
 
@@ -129,6 +134,42 @@ const Page = () => {
     []
   );
 
+  useEffect(() => {
+    const items = Array.from(stageData.designLayers);
+    if (Array.isArray(items)) {
+      const allLocked = items.every((layer) => layer.content.lock === 1);
+      setIsDragging(!allLocked);
+      setLocked(allLocked);
+    }
+  }, [stageData.designLayers]);
+
+  const handleMouseDown = (e) => {
+    if (
+      draggableDivRef.current &&
+      draggableDivRef.current.contains(e.target) &&
+      locked
+    ) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - dragOffset.x,
+        y: e.clientY - dragOffset.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setDragOffset({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   return (
     <>
       <Navbar
@@ -136,7 +177,11 @@ const Page = () => {
         setTransformerVisible={setTransformerVisible}
       />
       <div className="h-screen pt-[65px] overflow-hidden">
-        <Toolbox onToolChange={setActiveTool} activeTool={activeTool} />
+        <Toolbox
+          onToolChange={setActiveTool}
+          activeTool={activeTool}
+          stageRef={stageRef}
+        />
         <div
           className={`
           relative ${
@@ -164,9 +209,25 @@ const Page = () => {
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
           )}
-          <div className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center">
+          <div
+            className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center"
+            style={{
+              cursor: isDragging ? "grabbing" : "default",
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}>
             <div ref={containerRef}>
-              <div style={{ width: initSize.width, height: initSize.height }}>
+              <div
+                ref={draggableDivRef}
+                style={{
+                  width: initSize.width,
+                  height: initSize.height,
+                  transform: locked
+                    ? `translate(${dragOffset.x}px, ${dragOffset.y}px)`
+                    : "none",
+                }}>
                 <Stage
                   ref={stageRef}
                   width={initSize.width}

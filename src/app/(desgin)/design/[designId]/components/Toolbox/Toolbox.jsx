@@ -14,7 +14,7 @@ import TextFonts from "./TextFonts";
 import ImageMask from "./ImageMask";
 import { LeftOutlined } from "@ant-design/icons";
 
-const Toolbox = ({ onToolChange, activeTool }) => {
+const Toolbox = ({ onToolChange, activeTool, stageRef }) => {
   const [isToolboxVisible, setIsToolboxVisible] = useState(true);
   // const [activeTool, setActiveTool] = useState("Layer");
 
@@ -129,6 +129,25 @@ const Toolbox = ({ onToolChange, activeTool }) => {
             alignItems: "center",
             cursor: "pointer",
             padding: "20px 10px",
+            ...toolStyle("Masks"),
+          }}
+          onClick={() => {
+            handleToolClick("Masks");
+            if (activeTool === "Masks") {
+              setIsToolboxVisible(false);
+            }
+          }}>
+          <ElementIcon size={20} />
+          <p>Hình dạng</p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            cursor: "pointer",
+            padding: "20px 10px",
             ...toolStyle("Customize"),
           }}
           onClick={() => {
@@ -185,7 +204,7 @@ const Toolbox = ({ onToolChange, activeTool }) => {
       {activeTool === "Customize" && <Customize />}
       {activeTool === "Color" && <TextFill />}
       {activeTool === "Fonts" && <TextFonts />}
-      {activeTool === "Masks" && <ImageMask />}
+      {activeTool === "Masks" && <ImageMask stageRef={stageRef} />}
     </div>
   );
 };
