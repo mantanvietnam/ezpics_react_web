@@ -4,6 +4,7 @@ import useImage from "use-image";
 import { useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
+import GuideLines from './GuideLines'
 
 export default function ImageLayer(props) {
   const {
@@ -38,6 +39,7 @@ export default function ImageLayer(props) {
   const [image] = useImage(data.banner, "anonymous");
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
+  const [showLine, setShowLine] = useState(false)
 
   useEffect(() => {
     if (shapeRef.current && image) {
@@ -165,6 +167,7 @@ export default function ImageLayer(props) {
       postion_top: (e.target.y() / designSize.height) * 100,
     };
     dispatch(updateLayer({ id: id, data: data }));
+    setShowLine(false)
   };
 
   const handleTransformEnd = (e) => {
@@ -180,6 +183,7 @@ export default function ImageLayer(props) {
     dispatch(updateLayer({ id: id, data: data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
+    setShowLine(false)
   };
 
   useEffect(() => {
@@ -189,6 +193,22 @@ export default function ImageLayer(props) {
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
+
+  const [imageProps, setImageProps] = useState({
+    x: useMemo(() => designSize.width * (postion_left / 100), [designSize.width, postion_left]),
+    y: useMemo(() => designSize.height * (postion_top / 100), [designSize.height, postion_top]),
+    width: useMemo(() => designSize.width * (parseFloat(data.width?.replace("vw", "") || 0) / 100), [designSize.width, data.width]),
+    height: useMemo(() => (naturalHeight * width) / naturalWidth, [naturalHeight, naturalWidth, width]),
+    rotation: useMemo(() => parseFloat(rotate?.replace("deg", "")), [rotate])
+  });
+
+  const handleDragMove = (e) => {
+    const newX = e.target.x();
+    const newY = e.target.y();
+
+    setImageProps(prev => ({ ...prev, x: newX, y: newY }));
+    setShowLine(true);
+  }
 
   return (
     <>
@@ -211,6 +231,7 @@ export default function ImageLayer(props) {
         onTap={lock ? null : onSelect}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
+        onDragMove={handleDragMove}
       />
       {isTransformerVisible && !lock && localIsSelected && (
         <Transformer
@@ -247,6 +268,16 @@ export default function ImageLayer(props) {
             return newBox;
           }}
           attachTo={shapeRef.current} // Gắn Transformer với đối tượng Image
+        />
+      )}
+      {isTransformerVisible && !lock && showLine && (
+        <GuideLines
+          x={imageProps.x}
+          y={imageProps.y}
+          width={imageProps.width}
+          height={imageProps.height}
+          stageWidth={designSize.width}
+          stageHeight={designSize.height}
         />
       )}
     </>
