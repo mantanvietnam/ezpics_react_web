@@ -201,7 +201,7 @@ const EditPrint = ({ stageRef }) => {
       } else if (layer.content.type === "text") {
         const data = {
           ...layer.content,
-          text: "%_text_%",
+          text: `%${layer.content.variable}%`,
         };
         // console.log("layer text", layer.id, data);
         dispatch(
