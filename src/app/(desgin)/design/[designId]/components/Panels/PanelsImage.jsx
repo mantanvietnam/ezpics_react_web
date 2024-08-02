@@ -151,23 +151,23 @@ export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
 
   // States for sliders
   const [valueBrightness, setValueBrightness] = useState(
-    selectedLayer?.content.brightness / 2 || 100
+    selectedLayer?.content.brightness / 2 || 50
   );
   const [valueOpacity, setValueOpacity] = useState(
-    selectedLayer?.content.opacity * 100 || 100
+    selectedLayer?.content.opacity * 100 || 50
   );
   const [valueContrast, setValueContrast] = useState(
-    selectedLayer?.content.contrast / 2 || 100
+    selectedLayer?.content.contrast / 2 || 50
   );
   const [valueSaturate, setValueSaturate] = useState(
-    selectedLayer?.content.saturate / 2 || 100
+    selectedLayer?.content.saturate / 2 || 50
   );
 
   useEffect(() => {
     if (selectedLayer) {
       setValueOpacity(selectedLayer.content.opacity * 100);
       setValueContrast(selectedLayer.content.contrast / 2);
-      setValueBrightness(selectedLayer.content.brightness / 2 || 100);
+      setValueBrightness(selectedLayer.content.brightness / 2 || 50);
       setValueSaturate(selectedLayer.content.saturate / 2);
     }
   }, [selectedLayer]);
