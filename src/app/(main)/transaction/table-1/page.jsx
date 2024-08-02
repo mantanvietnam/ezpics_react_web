@@ -260,7 +260,7 @@ const Page = () => {
                 </tbody>
               </table>
               {/* <button onClick={handleLoadingmore}>xem thêm</button> */}
-              <Button
+              {/* <Button
                 onClick={handleLoadingmore}
                 type="primary"
                 danger
@@ -273,7 +273,7 @@ const Page = () => {
                 ) : (
                   "Xem thêm"
                 )}
-              </Button>
+              </Button> */}
             </div>
           ) : (
             <div className="center text-center w-full">
