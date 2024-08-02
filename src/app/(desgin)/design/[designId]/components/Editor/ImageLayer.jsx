@@ -173,9 +173,8 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        (e.target.width() * e.target.scaleX() * 100) / designSize.width
-      }vw`,
+      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
+        }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -190,9 +189,6 @@ export default function ImageLayer(props) {
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
-  console.log("🚀 ~ useEffect ~ isSelectedFromToolbox:", isSelectedFromToolbox);
-
-  console.log("🚀 ~ ImageLayer ~ localIsSelected:", localIsSelected, "id:", id);
 
   return (
     <>

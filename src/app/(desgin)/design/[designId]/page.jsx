@@ -27,21 +27,15 @@ const Page = () => {
   const draggableDivRef = useRef(null); // New ref for the draggable div
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
-  console.log(
-    "================================================",
-    stageData?.selectedLayer?.id
-  );
   const [locked, setLocked] = useState(true);
   const { design, designLayers, initSize } = stageData;
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
-  const [isTransformerVisible, setTransformerVisible] = useState(true);
+  const [isTransformerVisible, setTransformerVisible] = useState(true); // Added setTransformerVisible state
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
-  console.log("🚀 ~ Layer ~ selectedLayer:", stageData.selectedLayer);
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -138,7 +132,6 @@ const Page = () => {
     const items = Array.from(stageData.designLayers);
     if (Array.isArray(items)) {
       const allLocked = items.every((layer) => layer.content.lock === 1);
-      setIsDragging(!allLocked);
       setLocked(allLocked);
     }
   }, [stageData.designLayers]);
@@ -158,7 +151,7 @@ const Page = () => {
   };
 
   const handleMouseMove = (e) => {
-    if (isDragging) {
+    if (isDragging && locked) {
       setDragOffset({
         x: e.clientX - dragStart.x,
         y: e.clientY - dragStart.y,
@@ -213,7 +206,7 @@ const Page = () => {
           <div
             className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center"
             style={{
-              cursor: isDragging ? "grabbing" : "default",
+              cursor: isDragging ? "grabbing" : "grab",
             }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -265,8 +258,9 @@ const Page = () => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
-                            onMaxPositionUpdate={handleMaxPositionUpdate}
                             isTransformerVisible={isTransformerVisible}
+                            onMaxPositionUpdate={handleMaxPositionUpdate}
+                            isDraggable={!locked} // Only allow dragging when unlocked
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -290,6 +284,7 @@ const Page = () => {
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}
                             stageRef={stageRef}
+                            isDraggable={!locked} 
                           />
                         );
                       }
