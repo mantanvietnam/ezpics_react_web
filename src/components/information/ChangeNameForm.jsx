@@ -23,13 +23,17 @@ const ChangeNameForm = ({ data, setData }) => {
     validationSchema: Yup.object({
       name: Yup.string()
         .required("Không được bỏ trống")
-        .matches(/^[A-Za-z\s]+$/, "Tên không được chứa số")
         .matches(
-          /^[A-Z][a-z]*(\s+[A-Z][a-z]*)*$/,
+          /^[A-Za-zÀ-ÿ\s]+$/,
+          "Tên không được chứa số và phải bao gồm các ký tự tiếng Việt hợp lệ"
+        )
+        .matches(
+          /^[A-ZÀ-Ẫ][a-zà-ỹ]*(\s+[A-ZÀ-Ẫ][a-zà-ỹ]*)*$/,
           "Tên phải viết hoa chữ cái đầu mỗi từ và không có khoảng trắng ở đầu và cuối"
         )
         .trim()
-        .min(6, "Ít nhất phải có 6 kí tự"),
+        .min(6, "Ít nhất phải có 6 ký tự")
+        .max(30, "Tên không được vượt quá 30 ký tự"),
     }),
     onSubmit: async (values, { setSubmitting }) => {
       setLoadingName(true);

@@ -52,10 +52,10 @@ export default function ImageLayer(props) {
   }, [image]);
 
   // Convert vw to px
-  const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
-  // const widthValue = parseFloat(
-  //   typeof data.width === "string" ? data.width.replace("vw", "") : data.width
-  // );
+  // const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
+  const widthValue = parseFloat(
+    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  );
   const width = designSize.width * (widthValue / 100);
   const heightSize = useMemo(
     () => (naturalHeight * width) / naturalWidth,

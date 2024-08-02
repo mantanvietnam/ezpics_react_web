@@ -189,6 +189,7 @@ const Page = () => {
                 selectedId={selectedId}
                 maxPositions={maxPositions}
                 onDuplicateLayer={handleDuplicateLayer}
+                fetchData={fetchData}
               />
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (

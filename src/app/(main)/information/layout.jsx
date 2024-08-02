@@ -55,19 +55,30 @@ const Page = () => {
 
   useEffect(() => {
     const getData = async () => {
-      if (dataInforUser) {
+      try {
         const response = await getInfoMemberAPI({
           token: checkTokenCookie(),
         });
+
         if (response && response.code === 0) {
           setData(response?.data);
+        } else {
+          // Handle cases where the response code is not 0
+          console.error("Failed to fetch data:", response);
         }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    getData();
-  }, [dataInforUser]);
+    if (dataInforUser) {
+      getData();
+    } else {
+      setLoading(false);
+    }
+  }, [setData]);
 
   console.log(data);
   console.log(dataInforUser);
@@ -192,11 +203,9 @@ const Page = () => {
     setModalPassword(false);
   };
 
-  const ChangePasswordForm = () => {
+  const ChangePasswordForm = ({ data, setData }) => {
     const [showError, setShowError] = useState(false);
-    const network = useSelector((state) => state.ipv4.network);
     const router = useRouter();
-    const dispatch = useDispatch();
 
     const formik = useFormik({
       initialValues: {
@@ -205,49 +214,36 @@ const Page = () => {
         passAgain: "",
       },
       validationSchema: Yup.object({
-        passOld: Yup.string().required("Old Password is required"),
+        passOld: Yup.string().required("Mật khẩu cũ bị trống"),
         passNew: Yup.string()
-          .required("New Password is required")
-          .min(6, "New Password must be at least 6 characters"),
+          .required("Mật khẩu mới bị trống")
+          .min(6, "Mật khẩu mới ít nhất 6 kí tự"),
         passAgain: Yup.string()
-          .oneOf([Yup.ref("passNew"), null], "Passwords must match")
-          .required("Confirm New Password is required"),
+          .oneOf([Yup.ref("passNew"), null], "Mật khẩu không trùng nhau")
+          .required("Xác nhận mật khẩu mới bị trống"),
       }),
       onSubmit: async (values, { setSubmitting }) => {
         try {
-          const response = await axios.post(`${network}/saveChangePassAPI`, {
-            token: checkTokenCookie(),
-            passOld: values?.passOld,
-            passNew: values?.passNew,
-            passAgain: values?.passAgain,
-          });
+          const response = await axios.post(
+            `https://apis.ezpics.vn/apis/saveChangePassAPI`,
+            {
+              token: checkTokenCookie(),
+              passOld: values.passOld,
+              passNew: values.passNew,
+              passAgain: values.passAgain,
+            }
+          );
 
           console.log(response);
-          toast.success("Thay đổi mật khẩu thành công");
-          router.push("/sign-in");
-          console.log("push");
-
-          // if (response && response?.data?.code === 0) {
-          //   const responseInfo = await axios.post(
-          //     `${network}/getInfoMemberAPI`,
-          //     {
-          //       token: checkTokenCookie(),
-          //     }
-          //   );
-
-          //   console.log(responseInfo);
-
-          // if (responseInfo && responseInfo?.data?.code === 0) {
-          //   setCookie("user_login", responseInfo?.data?.data, 1);
-          //   dispatch(CHANGE_VALUE_USER(responseInfo?.data?.data));
-          //   setData(responseInfo?.data?.data);
-          //   toast.success("Thay đổi mật khẩu thành công");
-          //   router.push("/");
-          //   console.log("push");
-          // }
-          // }
+          if (response.data.code === 0) {
+            toast.success("Thay đổi mật khẩu thành công");
+            router.push("/sign-in");
+            console.log("push");
+          } else {
+            toast.error(response.data.messages[0].text);
+          }
         } catch (error) {
-          toast.error("Lỗi lưu thay đổi mật khẩu");
+          toast.error("Lỗi lưu thay đổi mật khẩu!");
         }
         setSubmitting(false);
       },
@@ -256,52 +252,49 @@ const Page = () => {
     return (
       <div>
         <h1 className="text-lg my-4">Mật khẩu</h1>
+        <Form
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 24 }}
+          onFinish={formik.handleSubmit} // Ensure the form is submitted via Formik
+        >
+          <Form.Item
+            label="Mật khẩu cũ"
+            name="passOld"
+            help={formik.touched.passOld && formik.errors.passOld}>
+            <Input.Password
+              id="passOld"
+              name="passOld"
+              value={formik.values.passOld}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </Form.Item>
 
-        <div>
-          <Form
-            labelCol={{
-              span: 6,
-            }}
-            wrapperCol={{
-              span: 24,
-            }}>
-            <Form.Item label="Mật khẩu cũ" name="passOld">
-              <Input.Password
-                id="passOld"
-                name="passOld"
-                {...formik.getFieldProps("passOld")}
-              />
-            </Form.Item>
-            {showError && formik.touched.passOld && formik.errors.passOld && (
-              <p className="text-red-500 text-xs">{formik.errors.passOld}</p>
-            )}
+          <Form.Item
+            label="Mật khẩu mới"
+            name="passNew"
+            help={formik.touched.passNew && formik.errors.passNew}>
+            <Input.Password
+              id="passNew"
+              name="passNew"
+              value={formik.values.passNew}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </Form.Item>
 
-            <Form.Item label="Mật khẩu mới" name="passNew">
-              <Input.Password
-                id="passNew"
-                name="passNew"
-                {...formik.getFieldProps("passNew")}
-              />
-            </Form.Item>
-            {showError && formik.touched.passNew && formik.errors.passNew && (
-              <p className="text-red-500 text-xs">{formik.errors.passNew}</p>
-            )}
-
-            <Form.Item label="Xác nhận lại mật khẩu" name="passAgain">
-              <Input.Password
-                id="passAgain"
-                name="passAgian"
-                {...formik.getFieldProps("passAgain")}
-              />
-            </Form.Item>
-            {showError &&
-              formik.touched.passAgain &&
-              formik.errors.passAgain && (
-                <p className="text-red-500 text-xs">
-                  {formik.errors.passAgain}
-                </p>
-              )}
-          </Form>
+          <Form.Item
+            label="Xác nhận lại mật khẩu"
+            name="passAgain"
+            help={formik.touched.passAgain && formik.errors.passAgain}>
+            <Input.Password
+              id="passAgain"
+              name="passAgain"
+              value={formik.values.passAgain}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+          </Form.Item>
 
           <div className="flex flex-row items-center justify-end">
             <button
@@ -314,17 +307,12 @@ const Page = () => {
               Hủy
             </button>
             <button
-              type="button"
-              className="items-center text-[15px] text-white leading-[22px] normal-case pl-[10px] pr-[10px] bg-[#ff424e] h-[36px] w-[80px] font-bold"
-              onClick={() => {
-                formik.handleSubmit();
-                setShowError(true);
-                handleCloseModalPassword();
-              }}>
+              type="submit"
+              className="items-center text-[15px] text-white leading-[22px] normal-case pl-[10px] pr-[10px] bg-[#ff424e] h-[36px] w-[80px] font-bold">
               Lưu
             </button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   };

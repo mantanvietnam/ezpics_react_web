@@ -370,7 +370,7 @@ const Header = ({ toggleNavbar }) => {
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     dispatch(DELETE_ALL_VALUES());
 
-    router.push("/");
+    router.push("https://ezpics.vn");
     // }
   };
 
@@ -790,10 +790,11 @@ const Header = ({ toggleNavbar }) => {
           )}
         </div>
         <div
-          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline
-            ? "bg-green-500 text-white opacity-0"
-            : "bg-red-500 text-white opacity-100"
-            } ${show ? "opacity-100" : "opacity-0"}`}
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
+            isOnline
+              ? "bg-green-500 text-white opacity-0"
+              : "bg-red-500 text-white opacity-100"
+          } ${show ? "opacity-100" : "opacity-0"}`}
           style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>
