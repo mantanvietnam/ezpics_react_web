@@ -76,10 +76,6 @@ const Product = (props) => {
           const response = await getInfoMemberAPI({ token: token });
           if (response.code === 0) {
             setCookie("user_login", response.data, 3);
-            console.log(
-              "--------------------------------",
-              JSON.stringify(response.data)
-            );
           }
         } catch (error) {
           console.log(error);
@@ -257,29 +253,39 @@ const Product = (props) => {
           <h2 className="xl:text-3xl text-xl font-bold pb-2">{data?.name}</h2>
           <div className="flex items-center gap-5 bg-slate-100 p-5">
             <div className="text-3xl text-red-500">
-              {data?.price ? VND.format(data?.price) : "Miễn Phí"}
+              {userLogin?.member_pro === 1
+                ? "Miễn Phí"
+                : data?.sale_price
+                  ? VND.format(data?.sale_price)
+                  : "Miễn Phí"}
             </div>
             <div className="line-through text-slate-400 rounded-sm">
-              {VND.format(defaultPrice)}
+              {userLogin?.member_pro === 1
+                ? ""
+                : VND.format(defaultPrice)}
             </div>
-            <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
-              {data?.price
+
+            {userLogin?.member_pro === 1
+              ? ""
+              : <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">{data?.price
                 ? `Giảm ${Math.round(
+                  100 - (data?.price / defaultPrice) * 100
+                )}%`
+                : "Miễn Phí"}
+              </div>}
+          </div>
+          {userLogin?.member_pro === 1 ? ""
+            : <div className="flex items-center gap-3 py-2">
+              <div className="text-sm product-details-e">Khuyến mãi</div>
+              <div className="bg-red-50 border border-red-500 text-red-500 p-2 font-semibold">
+                {data?.price
+                  ? `Giảm ${Math.round(
                     100 - (data?.price / defaultPrice) * 100
                   )}%`
-                : "Miễn Phí"}
+                  : "Miễn Phí"}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3 py-2">
-            <div className="text-sm product-details-e">Khuyến mãi</div>
-            <div className="bg-red-50 border border-red-500 text-red-500 p-2 font-semibold">
-              {data?.price
-                ? `Giảm ${Math.round(
-                    100 - (data?.price / defaultPrice) * 100
-                  )}%`
-                : "Miễn Phí"}
-            </div>
-          </div>
+          }
           <div className="flex items-center gap-3 py-2">
             <div className="product-details-e">Tác giả</div>
             <div className="w-[35px] h-[35px]">
@@ -428,11 +434,14 @@ const Product = (props) => {
             <Radio value="ecoin">Mua bằng ecoin</Radio>
           </Radio.Group>
           <div className="flex gap-2 justify-end mb-[20px] items-center">
-            <div className="text-lg font-semibold">Tổng tiền:</div>
+            <div className="text-lg font-semibold">{userLogin?.member_pro === 1 ? "Tài khoản Pro:" : "Tổng tiền:"}</div>
             <div className="text-lg font-semibold">
-              {type === "ecoin"
-                ? `${data?.ecoin} eCoin`
-                : VND.format(data?.price)}
+              {userLogin?.member_pro === 1
+                ? "Miễn Phí"
+                : type === "ecoin"
+                  ? `${data?.ecoin} eCoin`
+                  : VND.format(data?.price)
+              }
             </div>
           </div>
           <div className="flex justify-end">
