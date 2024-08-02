@@ -24,12 +24,8 @@ const ChangeNameForm = ({ data, setData }) => {
       name: Yup.string()
         .required("Không được bỏ trống")
         .matches(
-          /^[A-Za-zÀ-ÿ\s]+$/,
-          "Tên không được chứa số và phải bao gồm các ký tự tiếng Việt hợp lệ"
-        )
-        .matches(
-          /^[A-ZÀ-Ẫ][a-zà-ỹ]*(\s+[A-ZÀ-Ẫ][a-zà-ỹ]*)*$/,
-          "Tên phải viết hoa chữ cái đầu mỗi từ và không có khoảng trắng ở đầu và cuối"
+          /^[A-ZÀ-Ẫ][a-zà-ỹ]*(\s[A-ZÀ-Ẫ][a-zà-ỹ]*)*$/,
+          "Tên phải viết hoa chữ cái đầu mỗi từ và không có khoảng trắng ở đầu và cuối, và phải bao gồm các ký tự tiếng Việt hợp lệ"
         )
         .trim()
         .min(6, "Ít nhất phải có 6 ký tự")
