@@ -24,7 +24,6 @@ const VND = new Intl.NumberFormat("vi-VN", {
 export default function ProductInfo(props) {
   const { data, user, isLoading } = props;
   const router = useRouter();
-
   const [isFavorited, setIsFavorited] = useState(0);
   const [loadingFavorite, setLoadingFavorite] = useState(true);
 
@@ -38,6 +37,8 @@ export default function ProductInfo(props) {
       console.error("Error parsing user_login JSON:", error);
     }
   }
+  console.log('🚀 ~ ProductInfo ~ userLogin:', userLogin)
+
   const token = Cookies.get("token");
 
   const [open, setOpen] = useState(false);
@@ -294,40 +295,51 @@ export default function ProductInfo(props) {
           </div>
           <div className="flex items-center gap-5 bg-slate-100 p-5">
             <div className="text-3xl text-red-500">
-              {data?.sale_price ? VND.format(data?.sale_price) : "Miễn Phí"}
+              {userLogin?.member_pro === 1
+                ? "Miễn Phí"
+                : data?.sale_price
+                  ? VND.format(data?.sale_price)
+                  : "Miễn Phí"}
             </div>
             <div className="line-through text-slate-400 rounded-sm">
-              {data?.price ? VND.format(data?.price) : ""}
+              {userLogin?.member_pro === 1
+                ? ""
+                : data?.price ? VND.format(data?.price) : ""}
             </div>
-            {data?.sale_price ? (
-              <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
-                {`Giảm ${Math.round(
-                  100 - (data?.sale_price / data?.price) * 100
-                )}%`}
-              </div>
-            ) : (
-              ""
-            )}
+            {userLogin?.member_pro === 1
+              ? ""
+              : data?.sale_price ? (
+                <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+                  {`Giảm ${Math.round(
+                    100 - (data?.sale_price / data?.price) * 100
+                  )}%`}
+                </div>
+              ) : (
+                ""
+              )}
           </div>
-          {data?.price !== 0 && (
-            <div className="flex items-center gap-3">
-              <div className="text-sm product-details-e">Khuyến mãi</div>
-              <div
-                style={{
-                  backgroundColor: "rgb(255, 245, 241)",
-                  border: "1px solid rgb(255, 66, 78)",
-                  color: "rgb(255, 66, 78)",
-                  padding: "2px",
-                  fontWeight: "semibold",
-                }}>
-                {data?.sale_price
-                  ? `Lên đến ${Math.round(
+
+          {userLogin?.member_pro === 1
+            ? ""
+            : data?.price !== 0 && (
+              <div className="flex items-center gap-3">
+                <div className="text-sm product-details-e">Khuyến mãi</div>
+                <div
+                  style={{
+                    backgroundColor: "rgb(255, 245, 241)",
+                    border: "1px solid rgb(255, 66, 78)",
+                    color: "rgb(255, 66, 78)",
+                    padding: "2px",
+                    fontWeight: "semibold",
+                  }}>
+                  {data?.sale_price
+                    ? `Lên đến ${Math.round(
                       100 - (data?.sale_price / data?.price) * 100
                     )}%`
-                  : "Miễn Phí"}
+                    : "Miễn Phí"}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
             <div className="w-[35px] h-[35px]">
@@ -504,11 +516,14 @@ export default function ProductInfo(props) {
             <Radio value="ecoin">Mua bằng ecoin</Radio>
           </Radio.Group>
           <div className="flex gap-2 justify-end mb-[20px] items-center">
-            <div className="text-lg font-semibold">Tổng tiền:</div>
+            <div className="text-lg font-semibold">{userLogin?.member_pro === 1 ? "Tài khoản Pro:" : "Tổng tiền:"}</div>
             <div className="text-lg font-semibold">
-              {type === "ecoin"
-                ? `${data?.ecoin} eCoin`
-                : VND.format(data?.sale_price)}
+              {userLogin?.member_pro === 1
+                ? "Miễn Phí"
+                : type === "ecoin"
+                  ? `${data?.ecoin} eCoin`
+                  : VND.format(data?.sale_price)
+              }
             </div>
           </div>
           <div className="flex justify-end">
