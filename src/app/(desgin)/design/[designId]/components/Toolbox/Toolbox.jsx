@@ -160,7 +160,7 @@ const Toolbox = ({ onToolChange, activeTool, stageRef }) => {
           <p>Cài đặt</p>
         </div>
 
-        <div
+        {/* <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -177,7 +177,7 @@ const Toolbox = ({ onToolChange, activeTool, stageRef }) => {
           }}>
           <LayerIcon size={20} />
           <p>Frame</p>
-        </div>
+        </div> */}
       </div>
 
       <div

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+import { addLayerText } from "@/redux/slices/editor/stageSlice";
 import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 import { addLayerImageUrlAPI } from "@/api/design";
