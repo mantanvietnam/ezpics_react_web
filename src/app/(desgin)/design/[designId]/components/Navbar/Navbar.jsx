@@ -5,9 +5,10 @@ import exportIcon from "./Layer 2.png";
 import { useSelector } from "react-redux";
 import { downloadListLayer, saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
-import { Popover, Tooltip, Select, Button, Slider } from "antd";
+import { Popover, Select, Slider } from "antd";
 import { jsPDF } from "jspdf";
 import { checkTokenCookie, getCookie } from "@/utils";
+import Link from "next/link";
 
 const DownLoadMenu = ({
   handleDownload,
@@ -104,19 +105,6 @@ const DownLoadMenu = ({
   </div>
 );
 
-// Hàm lấy thông tin người dùng
-const getUserInfo = () => {
-  let dataInfoUser;
-  if (getCookie("user_login")) {
-    dataInfoUser = JSON.parse(getCookie("user_login"));
-  } else if (session?.user_login) {
-    dataInfoUser = session?.user_login;
-  } else {
-    dataInfoUser = null;
-  }
-  return dataInfoUser;
-};
-
 const Navbar = ({ stageRef, setTransformerVisible }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [imageURL, setImageURL] = useState("");
@@ -124,13 +112,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
   const [pixelRatio, setPixelRatio] = useState(1);
   const stageData = useSelector((state) => state.stage.stageData);
   const [isProMember, setIsProMember] = useState(true);
-
-  // useEffect(() => {
-  //   const dataInfoUser = getUserInfo();
-  //   if (dataInfoUser && dataInfoUser.member_pro === 1) {
-  //     setIsProMember(true);
-  //   }
-  // }, []);
 
   const downloadURI = (url, name) => {
     const link = document.createElement("a");
@@ -168,22 +149,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
     }
   };
 
-  // const handleDownloadJPG = () => {
-  //   if (imageURL) {
-  //     const img = new Image();
-  //     img.src = imageURL;
-  //     img.onload = () => {
-  //       const canvas = document.createElement("canvas");
-  //       const ctx = canvas.getContext("2d");
-  //       canvas.width = img.width;
-  //       canvas.height = img.height;
-  //       ctx.drawImage(img, 0, 0);
-  //       const jpgURL = canvas.toDataURL("image/jpeg", 0.95); // Chuyển đổi sang JPG với chất lượng 95%
-  //       downloadURI(jpgURL, "download.jpg");
-  //       setIsPopoverOpen(false);
-  //     };
-  //   }
-  // };
 
   const handleDownloadPDF = () => {
     if (imageURL) {
@@ -258,7 +223,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
             justifyContent: "space-between",
             borderBottom: "1px solid #fff",
           }}>
-          <div>
+          <Link href="/" className="flex flex-center">
             <NextImage
               alt=""
               src="/images/EZPICS.png"
@@ -266,7 +231,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               height={40}
               style={{ cursor: "pointer" }}
             />
-          </div>
+          </Link>
           <div
             style={{
               display: "flex",
