@@ -257,6 +257,7 @@ const Page = () => {
                               setSelectedId(layer.id);
                               dispatch(selectLayer({ id: layer.id }));
                             }}
+                            isTransformerVisible={isTransformerVisible}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
                             isDraggable={!locked} // Only allow dragging when unlocked
                           />
@@ -282,7 +283,7 @@ const Page = () => {
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}
                             stageRef={stageRef}
-                            isDraggable={!locked} // Only allow dragging when unlocked
+                            isDraggable={!locked} 
                           />
                         );
                       }
