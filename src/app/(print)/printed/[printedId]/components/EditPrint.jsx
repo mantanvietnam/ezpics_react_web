@@ -230,20 +230,23 @@ const EditPrint = ({ stageRef }) => {
         const newImgSrc = reader.result?.toString() || "";
         setImgSrc(newImgSrc);
 
-        filteredLayers.forEach((layer) => {
-          if (layer.content.type === "image") {
-            const data = {
-              ...layer.content,
-              banner: newImgSrc,
-            };
-            dispatch(
-              updateLayer({
-                id: layer.id,
-                data: data,
-              })
-            );
-          }
-        });
+        const img = new Image();
+        img.src = newImgSrc;
+        img.onload = () => {
+          filteredLayers.forEach((layer) => {
+            if (layer.content.type === "image") {
+              const data = {
+                ...layer.content,
+                banner: newImgSrc,
+                naturalWidth: img.width,
+                naturalHeight: img.height,
+                // width: "auto", // Bỏ kích thước cũ để giữ tỷ lệ
+                // height: "auto", // Bỏ kích thước cũ để giữ tỷ lệ
+              };
+              dispatch(updateLayer({ id: layer.id, data }));
+            }
+          });
+        };
       };
 
       reader.readAsDataURL(file);
