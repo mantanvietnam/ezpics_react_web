@@ -365,6 +365,21 @@ const Header = ({ toggleNavbar }) => {
     const response = await logoutService({
       token: checkTokenCookie(),
     });
+    clearAllCookies();
+    // await signOut({});
+    document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    dispatch(DELETE_ALL_VALUES());
+
+    router.push("https://ezpics.vn");
+    // }
+  };
+
+  const handleLogoutNew = async (e) => {
+    const response = await logoutService({
+      token: checkTokenCookie(),
+    });
+    clearAllCookies();
     await signOut({});
     document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -486,7 +501,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div className="list-item " onClick={handleLogout}>
+        <div className="list-item " onClick={handleLogoutNew}>
           <p className="item-text">Đăng xuất </p>
         </div>
       ),

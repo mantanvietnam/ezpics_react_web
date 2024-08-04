@@ -39,6 +39,8 @@ export default function ImageLayer(props) {
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
 
+  console.log(image);
+
   useEffect(() => {
     if (shapeRef.current && image) {
       // Đảm bảo hình ảnh đã được tải
@@ -52,11 +54,12 @@ export default function ImageLayer(props) {
   }, [image]);
 
   // Convert vw to px
-  // const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
-  const widthValue = parseFloat(
-    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
-  );
+  const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
+  // const widthValue = parseFloat(
+  //   typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  // );
   const width = designSize.width * (widthValue / 100);
+  // const heightSize = (naturalHeight * width) / naturalWidth;
   const heightSize = useMemo(
     () => (naturalHeight * width) / naturalWidth,
     [naturalHeight, naturalWidth, width]
@@ -173,8 +176,9 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
-        }vw`,
+      width: `${
+        (e.target.width() * e.target.scaleX() * 100) / designSize.width
+      }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -189,6 +193,8 @@ export default function ImageLayer(props) {
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
+
+  console.log(width, heightSize);
 
   return (
     <>

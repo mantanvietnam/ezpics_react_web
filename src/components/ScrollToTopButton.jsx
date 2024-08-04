@@ -1,6 +1,6 @@
 // components/ScrollToTopButton.jsx
-"use client"
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 import { AiFillCaretUp } from "react-icons/ai";
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,21 +20,21 @@ const ScrollToTopButton = () => {
       }
     };
 
-    window.addEventListener('scroll', toggleVisibility); 
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 
   // Hàm cuộn lên đầu trang
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
   return (
     <>
-    <div className="fixed bottom-12 right-1" >
+      {/* <div className="fixed bottom-12 right-1" >
     {isVisible &&(
       <div
       onClick={scrollToTop}
@@ -43,8 +43,8 @@ const ScrollToTopButton = () => {
         <AiFillCaretUp/>
         </div>
       )}
-        </div>
-      </>
+        </div> */}
+    </>
   );
 };
 

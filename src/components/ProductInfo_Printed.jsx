@@ -381,12 +381,8 @@ export default function ProductInfoPrinted(props) {
             </button>
             <button
               onClick={() => {
-                if (!isAuthenticated) {
-                  router.push(`/sign-in`);
-                  toast.warning("Vui lòng đăng nhập!");
-                } else {
-                  router.push(`/printed/${id_param}`);
-                }
+                router.push(`/printed/${id_param}`);
+                toast.success("Tạo ảnh thành công. Xin chờ giây lát!");
               }}
               style={{
                 backgroundColor: "rgb(255, 66, 78)",
