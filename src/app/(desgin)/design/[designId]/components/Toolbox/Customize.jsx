@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { updateDesign } from "@/api/design";
 
-import "@/styles/loading.css";
+import "@/styles/newloading.css";
 import Image from "next/image";
 
 function checkTokenCookie() {
@@ -371,8 +371,8 @@ export default function Customize() {
             <Image
               style={{
                 position: "absolute",
-                top: 10,
-                left: 17,
+                top: 30,
+                left: 32,
                 width: 40,
                 height: 40,
                 // alignSelf: 'center',

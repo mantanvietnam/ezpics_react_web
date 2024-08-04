@@ -7,7 +7,7 @@ import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import "@/styles/loading.css";
+import "@/styles/newloading.css";
 import Image from "next/image";
 
 function checkTokenCookie() {
@@ -144,8 +144,8 @@ export default function Graphic() {
             <Image
               style={{
                 position: "absolute",
-                top: 10,
-                left: 17,
+                top: 30,
+                left: 32,
                 width: 40,
                 height: 40,
                 // alignSelf: 'center',

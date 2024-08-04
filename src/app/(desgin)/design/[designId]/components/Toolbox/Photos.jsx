@@ -7,7 +7,7 @@ import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
-import "@/styles/loading.css";
+import "@/styles/newloading.css";
 import Image from "next/image";
 
 const Photos = () => {
@@ -40,7 +40,7 @@ const Photos = () => {
   //B1: Call api tạo layer image
   //B2: Cập nhât redux để nó load lại state
   const handleAddPhoto = (item) => {
-    console.log(item)
+    console.log(item);
     const addLayer = async () => {
       try {
         const res = await addLayerImageUrlAPI({
@@ -154,8 +154,8 @@ const Photos = () => {
               <Image
                 style={{
                   position: "absolute",
-                  top: 10,
-                  left: 17,
+                  top: 30,
+                  left: 32,
                   width: 40,
                   height: 40,
                   // alignSelf: 'center',

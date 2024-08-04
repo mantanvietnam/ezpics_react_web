@@ -37,6 +37,8 @@ const Page = () => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
+  console.log("- selected layrt -- : ", stageData.selectedLayer);
+
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
     maxLeft: null,
@@ -237,6 +239,7 @@ const Page = () => {
                       width={initSize.width}
                       height={initSize.height}
                     />
+
                     {designLayers.map((layer) => {
                       if (layer.content?.type === "image") {
                         return (
@@ -282,7 +285,7 @@ const Page = () => {
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}
                             stageRef={stageRef}
-                            isDraggable={!locked} 
+                            isDraggable={!locked}
                           />
                         );
                       }

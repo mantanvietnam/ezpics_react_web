@@ -8,7 +8,7 @@ import Image from "next/image";
 import images from "public/images/index2";
 import { useSelector, useDispatch } from "react-redux";
 import { addLayerImage } from "@/redux/slices/editor/stageSlice";
-import "@/styles/loading.css";
+import "@/styles/newloading.css";
 
 async function LoadFonts(fonts) {
   const styleElement = document.createElement("style");
@@ -247,8 +247,8 @@ export default function Text() {
               <Image
                 style={{
                   position: "absolute",
-                  top: 10,
-                  left: 17,
+                  top: 30,
+                  left: 32,
                   width: 40,
                   height: 40,
                   // alignSelf: 'center',
