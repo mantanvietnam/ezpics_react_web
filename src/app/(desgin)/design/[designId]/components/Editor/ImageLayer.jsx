@@ -41,7 +41,7 @@ export default function ImageLayer(props) {
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
 
-  console.log(image);
+  // console.log(image);
 
   useEffect(() => {
     if (shapeRef.current && image) {

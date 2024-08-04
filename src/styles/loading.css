@@ -76,6 +76,9 @@
     transform: translateZ(0) scale(1);
     backface-visibility: hidden;
     transform-origin: 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     /* see note above */
 }

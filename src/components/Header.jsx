@@ -376,17 +376,27 @@ const Header = ({ toggleNavbar }) => {
   };
 
   const handleLogoutNew = async (e) => {
-    const response = await logoutService({
-      token: checkTokenCookie(),
-    });
-    // await signOut({});
-    clearAllCookies();
-    document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    dispatch(DELETE_ALL_VALUES());
+    try {
+      // Gọi dịch vụ logout và xóa các cookies
+      await logoutService({
+        token: checkTokenCookie(),
+      });
 
-    router.push("https://ezpics.vn");
-    // }
+      // Xóa tất cả cookies
+      clearAllCookies();
+      document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+
+      // Xóa trạng thái trong Redux
+      dispatch(DELETE_ALL_VALUES());
+
+      // Điều hướng tới trang chính và tải lại trang
+      router.push("https://ezpics.vn").then(() => {
+        window.location.reload();
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const menuItems = [
