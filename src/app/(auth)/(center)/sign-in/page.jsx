@@ -112,7 +112,7 @@ export default function Login() {
         const repon = await loginByPhone({
           phone: phone,
           password: password,
-          token_device: deviceToken,
+          // token_device: deviceToken,
           type_device: "web",
         });
         if (repon.code === 0) {
