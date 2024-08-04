@@ -379,7 +379,6 @@ const Header = ({ toggleNavbar }) => {
     const response = await logoutService({
       token: checkTokenCookie(),
     });
-    clearAllCookies();
     await signOut({});
     document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
