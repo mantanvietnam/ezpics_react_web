@@ -43,14 +43,17 @@ const Footer = () => {
     { label: "Chính sách quyền riêng tư", link: "https://ezpics.vn/post/27" },
     { label: "Hình thức thanh toán", link: " https://ezpics.vn/post/28" },
     { label: "Chính sách bảo mật", link: "https://ezpics.vn/post/29" },
-    { label: "Hướng dẫn sử dụng ", link: "https://www.youtube.com/playlist?list=PLngg14zy8vvwLxThvcL8g35G0F9VlNXUh" },
+    {
+      label: "Hướng dẫn sử dụng ",
+      link: "https://www.youtube.com/playlist?list=PLngg14zy8vvwLxThvcL8g35G0F9VlNXUh",
+    },
   ];
 
   return (
     <div className="w-full z-40 bg-[#333] text-white bottom-0 px-15 md:px-5">
       <div className="padding_content flex flex-col ">
         <div className="top w-full py-7 flex flex-col sm:flex-row sm:justify-between">
-          <div className="info relative flex flex-col w-full sm:w-56">
+          <div className="info w-full sm:w-1/4 relative flex flex-col w-full sm:w-56">
             <div className="logo flex flex-col items-center justify-center">
               <Link href="/" className="flex flex-center">
                 <Image
@@ -74,8 +77,8 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="pages w-full sm:w-3/5 flex flex-row justify-between">
-            <div className="flex flex-col w-3/5 sm:pl-20 px-5">
+          <div className="pages w-full sm:w-1/2 flex flex-row justify-between">
+            <div className="flex flex-col w-1/2 sm:pl-10 px-5">
               <p className="footer_text font-semibold text-lg text_white pb-7">
                 Bạn cần hỗ trợ
               </p>
@@ -90,7 +93,7 @@ const Footer = () => {
                 <strong>Email: </strong>ezpicsvn@gmail.com
               </p>
             </div>
-            <div className="flex flex-col w-2/5 px-5">
+            <div className="flex flex-col w-1/2 px-5">
               <p className="footer_text font-semibold text-lg text_white pb-7">
                 Hướng dẫn sử dụng
               </p>
@@ -104,7 +107,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="contact flex flex-col items-center sm:items-start">
+          <div className="contact w-full sm:w-1/4 flex flex-col  items-center sm:items-start">
             <p className="font-semibold text-lg pb-7">
               Follow Us On Social Media
             </p>
@@ -118,6 +121,14 @@ const Footer = () => {
                   <FontAwesomeIcon icon={iconItem.icon} size="2x" />
                 </Link>
               ))}
+            </div>
+            <p className="font-semibold text-lg pt-7 pb-4">
+              Thông tin thanh toán
+            </p>
+            <div className="flex flex-col">
+              <p>* Số tài khoản: 10110457409</p>
+              <p>* Chủ tài khoản: Công ty TNHH Ezpics</p>
+              <p>* Ngân hàng: Ngân hàng TMCP Việt Nam Thịnh Vượng</p>
             </div>
           </div>
         </div>

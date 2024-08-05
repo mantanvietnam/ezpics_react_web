@@ -9,6 +9,8 @@ import { Popover, Select, Slider } from "antd";
 import { jsPDF } from "jspdf";
 import { checkTokenCookie, getCookie } from "@/utils";
 import Link from "next/link";
+import SaveIcon from "../../Icon/SaveIcon";
+import ExportIcon from "../../Icon/ExportIcon";
 
 const DownLoadMenu = ({
   handleDownload,
@@ -149,7 +151,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
     }
   };
 
-
   const handleDownloadPDF = () => {
     if (imageURL) {
       const img = new Image();
@@ -238,24 +239,19 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               alignSelf: "center",
               gap: "0.5rem",
               alignItems: "center",
-              paddingBottom: "10px",
               color: "#ffffff",
+              height: "100%",
             }}>
             <button
               style={{
                 marginRight: "50px",
-                paddingTop: "18px",
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 fontSize: "18px",
               }}
               onClick={handleSaveDesign}>
-              <NextImage
-                src={imageIcon}
-                alt=""
-                style={{ width: 24, height: 24, marginRight: 10 }}
-              />
-              <p>Lưu mẫu thiết kế</p>
+              <SaveIcon size={22} />
+              <p className="pl-2">Lưu mẫu thiết kế</p>
             </button>
 
             <Popover
@@ -278,18 +274,13 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               <button
                 style={{
                   marginRight: "4px",
-                  paddingTop: "18px",
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   fontSize: "18px",
                 }}
                 onClick={handleDownLoadDesign}>
-                <NextImage
-                  alt=""
-                  src={exportIcon}
-                  style={{ width: 24, height: 24, marginRight: 10 }}
-                />
-                <p>Xuất ảnh</p>
+                <ExportIcon size={23} />
+                <p className="pl-1">Xuất ảnh</p>
               </button>
             </Popover>
           </div>
