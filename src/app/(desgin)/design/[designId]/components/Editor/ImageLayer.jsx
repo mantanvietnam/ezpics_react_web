@@ -6,6 +6,13 @@ import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 import GuideLines from "./GuideLines";
 
+// Hàm tạo đối tượng Image từ URL Base64
+function createImageFromSvg(svgBase64, callback) {
+  const image = new window.Image();
+  image.onload = () => callback(image);
+  image.src = svgBase64;
+}
+
 export default function ImageLayer(props) {
   const {
     data,
@@ -40,8 +47,6 @@ export default function ImageLayer(props) {
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
-
-  // console.log(image);
 
   useEffect(() => {
     if (shapeRef.current && image) {
