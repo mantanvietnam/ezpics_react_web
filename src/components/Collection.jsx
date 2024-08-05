@@ -28,7 +28,7 @@ export default function Collection({ collection }) {
           Số lượng mẫu {collection?.number_product}
         </p>
         <div className="mt-2">
-          <span className="text-red-500 font-bold mr-2">
+          <span className="text-red-500 font-bold mr-2 text-lg">
             {VND.format(collection?.price)}
           </span>
           <span className="text-gray-500 line-through"></span>
