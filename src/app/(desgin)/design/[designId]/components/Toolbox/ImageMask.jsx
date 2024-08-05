@@ -29,7 +29,7 @@ const initialSvgString = `
 
 // Hàm chuyển SVG thành Base64
 function svgToBase64(svgString) {
-  return btoa(svgString);
+  return btoa(unescape(encodeURIComponent(svgString)));
 }
 
 // Hàm chuyển SVG thành URL Base64
@@ -149,7 +149,18 @@ const ImageMask = () => {
           Test them anh vao svg
         </Button>
       </div>
-      <img src={selectedLayer?.content?.banner} alt="SVG Banner" />
+      <object
+        type="image/svg+xml"
+        data={selectedLayer?.content?.banner}
+        width="200"
+        height="200"
+      />
+      <img
+        src={selectedLayer?.content?.banner}
+        alt=""
+        height={200}
+        width={200}
+      />
       <SvgImage dataUrl={selectedLayer?.content?.banner} />
     </div>
   );
