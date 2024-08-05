@@ -5,12 +5,16 @@ import exportIcon from "./Layer 2.png";
 import { useSelector } from "react-redux";
 import { downloadListLayer, saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
-import { Popover, Select, Slider } from "antd";
+import { Button, Popover, Select, Slider, Tooltip } from "antd";
 import { jsPDF } from "jspdf";
 import { checkTokenCookie, getCookie } from "@/utils";
 import Link from "next/link";
 import SaveIcon from "../../Icon/SaveIcon";
 import ExportIcon from "../../Icon/ExportIcon";
+import Undo from "../../Icon/Undo";
+import Redo from "../../Icon/Redo";
+import { redo, undo } from "@/redux/slices/editor/stageSlice";
+import { useDispatch } from "react-redux";
 
 const DownLoadMenu = ({
   handleDownload,
@@ -108,6 +112,7 @@ const DownLoadMenu = ({
 );
 
 const Navbar = ({ stageRef, setTransformerVisible }) => {
+  const dispatch = useDispatch();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [imageURL, setImageURL] = useState("");
   const [fileType, setFileType] = useState("png");
@@ -204,6 +209,14 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
     }
   };
 
+  const handleUndo = () => {
+    dispatch(undo());
+  };
+
+  const handleRedo = () => {
+    dispatch(redo());
+  };
+
   return (
     <>
       <div
@@ -242,6 +255,18 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               color: "#ffffff",
               height: "100%",
             }}>
+            <div className="mx-2 pt-3 flex items-center justify-center cursor-pointer">
+              <Tooltip placement="bottom" title="Undo">
+                <Button onClick={handleUndo} size="small" type="text">
+                  <Undo className="" />
+                </Button>
+              </Tooltip>
+              <Tooltip placement="bottom" title="Redo">
+                <Button onClick={handleRedo} size="small" type="text">
+                  <Redo />
+                </Button>
+              </Tooltip>
+            </div>
             <button
               style={{
                 marginRight: "50px",
