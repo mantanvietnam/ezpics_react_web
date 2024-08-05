@@ -255,7 +255,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               color: "#ffffff",
             }}>
             
-            <div className="mx-2 pt-3 flex items-center justify-center cursor-pointer">
+            <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
               <Tooltip placement="bottom" title="Undo">
                 <Button onClick={handleUndo} size="small" type="text">
                   <Undo className="" />
