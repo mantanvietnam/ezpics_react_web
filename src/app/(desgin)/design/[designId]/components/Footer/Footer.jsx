@@ -107,7 +107,6 @@ const LockUnlock = () => {
 
     setLocked(!locked);
     dispatch(updateListLayers(updatedLayers ));
-    console.log("updatedLayers :", updatedLayers);
   };
 
   return (
