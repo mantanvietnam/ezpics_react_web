@@ -1,38 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
-import useFonts from "../../../../../../hooks/useLoadFont"; // Correct import path
+import useFonts from "../../../../../../hooks/useLoadFont";
 
 const TextFonts = () => {
   const { selectedLayer } = useSelector((state) => state.stage.stageData);
-  const [font, setFont] = useState(selectedLayer.content.font);
+  const [font, setFont] = useState("");
   const [search, setSearch] = useState("");
   const [filteredFonts, setFilteredFonts] = useState([]);
+  const fontRef = useRef(font);
 
   const dispatch = useDispatch();
+  const { fonts, loading } = useFonts();
 
   useEffect(() => {
-    if (
-      selectedLayer.content.type === "text" &&
-      selectedLayer.content.font !== font
-    )
-      setFont(selectedLayer.content.font);
-  }, [selectedLayer, font]);
-
-  // useEffect(() => {
-  //   if (selectedLayer.content.font !== font) {
-  //     setFont(selectedLayer.content.font);
-  //   }
-  // }, [selectedLayer, font]);
+    if (selectedLayer?.content?.type === "text") {
+      setFont(selectedLayer.content.font || "");
+      fontRef.current = selectedLayer.content.font || "";
+    }
+  }, [selectedLayer]);
 
   useEffect(() => {
-    if (selectedLayer.id && font !== selectedLayer.content.font) {
+    if (selectedLayer?.id && font !== fontRef.current) {
       const data = { font: font };
       dispatch(updateLayer({ id: selectedLayer.id, data }));
+      fontRef.current = font;
     }
-  }, [selectedLayer.id, font, dispatch]);
-
-  const { fonts, loading } = useFonts();
+  }, [selectedLayer?.id, font, dispatch]);
 
   useEffect(() => {
     setFilteredFonts(
@@ -42,7 +36,11 @@ const TextFonts = () => {
     );
   }, [search, fonts]);
 
-  const updateObjectFill = (selectedFont) => {
+  const handleFontChange = (e) => {
+    setFont(e.target.value);
+  };
+
+  const handleFontSelect = (selectedFont) => {
     setFont(selectedFont);
   };
 
@@ -69,15 +67,16 @@ const TextFonts = () => {
               key={index}
               className="font-item cursor-pointer p-2 hover:bg-gray-200"
               style={{ fontFamily: fontOption.name }}
-              onClick={() => updateObjectFill(fontOption.name)}>
+              onClick={() => handleFontSelect(fontOption.name)}>
               {fontOption.name}
             </div>
           ))}
         </div>
         <input
           type="text"
+          value={font}
           className="w-12 h-12 appearance-none bg-transparent border-0 cursor-pointer p-0"
-          onChange={(e) => updateObjectFill(e.target.value)}
+          onChange={handleFontChange}
         />
         <div className="absolute text-white top-[44px] left-[16px] text-[26px] cursor-pointer">
           +
