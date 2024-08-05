@@ -10,6 +10,11 @@ const initialState: StageState = {
     initSize: {},
     designLayers: [],
     selectedLayer: {},
+    currentPage: {
+      page: 0,
+      pageLayers: []
+    },
+    totalPages: 0
   },
 };
 
@@ -19,6 +24,12 @@ const stageSlice = createSlice({
   reducers: {
     setStageData: (state, action: PayloadAction<any>) => {
       state.stageData = action.payload;
+    },
+    setCurrentPage: (state, action: PayloadAction<any>) => {
+      state.stageData.currentPage = action.payload;
+    },
+    setTotalPages: (state, action: PayloadAction<any>) => {
+      state.stageData.totalPages = action.payload;
     },
     addLayerImage: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = [
@@ -194,5 +205,7 @@ export const {
   flipLayerHorizontally,
   flipLayerVertically,
   addLayerText,
+  setCurrentPage,
+  setTotalPages
 } = stageSlice.actions;
 export default stageSlice.reducer;
