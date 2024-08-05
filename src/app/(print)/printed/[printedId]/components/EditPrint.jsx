@@ -20,7 +20,7 @@ const DownLoadMenu = ({
   setPixelRatio,
   isProMember,
 }) => (
-  <div className="w-[500px] h-fit p-3">
+  <div className="w-[300px] mobile:w-[400px] md:w-[500px] h-fit p-3">
     <div className="mt-4 flex flex-col">
       <label htmlFor="fileType" className="mb-2 text-lg">
         Chọn loại tệp:
@@ -375,7 +375,7 @@ const EditPrint = ({ stageRef }) => {
       {filteredLayers.map((layer) => {
         if (layer.content?.type === "image") {
           return (
-            <div className="w-[400px] h-fit" key={layer.id}>
+            <div className="w-[300px] md:w-[400px] h-fit" key={layer.id}>
               <h4 className="text-lg font-bold py-2 text-white">
                 {layer.content.variableLabel}
               </h4>
@@ -426,7 +426,7 @@ const EditPrint = ({ stageRef }) => {
                         <ArrowBottomIcon size={25} />
                       </div>
                     </div>
-                    <div className="w-[70%] flex justify-around items-center mb-2">
+                    <div className="w-[100%] mobile:w-[70%] flex justify-around items-center mb-2">
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
                         onClick={() => zoomLayer(layer.id, "zoomin")}>
@@ -532,7 +532,7 @@ const EditPrint = ({ stageRef }) => {
       })}
       <div className="flex">
         <Popover
-          placement="left"
+          placement="top"
           trigger="click"
           autoFocus
           returnFocus
