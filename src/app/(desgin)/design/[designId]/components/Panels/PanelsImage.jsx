@@ -125,7 +125,12 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
   </div>
 );
 
-export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
+export function PanelsImage({
+  selectedId,
+  maxPositions,
+  onDuplicateLayer,
+  fetchData,
+}) {
   const layerActive = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
   const selectedLayer = layerActive.selectedLayer;
@@ -505,6 +510,7 @@ export function PanelsImage({ selectedId, maxPositions, onDuplicateLayer }) {
             <ModalImageCrop
               isOpen={isModalCropOpen}
               onCancel={closeModalCrop}
+              fetchData={fetchData}
             />
           </div>
         </div>
@@ -556,7 +562,7 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
   );
 }
 
-export function ModalImageCrop({ isOpen, onCancel }) {
+export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
 
@@ -658,6 +664,9 @@ export function ModalImageCrop({ isOpen, onCancel }) {
           banner: response.data?.link,
         };
         dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
+        setTimeout(() => {
+          fetchData();
+        }, 0);
         onCancel();
         setLoading(false);
         toast.success("Cắt ảnh thành công");

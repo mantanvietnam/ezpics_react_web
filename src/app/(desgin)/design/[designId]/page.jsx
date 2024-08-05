@@ -37,6 +37,8 @@ const Page = () => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
+  console.log("- selected layrt -- : ", stageData.selectedLayer);
+
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
     maxLeft: null,
@@ -177,18 +179,17 @@ const Page = () => {
         />
         <div
           className={`
-          relative ${
-            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-          } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
-            activeTool ? "ml-[408px]" : "ml-[108px]"
-          }`}>
+          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
+            }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
                 selectedId={selectedId}
                 maxPositions={maxPositions}
                 onDuplicateLayer={handleDuplicateLayer}
+                fetchData={fetchData}
               />
             </div>
           ) : stageData.selectedLayer?.content?.type === "text" ? (
@@ -238,6 +239,7 @@ const Page = () => {
                       width={initSize.width}
                       height={initSize.height}
                     />
+
                     {designLayers.map((layer) => {
                       if (layer.content?.type === "image") {
                         return (
@@ -283,7 +285,7 @@ const Page = () => {
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}
                             stageRef={stageRef}
-                            isDraggable={!locked} 
+                            isDraggable={!locked}
                           />
                         );
                       }
@@ -294,9 +296,8 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${
-              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-            }`}>
+            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+              }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

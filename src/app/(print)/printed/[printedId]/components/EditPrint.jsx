@@ -9,6 +9,8 @@ import ArrowRightIcon from "../icon/ArrowRight";
 import jsPDF from "jspdf";
 import PrintedIcon from "../icon/PrintedIcon";
 import CancelIcon from "../icon/CancelIcon";
+import ZoomInIcon from "../icon/ZoomIn";
+import ZoomOutIcon from "../icon/ZoomOut";
 
 const DownLoadMenu = ({
   handleDownload,
@@ -228,20 +230,23 @@ const EditPrint = ({ stageRef }) => {
         const newImgSrc = reader.result?.toString() || "";
         setImgSrc(newImgSrc);
 
-        filteredLayers.forEach((layer) => {
-          if (layer.content.type === "image") {
-            const data = {
-              ...layer.content,
-              banner: newImgSrc,
-            };
-            dispatch(
-              updateLayer({
-                id: layer.id,
-                data: data,
-              })
-            );
-          }
-        });
+        const img = new Image();
+        img.src = newImgSrc;
+        img.onload = () => {
+          filteredLayers.forEach((layer) => {
+            if (layer.content.type === "image") {
+              const data = {
+                ...layer.content,
+                banner: newImgSrc,
+                naturalWidth: img.width,
+                naturalHeight: img.height,
+                // width: "auto", // Bỏ kích thước cũ để giữ tỷ lệ
+                // height: "auto", // Bỏ kích thước cũ để giữ tỷ lệ
+              };
+              dispatch(updateLayer({ id: layer.id, data }));
+            }
+          });
+        };
       };
 
       reader.readAsDataURL(file);
@@ -334,6 +339,37 @@ const EditPrint = ({ stageRef }) => {
     });
   };
 
+  const zoomLayer = (layerId, direction) => {
+    filteredLayers.forEach((layer) => {
+      if (layer.id === layerId) {
+        const newContent = { ...layer.content };
+        const zoomFactor = 0.1;
+        switch (direction) {
+          case "zoomin":
+            newContent.scaleX = (newContent.scaleX || 1) + zoomFactor;
+            newContent.scaleY = (newContent.scaleY || 1) + zoomFactor;
+            break;
+          case "zoomout":
+            newContent.scaleX = (newContent.scaleX || 1) - zoomFactor;
+            newContent.scaleY = (newContent.scaleY || 1) - zoomFactor;
+            break;
+          default:
+            break;
+        }
+
+        newContent.scaleX = Math.max(newContent.scaleX, 0.1);
+        newContent.scaleY = Math.max(newContent.scaleY, 0.1);
+
+        dispatch(
+          updateLayer({
+            id: layerId,
+            data: newContent,
+          })
+        );
+      }
+    });
+  };
+
   return (
     <div>
       {filteredLayers.map((layer) => {
@@ -368,26 +404,40 @@ const EditPrint = ({ stageRef }) => {
                         }}
                       />
                     </div>
-                    <div className="w-full flex justify-between items-center bg-gray-100 p-4 mt-2 rounded-lg shadow-md">
+                    <div className="w-full flex justify-between items-center bg-gray-100 p-2 my-2 rounded-lg">
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "left")}>
-                        <ArrowLeftIcon size={30} />
+                        <ArrowLeftIcon size={25} />
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "up")}>
-                        <ArrowTopIcon size={30} />
+                        <ArrowTopIcon size={25} />
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "right")}>
-                        <ArrowRightIcon size={30} />
+                        <ArrowRightIcon size={25} />
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "down")}>
-                        <ArrowBottomIcon size={30} />
+                        <ArrowBottomIcon size={25} />
+                      </div>
+                    </div>
+                    <div className="w-[70%] flex justify-around items-center mb-2">
+                      <div
+                        className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
+                        onClick={() => zoomLayer(layer.id, "zoomin")}>
+                        <ZoomInIcon size={25} />
+                        <p className="pl-2">Phóng to</p>
+                      </div>
+                      <div
+                        className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
+                        onClick={() => zoomLayer(layer.id, "zoomout")}>
+                        <ZoomOutIcon size={25} />
+                        <p className="pl-2">Thu nhỏ</p>
                       </div>
                     </div>
                   </div>
@@ -453,26 +503,26 @@ const EditPrint = ({ stageRef }) => {
                 onChange={handleTextChange}
               />
               {exportValue.valueText !== "" && (
-                <div className="flex justify-between items-center bg-gray-100 p-4 mt-2 rounded-lg shadow-md">
+                <div className="flex justify-between items-center bg-gray-100 p-2 my-2 rounded-lg shadow-md">
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "left")}>
-                    <ArrowLeftIcon size={30} />
+                    <ArrowLeftIcon size={25} />
                   </div>
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "up")}>
-                    <ArrowTopIcon size={30} />
+                    <ArrowTopIcon size={25} />
                   </div>
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "right")}>
-                    <ArrowRightIcon size={30} />
+                    <ArrowRightIcon size={25} />
                   </div>
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg"
+                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "down")}>
-                    <ArrowBottomIcon size={30} />
+                    <ArrowBottomIcon size={25} />
                   </div>
                 </div>
               )}

@@ -237,6 +237,12 @@ export default function TextLayer(props) {
           setTextValue(textarea.value);
           removeTextarea();
           setIsEditing(false);
+          dispatch(
+            updateLayer({
+              id: selectedLayer.id,
+              data: { text: textarea.value },
+            })
+          );
         }
       };
 
@@ -304,7 +310,7 @@ export default function TextLayer(props) {
         onTransform={handleTransform}
         onTransformEnd={handleTransformEnd}
       />
-      {(isTransformerVisible && !lock && localIsSelected) && (
+      {isTransformerVisible && !lock && localIsSelected && (
         <Transformer
           ref={trRef}
           node={shapeRef.current}

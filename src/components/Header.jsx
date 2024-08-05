@@ -365,13 +365,38 @@ const Header = ({ toggleNavbar }) => {
     const response = await logoutService({
       token: checkTokenCookie(),
     });
-    await signOut({});
+    clearAllCookies();
+    // await signOut({});
     document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     dispatch(DELETE_ALL_VALUES());
 
-    router.push("/");
+    router.push("https://ezpics.vn");
     // }
+  };
+
+  const handleLogoutNew = async (e) => {
+    try {
+      // Gọi dịch vụ logout và xóa các cookies
+      await logoutService({
+        token: checkTokenCookie(),
+      });
+
+      // Xóa tất cả cookies
+      clearAllCookies();
+      document.cookie = `user_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+
+      // Xóa trạng thái trong Redux
+      dispatch(DELETE_ALL_VALUES());
+
+      // Điều hướng tới trang chính và tải lại trang
+      router.push("https://ezpics.vn").then(() => {
+        window.location.reload();
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const menuItems = [
@@ -486,7 +511,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <div className="list-item " onClick={handleLogout}>
+        <div className="list-item " onClick={handleLogoutNew}>
           <p className="item-text">Đăng xuất </p>
         </div>
       ),
@@ -790,10 +815,11 @@ const Header = ({ toggleNavbar }) => {
           )}
         </div>
         <div
-          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline
-            ? "bg-green-500 text-white opacity-0"
-            : "bg-red-500 text-white opacity-100"
-            } ${show ? "opacity-100" : "opacity-0"}`}
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
+            isOnline
+              ? "bg-green-500 text-white opacity-0"
+              : "bg-red-500 text-white opacity-100"
+          } ${show ? "opacity-100" : "opacity-0"}`}
           style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>

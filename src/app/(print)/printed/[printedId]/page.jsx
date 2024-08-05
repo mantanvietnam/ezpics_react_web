@@ -178,8 +178,8 @@ const Page = () => {
             <Image
               style={{
                 position: "absolute",
-                top: 10,
-                left: 17,
+                top: 25,
+                left: 30,
                 width: 40,
                 height: 40,
                 // alignSelf: 'center',
