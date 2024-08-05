@@ -856,7 +856,7 @@ const Header = ({ toggleNavbar }) => {
                 variant="contained"
                 size="medium"
                 className="button-red"
-                onClick={() => handleLogout()}>
+                onClick={() => handleLogoutNew()}>
                 Đăng nhập lại
               </Button>
             </div>

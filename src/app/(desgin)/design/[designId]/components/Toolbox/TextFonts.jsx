@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
-import useFonts from "../../../../../../hooks/useLoadFont";  // Correct import path
+import useFonts from "../../../../../../hooks/useLoadFont"; // Correct import path
 
 const TextFonts = () => {
-  const [font, setFont] = useState("");
+  const { selectedLayer } = useSelector((state) => state.stage.stageData);
+  const [font, setFont] = useState(selectedLayer.content.font);
   const [search, setSearch] = useState("");
   const [filteredFonts, setFilteredFonts] = useState([]);
-  
-  const { selectedLayer } = useSelector((state) => state.stage.stageData);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (selectedLayer.content.font !== font) {
+    if (
+      selectedLayer.content.type === "text" &&
+      selectedLayer.content.font !== font
+    )
       setFont(selectedLayer.content.font);
-    }
   }, [selectedLayer, font]);
+
+  // useEffect(() => {
+  //   if (selectedLayer.content.font !== font) {
+  //     setFont(selectedLayer.content.font);
+  //   }
+  // }, [selectedLayer, font]);
 
   useEffect(() => {
     if (selectedLayer.id && font !== selectedLayer.content.font) {
@@ -62,8 +69,7 @@ const TextFonts = () => {
               key={index}
               className="font-item cursor-pointer p-2 hover:bg-gray-200"
               style={{ fontFamily: fontOption.name }}
-              onClick={() => updateObjectFill(fontOption.name)}
-            >
+              onClick={() => updateObjectFill(fontOption.name)}>
               {fontOption.name}
             </div>
           ))}
