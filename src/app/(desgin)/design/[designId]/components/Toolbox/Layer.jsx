@@ -381,7 +381,6 @@ const LockUnlock = ({ layer }) => {
 
     setLocked(!locked);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    x
   };
 
   return (
