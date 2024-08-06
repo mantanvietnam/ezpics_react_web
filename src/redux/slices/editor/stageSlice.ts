@@ -70,6 +70,27 @@ const stageSlice = createSlice({
         newLayer,
       ];
     },
+    updatePageLayerText: (state, action: PayloadAction<any>) => {
+      // Tìm giá trị sort lớn nhất hiện tại trong designLayers
+      const maxSort =
+        state.stageData.currentPage.pageLayers.length > 0
+          ? Math.max(
+              ...state.stageData.currentPage.pageLayers.map((layer: any) => layer.sort)
+            )
+          : 0;
+
+      // Tạo phần tử mới với giá trị sort được cập nhật
+      const newLayer = {
+        ...action.payload,
+        sort: maxSort + 1,
+      };
+
+      // Cập nhật state với phần tử mới
+      state.stageData.currentPage.pageLayers = [
+        ...state.stageData.currentPage.pageLayers,
+        newLayer,
+      ];
+    },
     updateListLayers: (state, action: PayloadAction<any>) => {
       state.stageData.currentPage.pageLayers = action.payload;
     },
@@ -213,6 +234,7 @@ export const {
   addLayerText,
   setCurrentPage,
   setTotalPages,
-  updatePageLayer
+  updatePageLayer,
+  updatePageLayerText
 } = stageSlice.actions;
 export default stageSlice.reducer;
