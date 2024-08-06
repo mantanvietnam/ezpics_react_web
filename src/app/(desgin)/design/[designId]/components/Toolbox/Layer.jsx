@@ -381,7 +381,7 @@ const LockUnlock = ({ layer }) => {
 
     setLocked(!locked);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    console.log("layer :", layer, "updatedData :", updatedData);
+    x
   };
 
   return (
@@ -420,7 +420,6 @@ const VisibilityToggle = ({ layer }) => {
 
     setVisible(!visible);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    console.log("layervisible :", layer, "updatedData :", updatedData);
   };
 
   return (

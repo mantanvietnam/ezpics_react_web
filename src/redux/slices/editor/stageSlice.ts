@@ -98,9 +98,21 @@ const stageSlice = createSlice({
       state.stageData.designLayers = state.stageData.designLayers.filter(
         (layer: any) => layer.id !== action.payload
       );
+      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.filter(
+        (layer: any) => layer.id !== action.payload
+      );
     },
     updateLayer: (state, action: PayloadAction<{ id: string; data: any }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: { ...layer.content, ...action.payload.data },
+              }
+            : layer
+      );
+      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
         (layer: any) =>
           layer.id === action.payload.id
             ? {
