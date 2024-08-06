@@ -45,21 +45,21 @@ const Layer = () => {
   });
 
   const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-    const items = Array.from(designLayers);
-    console.log(items)
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+  if (!result.destination) {
+    return;
+  }
+  const items = Array.from(designLayers).reverse();
+  const [reorderedItem] = items.splice(result.source.index, 1);
+  items.splice(result.destination.index, 0, reorderedItem);
 
-    const updatedItems = items.map((item, index) => ({
-      ...item,
-      sort: index + 1,
-    }));
+  const updatedItems = items.reverse().map((item, index) => ({
+    ...item,
+    sort: index + 1,
+  }));
 
-    dispatch(updateListLayers(updatedItems));
-  };
+  dispatch(updateListLayers(updatedItems));
+};
+
 
   const handleDeleteLayer = (layer) => {
     const deleteLayerApi = async () => {

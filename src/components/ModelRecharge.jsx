@@ -33,14 +33,17 @@ const UserInfo = ({
 }) => {
   const [transaction, setTransaction] = useState({});
   const [inputValue, setInputValue] = useState(0);
+  const [selectedAmount, setSelectedAmount] = useState(null);
   const [showBankTransfer, setShowBankTransfer] = useState(false);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
+    setSelectedAmount(null);
   };
 
   const handleAmountClick = (amount) => {
     setInputValue(amount);
+    setSelectedAmount(amount);
   };
 
   const handleAccept = async () => {
@@ -66,14 +69,16 @@ const UserInfo = ({
         {amounts.map((amount) => (
           <div
             key={amount}
-            className="p-2 m-2 border rounded shadow cursor-pointer"
+            className={`p-2 m-2 border rounded shadow cursor-pointer ${
+              selectedAmount === amount ? "bg-red-500 text-white" : ""
+            }`}
             onClick={() => handleAmountClick(amount)}>
             <p className="text-sm text-center">{amount.toLocaleString()} đ</p>
           </div>
         ))}
       </div>
     );
-  }, []);
+  }, [selectedAmount]);
 
   return (
     <Modal open={open} onCancel={handleCancel} width={600} footer={null}>

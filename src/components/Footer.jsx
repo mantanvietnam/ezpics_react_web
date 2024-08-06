@@ -50,7 +50,7 @@ const Footer = () => {
   ];
 
   return (
-    <div className="w-full z-40 bg-[#333] text-white bottom-0 px-15 md:px-5">
+    <div className="w-full z-40 bg-[#333] mt-[100px] text-white bottom-0 px-15 md:px-5">
       <div className="padding_content flex flex-col ">
         <div className="top w-full py-7 flex flex-col sm:flex-row sm:justify-between">
           <div className="info w-full sm:w-1/4 relative flex flex-col w-full sm:w-56">
@@ -126,9 +126,9 @@ const Footer = () => {
               Thông tin thanh toán
             </p>
             <div className="flex flex-col">
-              <p>* Số tài khoản: 10110457409</p>
-              <p>* Chủ tài khoản: Công ty TNHH Ezpics</p>
-              <p>* Ngân hàng: Ngân hàng TMCP Việt Nam Thịnh Vượng</p>
+              <p>Số tài khoản: 10110457409</p>
+              <p>Chủ tài khoản: Công ty TNHH Ezpics</p>
+              <p>Ngân hàng: Ngân hàng TMCP Việt Nam Thịnh Vượng</p>
             </div>
           </div>
         </div>
