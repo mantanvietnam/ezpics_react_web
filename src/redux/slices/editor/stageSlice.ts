@@ -43,6 +43,12 @@ const stageSlice = createSlice({
     //     { type: "svg", content: action.payload },
     //   ];
     // },
+    updatePageLayer: (state, action: PayloadAction<any>) => {
+      state.stageData.currentPage.pageLayers = [
+        ...state.stageData.currentPage.pageLayers,
+        action.payload
+      ]
+    },
     addLayerText: (state, action: PayloadAction<any>) => {
       // Tìm giá trị sort lớn nhất hiện tại trong designLayers
       const maxSort =
@@ -65,7 +71,7 @@ const stageSlice = createSlice({
       ];
     },
     updateListLayers: (state, action: PayloadAction<any>) => {
-      state.stageData.designLayers = action.payload;
+      state.stageData.currentPage.pageLayers = action.payload;
     },
     removeLayer: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = state.stageData.designLayers.filter(
@@ -206,6 +212,7 @@ export const {
   flipLayerVertically,
   addLayerText,
   setCurrentPage,
-  setTotalPages
+  setTotalPages,
+  updatePageLayer
 } = stageSlice.actions;
 export default stageSlice.reducer;

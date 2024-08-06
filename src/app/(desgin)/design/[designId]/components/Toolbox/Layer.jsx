@@ -26,13 +26,11 @@ import "@/styles/loading.css";
 import Image from "next/image";
 
 const Layer = () => {
-  const { designLayers, selectedLayer, design } = useSelector(
+  const { designLayers, selectedLayer, design, currentPage } = useSelector(
     (state) => state.stage.stageData
   );
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  // State for both forms
-  // console.log("🚀 ~ Layer ~ selectedLayer:", selectedLayer);
   const [textForm, setTextForm] = useState({
     displayName: "",
     variableName: "",
@@ -48,7 +46,7 @@ const Layer = () => {
     if (!result.destination) {
       return;
     }
-    const items = Array.from(designLayers);
+    const items = Array.from(currentPage?.pageLayers);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
@@ -266,8 +264,8 @@ const Layer = () => {
           <Droppable droppableId={"layerList"} type="group">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {designLayers.length > 0 ? (
-                  designLayers
+                {currentPage?.pageLayers.length > 0 ? (
+                  currentPage?.pageLayers
                     .filter((layer) => layer.id !== undefined)
                     .map((layer, index) => (
                       <Draggable
