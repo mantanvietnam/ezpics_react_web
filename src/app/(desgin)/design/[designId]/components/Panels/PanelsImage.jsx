@@ -263,13 +263,11 @@ export function PanelsImage({
   };
 
   const handleButtonChangeImageNew = () => {
-    console.log("Button 1 clicked");
     setVisibleChangeImage(false);
     openModalChangeImageNew();
   };
 
   const handleButtonChangeImage = () => {
-    console.log("Button 2 clicked");
     setVisibleChangeImage(false);
     openModalChangeImage();
   };
@@ -396,7 +394,6 @@ export function PanelsImage({
       lat_anh: selectedLayer.content.scaleX === -1 ? 1 : 0,
       lat_anh_doc: selectedLayer.content.scaleY === -1 ? 1 : 0,
     };
-    // console.log("🚀 ~ useEffect ~ data:", data);
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   }, [dispatch, selectedLayer]);
 

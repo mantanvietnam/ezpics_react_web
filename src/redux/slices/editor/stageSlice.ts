@@ -173,12 +173,38 @@ const stageSlice = createSlice({
               }
             : layer
       );
+      //updatre
+      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: {
+                  ...layer.content,
+                  scaleX: -layer.content.scaleX || -1,
+                },
+              }
+            : layer
+      );
       const { history, historyStep } = addToHistory(state);
       state.history = history;
       state.historyStep = historyStep;
     },
     flipLayerVertically: (state, action: PayloadAction<{ id: string }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: {
+                  ...layer.content,
+                  scaleY: -layer.content.scaleY || -1,
+                },
+              }
+            : layer
+      );
+
+      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
         (layer: any) =>
           layer.id === action.payload.id
             ? {
