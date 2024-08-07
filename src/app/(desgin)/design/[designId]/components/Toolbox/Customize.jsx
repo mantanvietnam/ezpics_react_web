@@ -106,7 +106,7 @@ export default function Customize() {
     getData();
   }, []);
 
-  const [state, setState] = useState({ backgroundColor: "#000000" });
+  const [state, setState] = useState({});
 
   useEffect(() => {
     const getDataStorage = async () => {
@@ -216,7 +216,7 @@ export default function Customize() {
             {colors.map((color) => (
               <div
                 key={color}
-                onClick={() => handleChange("backgroundColor", color)}
+                onClick={() => handleChange("color", color)}
                 className={`h-9 rounded border border-gray-400 cursor-pointer`}
                 style={{ background: color }}
               />
@@ -256,7 +256,7 @@ export default function Customize() {
               <>
                 <div>
                   <label className="block">
-                    Chế độ hiển thị lên thị trường
+                    Trạng thái chỉnh sửa
                   </label>
                   <select
                     value={selectedOptionDisplay}

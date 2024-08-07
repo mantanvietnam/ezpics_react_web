@@ -12,6 +12,11 @@ const initialState: StageState = {
     initSize: {},
     designLayers: [],
     selectedLayer: {},
+    currentPage: {
+      page: 0,
+      pageLayers: []
+    },
+    totalPages: 0
   },
   history: [],
   historyStep: -1,
@@ -38,6 +43,12 @@ const stageSlice = createSlice({
       state.history = history;
       state.historyStep = historyStep;
     },
+    setCurrentPage: (state, action: PayloadAction<any>) => {
+      state.stageData.currentPage = action.payload;
+    },
+    setTotalPages: (state, action: PayloadAction<any>) => {
+      state.stageData.totalPages = action.payload;
+    },
     addLayerImage: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = [
         ...state.stageData.designLayers,
@@ -46,6 +57,18 @@ const stageSlice = createSlice({
       const { history, historyStep } = addToHistory(state);
       state.history = history;
       state.historyStep = historyStep;
+    },
+    // addLayerSVG: (state, action: PayloadAction<string>) => {
+    //   state.stageData.designLayers = [
+    //     ...state.stageData.designLayers,
+    //     { type: "svg", content: action.payload },
+    //   ];
+    // },
+    updatePageLayer: (state, action: PayloadAction<any>) => {
+      state.stageData.currentPage.pageLayers = [
+        ...state.stageData.currentPage.pageLayers,
+        action.payload
+      ]
     },
     addLayerText: (state, action: PayloadAction<any>) => {
       const maxSort =
@@ -68,8 +91,29 @@ const stageSlice = createSlice({
       state.history = history;
       state.historyStep = historyStep;
     },
+    updatePageLayerText: (state, action: PayloadAction<any>) => {
+      // Tìm giá trị sort lớn nhất hiện tại trong designLayers
+      const maxSort =
+        state.stageData.currentPage.pageLayers.length > 0
+          ? Math.max(
+              ...state.stageData.currentPage.pageLayers.map((layer: any) => layer.sort)
+            )
+          : 0;
+
+      // Tạo phần tử mới với giá trị sort được cập nhật
+      const newLayer = {
+        ...action.payload,
+        sort: maxSort + 1,
+      };
+
+      // Cập nhật state với phần tử mới
+      state.stageData.currentPage.pageLayers = [
+        ...state.stageData.currentPage.pageLayers,
+        newLayer,
+      ];
+    },
     updateListLayers: (state, action: PayloadAction<any>) => {
-      state.stageData.designLayers = action.payload;
+      state.stageData.currentPage.pageLayers = action.payload;
       const { history, historyStep } = addToHistory(state);
       state.history = history;
       state.historyStep = historyStep;
@@ -78,12 +122,24 @@ const stageSlice = createSlice({
       state.stageData.designLayers = state.stageData.designLayers.filter(
         (layer: any) => layer.id !== action.payload
       );
+      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.filter(
+        (layer: any) => layer.id !== action.payload
+      );
       const { history, historyStep } = addToHistory(state);
       state.history = history;
       state.historyStep = historyStep;
     },
     updateLayer: (state, action: PayloadAction<{ id: string; data: any }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) =>
+          layer.id === action.payload.id
+            ? {
+                ...layer,
+                content: { ...layer.content, ...action.payload.data },
+              }
+            : layer
+      );
+      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
         (layer: any) =>
           layer.id === action.payload.id
             ? {
@@ -156,6 +212,22 @@ const stageSlice = createSlice({
         state.history = history;
         state.historyStep = historyStep;
       }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent > -1) {
+        const layer = state.stageData.currentPage.pageLayers[layerIndexCurrent];
+        const updatedLayers = [
+          layer,
+          ...state.stageData.currentPage.pageLayers.filter(
+            (_: any, index: any) => index !== layerIndexCurrent
+          ),
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
+      }
     },
     moveLayerToFront: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
@@ -175,7 +247,24 @@ const stageSlice = createSlice({
         state.history = history;
         state.historyStep = historyStep;
       }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent > -1) {
+        const layer = state.stageData.currentPage.pageLayers[layerIndexCurrent];
+        const updatedLayers = [
+          ...state.stageData.currentPage.pageLayers.filter(
+            (_: any, index: any) => index !== layerIndexCurrent
+          ),
+          layer,
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
+      }
     },
+
     sendLayerBack: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -194,6 +283,23 @@ const stageSlice = createSlice({
         const { history, historyStep } = addToHistory(state);
         state.history = history;
         state.historyStep = historyStep;
+      }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent > 0) {
+        const updatedLayers = [...state.stageData.currentPage.pageLayers];
+        const temp = updatedLayers[layerIndexCurrent - 1];
+        updatedLayers[layerIndexCurrent - 1] = updatedLayers[layerIndexCurrent];
+        updatedLayers[layerIndexCurrent] = temp;
+
+        updatedLayers.forEach((layer, index) => {
+          layer.sort = index + 1;
+        });
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
     bringLayerForward: (state, action: PayloadAction<{ id: string }>) => {
@@ -214,6 +320,22 @@ const stageSlice = createSlice({
         const { history, historyStep } = addToHistory(state);
         state.history = history;
         state.historyStep = historyStep;
+      }
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent < state.stageData.currentPage.pageLayers.length - 1) {
+        const updatedLayers = [...state.stageData.currentPage.pageLayers];
+        const temp = updatedLayers[layerIndexCurrent];
+        updatedLayers[layerIndexCurrent] = updatedLayers[layerIndexCurrent + 1];
+        updatedLayers[layerIndexCurrent + 1] = temp;
+
+        updatedLayers.forEach((layer, index) => {
+          layer.sort = index + 1;
+        });
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
     undo: (state) => {
@@ -245,6 +367,10 @@ export const {
   flipLayerHorizontally,
   flipLayerVertically,
   addLayerText,
+  setCurrentPage,
+  setTotalPages,
+  updatePageLayer,
+  updatePageLayerText,
   undo,
   redo,
 } = stageSlice.actions;

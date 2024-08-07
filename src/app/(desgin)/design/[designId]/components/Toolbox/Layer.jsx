@@ -26,13 +26,11 @@ import "@/styles/loading.css";
 import Image from "next/image";
 
 const Layer = () => {
-  const { designLayers, design } = useSelector(
+  const { designLayers, selectedLayer, design, currentPage } = useSelector(
     (state) => state.stage.stageData
   );
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  // State for both forms
-  // console.log("🚀 ~ Layer ~ selectedLayer:", selectedLayer);
   const [textForm, setTextForm] = useState({
     displayName: "",
     variableName: "",
@@ -45,20 +43,20 @@ const Layer = () => {
   });
 
   const onDragEnd = (result) => {
-  if (!result.destination) {
-    return;
-  }
-  const items = Array.from(designLayers).reverse();
-  const [reorderedItem] = items.splice(result.source.index, 1);
-  items.splice(result.destination.index, 0, reorderedItem);
+    if (!result.destination) {
+      return;
+    }
+    const items = Array.from(currentPage?.pageLayers).reverse();
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
-  const updatedItems = items.reverse().map((item, index) => ({
-    ...item,
-    sort: index + 1,
-  }));
+    const updatedItems = items.reverse().map((item, index) => ({
+      ...item,
+      sort: index + 1,
+    }));
 
-  dispatch(updateListLayers(updatedItems));
-};
+    dispatch(updateListLayers(updatedItems));
+  };
 
 
   const handleDeleteLayer = (layer) => {
@@ -266,71 +264,70 @@ const Layer = () => {
           <Droppable droppableId={"layerList"} type="group">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-              {designLayers.length > 0 ? (
-              (() => {
-                const reversedLayers = [...designLayers]
-                  .filter((layer) => layer.id !== undefined)
-                  .reverse();
-                console.log("Reversed designLayers:", reversedLayers);
-                return reversedLayers.map((layer, index) => (
-                  <Draggable
-                    key={layer.id}
-                    draggableId={layer.id.toString()}
-                    index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
-                        onClick={() => {
-                          dispatch(selectLayer({ id: layer.id }));
-                        }}>
-                        <button className="col-span-1 cursor-move">
-                          <Drapdrop size={20} />
-                        </button>
-                        {layer.content.type === "text" ? (
-                          <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
-                            {layer.content.text}
+                {currentPage?.pageLayers.length > 0 ? (
+                  (() => {
+                    const reversedLayers = [...currentPage?.pageLayers]
+                      .filter((layer) => layer.id !== undefined)
+                      .reverse();
+                    return reversedLayers.map((layer, index) => (
+                      <Draggable
+                        key={layer.id}
+                        draggableId={layer.id.toString()}
+                        index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
+                            onClick={() => {
+                              dispatch(selectLayer({ id: layer.id }));
+                            }}>
+                            <button className="col-span-1 cursor-move">
+                              <Drapdrop size={20} />
+                            </button>
+                            {layer.content.type === "text" ? (
+                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
+                                {layer.content.text}
+                              </div>
+                            ) : (
+                              <img
+                                className="col-span-3"
+                                src={layer.content.banner}
+                                alt="Layer ảnh"
+                                style={{
+                                  width: "auto",
+                                  height: 40,
+                                  maxWidth: "100px",
+                                  resize: "both",
+                                  border: "1px solid black",
+                                }}
+                              />
+                            )}
+                            <div className="flex items-center justify-end col-span-2">
+                              <LockUnlock layer={layer} />
+                              <VisibilityToggle layer={layer} />
+                              <button
+                                className="px-1"
+                                onClick={() => handleDeleteLayer(layer)}>
+                                <Delete size={20} />
+                              </button>
+                            </div>
                           </div>
-                        ) : (
-                          <img
-                            className="col-span-3"
-                            src={layer.content.banner}
-                            alt="Layer ảnh"
-                            style={{
-                              width: "auto",
-                              height: 40,
-                              maxWidth: "100px",
-                              resize: "both",
-                              border: "1px solid black",
-                            }}
-                          />
                         )}
-                        <div className="flex items-center justify-end col-span-2">
-                          <LockUnlock layer={layer} />
-                          <VisibilityToggle layer={layer} />
-                          <button
-                            className="px-1"
-                            onClick={() => handleDeleteLayer(layer)}>
-                            <Delete size={20} />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ));
-              })()
-            ) : (
-              <div>Layer trống</div>
-            )}
+                      </Draggable>
+                    ));
+                  })()
+                ) : (
+                  <div>Layer trống</div>
+                )}
 
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
-        </DragDropContext>
-      </div>
+        </DragDropContext >
+      </div >
       {loading && (
         <div
           style={{
@@ -366,7 +363,7 @@ const Layer = () => {
           </div>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 
@@ -388,7 +385,6 @@ const LockUnlock = ({ layer }) => {
 
     setLocked(!locked);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    console.log("layer :", layer, "updatedData :", updatedData);
   };
 
   return (
@@ -427,7 +423,6 @@ const VisibilityToggle = ({ layer }) => {
 
     setVisible(!visible);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    console.log("layervisible :", layer, "updatedData :", updatedData);
   };
 
   return (
