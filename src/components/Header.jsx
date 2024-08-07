@@ -485,14 +485,14 @@ const Header = ({ toggleNavbar }) => {
       ),
       key: "1",
     },
-    {
-      label: (
-        <div className="list-item ">
-          <p className="item-text">Khiếu nại </p>
-        </div>
-      ),
-      key: "2",
-    },
+    // {
+    //   label: (
+    //     <div className="list-item ">
+    //       <p className="item-text">Khiếu nại </p>
+    //     </div>
+    //   ),
+    //   key: "2",
+    // },
     {
       label: (
         <div className="list-item ">
@@ -789,7 +789,9 @@ const Header = ({ toggleNavbar }) => {
                   ))}
                 </div>
               )}>
-              <div>
+              <div style={{
+                cursor: "pointer"
+              }}>
                 <Space>
                   <div className="w-10 h-10 rounded-full overflow-hidden m-5">
                     <img
@@ -856,7 +858,7 @@ const Header = ({ toggleNavbar }) => {
                 variant="contained"
                 size="medium"
                 className="button-red"
-                onClick={() => handleLogout()}>
+                onClick={() => handleLogoutNew()}>
                 Đăng nhập lại
               </Button>
             </div>

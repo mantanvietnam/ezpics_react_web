@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface StageState {
   stageData: any; // Replace `any` with the actual type of your stage data
+  history: any[];
+  historyStep: number;
 }
 
 const initialState: StageState = {
@@ -16,6 +18,19 @@ const initialState: StageState = {
     },
     totalPages: 0
   },
+  history: [],
+  historyStep: -1,
+};
+
+const addToHistory = (state: StageState) => {
+  const newHistory = [
+    ...state.history.slice(0, state.historyStep + 1),
+    state.stageData,
+  ];
+  return {
+    history: newHistory,
+    historyStep: newHistory.length - 1,
+  };
 };
 
 const stageSlice = createSlice({
@@ -24,6 +39,9 @@ const stageSlice = createSlice({
   reducers: {
     setStageData: (state, action: PayloadAction<any>) => {
       state.stageData = action.payload;
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
     setCurrentPage: (state, action: PayloadAction<any>) => {
       state.stageData.currentPage = action.payload;
@@ -36,6 +54,9 @@ const stageSlice = createSlice({
         ...state.stageData.designLayers,
         action.payload,
       ];
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
     // addLayerSVG: (state, action: PayloadAction<string>) => {
     //   state.stageData.designLayers = [
@@ -50,7 +71,6 @@ const stageSlice = createSlice({
       ]
     },
     addLayerText: (state, action: PayloadAction<any>) => {
-      // Tìm giá trị sort lớn nhất hiện tại trong designLayers
       const maxSort =
         state.stageData.designLayers.length > 0
           ? Math.max(
@@ -58,17 +78,18 @@ const stageSlice = createSlice({
             )
           : 0;
 
-      // Tạo phần tử mới với giá trị sort được cập nhật
       const newLayer = {
         ...action.payload,
         sort: maxSort + 1,
       };
 
-      // Cập nhật state với phần tử mới
       state.stageData.designLayers = [
         ...state.stageData.designLayers,
         newLayer,
       ];
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
     updatePageLayerText: (state, action: PayloadAction<any>) => {
       // Tìm giá trị sort lớn nhất hiện tại trong designLayers
@@ -93,6 +114,9 @@ const stageSlice = createSlice({
     },
     updateListLayers: (state, action: PayloadAction<any>) => {
       state.stageData.currentPage.pageLayers = action.payload;
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
     removeLayer: (state, action: PayloadAction<any>) => {
       state.stageData.designLayers = state.stageData.designLayers.filter(
@@ -101,6 +125,9 @@ const stageSlice = createSlice({
       state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.filter(
         (layer: any) => layer.id !== action.payload
       );
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
     updateLayer: (state, action: PayloadAction<{ id: string; data: any }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map(
@@ -121,6 +148,9 @@ const stageSlice = createSlice({
               }
             : layer
       );
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
     selectLayer: (state, action: PayloadAction<{ id: string }>) => {
       const layer = state.stageData.designLayers.find(
@@ -143,8 +173,10 @@ const stageSlice = createSlice({
               }
             : layer
       );
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
-
     flipLayerVertically: (state, action: PayloadAction<{ id: string }>) => {
       state.stageData.designLayers = state.stageData.designLayers.map(
         (layer: any) =>
@@ -158,8 +190,10 @@ const stageSlice = createSlice({
               }
             : layer
       );
+      const { history, historyStep } = addToHistory(state);
+      state.history = history;
+      state.historyStep = historyStep;
     },
-
     moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -174,6 +208,9 @@ const stageSlice = createSlice({
         ].map((layer, index) => ({ ...layer, sort: index + 1 }));
 
         state.stageData.designLayers = updatedLayers;
+        const { history, historyStep } = addToHistory(state);
+        state.history = history;
+        state.historyStep = historyStep;
       }
 
       //update
@@ -206,6 +243,9 @@ const stageSlice = createSlice({
         ].map((layer, index) => ({ ...layer, sort: index + 1 }));
 
         state.stageData.designLayers = updatedLayers;
+        const { history, historyStep } = addToHistory(state);
+        state.history = history;
+        state.historyStep = historyStep;
       }
 
       //update
@@ -240,6 +280,9 @@ const stageSlice = createSlice({
         });
 
         state.stageData.designLayers = updatedLayers;
+        const { history, historyStep } = addToHistory(state);
+        state.history = history;
+        state.historyStep = historyStep;
       }
 
       //update
@@ -274,8 +317,10 @@ const stageSlice = createSlice({
         });
 
         state.stageData.designLayers = updatedLayers;
+        const { history, historyStep } = addToHistory(state);
+        state.history = history;
+        state.historyStep = historyStep;
       }
-
       //update
       const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -293,13 +338,24 @@ const stageSlice = createSlice({
         state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
+    undo: (state) => {
+      if (state.historyStep > 0) {
+        state.historyStep -= 1;
+        state.stageData = state.history[state.historyStep];
+      }
+    },
+    redo: (state) => {
+      if (state.historyStep < state.history.length - 1) {
+        state.historyStep += 1;
+        state.stageData = state.history[state.historyStep];
+      }
+    },
   },
 });
 
 export const {
   setStageData,
   addLayerImage,
-  // addLayerSVG,
   removeLayer,
   updateLayer,
   selectLayer,
@@ -314,6 +370,8 @@ export const {
   setCurrentPage,
   setTotalPages,
   updatePageLayer,
-  updatePageLayerText
+  updatePageLayerText,
+  undo,
+  redo,
 } = stageSlice.actions;
 export default stageSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import NextImage from "next/image";
 import { Button, Slider, Popover, Modal, Input } from "antd";
 import { useClickAway } from "react-use";
@@ -288,16 +288,16 @@ export function PanelsImage({
   });
 
   const HandleRemoveBackground = async () => {
-    let proUser = false;
+    let proUser = true;
 
-    if (!authentication) {
-      toast.error(
-        "Bạn chưa là pro. Hãy nâng cấp tài khoản để thực hiện chức năng này !!!"
-      );
-      return;
-    } else if (dataInforUser.member_pro === 1) {
-      proUser = true;
-    }
+    // if (!authentication) {
+    //   toast.error(
+    //     "Bạn chưa là pro. Hãy nâng cấp tài khoản để thực hiện chức năng này !!!"
+    //   );
+    //   return;
+    // } else if (dataInforUser.member_pro === 1) {
+    //   proUser = true;
+    // }
 
     if (proUser) {
       const headers = {
@@ -568,6 +568,7 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
 
   const [imgSrc, setImgSrc] = useState("");
   const imgRef = useRef(null);
+  const modalRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -659,6 +660,7 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
       console.log(response);
 
       if (response && response?.data?.code === 1) {
+        console.log("response.data", response.data);
         const data = {
           ...stageData.selectedLayer.content,
           banner: response.data?.link,
@@ -674,6 +676,22 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
     };
   };
 
+  // Function to handle clicks outside of the modal
+  const handleClickOutside = useCallback(
+    (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onCancel(); // Close the modal when clicking outside
+      }
+    },
+    [onCancel]
+  );
+
+  // Attach and clean up event listener
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [handleClickOutside]);
+
   return (
     <>
       <Modal
@@ -688,10 +706,13 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
           alignItems: "center",
           flexDirection: "column",
           backgroundColor: "#f0f0f0",
-        }}>
+        }}
+        maskClosable={false}>
         <div
+          ref={modalRef}
           style={{
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
@@ -704,7 +725,8 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
             onChange={(_, percentCrop) => setCrop(_)}
             onComplete={(c) => setCompletedCrop(c)}
             aspect={aspect}
-            minHeight={50}>
+            minHeight={50}
+            onMouseUp={(e) => e.stopPropagation()}>
             <img
               alt="Crop me"
               src={imgSrc}
@@ -713,19 +735,20 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
               style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
           </ReactCrop>
-        </div>
-        <div className="flex justify-center">
-          {loading ? (
-            <Button className="text-lg" type="primary" loading>
-              Loading
-            </Button>
-          ) : (
-            <button
-              className="text-lg font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
-              onClick={cropCompleteImage}>
-              Cắt ảnh
-            </button>
-          )}
+
+          <div className="flex justify-center">
+            {loading ? (
+              <Button className="text-lg" type="primary" loading>
+                Loading
+              </Button>
+            ) : (
+              <button
+                className="text-lg font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
+                onClick={cropCompleteImage}>
+                Cắt ảnh
+              </button>
+            )}
+          </div>
         </div>
       </Modal>
     </>

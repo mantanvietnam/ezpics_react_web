@@ -80,8 +80,8 @@ export default function Page() {
               </button>
 
               {productDetails.length === 0 ? (
-                <div className="text-center mt-8">
-                  <p>Bạn chưa có mẫu thiết kế nào.</p>
+                <div className="text-center mt-8 my-2">
+                  <p  className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
                   <Link href="/">
                     <button className="button-red">Về trang chủ</button>
                   </Link>

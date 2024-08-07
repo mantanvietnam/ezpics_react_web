@@ -46,18 +46,18 @@ const Layer = () => {
     if (!result.destination) {
       return;
     }
-    const items = Array.from(currentPage?.pageLayers);
+    const items = Array.from(currentPage?.pageLayers).reverse();
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Update the sort value
-    const updatedItems = items.map((item, index) => ({
+    const updatedItems = items.reverse().map((item, index) => ({
       ...item,
       sort: index + 1,
     }));
 
     dispatch(updateListLayers(updatedItems));
   };
+
 
   const handleDeleteLayer = (layer) => {
     const deleteLayerApi = async () => {
@@ -265,9 +265,11 @@ const Layer = () => {
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {currentPage?.pageLayers.length > 0 ? (
-                  currentPage?.pageLayers
-                    .filter((layer) => layer.id !== undefined)
-                    .map((layer, index) => (
+                  (() => {
+                    const reversedLayers = [...currentPage?.pageLayers]
+                      .filter((layer) => layer.id !== undefined)
+                      .reverse();
+                    return reversedLayers.map((layer, index) => (
                       <Draggable
                         key={layer.id}
                         draggableId={layer.id.toString()}
@@ -314,16 +316,18 @@ const Layer = () => {
                           </div>
                         )}
                       </Draggable>
-                    ))
+                    ));
+                  })()
                 ) : (
                   <div>Layer trống</div>
                 )}
+
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
-        </DragDropContext>
-      </div>
+        </DragDropContext >
+      </div >
       {loading && (
         <div
           style={{
@@ -359,7 +363,7 @@ const Layer = () => {
           </div>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 

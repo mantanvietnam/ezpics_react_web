@@ -29,7 +29,7 @@ const initialSvgString = `
 
 // Hàm chuyển SVG thành Base64
 function svgToBase64(svgString) {
-  return btoa(svgString);
+  return btoa(unescape(encodeURIComponent(svgString)));
 }
 
 // Hàm chuyển SVG thành URL Base64
@@ -42,6 +42,19 @@ function svgToDataUrl(svgString) {
 function dataUrlToSvg(dataUrl) {
   const base64 = dataUrl.split(",")[1];
   return atob(base64);
+}
+
+// Hàm để lấy kích thước từ SVG
+function getSvgDimensions(svgString) {
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
+  const svgElement = svgDoc.documentElement;
+  const width = svgElement.getAttribute("width") || "0";
+  const height = svgElement.getAttribute("height") || "0";
+  return {
+    naturalWidth: parseInt(width, 10),
+    naturalHeight: parseInt(height, 10),
+  };
 }
 
 const ImageMask = () => {
@@ -60,6 +73,8 @@ const ImageMask = () => {
   const SvgImage = ({ dataUrl }) => {
     // Chuyển URL Base64 thành chuỗi SVG
     const svgString = dataUrlToSvg(dataUrl);
+
+    console.log("svgString", svgString);
 
     return (
       <div
@@ -110,6 +125,14 @@ const ImageMask = () => {
       page: 0,
     });
     dispatch(addLayerText(res.data));
+    const { naturalWidth, naturalHeight } = getSvgDimensions(initialSvgString);
+    // console.log(res.data);
+    const data = {
+      ...res.data.content,
+      naturalWidth: naturalWidth,
+      naturalHeight: naturalHeight,
+    };
+    dispatch(updateLayer({ id: res.data.id, data: data }));
   };
 
   return (
@@ -126,6 +149,19 @@ const ImageMask = () => {
           Test them anh vao svg
         </Button>
       </div>
+      <object
+        type="image/svg+xml"
+        data={selectedLayer?.content?.banner}
+        width="200"
+        height="200"
+      />
+      <img
+        src={selectedLayer?.content?.banner}
+        alt=""
+        height={200}
+        width={200}
+      />
+      <SvgImage dataUrl={selectedLayer?.content?.banner} />
     </div>
   );
 };
