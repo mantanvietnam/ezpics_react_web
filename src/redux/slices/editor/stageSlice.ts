@@ -175,6 +175,22 @@ const stageSlice = createSlice({
 
         state.stageData.designLayers = updatedLayers;
       }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent > -1) {
+        const layer = state.stageData.currentPage.pageLayers[layerIndexCurrent];
+        const updatedLayers = [
+          layer,
+          ...state.stageData.currentPage.pageLayers.filter(
+            (_: any, index: any) => index !== layerIndexCurrent
+          ),
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
+      }
     },
     moveLayerToFront: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
@@ -191,7 +207,24 @@ const stageSlice = createSlice({
 
         state.stageData.designLayers = updatedLayers;
       }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent > -1) {
+        const layer = state.stageData.currentPage.pageLayers[layerIndexCurrent];
+        const updatedLayers = [
+          ...state.stageData.currentPage.pageLayers.filter(
+            (_: any, index: any) => index !== layerIndexCurrent
+          ),
+          layer,
+        ].map((layer, index) => ({ ...layer, sort: index + 1 }));
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
+      }
     },
+
     sendLayerBack: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -207,6 +240,23 @@ const stageSlice = createSlice({
         });
 
         state.stageData.designLayers = updatedLayers;
+      }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent > 0) {
+        const updatedLayers = [...state.stageData.currentPage.pageLayers];
+        const temp = updatedLayers[layerIndexCurrent - 1];
+        updatedLayers[layerIndexCurrent - 1] = updatedLayers[layerIndexCurrent];
+        updatedLayers[layerIndexCurrent] = temp;
+
+        updatedLayers.forEach((layer, index) => {
+          layer.sort = index + 1;
+        });
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
     bringLayerForward: (state, action: PayloadAction<{ id: string }>) => {
@@ -224,6 +274,23 @@ const stageSlice = createSlice({
         });
 
         state.stageData.designLayers = updatedLayers;
+      }
+
+      //update
+      const layerIndexCurrent = state.stageData.currentPage.pageLayers.findIndex(
+        (layer: any) => layer.id === action.payload.id
+      );
+      if (layerIndexCurrent < state.stageData.currentPage.pageLayers.length - 1) {
+        const updatedLayers = [...state.stageData.currentPage.pageLayers];
+        const temp = updatedLayers[layerIndexCurrent];
+        updatedLayers[layerIndexCurrent] = updatedLayers[layerIndexCurrent + 1];
+        updatedLayers[layerIndexCurrent + 1] = temp;
+
+        updatedLayers.forEach((layer, index) => {
+          layer.sort = index + 1;
+        });
+
+        state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
   },
