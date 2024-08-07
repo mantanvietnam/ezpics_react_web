@@ -117,7 +117,7 @@ export default function Page() {
               >&lt; Quay lại</button>
               {productDetails.length === 0 ? (
                 <div className="text-center mt-8">
-                  <p>Bạn chưa có mẫu thiết kế nào.</p>
+                  <p  className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
                   <Link href="/">
                     <button 
                       className="button-red" 
@@ -170,7 +170,7 @@ export default function Page() {
         <div>
           {products.length === 0 ? (
             <div className="text-center mt-8">
-              <p>Bạn chưa có mẫu thiết kế nào.</p>
+              <p  className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
               <Link href="/">
                 <button 
                   className="button-red" 

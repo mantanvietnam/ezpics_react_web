@@ -270,9 +270,9 @@ export default function ProductInfoPrinted(props) {
           </div>
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
-            <div className="w-[35px] h-[35px]">
+            <div className="w-[37px] h-[35px] mr-3 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
               <img
-                className="object-cover rounded-full"
+                className="object-cover w-full h-full"
                 src={user?.avatar}
                 alt=""
               />
