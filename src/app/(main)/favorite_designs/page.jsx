@@ -6,6 +6,7 @@ import { checkTokenCookie } from "@/utils/cookie";
 import { truncateText } from "@/utils/format";
 import { Button, Spin } from "antd";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const YourDesign = () => {
@@ -67,38 +68,14 @@ const YourDesign = () => {
               <div className="skeleton skeleton-text"></div>
             </div>
           ))
-        : dataForYou.map((item, index) => {
+        : dataForYou.length > 0
+        ? dataForYou.map((item, index) => {
             const isLastItem = index === dataForYou.length - 1;
             return (
               <div
                 className="item"
                 key={index}
                 ref={isLastItem ? lastItemRef : null}>
-                {/* <div
-                                className="overlay"
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.opacity = 1;
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.opacity = 0;
-                                }}
-                            >
-                                <Button
-                                    onClick={() => {
-                                        router.push(`/design`, {
-                                            state: { id: item.id, token: checkTokenCookie() },
-                                        });
-                                    }}
-                                    className="edit-button"
-                                >
-                                    <img
-                                        src={'/images/edit.png'}
-                                        alt=""
-                                        className="edit-icon"
-                                    />
-                                    <p className="edit-text">Sửa</p>
-                                </Button>
-                            </div> */}
                 <div
                   className="image-container"
                   onClick={() => {
@@ -112,7 +89,16 @@ const YourDesign = () => {
                 </div>
               </div>
             );
-          })}
+          })
+        : <div className="no-designs">
+            <p className="no-designs-text">Bạn chưa có mẫu thiết kế nào.</p>
+            <Link href="/">
+              <button className="button-red">
+                Về trang chủ
+              </button>
+            </Link>
+          </div>
+      }
 
       <div
         style={{
@@ -129,28 +115,6 @@ const YourDesign = () => {
             <Spin />
           </div>
         )}
-        {/* {!loading && loadMore && (<Button
-                    variant="contained"
-                    size="medium"
-                    style={{
-                        marginLeft: "20px",
-                        height: 40,
-                        textTransform: "none",
-                        color: "white",
-                        backgroundColor: "rgb(255, 66, 78)",
-                        alignItems: "center",
-                        width: "20%",
-                    }}
-                    onClick={() => {
-                        // window.scrollTo({
-                        //     top: 0,
-                        //     behavior: "smooth",
-                        // });
-                        router.push("/your-design/purchase-form");
-                    }}
-                >
-                    Xem thêm
-                </Button>)} */}
       </div>
 
       <style jsx>{`
@@ -271,6 +235,31 @@ const YourDesign = () => {
           background-color: rgb(255, 66, 78);
           align-items: center;
           width: 20%;
+        }
+        .no-designs {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          text-align: center;
+          margin-top: 50px;
+        }
+        .no-designs-text {
+          font-size: 18px;
+          color: #555;
+          margin-bottom: 20px;
+        }
+        .button-red {
+          background-color: rgb(255, 66, 78);
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        .button-red:hover {
+          background-color: rgb(200, 50, 60);
         }
 
         @media (max-width: 768px) {

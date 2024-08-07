@@ -17,16 +17,18 @@ export default function AuthorInfo(props) {
       <h2 className="text-lg font-semibold">Chi tiết tác giả</h2>
       <div className="flex w-fit xl:flex-row flex-col justify-between items-start w-full gap-8">
         <div className="flex justify-start">
-          <div className="w-[65px] h-[65px]">
+          <div className="w-[65px] h-[65px] mr-5 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
             <img
-              className="object-cover rounded-full"
+              className="object-cover w-full h-full"
               src={user?.avatar}
               alt=""
             />
           </div>
+
+
           <div className="flex flex-col gap-2">
             <div className="text-lg font-semibold">{user?.name}</div>
-            <div className="text-sm">Email: {user?.email}</div>
+            <div className="text-sm">{user?.email}</div>
             {/* <div
               className='flex gap-1 items-center justify-center'
               style={{

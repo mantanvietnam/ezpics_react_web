@@ -99,7 +99,7 @@ function Search({ searchAPI, searchParams, placeholder }) {
             <div className="relative flex items-center h-12 p-4 rounded-lg shadow-sm border bg-white w-full">
               <SearchOutlined className="text-lg text-gray-500" />
               <input
-                className="ml-2 w-full h-full bg-transparent outline-none"
+                className="ml-2 py-2 w-full h-full bg-transparent outline-none"
                 ref={inputRef}
                 value={searchValue}
                 onKeyDown={handleKeyDown}

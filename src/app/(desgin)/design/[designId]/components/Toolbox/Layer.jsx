@@ -26,7 +26,7 @@ import "@/styles/loading.css";
 import Image from "next/image";
 
 const Layer = () => {
-  const { designLayers, selectedLayer, design } = useSelector(
+  const { designLayers, design } = useSelector(
     (state) => state.stage.stageData
   );
   const dispatch = useDispatch();
@@ -45,21 +45,21 @@ const Layer = () => {
   });
 
   const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-    const items = Array.from(designLayers);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+  if (!result.destination) {
+    return;
+  }
+  const items = Array.from(designLayers).reverse();
+  const [reorderedItem] = items.splice(result.source.index, 1);
+  items.splice(result.destination.index, 0, reorderedItem);
 
-    // Update the sort value
-    const updatedItems = items.map((item, index) => ({
-      ...item,
-      sort: index + 1,
-    }));
+  const updatedItems = items.reverse().map((item, index) => ({
+    ...item,
+    sort: index + 1,
+  }));
 
-    dispatch(updateListLayers(updatedItems));
-  };
+  dispatch(updateListLayers(updatedItems));
+};
+
 
   const handleDeleteLayer = (layer) => {
     const deleteLayerApi = async () => {
@@ -266,60 +266,65 @@ const Layer = () => {
           <Droppable droppableId={"layerList"} type="group">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {designLayers.length > 0 ? (
-                  designLayers
-                    .filter((layer) => layer.id !== undefined)
-                    .map((layer, index) => (
-                      <Draggable
-                        key={layer.id}
-                        draggableId={layer.id.toString()}
-                        index={index}>
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
-                            onClick={() => {
-                              dispatch(selectLayer({ id: layer.id }));
-                            }}>
-                            <button className="col-span-1 cursor-move">
-                              <Drapdrop size={20} />
-                            </button>
-                            {layer.content.type === "text" ? (
-                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
-                                {layer.content.text}
-                              </div>
-                            ) : (
-                              <img
-                                className="col-span-3"
-                                src={layer.content.banner}
-                                alt="Layer ảnh"
-                                style={{
-                                  width: "auto",
-                                  height: 40,
-                                  maxWidth: "100px",
-                                  resize: "both",
-                                  border: "1px solid black",
-                                }}
-                              />
-                            )}
-                            <div className="flex items-center justify-end col-span-2">
-                              <LockUnlock layer={layer} />
-                              <VisibilityToggle layer={layer} />
-                              <button
-                                className="px-1"
-                                onClick={() => handleDeleteLayer(layer)}>
-                                <Delete size={20} />
-                              </button>
-                            </div>
+              {designLayers.length > 0 ? (
+              (() => {
+                const reversedLayers = [...designLayers]
+                  .filter((layer) => layer.id !== undefined)
+                  .reverse();
+                console.log("Reversed designLayers:", reversedLayers);
+                return reversedLayers.map((layer, index) => (
+                  <Draggable
+                    key={layer.id}
+                    draggableId={layer.id.toString()}
+                    index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
+                        onClick={() => {
+                          dispatch(selectLayer({ id: layer.id }));
+                        }}>
+                        <button className="col-span-1 cursor-move">
+                          <Drapdrop size={20} />
+                        </button>
+                        {layer.content.type === "text" ? (
+                          <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
+                            {layer.content.text}
                           </div>
+                        ) : (
+                          <img
+                            className="col-span-3"
+                            src={layer.content.banner}
+                            alt="Layer ảnh"
+                            style={{
+                              width: "auto",
+                              height: 40,
+                              maxWidth: "100px",
+                              resize: "both",
+                              border: "1px solid black",
+                            }}
+                          />
                         )}
-                      </Draggable>
-                    ))
-                ) : (
-                  <div>Layer trống</div>
-                )}
+                        <div className="flex items-center justify-end col-span-2">
+                          <LockUnlock layer={layer} />
+                          <VisibilityToggle layer={layer} />
+                          <button
+                            className="px-1"
+                            onClick={() => handleDeleteLayer(layer)}>
+                            <Delete size={20} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ));
+              })()
+            ) : (
+              <div>Layer trống</div>
+            )}
+
                 {provided.placeholder}
               </div>
             )}

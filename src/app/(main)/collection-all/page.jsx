@@ -147,7 +147,7 @@ export default function Page() {
       <div className="w-full lg:w-[60%] mt-2 mobile:mt-5">
         <div className="w-full pt-5 flex items-center gap-2">
           <input
-            placeholder="Tim kiem san pham"
+            placeholder="Tìm kiếm sản phẩm"
             type="text"
             style={{
               backgroundColor: "#fff",
