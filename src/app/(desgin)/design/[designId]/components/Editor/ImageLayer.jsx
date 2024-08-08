@@ -6,13 +6,6 @@ import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 import GuideLines from "./GuideLines";
 
-// Hàm tạo đối tượng Image từ URL Base64
-function createImageFromSvg(svgBase64, callback) {
-  const image = new window.Image();
-  image.onload = () => callback(image);
-  image.src = svgBase64;
-}
-
 export default function ImageLayer(props) {
   const {
     data,
@@ -23,6 +16,7 @@ export default function ImageLayer(props) {
     onSelect,
     onMaxPositionUpdate,
     isTransformerVisible,
+    stageRef,
   } = props;
   const {
     postion_left,
@@ -261,6 +255,7 @@ export default function ImageLayer(props) {
         <Transformer
           ref={trRef}
           flipEnabled={false}
+          key={id}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
             if (

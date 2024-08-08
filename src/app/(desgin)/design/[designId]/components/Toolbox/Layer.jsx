@@ -15,7 +15,8 @@ import { useDispatch } from "react-redux";
 import {
   addLayerText,
   removeLayer,
-  selectLayer,
+  selectLayerTool,
+  deselectLayerTool,
   updateLayer,
   updateListLayers,
 } from "@/redux/slices/editor/stageSlice";
@@ -181,6 +182,14 @@ const Layer = () => {
     }
   };
 
+  const handleLayerClick = (layerId) => {
+    if (selectedLayer?.id === layerId) {
+      dispatch(deselectLayerTool());
+    } else {
+      dispatch(selectLayerTool({ id: layerId }));
+    }
+  };
+
   return (
     <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
       {design?.type === "user_series" && (
@@ -279,15 +288,17 @@ const Layer = () => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-[rgb(245,246,247)]"
-                            onClick={() => {
-                              dispatch(selectLayer({ id: layer.id }));
-                            }}>
+                            className={`grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-blue-200 ${
+                              selectedLayer?.id === layer.id
+                                ? "bg-blue-100"
+                                : ""
+                            }`}
+                            onClick={() => handleLayerClick(layer.id)}>
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
                             </button>
                             {layer.content.type === "text" ? (
-                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%]">
+                              <div className="col-span-3 cursor-pointer font-sans font-normal text-base w-[70%] truncate">
                                 {layer.content.text}
                               </div>
                             ) : (

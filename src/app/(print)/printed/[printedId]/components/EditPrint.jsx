@@ -426,7 +426,7 @@ const EditPrint = ({ stageRef }) => {
                         <ArrowBottomIcon size={25} />
                       </div>
                     </div>
-                    <div className="w-[100%] mobile:w-[70%] flex justify-around items-center mb-2">
+                    <div className="w-[100%] mobile:w-[90%] lg:w-[70%] flex justify-around items-center mb-2">
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
                         onClick={() => zoomLayer(layer.id, "zoomin")}>
@@ -442,7 +442,7 @@ const EditPrint = ({ stageRef }) => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col relative pt-4">
+                  <div className="flex flex-col relative mobile:pt-4">
                     <form
                       id="file-upload-form"
                       className="block clear-both mx-auto w-full max-w-600">

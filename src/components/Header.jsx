@@ -28,7 +28,7 @@ import { Box } from "@mui/material";
 import useCheckInternet from "@/hooks/useCheckInternet ";
 import axios from "axios";
 
-const Header = ({ toggleNavbar }) => {
+const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { data: session } = useSession();
@@ -587,6 +587,7 @@ const Header = ({ toggleNavbar }) => {
     paddingTop: "15px",
     borderRadius: "15px",
   };
+
   return (
     <SessionProvider>
       <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-1 mobile:px-6 shadow-xl bg-white">
@@ -613,11 +614,15 @@ const Header = ({ toggleNavbar }) => {
               {menuItems.map((menuItem, index) => (
                 <div
                   key={index}
-                  className={`${getHiddenClass(menuItem.hiddenOn)}`}>
+                  className={`${getHiddenClass(menuItem.hiddenOn)} `}
+                  onClick={() => handleHeaderItem(index)}>
                   {!menuItem.subMenu ? (
                     <Link
                       href={menuItem.href}
-                      className="primary_btn pl-10 whitespace-nowrap">
+                      className={`primary_btn pl-10 whitespace-nowrap ${
+                        activeHeader === index &&
+                        "underline decoration-yellow-600 underline-offset-4"
+                      } rounded-lg`}>
                       {menuItem.label}
                     </Link>
                   ) : (

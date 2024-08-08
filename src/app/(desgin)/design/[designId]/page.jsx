@@ -4,14 +4,19 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
 import { useParams } from "next/navigation";
-import { getListLayerApi } from "../../../../api/design";
+import { getListLayerApi, saveListLayer } from "../../../../api/design";
 import { checkTokenCookie } from "@/utils";
 import { Stage, Layer } from "react-konva";
 import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
-import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
+import {
+  selectLayer,
+  setStageData,
+  selectLayerTool,
+  deselectLayerTool,
+} from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
 import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
@@ -113,9 +118,10 @@ const Page = () => {
             idlayer: selectedId,
           }
         );
-        toast.success("Nhân bản layer đã chọn thành công");
-        fetchData();
-        dispatch();
+        if (res.data.code === 1) {
+          toast.success("Nhân bản layer đã chọn thành công");
+          fetchData();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -163,6 +169,14 @@ const Page = () => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+  };
+
+  const handleLayerClick = (layerId) => {
+    if (stageData?.selectedLayer?.id === layerId) {
+      dispatch(deselectLayerTool());
+    } else {
+      dispatch(selectLayerTool({ id: layerId }));
+    }
   };
 
   return (
@@ -230,7 +244,7 @@ const Page = () => {
                   width={initSize.width}
                   height={initSize.height}
                   style={{
-                    zIndex: -1,
+                    // zIndex: -1,
                     overflow: "auto",
                     backgroundColor: "#fff",
                   }}
@@ -260,11 +274,12 @@ const Page = () => {
                             }
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              dispatch(selectLayer({ id: layer.id }));
+                              handleLayerClick(layer.id);
                             }}
                             isTransformerVisible={isTransformerVisible}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
                             isDraggable={!locked} // Only allow dragging when unlocked
+                            stageRef={stageRef}
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -283,7 +298,7 @@ const Page = () => {
                             }
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              dispatch(selectLayer({ id: layer.id }));
+                              handleLayerClick(layer.id);
                             }}
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}

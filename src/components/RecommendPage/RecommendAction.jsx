@@ -31,7 +31,7 @@ export default function RecommendAction() {
       path: "banner",
     },
     {
-      title: "Xem thêm",
+      title: "Tất cả",
       path: "more",
     },
   ];

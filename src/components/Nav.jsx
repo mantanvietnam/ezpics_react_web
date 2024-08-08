@@ -15,7 +15,16 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-const Nav = ({ isOpen, closeNavbar }) => {
+const Nav = ({
+  isOpen,
+  closeNavbar,
+  activeItem,
+  setActiveItem,
+  handleNavItem,
+  activeFunc,
+  setActiveFunc,
+  hanldeFuncItem,
+}) => {
   const [openPro, setOpenPro] = useState(false);
   const [openRecharge, setOpenRecharge] = useState(false);
   const handleCancelPro = () => {
@@ -81,9 +90,6 @@ const Nav = ({ isOpen, closeNavbar }) => {
     [isProMember]
   );
 
-  //Them bg vao button khi chon tren thanh nav
-  const [activeItem, setActiveItem] = useState(0);
-  const [activeFunc, setActiveFunc] = useState("");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -99,21 +105,9 @@ const Nav = ({ isOpen, closeNavbar }) => {
     }
   }, [navItems, pathname, userFuncs]);
 
-  const handleNavItem = (item) => {
-    setActiveItem(item);
-    setActiveFunc(null);
-    closeNavbar(); // Close the navbar when a link is clicked
-  };
-
-  const hanldeFuncItem = (item) => {
-    setActiveFunc(item);
-    setActiveItem(null);
-    closeNavbar(); // Close the navbar when a link is clicked
-  };
-
   return (
     <div
-      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 ${
+      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 overflow-y-auto ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
       {isAuthenticated ? (

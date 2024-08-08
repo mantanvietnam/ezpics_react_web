@@ -37,6 +37,33 @@ export default function CenteredLayouts(props) {
     }
   };
 
+  //active header
+  const [activeHeader, setActiveHeader] = useState("");
+
+  const handleHeaderItem = (item) => {
+    setActiveHeader(item);
+    setActiveItem(null);
+    setActiveFunc(null);
+  };
+
+  //Them bg vao button khi chon tren thanh nav
+  const [activeItem, setActiveItem] = useState(0);
+  const [activeFunc, setActiveFunc] = useState("");
+
+  const handleNavItem = (item) => {
+    setActiveItem(item);
+    setActiveFunc(null);
+    setActiveHeader(null);
+    closeNavbar(); // Close the navbar when a link is clicked
+  };
+
+  const hanldeFuncItem = (item) => {
+    setActiveFunc(item);
+    setActiveItem(null);
+    setActiveHeader(null);
+    closeNavbar(); // Close the navbar when a link is clicked
+  };
+
   return (
     <>
       <Head>
@@ -46,7 +73,11 @@ export default function CenteredLayouts(props) {
         />
       </Head>
       <SessionProvider className="font-poppins">
-        <Header toggleNavbar={toggleNavbar} />
+        <Header
+          toggleNavbar={toggleNavbar}
+          activeHeader={activeHeader}
+          handleHeaderItem={handleHeaderItem}
+        />
         <div
           className={`fixed inset-0 bg-black transition-opacity duration-0 ${
             isNavbarOpen && isMobile
@@ -55,7 +86,16 @@ export default function CenteredLayouts(props) {
           }`}
           onClick={toggleNavbar}></div>
         <main className="flex pt-[var(--header-height)] font-poppins">
-          <Nav isOpen={isNavbarOpen} closeNavbar={closeNavbar} />
+          <Nav
+            isOpen={isNavbarOpen}
+            closeNavbar={closeNavbar}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+            handleNavItem={handleNavItem}
+            activeFunc={activeFunc}
+            setActiveFunc={setActiveFunc}
+            hanldeFuncItem={hanldeFuncItem}
+          />
           {isMobile ? (
             <div className=" w-full flex flex-col justify-center items-center">
               {props.children}
@@ -69,11 +109,12 @@ export default function CenteredLayouts(props) {
               className={`flex flex-col items-center justify-center transition-all duration-300 ${
                 isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
               } flex justify-center`}>
-                {props.children}
-                <div className={`transition-all duration-300 w-[100%] flex justify-center`}>
-                  <Footer />
-                </div>  
+              {props.children}
+              <div
+                className={`transition-all duration-300 w-[100%] flex justify-center`}>
+                <Footer />
               </div>
+            </div>
           )}
         </main>
       </SessionProvider>

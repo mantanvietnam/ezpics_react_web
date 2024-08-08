@@ -22,6 +22,26 @@ import ReactCrop, {
 import "react-image-crop/dist/ReactCrop.css";
 import { toast } from "react-toastify";
 
+function dataURLToBlob(dataURL) {
+  const parts = dataURL.split(",");
+  const mimeMatch = parts[0].match(/:(.*?);/);
+
+  if (!mimeMatch) {
+    throw new Error("Invalid data URL");
+  }
+
+  const mime = mimeMatch[1];
+  const bstr = atob(parts[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new Blob([u8arr], { type: mime });
+}
+
 const SliderMenu = ({
   valueBrightness,
   valueOpacity,
@@ -378,27 +398,105 @@ export function PanelsImage({
     }
   };
 
-  //Btn click lat anh
-  const onFlipHorizontally = () => {
-    if (selectedLayer) {
-      dispatch(flipLayerHorizontally({ id: selectedId }));
-    }
-  };
-
-  const onFlipVertically = () => {
-    if (selectedLayer) {
-      dispatch(flipLayerVertically({ id: selectedId }));
-    }
-  };
+  //lat anh
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const data = {
-      lat_anh: selectedLayer.content.scaleX === -1 ? 1 : 0,
-      lat_anh_doc: selectedLayer.content.scaleY === -1 ? 1 : 0,
-    };
-    // console.log("🚀 ~ useEffect ~ data:", data);
-    dispatch(updateLayer({ id: selectedLayer.id, data: data }));
-  }, [dispatch, selectedLayer]);
+    // Tạo canvas khi component mount
+    const canvas = document.createElement("canvas");
+    canvasRef.current = canvas;
+  }, []);
+
+  const drawAndFlipImage = (
+    imageSrc,
+    flipHorizontally = false,
+    flipVertically = false
+  ) => {
+    return new Promise((resolve, reject) => {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      const image = new Image();
+      image.crossOrigin = "Anonymous";
+      image.src = imageSrc;
+
+      image.onload = () => {
+        console.log("Image loaded with dimensions:", image.width, image.height);
+
+        const width = image.width;
+        const height = image.height;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Thiết lập ma trận biến đổi
+        ctx.setTransform(
+          flipHorizontally ? -1 : 1,
+          0,
+          0,
+          flipVertically ? -1 : 1,
+          flipHorizontally ? width : 0,
+          flipVertically ? height : 0
+        );
+
+        // Vẽ hình ảnh lên canvas
+        ctx.drawImage(image, 0, 0, width, height);
+
+        // Lấy dữ liệu hình ảnh từ canvas
+        const dataUrl = canvas.toDataURL("image/png");
+        // console.log("Canvas content:", dataUrl);
+
+        // const imageBlob = dataURLToBlob(dataUrl);
+
+        // console.log(imageBlob);
+
+        resolve(dataUrl);
+      };
+
+      image.onerror = (err) => {
+        console.error("Error loading image:", err);
+        reject(err);
+      };
+    });
+  };
+
+  const updateLayerWithFlippedImage = async (
+    imageSrc,
+    flipHorizontally,
+    flipVertically
+  ) => {
+    if (selectedLayer) {
+      try {
+        const flippedImageSrc = await drawAndFlipImage(
+          imageSrc,
+          flipHorizontally,
+          flipVertically
+        );
+        const data = {
+          ...selectedLayer.content,
+          banner: flippedImageSrc,
+        };
+        await dispatch(updateLayer({ id: selectedId, data: data }));
+
+        // Cập nhật lại imgSrc để phản ánh ảnh mới đã lật
+        setImgSrc(flippedImageSrc);
+      } catch (err) {
+        console.error("Error flipping image:", err);
+      }
+    }
+  };
+
+  const onFlipHorizontally = () => {
+    if (imgSrc) {
+      updateLayerWithFlippedImage(imgSrc, true, false);
+    }
+  };
+  const onFlipVertically = () => {
+    if (imgSrc) {
+      updateLayerWithFlippedImage(imgSrc, false, true);
+    }
+  };
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -524,26 +622,6 @@ export function PanelsImage({
       </div>
     </div>
   );
-}
-
-function dataURLToBlob(dataURL) {
-  const parts = dataURL.split(",");
-  const mimeMatch = parts[0].match(/:(.*?);/);
-
-  if (!mimeMatch) {
-    throw new Error("Invalid data URL");
-  }
-
-  const mime = mimeMatch[1];
-  const bstr = atob(parts[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-
-  return new Blob([u8arr], { type: mime });
 }
 
 function centerAspectCrop(mediaWidth, mediaHeight, aspect) {

@@ -15,6 +15,27 @@ import Undo from "../../Icon/Undo";
 import Redo from "../../Icon/Redo";
 import { redo, undo } from "@/redux/slices/editor/stageSlice";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+
+function dataURLToBlob(dataURL) {
+  const parts = dataURL.split(",");
+  const mimeMatch = parts[0].match(/:(.*?);/);
+
+  if (!mimeMatch) {
+    throw new Error("Invalid data URL");
+  }
+
+  const mime = mimeMatch[1];
+  const bstr = atob(parts[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new Blob([u8arr], { type: mime });
+}
 
 const DownLoadMenu = ({
   handleDownload,
@@ -184,15 +205,58 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
         throw new Error("Invalid stageData or designLayers not found");
       }
 
-      const data = stageData.designLayers.map((layer) => ({
-        id: layer.id,
-        content: {
-          ...layer.content,
-        },
-        sort: layer.sort,
-      }));
+      const updatedLayers = await Promise.all(
+        stageData.designLayers.map(async (layer) => {
+          if (
+            layer.content.banner &&
+            layer.content.banner.startsWith("data:image/png;base64")
+          ) {
+            const bannerBlob = dataURLToBlob(layer.content.banner);
+            const token = checkTokenCookie();
+            const formData = new FormData();
 
-      const jsonData = JSON.stringify(data);
+            formData.append("idproduct", stageData.design.id);
+            formData.append("token", token);
+            formData.append("idlayer", layer.id);
+            formData.append("file", bannerBlob);
+
+            const headers = {
+              "Content-Type": "multipart/form-data",
+            };
+
+            const config = {
+              headers: headers,
+            };
+
+            const response = await axios.post(
+              "https://apis.ezpics.vn/apis/changeLayerImageNew",
+              formData,
+              config
+            );
+            console.log(response);
+
+            if (response && response?.data?.code === 1) {
+              return {
+                id: layer.id,
+                content: {
+                  ...layer.content,
+                  banner: response.data?.link, // Cập nhật banner thành Blob
+                },
+                sort: layer.sort,
+              };
+            }
+          }
+          return {
+            id: layer.id,
+            content: {
+              ...layer.content,
+            },
+            sort: layer.sort,
+          };
+        })
+      );
+
+      const jsonData = JSON.stringify(updatedLayers);
 
       const response = await saveListLayer({
         idProduct: stageData.design?.id,

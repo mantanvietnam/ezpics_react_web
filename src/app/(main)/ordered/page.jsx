@@ -29,8 +29,8 @@ function ContactDetail({ icon, title, content }) {
     <div className="flex items-center">
       <Image src={icon} alt={title} className="w-10 h-10 mr-6 rounded-full" />
       <div className="flex flex-col">
-        <p className="font-semibold text-white py-2">{title}:</p>
-        <p className="font-sm font-bold text-white">{content}</p>
+        <p className="font-normal text-base text-white py-2">{title}:</p>
+        <p className="font-bold text-lg text-white">{content}</p>
       </div>
     </div>
   );
