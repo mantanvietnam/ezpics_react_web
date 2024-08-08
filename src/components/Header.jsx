@@ -430,11 +430,11 @@ const Header = ({ toggleNavbar }) => {
       desc: "Cài đặt",
       href: "/information",
     },
-    {
-      icon: <BellOutlined style={{ fontSize: "20px" }} />,
-      name: "bell",
-      desc: "Thông báo",
-    },
+    // {
+    //   icon: <BellOutlined style={{ fontSize: "20px" }} />,
+    //   name: "bell",
+    //   desc: "Thông báo",
+    // },
   ];
 
   const formattedBalance =

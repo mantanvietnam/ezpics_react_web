@@ -207,9 +207,17 @@ const Page = () => {
                                             <td className="p-2 ">{row.meta_payment}</td>
                                             <td className="p-2 "><img src={row.image} alt="hihi" className="h-10 w-10 object-cover" /></td>
                                             <td className="p-2 "> {formatDateString(row.created_at)}</td>
-                                            <td className="p-2"> <p className=' bg-green-100 text-green-800 rounded text-center'>
-                                                {row.status === 1 ? "Đang chờ" : "Hoàn thành"}
-                                            </p></td>
+                                            <td className="p-2">
+                                            <p
+                                            className={`rounded text-center ${
+                                                row.status === 1
+                                                ? "bg-red-100 text-red-800"
+                                                : "bg-green-100 text-green-800"
+                                            }`}
+                                            >
+                                            {row.status === 1 ? "Đang chờ" : "Hoàn thành"}
+                                            </p>
+                                            </td>
                                         </tr>
                                     )
                                     )}
