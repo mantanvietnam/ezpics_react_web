@@ -4,21 +4,30 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Toolbox from "./components/Toolbox/Toolbox";
 import { useParams } from "next/navigation";
-import { getListLayerApi } from "../../../../api/design";
+import { getListLayerApi, saveListLayer } from "../../../../api/design";
 import { checkTokenCookie } from "@/utils";
 import { Stage, Layer } from "react-konva";
 import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
-import { selectLayer, setCurrentPage, setStageData, setTotalPages } from "@/redux/slices/editor/stageSlice";
+import {
+  selectLayer,
+  setStageData,
+  selectLayerTool,
+  deselectLayerTool,
+} from "@/redux/slices/editor/stageSlice";
+import {
+  setCurrentPage,
+  setTotalPages,
+} from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
 import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useFonts from "../../../../hooks/useLoadFont";
-import { calculateTotalPages, getLayersByPage } from "@/utils/editor"
+import { calculateTotalPages, getLayersByPage } from "@/utils/editor";
 
 const Page = () => {
   const params = useParams();
@@ -84,18 +93,16 @@ const Page = () => {
           })
         );
         //Lấy ra page đầu tiên
-        const pageLayers = getLayersByPage(response.data.productDetail, 0)
+        const pageLayers = getLayersByPage(response.data.productDetail, 0);
         const totalPages = calculateTotalPages(response.data.productDetail);
 
         dispatch(
           setCurrentPage({
             page: 0,
-            pageLayers: pageLayers
+            pageLayers: pageLayers,
           })
         );
-        dispatch(
-          setTotalPages(totalPages)
-        );
+        dispatch(setTotalPages(totalPages));
       }
     } catch (error) {
       console.log(error);
@@ -108,8 +115,8 @@ const Page = () => {
 
   const checkDeselect = (e) => {
     const clickedOnEmpty = e.target === e.target.getStage();
-    console.log('🚀 ~ Page ~ currentPage:', currentPage)
-    console.log('🚀 ~ Page ~ totalPages:', totalPages)
+    console.log("🚀 ~ Page ~ currentPage:", currentPage);
+    console.log("🚀 ~ Page ~ totalPages:", totalPages);
 
     if (clickedOnEmpty) {
       setSelectedId(null);
@@ -127,9 +134,10 @@ const Page = () => {
             idlayer: selectedId,
           }
         );
-        toast.success("Nhân bản layer đã chọn thành công");
-        fetchData();
-        dispatch();
+        if (res.data.code === 1) {
+          toast.success("Nhân bản layer đã chọn thành công");
+          fetchData();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -178,6 +186,17 @@ const Page = () => {
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+
+  const handleLayerClick = (layerId) => {
+    if (stageData?.selectedLayer?.id === layerId) {
+      dispatch(deselectLayerTool());
+    } else {
+      dispatch(selectLayerTool({ id: layerId }));
+    }
+  };
+
+  console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
+  console.log("🚀 ~ Layer ~ designLayers:", designLayers);
 
   return (
     <>
@@ -244,7 +263,7 @@ const Page = () => {
                   width={initSize.width}
                   height={initSize.height}
                   style={{
-                    zIndex: -1,
+                    // zIndex: -1,
                     overflow: "auto",
                     backgroundColor: "#fff",
                   }}
@@ -279,6 +298,7 @@ const Page = () => {
                             isTransformerVisible={isTransformerVisible}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
                             isDraggable={!locked} // Only allow dragging when unlocked
+                            stageRef={stageRef}
                           />
                         );
                       } else if (layer.content?.type === "text") {

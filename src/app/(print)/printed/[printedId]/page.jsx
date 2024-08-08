@@ -41,15 +41,15 @@ const Page = () => {
 
       const calculateSizeFactor = () => {
         if (windowWidth >= 1600) {
-          return 1;
+          return 0.5;
         } else if (windowWidth >= 1200) {
-          return 1.5;
+          return 1;
         } else if (windowWidth >= 950) {
           return 1.5;
         } else if (windowWidth >= 600) {
-          return 2;
+          return 1.5;
         } else {
-          return 2.5;
+          return 2.2;
         }
       };
 
@@ -115,7 +115,7 @@ const Page = () => {
   }, [printedId]);
 
   return (
-    <div className="flex flex-col md:flex-row overflow-auto h-screen pt-[70px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]">
+    <div className="flex flex-col lg:flex-row overflow-auto h-screen pt-[70px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]">
       <div className="logo flex items-center justify-center absolute top-4 left-4 lg:top-6 lg:left-6">
         <Link href="/" className="flex flex-center">
           <Image

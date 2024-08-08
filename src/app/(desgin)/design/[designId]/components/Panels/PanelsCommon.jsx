@@ -295,7 +295,7 @@ const LockUnlock = () => {
   const selectedLayer = useSelector(
     (state) => state.stage.stageData.selectedLayer
   );
-  const [locked, setLocked] = useState(selectedLayer?.content?.lock === 0);
+  const [locked, setLocked] = useState("");
 
   useEffect(() => {
     setLocked(selectedLayer?.content?.lock === 0);
@@ -305,7 +305,6 @@ const LockUnlock = () => {
     const newLockState = locked ? 1 : 0;
     if (selectedLayer) {
       const updatedData = {
-        ...selectedLayer.content,
         lock: newLockState,
         draggable: newLockState === 0,
       };

@@ -9,7 +9,6 @@ import { checkTokenCookie } from "@/utils";
 import axios from "axios";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { Button } from "antd";
-
 // SVG cơ bản
 const initialSvgString = `
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +18,7 @@ const initialSvgString = `
     </clipPath>
   </defs>
   <image
-    href="https://via.placeholder.com/200" 
+    xlink:href="https://via.placeholder.com/200" 
     width="200"
     height="200"
     clip-path="url(#circle-clip)"
@@ -149,19 +148,13 @@ const ImageMask = () => {
           Test them anh vao svg
         </Button>
       </div>
-      <object
+      {/* <object
         type="image/svg+xml"
         data={selectedLayer?.content?.banner}
         width="200"
         height="200"
-      />
-      <img
-        src={selectedLayer?.content?.banner}
-        alt=""
-        height={200}
-        width={200}
-      />
-      <SvgImage dataUrl={selectedLayer?.content?.banner} />
+      /> */}
+      {/* <SvgImage dataUrl={selectedLayer?.content?.banner} /> */}
     </div>
   );
 };
