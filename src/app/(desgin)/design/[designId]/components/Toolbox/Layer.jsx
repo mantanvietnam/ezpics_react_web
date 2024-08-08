@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import {
   addLayerText,
   removeLayer,
+  selectLayer,
   selectLayerTool,
   deselectLayerTool,
   updateLayer,
@@ -58,7 +59,6 @@ const Layer = () => {
 
     dispatch(updateListLayers(updatedItems));
   };
-
 
   const handleDeleteLayer = (layer) => {
     const deleteLayerApi = async () => {
@@ -293,7 +293,9 @@ const Layer = () => {
                                 ? "bg-blue-100"
                                 : ""
                             }`}
-                            onClick={() => handleLayerClick(layer.id)}>
+                            onClick={() => {
+                              dispatch(selectLayer({ id: layer.id }));
+                            }}>
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
                             </button>
@@ -337,8 +339,8 @@ const Layer = () => {
               </div>
             )}
           </Droppable>
-        </DragDropContext >
-      </div >
+        </DragDropContext>
+      </div>
       {loading && (
         <div
           style={{
@@ -374,7 +376,7 @@ const Layer = () => {
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
 };
 

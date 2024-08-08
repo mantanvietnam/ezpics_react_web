@@ -164,9 +164,11 @@ const stageSlice = createSlice({
       const { id } = action.payload;
       const designLayers = [...state.stageData.designLayers];
 
-      // Save the original sort order
-      designLayers.forEach((layer) => {
-        layer.originalSort = layer.sort;
+      // Save the original sort order if not already saved
+      designLayers.forEach(layer => {
+        if (layer.originalSort === undefined) {
+          layer.originalSort = layer.sort;
+        }
       });
 
       // Find the selected layer and move it to the top
@@ -176,20 +178,29 @@ const stageSlice = createSlice({
 
         // Remove the selected layer from its current position and add it to the end
         designLayers.splice(selectedLayerIndex, 1);
-        selectedLayer.sort = designLayers.length;
-        designLayers.push(selectedLayer);
+        selectedLayer.sort = 0; // Move to top
+        designLayers.unshift(selectedLayer); // Add to the beginning of the array
+
+        // Update the sort order for all layers
+        designLayers.forEach((layer, index) => {
+          layer.sort = index;
+        });
 
         state.stageData.designLayers = designLayers;
         state.stageData.selectedLayer = selectedLayer;
       }
     },
+
     deselectLayerTool: (state) => {
       // Restore the original sort order of layers
       const designLayers = state.stageData.designLayers.map((layer: any) => ({
         ...layer,
         selected: false,
-        sort: layer.originalSort || 0, // Restore to original sort or keep current if undefined
-      })).sort((a: any, b: any) => a.sort - b.sort);
+        sort: layer.originalSort !== undefined ? layer.originalSort : layer.sort, // Restore to original sort or keep current if undefined
+      }));
+
+      // Sort layers back to their original order
+      designLayers.sort((a: any, b: any) => a.sort - b.sort);
 
       state.stageData.designLayers = designLayers;
       state.stageData.selectedLayer = {};

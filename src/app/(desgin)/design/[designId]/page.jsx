@@ -19,7 +19,6 @@ import {
 } from "@/redux/slices/editor/stageSlice";
 import {
   setCurrentPage,
-  setStageData,
   setTotalPages,
 } from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
@@ -196,6 +195,9 @@ const Page = () => {
     }
   };
 
+  console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
+  console.log("🚀 ~ Layer ~ designLayers:", designLayers);
+
   return (
     <>
       <Navbar
@@ -291,7 +293,7 @@ const Page = () => {
                             }
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              handleLayerClick(layer.id);
+                              dispatch(selectLayer({ id: layer.id }));
                             }}
                             isTransformerVisible={isTransformerVisible}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
@@ -315,7 +317,7 @@ const Page = () => {
                             }
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              handleLayerClick(layer.id);
+                              dispatch(selectLayer({ id: layer.id }));
                             }}
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}
