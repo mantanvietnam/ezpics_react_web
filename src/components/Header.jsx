@@ -430,11 +430,11 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
       desc: "Cài đặt",
       href: "/information",
     },
-    {
-      icon: <BellOutlined style={{ fontSize: "20px" }} />,
-      name: "bell",
-      desc: "Thông báo",
-    },
+    // {
+    //   icon: <BellOutlined style={{ fontSize: "20px" }} />,
+    //   name: "bell",
+    //   desc: "Thông báo",
+    // },
   ];
 
   const formattedBalance =
@@ -485,14 +485,14 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
       ),
       key: "1",
     },
-    {
-      label: (
-        <div className="list-item ">
-          <p className="item-text">Khiếu nại </p>
-        </div>
-      ),
-      key: "2",
-    },
+    // {
+    //   label: (
+    //     <div className="list-item ">
+    //       <p className="item-text">Khiếu nại </p>
+    //     </div>
+    //   ),
+    //   key: "2",
+    // },
     {
       label: (
         <div className="list-item ">
@@ -794,7 +794,9 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                   ))}
                 </div>
               )}>
-              <div>
+              <div style={{
+                cursor: "pointer"
+              }}>
                 <Space>
                   <div className="w-10 h-10 rounded-full overflow-hidden m-5">
                     <img

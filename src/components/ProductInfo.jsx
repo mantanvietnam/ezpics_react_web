@@ -248,7 +248,19 @@ export default function ProductInfo(props) {
           {isLoading ? (
             <Skeleton.Input active="true" />
           ) : (
-            <div className="flex items-center justify-center gap-1 border-l-2 border-slate-300 pl-1">
+          <div className="flex items-center justify-center gap-1 border-l-2 border-slate-300 pl-1">
+            {data?.favorites !== 0 ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <g clip-path="url(#clip0_234_2)">
+              <path d="M11.466 22.776C11.607 22.92 11.799 23 12 23C12.201 23 12.393 22.92 12.534 22.776L22.128 13.055C26.129 9.002 23.286 2 17.596 2C14.179 2 12.611 4.511 12 4.98C11.386 4.509 9.82804 2 6.40404 2C0.732037 2 -2.14596 8.984 1.87304 13.055L11.466 22.776Z" fill="#F44336"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_234_2">
+              <rect width="24" height="24" fill="white"/>
+              </clipPath>
+              </defs>
+              </svg>
+            ) : (
               <svg
                 width="32"
                 height="32"
@@ -268,10 +280,12 @@ export default function ProductInfo(props) {
                     color: "rgb(255, 66, 78)",
                   }}></path>
               </svg>
-              <span className="text-sm font-semibold">
-                Đã thích ({data?.favorites || 0})
-              </span>
-            </div>
+            )}
+            <span className="text-sm font-semibold">
+              Đã thích ({data?.favorites || 0})
+            </span>
+          </div>
+
           )}
         </div>
       </div>
@@ -342,9 +356,9 @@ export default function ProductInfo(props) {
             )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
-            <div className="w-[35px] h-[35px]">
+            <div className="w-[37px] h-[35px] mr-3 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
               <img
-                className="object-cover rounded-full"
+                className="object-cover w-full h-full"
                 src={user?.avatar}
                 alt=""
               />

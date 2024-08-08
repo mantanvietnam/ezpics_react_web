@@ -251,9 +251,15 @@ const Page = () => {
                       </td>
                       <td className="p-2">
                         {" "}
-                        <p className=" bg-green-100 text-green-800 rounded text-center">
-                          {row.status === 1 ? "Đang chờ" : "Hoàn thành"}
-                        </p>
+                        <p
+                        className={`rounded text-center ${
+                          row.status === 1
+                            ? "bg-red-100 text-red-800"
+                            : "bg-green-100 text-green-800"
+                        }`}
+                      >
+                        {row.status === 1 ? "Đang chờ" : "Hoàn thành"}
+                      </p>
                       </td>
                     </tr>
                   ))}

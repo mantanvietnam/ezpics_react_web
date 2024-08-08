@@ -3,10 +3,6 @@ import NextImage from "next/image";
 import { Button, Slider, Popover, Modal, Input } from "antd";
 import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
-import {
-  flipLayerHorizontally,
-  flipLayerVertically,
-} from "@/redux/slices/editor/stageSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
@@ -283,13 +279,11 @@ export function PanelsImage({
   };
 
   const handleButtonChangeImageNew = () => {
-    console.log("Button 1 clicked");
     setVisibleChangeImage(false);
     openModalChangeImageNew();
   };
 
   const handleButtonChangeImage = () => {
-    console.log("Button 2 clicked");
     setVisibleChangeImage(false);
     openModalChangeImage();
   };
@@ -308,16 +302,16 @@ export function PanelsImage({
   });
 
   const HandleRemoveBackground = async () => {
-    let proUser = true;
+    let proUser;
 
-    // if (!authentication) {
-    //   toast.error(
-    //     "Bạn chưa là pro. Hãy nâng cấp tài khoản để thực hiện chức năng này !!!"
-    //   );
-    //   return;
-    // } else if (dataInforUser.member_pro === 1) {
-    //   proUser = true;
-    // }
+    if (!authentication) {
+      toast.error(
+        "Bạn chưa là pro. Hãy nâng cấp tài khoản để thực hiện chức năng này !!!"
+      );
+      return;
+    } else if (dataInforUser.member_pro === 1) {
+      proUser = true;
+    }
 
     if (proUser) {
       const headers = {
@@ -445,11 +439,6 @@ export function PanelsImage({
 
         // Lấy dữ liệu hình ảnh từ canvas
         const dataUrl = canvas.toDataURL("image/png");
-        // console.log("Canvas content:", dataUrl);
-
-        // const imageBlob = dataURLToBlob(dataUrl);
-
-        // console.log(imageBlob);
 
         resolve(dataUrl);
       };

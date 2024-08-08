@@ -11,10 +11,10 @@ export default function YourProductBanner() {
       }}
       className="flex justify-between gap-5 p-[20px] mobile:p-[50px] rounded-[20px] relative overflow-hidden w-full h-[300px]">
       <div className="w-1/2">
-        <div className="text-lg mobile:text-[32px] font-bold">
+        <div className="text-lg leading-tight mobile:text-[32px] font-bold">
           Hãy thổi hồn vào các mẫu thiết kế của bạn
         </div>
-        <div className="">
+        <div className="mt-5">
           Không chỉ là mẫu thiết kế, mà là một phần của cuộc sống hiện đại, thể
           hiện sự cá nhân hóa và gu thẩm mỹ của bạn.
         </div>

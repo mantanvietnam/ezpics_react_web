@@ -18,7 +18,7 @@ const FeatureList = ({ features, showContactInfo }) => {
       ))}
       {showContactInfo && (
         <p className="text-xs pt-10 text-[rgba(13,18,22,0.7)]">
-          *Liên hệ với bộ phận bán hàng để biết thêm thông tin.
+          Liên hệ với bộ phận bán hàng để biết thêm thông tin.
         </p>
       )}
     </div>

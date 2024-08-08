@@ -38,13 +38,11 @@ export default function ImageLayer(props) {
   const shapeRef = useRef();
   const trRef = useRef();
   const [image] = useImage(data.banner, "anonymous");
-  const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
 
   useEffect(() => {
     if (shapeRef.current && image) {
-      // Đảm bảo hình ảnh đã được tải
       if (image.width > 0 && image.height > 0) {
         shapeRef.current.cache();
         shapeRef.current.getLayer().batchDraw();
@@ -54,13 +52,8 @@ export default function ImageLayer(props) {
     }
   }, [image]);
 
-  // Convert vw to px
   const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
-  // const widthValue = parseFloat(
-  //   typeof data.width === "string" ? data.width.replace("vw", "") : data.width
-  // );
   const width = designSize.width * (widthValue / 100);
-  // const heightSize = (naturalHeight * width) / naturalWidth;
   const heightSize = useMemo(
     () => (naturalHeight * width) / naturalWidth,
     [naturalHeight, naturalWidth, width]
@@ -119,7 +112,6 @@ export default function ImageLayer(props) {
     onMaxPositionUpdate,
   ]);
 
-  //Vẽ ra transform
   useEffect(() => {
     if (localIsSelected) {
       trRef.current?.nodes([shapeRef.current]);
@@ -169,7 +161,8 @@ export default function ImageLayer(props) {
       postion_top: (e.target.y() / designSize.height) * 100,
     };
     dispatch(updateLayer({ id: id, data: data }));
-    setShowLine(false);
+    setShowLine(false); // Hide lines after drag end
+    setLocalIsSelected(true); // Ensure the layer remains selected after dragging
   };
 
   const handleTransformEnd = (e) => {
@@ -186,18 +179,14 @@ export default function ImageLayer(props) {
     dispatch(updateLayer({ id: id, data: data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
-    setShowLine(false);
+    setShowLine(false); // Hide lines after transform end
+    setLocalIsSelected(true); // Ensure the layer remains selected after transformation
   };
-
-  useEffect(() => {
-    setIsSelectLayer(!lock && Boolean(status));
-  }, [lock, status]);
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
 
-  // console.log(width, heightSize);
   const [imageProps, setImageProps] = useState({
     x: useMemo(
       () => designSize.width * (postion_left / 100),
@@ -225,8 +214,35 @@ export default function ImageLayer(props) {
     const newY = e.target.y();
 
     setImageProps((prev) => ({ ...prev, x: newX, y: newY }));
-    setShowLine(true);
+    setShowLine(true); // Show lines while dragging
   };
+
+  const handleClickOutside = (e) => {
+    if (
+      shapeRef.current &&
+      !shapeRef.current.getStage().getIntersection({
+        x: e.clientX,
+        y: e.clientY,
+      })
+    ) {
+      setLocalIsSelected(false);
+      setShowLine(false); // Hide lines when clicking outside
+    }
+  };
+
+  const handleSelect = (e) => {
+    if (lock) return;
+    onSelect(e);
+    setLocalIsSelected(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -245,8 +261,8 @@ export default function ImageLayer(props) {
         scaleY={scaleY}
         draggable={!lock}
         visible={Boolean(status)}
-        onClick={lock ? null : onSelect}
-        onTap={lock ? null : onSelect}
+        onClick={handleSelect}
+        onTap={handleSelect}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
         onDragMove={handleDragMove}
@@ -280,13 +296,12 @@ export default function ImageLayer(props) {
             }
           }}
           boundBoxFunc={(oldBox, newBox) => {
-            // Limit resize
             if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
               return oldBox;
             }
             return newBox;
           }}
-          attachTo={shapeRef.current} // Gắn Transformer với đối tượng Image
+          attachTo={shapeRef.current}
         />
       )}
       {isTransformerVisible && !lock && showLine && (

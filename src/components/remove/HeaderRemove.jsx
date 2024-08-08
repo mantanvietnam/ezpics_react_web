@@ -24,7 +24,6 @@ const HeaderRemove = () => {
     setOpenPro(false);
   };
 
-  const dispatch = useDispatch();
   const { data: session } = useSession();
 
   // Lấy data user

@@ -27,13 +27,11 @@ import "@/styles/loading.css";
 import Image from "next/image";
 
 const Layer = () => {
-  const { designLayers, selectedLayer, design } = useSelector(
+  const { designLayers, selectedLayer, design, currentPage } = useSelector(
     (state) => state.stage.stageData
   );
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  // State for both forms
-  // console.log("🚀 ~ Layer ~ selectedLayer:", selectedLayer);
   const [textForm, setTextForm] = useState({
     displayName: "",
     variableName: "",
@@ -49,18 +47,18 @@ const Layer = () => {
     if (!result.destination) {
       return;
     }
-    const items = Array.from(designLayers);
+    const items = Array.from(currentPage?.pageLayers).reverse();
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Update the sort value
-    const updatedItems = items.map((item, index) => ({
+    const updatedItems = items.reverse().map((item, index) => ({
       ...item,
       sort: index + 1,
     }));
 
     dispatch(updateListLayers(updatedItems));
   };
+
 
   const handleDeleteLayer = (layer) => {
     const deleteLayerApi = async () => {
@@ -275,10 +273,12 @@ const Layer = () => {
           <Droppable droppableId={"layerList"} type="group">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {designLayers.length > 0 ? (
-                  designLayers
-                    .filter((layer) => layer.id !== undefined)
-                    .map((layer, index) => (
+                {currentPage?.pageLayers.length > 0 ? (
+                  (() => {
+                    const reversedLayers = [...currentPage?.pageLayers]
+                      .filter((layer) => layer.id !== undefined)
+                      .reverse();
+                    return reversedLayers.map((layer, index) => (
                       <Draggable
                         key={layer.id}
                         draggableId={layer.id.toString()}
@@ -327,16 +327,18 @@ const Layer = () => {
                           </div>
                         )}
                       </Draggable>
-                    ))
+                    ));
+                  })()
                 ) : (
                   <div>Layer trống</div>
                 )}
+
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
-        </DragDropContext>
-      </div>
+        </DragDropContext >
+      </div >
       {loading && (
         <div
           style={{
@@ -372,7 +374,7 @@ const Layer = () => {
           </div>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 
@@ -394,7 +396,6 @@ const LockUnlock = ({ layer }) => {
 
     setLocked(!locked);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    console.log("layer :", layer, "updatedData :", updatedData);
   };
 
   return (
@@ -433,7 +434,6 @@ const VisibilityToggle = ({ layer }) => {
 
     setVisible(!visible);
     dispatch(updateLayer({ id: layer.id, data: updatedData }));
-    console.log("layervisible :", layer, "updatedData :", updatedData);
   };
 
   return (

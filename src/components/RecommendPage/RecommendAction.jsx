@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function RecommendAction() {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const actions = [
     {
@@ -45,13 +45,15 @@ export default function RecommendAction() {
           <Link
             href={action.path}
             className="w-[100px] mobile:w-fit p-3 flex items-center justify-center">
-            <div className="text-[14px] font-semibold opacity-65 hover:opacity-100 ease-in duration-300">
+            <div className={`${
+              activeIndex === index ? "text-[14px] font-bold opacity-100" : "text-[14px] font-semibold opacity-65 hover:opacity-100 ease-in duration-300"
+            }`}>
               {action.title}
             </div>
           </Link>
           <div
             className={`${
-              activeIndex === index ? "border-b-2 border-red-500" : ""
+              activeIndex === index ? "text-[14px] opacity-100 font-weight border-b-2 border-red-500" : ""
             }`}></div>
         </div>
       ))}
