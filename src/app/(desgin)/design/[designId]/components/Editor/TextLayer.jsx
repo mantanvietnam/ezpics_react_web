@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 
 export default function TextLayer(props) {
@@ -35,20 +34,18 @@ export default function TextLayer(props) {
   const getScaleFromTransform = (transformString) => {
     const regex = /scale\(([^)]+)\)/;
     const match = transformString.match(regex);
-
     if (match) {
       const scale = parseFloat(match[1]);
-      return { scaleX: scale, scaleY: scale }; // Assuming uniform scaling
+      return { scaleX: scale, scaleY: scale };
     }
-
     return { scaleX: 1, scaleY: 1 }; // Default values if no scale found
   };
+
   // Get scale values from containerRef
   const containerTransform = containerRef?.current?.style.transform || "";
   const { scaleX, scaleY } = getScaleFromTransform(containerTransform);
 
   const dispatch = useDispatch();
-
   const { selectedLayer } = useSelector((state) => state.stage.stageData);
 
   const shapeRef = useRef();
@@ -67,7 +64,7 @@ export default function TextLayer(props) {
   const sizeValue = parseFloat(size?.replace("vw", ""));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
-  //wid
+  // Width
   const widthValue = parseFloat(
     typeof data.width === "string" ? data.width.replace("vw", "") : data.width
   );
@@ -76,7 +73,6 @@ export default function TextLayer(props) {
   // Rotation
   const rotationValue = parseFloat(rotate?.replace("deg", ""));
 
-  //Vẽ ra transform
   useEffect(() => {
     if (localIsSelected) {
       trRef.current?.nodes([shapeRef.current]);
@@ -110,13 +106,15 @@ export default function TextLayer(props) {
       postion_top: (e.target.y() / designSize.height) * 100,
     };
     dispatch(updateLayer({ id, data }));
+
+    // Mark as selected when dragging ends
+    setLocalIsSelected(true);
   };
 
   const handleTransform = (e) => {
     const node = shapeRef.current;
     const newScaleX = node.scaleX();
     const newScaleY = node.scaleY();
-    // If dragging sides, change width only
     const newWidth = node.width() * newScaleX;
     node.width(newWidth);
     node.scaleX(1);
@@ -139,25 +137,19 @@ export default function TextLayer(props) {
   const handleDblClick = () => {
     if (lock) return; // Prevent editing if locked
 
-    // console.log("Double clicked"); // Debugging log
-
     setIsEditing(true);
 
     setTimeout(() => {
-      // const textPosition = shapeRef.current.getClientRect();
       const node = shapeRef.current;
       const transformer = trRef.current;
 
-      // Ẩn textNode và transformer
       node.hide();
       transformer.hide();
 
-      // Tạo textarea
       const textarea = document.createElement("textarea");
       textareaRef.current = textarea; // Store textarea reference
       document.body.appendChild(textarea);
 
-      // console.log("Textarea created"); // Debugging log
       const textPosition = node.getClientRect();
       const stageContainer = stageRef.current.container();
       const stageRect = stageContainer.getBoundingClientRect();
@@ -165,9 +157,6 @@ export default function TextLayer(props) {
         x: stageRect.x + textPosition.x * scaleX,
         y: stageRect.y + textPosition.y * scaleY,
       };
-
-      console.log("stageRect", stageRect);
-      console.log("textPosition", textPosition);
 
       textarea.value = textValue;
       textarea.style.position = "absolute";
@@ -198,19 +187,11 @@ export default function TextLayer(props) {
 
       textarea.focus();
 
-      console.log("Textarea position:", {
-        top: textarea.style.top,
-        left: textarea.style.left,
-        width: textarea.style.width,
-        height: textarea.style.height,
-      });
-
       const removeTextarea = () => {
         if (document.body.contains(textarea)) {
           document.body.removeChild(textarea);
           node.show();
           transformer.show();
-          // console.log("Textarea removed"); // Debugging log
         }
       };
 
@@ -249,12 +230,11 @@ export default function TextLayer(props) {
       textarea.addEventListener("keydown", handleKeyDown);
       window.addEventListener("click", handleOutsideClick);
 
-      // Clean up event listeners when the component unmounts or when editing state changes
       return () => {
         textarea.removeEventListener("keydown", handleKeyDown);
         window.removeEventListener("click", handleOutsideClick);
       };
-    }, 0); // Use a timeout to ensure the textarea is added before other operations
+    }, 0);
   };
 
   const getFontStyle = (indam, innghieng) => {
@@ -283,6 +263,32 @@ export default function TextLayer(props) {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
 
+  const handleClickOutside = (e) => {
+    if (
+      shapeRef.current &&
+      !shapeRef.current.getStage().getIntersection({
+        x: e.clientX,
+        y: e.clientY,
+      })
+    ) {
+      setLocalIsSelected(false);
+    }
+  };
+
+  const handleSelect = (e) => {
+    if (lock) return;
+    onSelect(e);
+    setLocalIsSelected(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <Text
@@ -302,8 +308,8 @@ export default function TextLayer(props) {
         textDecoration={gachchan}
         letterSpacing={gianchu === "normal" ? 0 : parseFloat(gianchu)}
         lineHeight={giandong === "normal" ? 1 : parseFloat(giandong)}
-        onClick={!lock ? onSelect : null}
-        onTap={!lock ? onSelect : null}
+        onClick={!lock ? handleSelect : null}
+        onTap={!lock ? handleSelect : null}
         onDblClick={!lock ? handleDblClick : null}
         onDblTap={!lock ? handleDblClick : null}
         onDragEnd={handleDragEnd}

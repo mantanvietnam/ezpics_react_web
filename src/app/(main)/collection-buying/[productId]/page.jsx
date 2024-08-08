@@ -44,7 +44,6 @@ const Product = (props) => {
     }
   }
   const token = Cookies.get("token");
-
   const showLoading = () => {
     setOpen(true);
     setLoading(true);
