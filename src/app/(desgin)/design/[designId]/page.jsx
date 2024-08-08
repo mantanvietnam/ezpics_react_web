@@ -11,13 +11,14 @@ import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
 import { useDispatch, useSelector } from "react-redux";
-import { selectLayer, setStageData } from "@/redux/slices/editor/stageSlice";
+import { selectLayer, setCurrentPage, setStageData, setTotalPages } from "@/redux/slices/editor/stageSlice";
 import { PanelsImage } from "./components/Panels/PanelsImage";
 import { PanelsText } from "./components/Panels/PanelsText";
 import PanelsCommon from "./components/Panels/PanelsCommon";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useFonts from "../../../../hooks/useLoadFont";
+import { calculateTotalPages, getLayersByPage } from "@/utils/editor"
 
 const Page = () => {
   const params = useParams();
@@ -28,7 +29,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
   const [locked, setLocked] = useState(true);
-  const { design, designLayers, initSize } = stageData;
+  const { design, designLayers, initSize, currentPage, totalPages } = stageData;
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
@@ -36,8 +37,6 @@ const Page = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
-  console.log("- selected layrt -- : ", stageData.selectedLayer);
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -74,7 +73,6 @@ const Page = () => {
         } else {
           sizeFactor = 2;
         }
-
         dispatch(
           setStageData({
             initSize: {
@@ -84,6 +82,19 @@ const Page = () => {
             design: response.data,
             designLayers: response.data.productDetail,
           })
+        );
+        //Lấy ra page đầu tiên
+        const pageLayers = getLayersByPage(response.data.productDetail, 0)
+        const totalPages = calculateTotalPages(response.data.productDetail);
+
+        dispatch(
+          setCurrentPage({
+            page: 0,
+            pageLayers: pageLayers
+          })
+        );
+        dispatch(
+          setTotalPages(totalPages)
         );
       }
     } catch (error) {
@@ -97,6 +108,9 @@ const Page = () => {
 
   const checkDeselect = (e) => {
     const clickedOnEmpty = e.target === e.target.getStage();
+    console.log('🚀 ~ Page ~ currentPage:', currentPage)
+    console.log('🚀 ~ Page ~ totalPages:', totalPages)
+
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
@@ -243,7 +257,7 @@ const Page = () => {
                       height={initSize.height}
                     />
 
-                    {designLayers.map((layer) => {
+                    {currentPage?.pageLayers.map((layer) => {
                       if (layer.content?.type === "image") {
                         return (
                           <ImageLayer

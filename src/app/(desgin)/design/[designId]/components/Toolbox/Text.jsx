@@ -7,7 +7,7 @@ import { useAppSelector } from "@/hooks/hook";
 import Image from "next/image";
 import images from "public/images/index2";
 import { useSelector, useDispatch } from "react-redux";
-import { addLayerImage } from "@/redux/slices/editor/stageSlice";
+import { addLayerImage, updatePageLayerText } from "@/redux/slices/editor/stageSlice";
 import "@/styles/newloading.css";
 
 async function LoadFonts(fonts) {
@@ -71,6 +71,7 @@ export default function Text() {
   const [loading, setLoading] = useState(false);
 
   const stageData = useSelector((state) => state.stage.stageData);
+  const { currentPage } = stageData
   const dispatch = useDispatch();
   useEffect(() => {
     setLoading(true);
@@ -116,10 +117,12 @@ export default function Text() {
         color: "#333333",
         size: "10px",
         font: defaultFont.name,
+        page: currentPage.page
       });
 
       if (res.data.code === 1) {
         dispatch(addLayerImage(res.data.data));
+        dispatch(updatePageLayerText(res.data.data))
       } else {
         console.error("Failed to add text layer:", res.data);
       }
@@ -142,8 +145,10 @@ export default function Text() {
           color: item.content.color,
           size: "8px",
           font: item.content.font,
+          page: currentPage.page
         });
         dispatch(addLayerImage(res.data.data));
+        dispatch(updatePageLayerText(res.data.data))
       } catch (error) {
         console.log(error);
       }

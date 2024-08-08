@@ -5,7 +5,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
-import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
+import { addLayerImage, addLayerText, updatePageLayer } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
 import "@/styles/newloading.css";
 import Image from "next/image";
@@ -16,6 +16,7 @@ const Photos = () => {
   const [loading, setLoading] = useState(true);
 
   const stageData = useSelector((state) => state.stage.stageData);
+  const { currentPage } = stageData
   const dispatch = useDispatch();
 
   const fetchData = async () => {
@@ -40,16 +41,16 @@ const Photos = () => {
   //B1: Call api tạo layer image
   //B2: Cập nhât redux để nó load lại state
   const handleAddPhoto = (item) => {
-    console.log(item);
     const addLayer = async () => {
       try {
         const res = await addLayerImageUrlAPI({
           idproduct: stageData.design.id,
           token: checkTokenCookie(),
           imageUrl: item.link,
-          page: 0,
+          page: currentPage.page,
         });
         dispatch(addLayerText(res.data));
+        dispatch(updatePageLayer(res.data));
       } catch (error) {
         console.log(error);
       }
