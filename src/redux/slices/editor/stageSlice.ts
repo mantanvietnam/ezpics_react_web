@@ -162,7 +162,7 @@ const stageSlice = createSlice({
     },
     selectLayerTool: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload;
-      const designLayers = [...state.stageData.designLayers];
+      const designLayers = [...state.stageData.currentPage.pageLayers];
 
       // Save the original sort order if not already saved
       designLayers.forEach(layer => {
@@ -171,40 +171,47 @@ const stageSlice = createSlice({
         }
       });
 
-      // Find the selected layer and move it to the top
+      // Find the selected layer in currentPage.pageLayers
       const selectedLayerIndex = designLayers.findIndex(layer => layer.id === id);
       if (selectedLayerIndex !== -1) {
         const selectedLayer = designLayers[selectedLayerIndex];
 
-        // Remove the selected layer from its current position and add it to the end
+        // Remove the selected layer from its current position
         designLayers.splice(selectedLayerIndex, 1);
-        selectedLayer.sort = 0; // Move to top
-        designLayers.unshift(selectedLayer); // Add to the beginning of the array
+        // Set it to the top with the highest sort value
+        selectedLayer.sort = designLayers.length + 1; // Move it to the top by assigning the highest sort value
+        designLayers.push(selectedLayer); // Add it to the end of the array
 
         // Update the sort order for all layers
         designLayers.forEach((layer, index) => {
-          layer.sort = index;
+          layer.sort = designLayers.length - index; // Highest sort value at the top
         });
 
-        state.stageData.designLayers = designLayers;
+        // Update the state
+        state.stageData.currentPage.pageLayers = designLayers;
         state.stageData.selectedLayer = selectedLayer;
+
+        // Optionally, if you need to reflect these changes in designLayers as well
+        state.stageData.designLayers = designLayers;
       }
     },
 
     deselectLayerTool: (state) => {
       // Restore the original sort order of layers
-      const designLayers = state.stageData.designLayers.map((layer: any) => ({
+      const designLayers = state.stageData.currentPage.pageLayers.map((layer: any) => ({
         ...layer,
-        selected: false,
+        selected: false, // Unselect all layers
         sort: layer.originalSort !== undefined ? layer.originalSort : layer.sort, // Restore to original sort or keep current if undefined
       }));
 
       // Sort layers back to their original order
-      designLayers.sort((a: any, b: any) => a.sort - b.sort);
+      designLayers.sort((a: any, b: any) => b.sort - a.sort); // Sort in descending order so highest sort values are at the top
 
-      state.stageData.designLayers = designLayers;
+      // Update the state with the modified layers
+      state.stageData.currentPage.pageLayers = designLayers;
       state.stageData.selectedLayer = {};
     },
+
 
     moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(

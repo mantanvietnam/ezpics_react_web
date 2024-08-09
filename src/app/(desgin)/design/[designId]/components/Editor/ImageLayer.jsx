@@ -1,10 +1,20 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { Image, Transformer } from "react-konva";
 import useImage from "use-image";
 import { useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 import GuideLines from "./GuideLines";
+import {
+  deselectLayerTool,
+  selectLayerTool,
+} from "@/redux/slices/editor/stageSlice";
 
 export default function ImageLayer(props) {
   const {
@@ -217,23 +227,30 @@ export default function ImageLayer(props) {
     setShowLine(true); // Show lines while dragging
   };
 
-  const handleClickOutside = (e) => {
-    if (
-      shapeRef.current &&
-      !shapeRef.current.getStage().getIntersection({
-        x: e.clientX,
-        y: e.clientY,
-      })
-    ) {
-      setLocalIsSelected(false);
-      setShowLine(false); // Hide lines when clicking outside
-    }
-  };
+  const handleClickOutside = useCallback(
+    (e) => {
+      if (
+        shapeRef.current &&
+        !(
+          e.clientX >= shapeRef.current.x() &&
+          e.clientX <= shapeRef.current.x() + shapeRef.current.width() &&
+          e.clientY >= shapeRef.current.y() &&
+          e.clientY <= shapeRef.current.y() + shapeRef.current.height()
+        )
+      ) {
+        setLocalIsSelected(false);
+        dispatch(deselectLayerTool());
+      }
+    },
+    [dispatch]
+  );
 
   const handleSelect = (e) => {
+    console.log("click inside");
     if (lock) return;
     onSelect(e);
     setLocalIsSelected(true);
+    dispatch(selectLayerTool({ id })); // Dispatch action to select layer
   };
 
   useEffect(() => {
@@ -242,7 +259,7 @@ export default function ImageLayer(props) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <>
