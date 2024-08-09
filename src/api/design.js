@@ -54,3 +54,11 @@ export const updateDesign = async (data) => {
   );
   return response.data;
 };
+
+export const deletePageAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/deletePageLayerAPI",
+    data
+  );
+  return response.data;
+};
