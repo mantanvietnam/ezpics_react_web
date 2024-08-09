@@ -52,6 +52,7 @@ export default function Customize() {
   const [categoryList, setCategoryList] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOptionDisplay, setSelectedOptionDisplay] = useState("");
+  const [selectedOptionShow, setSelectedOptionShow] = useState("");
   const [selectedFilesBackground, setSelectedFilesBackground] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [listWarehouse, setListWarehouse] = useState([]);
@@ -139,10 +140,20 @@ export default function Customize() {
     handleChange("status", event.target.value);
   };
 
+  const handleSelectChangeStatusShow = (event) => {
+    setSelectedOptionShow(event.target.value);
+    handleChange("display", event.target.value);
+  };
+
   const optionsDisplay = [
     { value: "", label: "Chọn trạng thái" },
     { value: "1", label: "Đã hoàn thành" },
     { value: "0", label: "Đang chỉnh sửa" },
+  ];
+
+  const optionsShow = [
+    { value: 0, label: "Riêng tư" },
+    { value: 1, label: "Công khai" },
   ];
 
   const categories = categoryList.map((category) => ({
@@ -263,6 +274,21 @@ export default function Customize() {
                     onChange={handleSelectChangeStatusDisplay}
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     {optionsDisplay.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block">
+                    Chế độ hiển thị
+                  </label>
+                  <select
+                    value={selectedOptionShow}
+                    onChange={handleSelectChangeStatusShow}
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    {optionsShow.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
