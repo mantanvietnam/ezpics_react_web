@@ -25,7 +25,6 @@ export default function AuthorInfo(props) {
             />
           </div>
 
-
           <div className="flex flex-col gap-2">
             <div className="text-lg font-semibold">{user?.name}</div>
             <div className="text-sm">{user?.email}</div>
@@ -79,12 +78,6 @@ export default function AuthorInfo(props) {
               Số lượng đã bán:{" "}
               <span className="text-red-500">{user?.quantitySell}</span>
             </div>
-            <div className="text-sm">
-              Thành tiền:{" "}
-              <span className="text-red-500">{user?.sellingMoney}</span>
-            </div>
-          </div>
-          <div className="">
             <div className="text-sm">
               Ngày tạo: <span className="text-red-500">{formattedDate}</span>
             </div>

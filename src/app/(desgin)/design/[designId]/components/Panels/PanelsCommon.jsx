@@ -148,7 +148,6 @@ const CommonAlign = ({ maxPositions }) => {
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
-        ...selectedLayer.content,
         postion_left: 0.1,
       };
 
@@ -162,7 +161,6 @@ const CommonAlign = ({ maxPositions }) => {
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
-        ...selectedLayer.content,
         postion_left: maxLeft - 0.1,
       };
 
@@ -176,7 +174,6 @@ const CommonAlign = ({ maxPositions }) => {
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
-        ...selectedLayer.content,
         postion_left: centerX,
       };
 
@@ -190,7 +187,6 @@ const CommonAlign = ({ maxPositions }) => {
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
-        ...selectedLayer.content,
         postion_top: 0.1,
       };
 
@@ -204,7 +200,6 @@ const CommonAlign = ({ maxPositions }) => {
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
-        ...selectedLayer.content,
         postion_top: centerY,
       };
 
@@ -218,7 +213,6 @@ const CommonAlign = ({ maxPositions }) => {
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
-        ...selectedLayer.content,
         postion_top: maxTop,
       };
 
