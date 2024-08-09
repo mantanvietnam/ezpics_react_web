@@ -293,7 +293,7 @@ export default function TextLayer(props) {
         // Kích hoạt khi click nằm ngoài container và ngoài layer
         if (clickInsideContainer && clickOutsideLayer) {
           setLocalIsSelected(false);
-          dispatch(deselectLayerTool());
+          // dispatch(deselectLayerTool());
         }
       }
     },

@@ -179,7 +179,7 @@ const stageSlice = createSlice({
         // Remove the selected layer from its current position
         designLayers.splice(selectedLayerIndex, 1);
         // Set it to the top with the highest sort value
-        selectedLayer.sort = designLayers.length; // Move it to the top by assigning the highest sort value
+        selectedLayer.sort = designLayers.length + 1; // Move it to the top by assigning the highest sort value
         designLayers.push(selectedLayer); // Add it to the end of the array
 
         // Update the sort order for all layers
