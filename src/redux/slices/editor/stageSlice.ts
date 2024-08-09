@@ -179,7 +179,7 @@ const stageSlice = createSlice({
         // Remove the selected layer from its current position
         designLayers.splice(selectedLayerIndex, 1);
         // Set it to the top with the highest sort value
-        selectedLayer.sort = designLayers.length + 1; // Move it to the top by assigning the highest sort value
+        selectedLayer.sort = designLayers.length; // Move it to the top by assigning the highest sort value
         designLayers.push(selectedLayer); // Add it to the end of the array
 
         // Update the sort order for all layers
@@ -357,9 +357,9 @@ const stageSlice = createSlice({
         state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
-    deletePage: (state, action: PayloadAction< number >) => {
+    deletePage: (state, action: PayloadAction<number>) => {
       state.stageData.designLayers = state.stageData.designLayers.filter((layer: any) => layer.content.page !== action.payload);
-        // Điều chỉnh `page` của các layer còn lại
+      // Điều chỉnh `page` của các layer còn lại
       state.stageData.designLayers = state.stageData.designLayers.map(
         (layer: any) => {
           if (layer.content.page > action.payload) {

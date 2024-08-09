@@ -1,7 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Text, Transformer } from "react-konva";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import {
+  deselectLayerTool,
+  selectLayerTool,
+} from "@/redux/slices/editor/stageSlice";
 
 export default function TextLayer(props) {
   const {
@@ -263,22 +267,45 @@ export default function TextLayer(props) {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
   }, [isSelected, isSelectedFromToolbox]);
 
-  const handleClickOutside = (e) => {
-    if (
-      shapeRef.current &&
-      !shapeRef.current.getStage().getIntersection({
-        x: e.clientX,
-        y: e.clientY,
-      })
-    ) {
-      setLocalIsSelected(false);
-    }
-  };
+  const handleClickOutside = useCallback(
+    (e) => {
+      if (containerRef.current && shapeRef.current) {
+        // Lấy tọa độ click
+        const { clientX: clickX, clientY: clickY } = e;
+
+        // Tính toán kích thước và vị trí của container
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const layerRect = shapeRef.current.getClientRect();
+
+        // Kiểm tra nếu click nằm trong containerRef và ngoài shapeRef
+        const clickInsideContainer =
+          clickX >= containerRect.left &&
+          clickX <= containerRect.right &&
+          clickY >= containerRect.top &&
+          clickY <= containerRect.bottom;
+
+        const clickOutsideLayer = !(
+          clickX >= layerRect.left &&
+          clickX <= layerRect.right &&
+          clickY >= layerRect.top &&
+          clickY <= layerRect.bottom
+        );
+        // Kích hoạt khi click nằm ngoài container và ngoài layer
+        if (clickInsideContainer && clickOutsideLayer) {
+          setLocalIsSelected(false);
+          dispatch(deselectLayerTool());
+        }
+      }
+    },
+    [dispatch, containerRef, shapeRef]
+  );
 
   const handleSelect = (e) => {
+    console.log("click inside");
     if (lock) return;
     onSelect(e);
     setLocalIsSelected(true);
+    // dispatch(selectLayerTool({ id })); // Dispatch action to select layer
   };
 
   useEffect(() => {
