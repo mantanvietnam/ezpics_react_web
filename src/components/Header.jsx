@@ -479,7 +479,7 @@ const Header = ({ toggleNavbar }) => {
     },
     {
       label: (
-        <Link href={"/information"} class="list-item ">
+        <Link href={"/information"} className="list-item ">
           <p className="item-text">Sửa thông tin cá nhân</p>
         </Link>
       ),
@@ -817,11 +817,10 @@ const Header = ({ toggleNavbar }) => {
           )}
         </div>
         <div
-          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
-            isOnline
-              ? "bg-green-500 text-white opacity-0"
-              : "bg-red-500 text-white opacity-100"
-          } ${show ? "opacity-100" : "opacity-0"}`}
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline
+            ? "bg-green-500 text-white opacity-0"
+            : "bg-red-500 text-white opacity-100"
+            } ${show ? "opacity-100" : "opacity-0"}`}
           style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>
