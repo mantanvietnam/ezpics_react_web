@@ -58,6 +58,7 @@ const Layer = () => {
     }));
 
     dispatch(updateListLayers(updatedItems));
+    console.log("updatedItems", updatedItems);
   };
 
   const handleDeleteLayer = (layer) => {
@@ -294,7 +295,7 @@ const Layer = () => {
                                 : ""
                             }`}
                             onClick={() => {
-                              dispatch(selectLayer({ id: layer.id }));
+                              handleLayerClick(layer.id);
                             }}>
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />
