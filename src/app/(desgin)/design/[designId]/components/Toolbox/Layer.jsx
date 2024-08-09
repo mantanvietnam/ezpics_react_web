@@ -295,7 +295,7 @@ const Layer = () => {
                                 : ""
                             }`}
                             onClick={() => {
-                              handleLayerClick(layer.id);
+                              dispatch(selectLayer({ id: layer.id }));
                             }}>
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />

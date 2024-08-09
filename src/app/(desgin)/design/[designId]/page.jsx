@@ -299,6 +299,7 @@ const Page = () => {
                             onMaxPositionUpdate={handleMaxPositionUpdate}
                             isDraggable={!locked} // Only allow dragging when unlocked
                             stageRef={stageRef}
+                            containerRef={containerRef}
                           />
                         );
                       } else if (layer.content?.type === "text") {

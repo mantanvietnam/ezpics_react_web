@@ -27,6 +27,7 @@ export default function ImageLayer(props) {
     onMaxPositionUpdate,
     isTransformerVisible,
     stageRef,
+    containerRef,
   } = props;
   const {
     postion_left,
@@ -181,8 +182,9 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
-        }vw`,
+      width: `${
+        (e.target.width() * e.target.scaleX() * 100) / designSize.width
+      }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -225,25 +227,38 @@ export default function ImageLayer(props) {
     setImageProps((prev) => ({ ...prev, x: newX, y: newY }));
     setShowLine(true); // Show lines while dragging
   };
-
   const handleClickOutside = useCallback(
     (e) => {
-      if (
-        shapeRef.current &&
-        !(
-          e.clientX >= shapeRef.current.x() &&
-          e.clientX <= shapeRef.current.x() + shapeRef.current.width() &&
-          e.clientY >= shapeRef.current.y() &&
-          e.clientY <= shapeRef.current.y() + shapeRef.current.height()
-        )
-      ) {
-        setLocalIsSelected(false);
-        dispatch(deselectLayerTool());
+      if (containerRef.current && shapeRef.current) {
+        // Lấy tọa độ click
+        const { clientX: clickX, clientY: clickY } = e;
+
+        // Tính toán kích thước và vị trí của container
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const layerRect = shapeRef.current.getClientRect();
+
+        // Kiểm tra nếu click nằm trong containerRef và ngoài shapeRef
+        const clickInsideContainer =
+          clickX >= containerRect.left &&
+          clickX <= containerRect.right &&
+          clickY >= containerRect.top &&
+          clickY <= containerRect.bottom;
+
+        const clickOutsideLayer = !(
+          clickX >= layerRect.left &&
+          clickX <= layerRect.right &&
+          clickY >= layerRect.top &&
+          clickY <= layerRect.bottom
+        );
+        // Kích hoạt khi click nằm ngoài container và ngoài layer
+        if (clickInsideContainer && clickOutsideLayer) {
+          setLocalIsSelected(false);
+          dispatch(deselectLayerTool());
+        }
       }
     },
-    [dispatch]
+    [dispatch, containerRef, shapeRef]
   );
-
   const handleSelect = (e) => {
     console.log("click inside");
     if (lock) return;
