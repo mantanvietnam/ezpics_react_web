@@ -253,7 +253,7 @@ export default function ImageLayer(props) {
         // Kích hoạt khi click nằm ngoài container và ngoài layer
         if (clickInsideContainer && clickOutsideLayer) {
           setLocalIsSelected(false);
-          dispatch(deselectLayerTool());
+          // dispatch(deselectLayerTool());
         }
       }
     },
@@ -264,7 +264,7 @@ export default function ImageLayer(props) {
     if (lock) return;
     onSelect(e);
     setLocalIsSelected(true);
-    dispatch(selectLayerTool({ id })); // Dispatch action to select layer
+    // dispatch(selectLayerTool({ id })); // Dispatch action to select layer
   };
 
   useEffect(() => {

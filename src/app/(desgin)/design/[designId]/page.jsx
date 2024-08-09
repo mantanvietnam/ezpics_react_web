@@ -293,7 +293,7 @@ const Page = () => {
                             }
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              dispatch(selectLayerTool({ id: layer.id }));
+                              dispatch(selectLayer({ id: layer.id }));
                             }}
                             isTransformerVisible={isTransformerVisible}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
@@ -318,7 +318,7 @@ const Page = () => {
                             }
                             onSelect={() => {
                               setSelectedId(layer.id);
-                              dispatch(selectLayerTool({ id: layer.id }));
+                              dispatch(selectLayer({ id: layer.id }));
                             }}
                             isTransformerVisible={isTransformerVisible}
                             containerRef={containerRef}
