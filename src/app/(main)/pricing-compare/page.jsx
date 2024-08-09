@@ -44,7 +44,7 @@ const Page = () => {
 
   return (
     <div className="w-full">
-      <h1 className="min-h-[4%] mobile:min-h-[6%] md:min-h-[10%] xl:min-h-[20%] flex justify-center text-xl mobile:text-2xl xl:text-5xl font-bold pt-[8%] bg-radial-gradient whitespace-nowra">
+      <h1 className="min-h-[4%] mobile:min-h-[6%] md:min-h-[12%] xl:min-h-[14%] flex justify-center text-xl mobile:text-2xl xl:text-5xl font-bold pt-[6%] bg-radial-gradient whitespace-nowra">
         Thiết kế
         <span
           className="px-2.5 text-transparent"
@@ -57,7 +57,7 @@ const Page = () => {
         với gói đăng ký phù hợp
       </h1>
 
-      <div className="md:flex flex-row pt-[6%] px-[2%] xl:px-[5%]">
+      <div className="md:flex flex-row pt-[2%] px-[2%] xl:px-[5%]">
         <div className="w-full">
           <p className="text-base pb-2 w-[90%]">
             <strong className="font-bold">Chu kì: </strong>
@@ -83,7 +83,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row pt-[6%] px-[2%] xl:px-[5%]">
+      <div className="flex flex-col md:flex-row pt-[2%] px-[2%] xl:px-[5%]">
         <div className="w-full md:w-1/3 mb-3">
           <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="h-10 flex">
@@ -234,8 +234,8 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="w-full h-30 border-t border-[rgb(225,228,231)] mobile:flex justify-between items-center py-[3%] pl-[5%] mobile:px-[5%] mt-5 mobile:mt-10">
-        <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3 pb-3">
+      <div className="w-full h-30 border-t border-[rgb(225,228,231)] mobile:flex justify-between items-center py-[3%] pl-[5%] mobile:px-[5%] mt-5 mobile:mt-10 mb-[50px] mobile:mb-[120px]">
+        <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3 pb-3 cursor-default">
           <GlobalOutlined className="text-xl" />
           <p className="pr-[2%] pl-[2%] my-3 text-[rgb(13,18,22)] text-sm">
             Tiếng Việt (Việt Nam)

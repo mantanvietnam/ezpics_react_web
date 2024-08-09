@@ -98,7 +98,9 @@ export default function Login() {
   }
 
   const handleSubmitLogin = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
     setIsLoading(true);
     setLoginError("");
 
@@ -272,6 +274,11 @@ export default function Login() {
                         placeholder="Số điện thoại"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSubmitLogin(e);
+                          }
+                        }}
                       />
                       {errors?.phone && (
                         <p className={styles.error}>{errors?.phone}</p>
@@ -289,6 +296,11 @@ export default function Login() {
                         placeholder="Mật khẩu"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSubmitLogin(e);
+                          }
+                        }}
                       />
                       {errors?.password && (
                         <p className={styles.error}>{errors?.password}</p>

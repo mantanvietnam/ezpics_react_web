@@ -12,9 +12,6 @@ export default function Page({ params }) {
   const [otherData, setOtherData] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  console.log(params);
-
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);

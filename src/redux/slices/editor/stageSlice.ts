@@ -74,8 +74,8 @@ const stageSlice = createSlice({
       const maxSort =
         state.stageData.designLayers.length > 0
           ? Math.max(
-              ...state.stageData.designLayers.map((layer: any) => layer.sort)
-            )
+            ...state.stageData.designLayers.map((layer: any) => layer.sort)
+          )
           : 0;
 
       const newLayer = {
@@ -96,8 +96,8 @@ const stageSlice = createSlice({
       const maxSort =
         state.stageData.currentPage.pageLayers.length > 0
           ? Math.max(
-              ...state.stageData.currentPage.pageLayers.map((layer: any) => layer.sort)
-            )
+            ...state.stageData.currentPage.pageLayers.map((layer: any) => layer.sort)
+          )
           : 0;
 
       // Tạo phần tử mới với giá trị sort được cập nhật
@@ -134,18 +134,18 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: { ...layer.content, ...action.payload.data },
-              }
+              ...layer,
+              content: { ...layer.content, ...action.payload.data },
+            }
             : layer
       );
       state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: { ...layer.content, ...action.payload.data },
-              }
+              ...layer,
+              content: { ...layer.content, ...action.payload.data },
+            }
             : layer
       );
       const { history, historyStep } = addToHistory(state);
@@ -160,66 +160,52 @@ const stageSlice = createSlice({
         state.stageData.selectedLayer = { ...layer };
       }
     },
-    flipLayerHorizontally: (state, action: PayloadAction<{ id: string }>) => {
-      state.stageData.designLayers = state.stageData.designLayers.map(
-        (layer: any) =>
-          layer.id === action.payload.id
-            ? {
-                ...layer,
-                content: {
-                  ...layer.content,
-                  scaleX: -layer.content.scaleX || -1,
-                },
-              }
-            : layer
-      );
-      //updatre
-      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
-        (layer: any) =>
-          layer.id === action.payload.id
-            ? {
-                ...layer,
-                content: {
-                  ...layer.content,
-                  scaleX: -layer.content.scaleX || -1,
-                },
-              }
-            : layer
-      );
-      const { history, historyStep } = addToHistory(state);
-      state.history = history;
-      state.historyStep = historyStep;
-    },
-    flipLayerVertically: (state, action: PayloadAction<{ id: string }>) => {
-      state.stageData.designLayers = state.stageData.designLayers.map(
-        (layer: any) =>
-          layer.id === action.payload.id
-            ? {
-                ...layer,
-                content: {
-                  ...layer.content,
-                  scaleY: -layer.content.scaleY || -1,
-                },
-              }
-            : layer
-      );
+    selectLayerTool: (state, action: PayloadAction<{ id: string }>) => {
+      const { id } = action.payload;
+      const designLayers = [...state.stageData.designLayers];
 
-      state.stageData.currentPage.pageLayers = state.stageData.currentPage.pageLayers.map(
-        (layer: any) =>
-          layer.id === action.payload.id
-            ? {
-                ...layer,
-                content: {
-                  ...layer.content,
-                  scaleY: -layer.content.scaleY || -1,
-                },
-              }
-            : layer
-      );
-      const { history, historyStep } = addToHistory(state);
-      state.history = history;
-      state.historyStep = historyStep;
+      // Save the original sort order if not already saved
+      designLayers.forEach(layer => {
+        if (layer.originalSort === undefined) {
+          layer.originalSort = layer.sort;
+        }
+      });
+
+      // Find the selected layer and move it to the top
+      const selectedLayerIndex = designLayers.findIndex(layer => layer.id === id);
+      if (selectedLayerIndex !== -1) {
+        const selectedLayer = designLayers[selectedLayerIndex];
+
+        // Remove the selected layer from its current position and add it to the end
+        designLayers.splice(selectedLayerIndex, 1);
+        selectedLayer.sort = 0; // Move to top
+        designLayers.unshift(selectedLayer); // Add to the beginning of the array
+
+        // Update the sort order for all layers
+        designLayers.forEach((layer, index) => {
+          layer.sort = index;
+        });
+
+        state.stageData.designLayers = designLayers;
+        state.stageData.selectedLayer = selectedLayer;
+      }
     },
+
+    deselectLayerTool: (state) => {
+      // Restore the original sort order of layers
+      const designLayers = state.stageData.designLayers.map((layer: any) => ({
+        ...layer,
+        selected: false,
+        sort: layer.originalSort !== undefined ? layer.originalSort : layer.sort, // Restore to original sort or keep current if undefined
+      }));
+
+      // Sort layers back to their original order
+      designLayers.sort((a: any, b: any) => a.sort - b.sort);
+
+      state.stageData.designLayers = designLayers;
+      state.stageData.selectedLayer = {};
+    },
+
     moveLayerToFinal: (state, action: PayloadAction<{ id: string }>) => {
       const layerIndex = state.stageData.designLayers.findIndex(
         (layer: any) => layer.id === action.payload.id
@@ -410,13 +396,13 @@ export const {
   removeLayer,
   updateLayer,
   selectLayer,
+  selectLayerTool,
+  deselectLayerTool,
   updateListLayers,
   moveLayerToFinal,
   moveLayerToFront,
   sendLayerBack,
   bringLayerForward,
-  flipLayerHorizontally,
-  flipLayerVertically,
   addLayerText,
   setCurrentPage,
   setTotalPages,
