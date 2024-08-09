@@ -1,20 +1,10 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Image, Transformer } from "react-konva";
 import useImage from "use-image";
 import { useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 import GuideLines from "./GuideLines";
-import {
-  deselectLayerTool,
-  selectLayerTool,
-} from "@/redux/slices/editor/stageSlice";
 
 export default function ImageLayer(props) {
   const {
@@ -26,8 +16,6 @@ export default function ImageLayer(props) {
     onSelect,
     onMaxPositionUpdate,
     isTransformerVisible,
-    stageRef,
-    containerRef,
   } = props;
   const {
     postion_left,
@@ -48,9 +36,12 @@ export default function ImageLayer(props) {
   const dispatch = useDispatch();
   const shapeRef = useRef();
   const trRef = useRef();
+  const containerRef = useRef(); // Ref for the container element
   const [image] = useImage(data.banner, "anonymous");
+  const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
+  const [transformerVisible, setTransformerVisible] = useState(false);
 
   useEffect(() => {
     if (shapeRef.current && image) {
@@ -165,15 +156,14 @@ export default function ImageLayer(props) {
   }, [lock, postionX, postionY]);
 
   const handleDragEnd = (e) => {
-    if (lock) return; // Prevent dragging if locked
+    if (lock) return;
 
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
     };
     dispatch(updateLayer({ id: id, data: data }));
-    setShowLine(false); // Hide lines after drag end
-    setLocalIsSelected(true); // Ensure the layer remains selected after dragging
+    setShowLine(false);
   };
 
   const handleTransformEnd = (e) => {
@@ -190,9 +180,12 @@ export default function ImageLayer(props) {
     dispatch(updateLayer({ id: id, data: data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
-    setShowLine(false); // Hide lines after transform end
-    setLocalIsSelected(true); // Ensure the layer remains selected after transformation
+    setShowLine(false);
   };
+
+  useEffect(() => {
+    setIsSelectLayer(!lock && Boolean(status));
+  }, [lock, status]);
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
@@ -225,58 +218,28 @@ export default function ImageLayer(props) {
     const newY = e.target.y();
 
     setImageProps((prev) => ({ ...prev, x: newX, y: newY }));
-    setShowLine(true); // Show lines while dragging
+    setShowLine(true);
   };
-  const handleClickOutside = useCallback(
-    (e) => {
-      if (containerRef.current && shapeRef.current) {
-        // Lấy tọa độ click
-        const { clientX: clickX, clientY: clickY } = e;
 
-        // Tính toán kích thước và vị trí của container
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const layerRect = shapeRef.current.getClientRect();
-
-        // Kiểm tra nếu click nằm trong containerRef và ngoài shapeRef
-        const clickInsideContainer =
-          clickX >= containerRect.left &&
-          clickX <= containerRect.right &&
-          clickY >= containerRect.top &&
-          clickY <= containerRect.bottom;
-
-        const clickOutsideLayer = !(
-          clickX >= layerRect.left &&
-          clickX <= layerRect.right &&
-          clickY >= layerRect.top &&
-          clickY <= layerRect.bottom
-        );
-        // Kích hoạt khi click nằm ngoài container và ngoài layer
-        if (clickInsideContainer && clickOutsideLayer) {
-          setLocalIsSelected(false);
-          // dispatch(deselectLayerTool());
-        }
-      }
-    },
-    [dispatch, containerRef, shapeRef]
-  );
-  const handleSelect = (e) => {
-    console.log("click inside");
-    if (lock) return;
-    onSelect(e);
-    setLocalIsSelected(true);
-    // dispatch(selectLayerTool({ id })); // Dispatch action to select layer
+  const handleClickOutside = (e) => {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(e.target)
+    ) {
+      setLocalIsSelected(false);
+      setTransformerVisible(false);
+    }
   };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [handleClickOutside]);
+  }, []);
 
   return (
-    <>
+    <div ref={containerRef} style={{ position: 'relative' }}>
       <Image
         ref={shapeRef}
         id={id}
@@ -292,17 +255,16 @@ export default function ImageLayer(props) {
         scaleY={scaleY}
         draggable={!lock}
         visible={Boolean(status)}
-        onClick={handleSelect}
-        onTap={handleSelect}
+        onClick={lock ? null : onSelect}
+        onTap={lock ? null : onSelect}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
         onDragMove={handleDragMove}
       />
-      {isTransformerVisible && !lock && localIsSelected && (
+      {isTransformerVisible && !lock && localIsSelected && transformerVisible && (
         <Transformer
           ref={trRef}
           flipEnabled={false}
-          key={id}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
             if (
@@ -335,7 +297,7 @@ export default function ImageLayer(props) {
           attachTo={shapeRef.current}
         />
       )}
-      {/* {isTransformerVisible && !lock && showLine && (
+      {isTransformerVisible && !lock && showLine && (
         <GuideLines
           x={imageProps.x}
           y={imageProps.y}
@@ -344,7 +306,7 @@ export default function ImageLayer(props) {
           stageWidth={designSize.width}
           stageHeight={designSize.height}
         />
-      )} */}
-    </>
+      )}
+    </div>
   );
 }
