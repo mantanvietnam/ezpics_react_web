@@ -171,9 +171,8 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        (e.target.width() * e.target.scaleX() * 100) / designSize.width
-      }vw`,
+      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
+        }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -304,7 +303,7 @@ export default function ImageLayer(props) {
           attachTo={shapeRef.current}
         />
       )}
-      {isTransformerVisible && !lock && showLine && (
+      {/* {isTransformerVisible && !lock && showLine && (
         <GuideLines
           x={imageProps.x}
           y={imageProps.y}
@@ -313,7 +312,7 @@ export default function ImageLayer(props) {
           stageWidth={designSize.width}
           stageHeight={designSize.height}
         />
-      )}
+      )} */}
     </>
   );
 }

@@ -350,6 +350,28 @@ const stageSlice = createSlice({
         state.stageData.currentPage.pageLayers = updatedLayers;
       }
     },
+    deletePage: (state, action: PayloadAction< number >) => {
+      state.stageData.designLayers = state.stageData.designLayers.filter((layer: any) => layer.content.page !== action.payload);
+        // Điều chỉnh `page` của các layer còn lại
+      state.stageData.designLayers = state.stageData.designLayers.map(
+        (layer: any) => {
+          if (layer.content.page > action.payload) {
+            return {
+              ...layer,
+              content: {
+                ...layer.content,
+                page: layer.content.page - 1,
+              },
+            };
+          }
+          return layer;
+        }
+      );
+      // Giảm tổng số trang (nếu có lưu trữ)
+      if (state.stageData.totalPages) {
+        state.stageData.totalPages -= 1;
+      }
+    },
     undo: (state) => {
       if (state.historyStep > 0) {
         state.historyStep -= 1;
@@ -362,6 +384,9 @@ const stageSlice = createSlice({
         state.stageData = state.history[state.historyStep];
       }
     },
+    addPage: (state) => {
+      state.stageData.totalPages = state.stageData.totalPages + 1
+    }
   },
 });
 
@@ -385,5 +410,7 @@ export const {
   updatePageLayerText,
   undo,
   redo,
+  addPage,
+  deletePage
 } = stageSlice.actions;
 export default stageSlice.reducer;
