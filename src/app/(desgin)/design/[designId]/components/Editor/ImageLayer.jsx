@@ -41,7 +41,8 @@ export default function ImageLayer(props) {
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
-  const [transformerVisible, setTransformerVisible] = useState(false);
+  const [transformerVisible, setTransformerVisible] =
+    useState(isTransformerVisible);
 
   useEffect(() => {
     if (shapeRef.current && image) {
@@ -258,46 +259,43 @@ export default function ImageLayer(props) {
         onTransformEnd={handleTransformEnd}
         onDragMove={handleDragMove}
       />
-      {isTransformerVisible &&
-        !lock &&
-        localIsSelected &&
-        transformerVisible && (
-          <Transformer
-            ref={trRef}
-            flipEnabled={false}
-            anchorStyleFunc={(anchor) => {
-              anchor.cornerRadius(10);
-              if (
-                anchor.hasName("top-center") ||
-                anchor.hasName("bottom-center")
-              ) {
-                anchor.visible(false);
-                anchor.height(6);
-                anchor.offsetY(3);
-                anchor.width(30);
-                anchor.offsetX(15);
-              }
-              if (
-                anchor.hasName("middle-left") ||
-                anchor.hasName("middle-right")
-              ) {
-                anchor.visible(false);
-                anchor.height(30);
-                anchor.offsetY(15);
-                anchor.width(6);
-                anchor.offsetX(3);
-              }
-            }}
-            boundBoxFunc={(oldBox, newBox) => {
-              if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
-                return oldBox;
-              }
-              return newBox;
-            }}
-            attachTo={shapeRef.current}
-          />
-        )}
-      {isTransformerVisible && !lock && showLine && (
+      {!lock && localIsSelected && transformerVisible && (
+        <Transformer
+          ref={trRef}
+          flipEnabled={false}
+          anchorStyleFunc={(anchor) => {
+            anchor.cornerRadius(10);
+            if (
+              anchor.hasName("top-center") ||
+              anchor.hasName("bottom-center")
+            ) {
+              anchor.visible(false);
+              anchor.height(6);
+              anchor.offsetY(3);
+              anchor.width(30);
+              anchor.offsetX(15);
+            }
+            if (
+              anchor.hasName("middle-left") ||
+              anchor.hasName("middle-right")
+            ) {
+              anchor.visible(false);
+              anchor.height(30);
+              anchor.offsetY(15);
+              anchor.width(6);
+              anchor.offsetX(3);
+            }
+          }}
+          boundBoxFunc={(oldBox, newBox) => {
+            if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
+              return oldBox;
+            }
+            return newBox;
+          }}
+          attachTo={shapeRef.current}
+        />
+      )}
+      {/* {isTransformerVisible && !lock && showLine && (
         <GuideLines
           x={imageProps.x}
           y={imageProps.y}
@@ -306,7 +304,7 @@ export default function ImageLayer(props) {
           stageWidth={designSize.width}
           stageHeight={designSize.height}
         />
-      )}
+      )} */}
     </div>
   );
 }

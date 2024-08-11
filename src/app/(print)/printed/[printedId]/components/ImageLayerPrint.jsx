@@ -15,6 +15,7 @@ export default function ImageLayer(props) {
     rotate,
     scaleX,
     scaleY,
+    opacity,
   } = data;
 
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ export default function ImageLayer(props) {
         scaleX={scaleX}
         scaleY={scaleY}
         draggable={false}
+        opacity={opacity}
       />
     </>
   );
