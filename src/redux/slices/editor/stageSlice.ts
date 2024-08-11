@@ -113,7 +113,13 @@ const stageSlice = createSlice({
       ];
     },
     updateListLayers: (state, action: PayloadAction<any>) => {
+      // Cập nhật pageLayers với dữ liệu mới
       state.stageData.currentPage.pageLayers = action.payload;
+
+      // Cập nhật designLayers dựa trên pageLayers
+      state.stageData.designLayers = [...action.payload]; // Ví dụ đơn giản, có thể thay đổi theo logic của bạn
+
+      // Lưu vào history
       const { history, historyStep } = addToHistory(state);
       state.history = history;
       state.historyStep = historyStep;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { updateLayer } from "@/redux/slices/print/printSlice";
 
 export default function TextLayer(props) {
   const { data, designSize, id } = props;

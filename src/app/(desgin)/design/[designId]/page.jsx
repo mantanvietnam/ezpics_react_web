@@ -6,7 +6,7 @@ import Toolbox from "./components/Toolbox/Toolbox";
 import { useParams } from "next/navigation";
 import { getListLayerApi, saveListLayer } from "../../../../api/design";
 import { checkTokenCookie } from "@/utils";
-import { Stage, Layer } from "react-konva";
+import { Stage, Layer, Transformer } from "react-konva";
 import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
@@ -28,6 +28,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useFonts from "../../../../hooks/useLoadFont";
 import { calculateTotalPages, getLayersByPage } from "@/utils/editor";
+import { faSlack } from "@fortawesome/free-brands-svg-icons";
+import TransformerLayer from "./components/Editor/TransformerLayer";
 
 const Page = () => {
   const params = useParams();
@@ -114,12 +116,10 @@ const Page = () => {
   }, [designId]);
 
   const checkDeselect = (e) => {
-    const clickedOnEmpty = e.target === e.target.getStage();
-    console.log("🚀 ~ Page ~ currentPage:", currentPage);
-    console.log("🚀 ~ Page ~ totalPages:", totalPages);
-
-    if (clickedOnEmpty) {
-      setSelectedId(null);
+    setSelectedId(null);
+    if (transformerRef.current) {
+      transformerRef.current.nodes([]);
+      transformerRef.current.getLayer().batchDraw();
     }
   };
 
@@ -195,8 +195,27 @@ const Page = () => {
     }
   };
 
-  console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
-  console.log("🚀 ~ Layer ~ designLayers:", designLayers);
+  // console.log("🚀 ~ Layer ~ selected:", stageData?.selectedLayer?.id);
+  // console.log("🚀 ~ Layer ~ designLayers:", designLayers);
+
+  const transformerRef = useRef(null); // Ref for Transformer
+  const shapeRefs = useRef({});
+
+  const [shapeRef, setShapeRef] = useState(null);
+
+  const handleSelect = (id) => {
+    console.log("handleSelect");
+    setSelectedId(id);
+    dispatch(selectLayer({ id: id }));
+    setShapeRef(shapeRefs.current[id]);
+    console.log("shapeRefs.current[id]: ", shapeRefs.current[id]);
+    if (transformerRef.current && shapeRefs.current[id]) {
+      transformerRef.current.nodes([shapeRefs.current[id]]);
+      transformerRef.current.getLayer().batchDraw();
+    }
+  };
+
+  console.log("shapeRef:", shapeRef);
 
   return (
     <>
@@ -291,15 +310,18 @@ const Page = () => {
                             isSelectedFromToolbox={
                               layer.id === stageData?.selectedLayer?.id
                             }
-                            onSelect={() => {
-                              setSelectedId(layer.id);
-                              dispatch(selectLayer({ id: layer.id }));
-                            }}
+                            onSelect={() => handleSelect(layer.id)}
                             isTransformerVisible={isTransformerVisible}
                             onMaxPositionUpdate={handleMaxPositionUpdate}
                             isDraggable={!locked} // Only allow dragging when unlocked
                             stageRef={stageRef}
                             containerRef={containerRef}
+                            currentPage={currentPage}
+                            shapeRef={(ref) => {
+                              if (ref) {
+                                shapeRefs.current[layer.id] = ref;
+                              }
+                            }}
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -328,6 +350,9 @@ const Page = () => {
                         );
                       }
                     })}
+                    {isTransformerVisible && !locked && (
+                      <TransformerLayer shapeRef={shapeRef} id={selectedId} />
+                    )}
                   </Layer>
                 </Stage>
               </div>
