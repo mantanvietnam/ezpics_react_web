@@ -14,6 +14,9 @@ export default function TextLayer(props) {
     indam,
     innghieng,
     gachchan,
+    text_align,
+    gianchu,
+    giandong,
   } = data;
 
   const dispatch = useDispatch();
@@ -46,6 +49,12 @@ export default function TextLayer(props) {
   const sizeValue = parseFloat(size?.replace("vw", ""));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
+  // Width
+  const widthValue = parseFloat(
+    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  );
+  const width = designSize.width * (widthValue / 100);
+
   // Hàm để tạo giá trị fontStyle dựa trên các cờ
   const getFontStyle = (indam, innghieng) => {
     let fontStyle = "";
@@ -75,12 +84,16 @@ export default function TextLayer(props) {
         text={textValue}
         x={positionX}
         y={positionY}
+        width={width}
         draggable={true}
         fill={data?.color}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
+        align={text_align}
+        letterSpacing={gianchu === "normal" ? 0 : parseFloat(gianchu)}
+        lineHeight={giandong === "normal" ? 1 : parseFloat(giandong)}
       />
     </>
   );
