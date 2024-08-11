@@ -1,11 +1,3 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
-import { Image } from "react-konva";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Image, Transformer } from "react-konva";
 import useImage from "use-image";
@@ -13,12 +5,8 @@ import { useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
 import GuideLines from "./GuideLines";
-import {
-  deselectLayerTool,
-  selectLayerTool,
-} from "@/redux/slices/editor/stageSlice";
 
-const ImageLayer = (props) => {
+export default function ImageLayer(props) {
   const {
     data,
     designSize,
@@ -28,8 +16,6 @@ const ImageLayer = (props) => {
     onSelect,
     onMaxPositionUpdate,
     isTransformerVisible,
-    stageRef,
-    containerRef,
   } = props;
   const {
     postion_left,
@@ -47,15 +33,15 @@ const ImageLayer = (props) => {
     saturate,
   } = data;
 
-  console.log("shapeRef.current ImageLayer: ", shapeRef?.current);
-
   const dispatch = useDispatch();
   const shapeRef = useRef();
   const trRef = useRef();
+  const containerRef = useRef(); // Ref for the container element
   const [image] = useImage(data.banner, "anonymous");
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
+  const [transformerVisible, setTransformerVisible] = useState(false);
 
   useEffect(() => {
     if (shapeRef.current && image) {
@@ -127,6 +113,13 @@ const ImageLayer = (props) => {
     centerPositionY,
     onMaxPositionUpdate,
   ]);
+
+  useEffect(() => {
+    if (localIsSelected) {
+      trRef.current?.nodes([shapeRef.current]);
+      trRef.current?.getLayer().batchDraw();
+    }
+  }, [localIsSelected]);
 
   useEffect(() => {
     if (shapeRef.current && image && image.width > 0 && image.height > 0) {
@@ -235,20 +228,12 @@ const ImageLayer = (props) => {
     }
   };
 
-  const handleSelect = (e) => {
-    if (lock) return;
-    onSelect(e);
-    setLocalIsSelected(true);
-    // dispatch(selectLayerTool({ id })); // Dispatch action to select layer
-  };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [handleClickOutside]);
+  }, []);
 
   return (
     <div ref={containerRef} style={{ position: "relative" }}>
@@ -312,7 +297,7 @@ const ImageLayer = (props) => {
             attachTo={shapeRef.current}
           />
         )}
-      {/* {isTransformerVisible && !lock && showLine && (
+      {isTransformerVisible && !lock && showLine && (
         <GuideLines
           x={imageProps.x}
           y={imageProps.y}
@@ -321,7 +306,7 @@ const ImageLayer = (props) => {
           stageWidth={designSize.width}
           stageHeight={designSize.height}
         />
-      )} */}
+      )}
     </div>
   );
-};
+}
