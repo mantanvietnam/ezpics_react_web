@@ -115,8 +115,8 @@ const Page = () => {
 
   const checkDeselect = (e) => {
     const clickedOnEmpty = e.target === e.target.getStage();
-    console.log("🚀 ~ Page ~ currentPage:", currentPage);
-    console.log("🚀 ~ Page ~ totalPages:", totalPages);
+    // console.log("🚀 ~ Page ~ currentPage:", currentPage);
+    // console.log("🚀 ~ Page ~ totalPages:", totalPages);
 
     if (clickedOnEmpty) {
       setSelectedId(null);
@@ -195,8 +195,8 @@ const Page = () => {
     }
   };
 
-  console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
-  console.log("🚀 ~ Layer ~ designLayers:", designLayers);
+  // console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
+  // console.log("🚀 ~ Layer ~ designLayers:", designLayers);
 
   return (
     <>
@@ -321,9 +321,9 @@ const Page = () => {
                               dispatch(selectLayer({ id: layer.id }));
                             }}
                             isTransformerVisible={isTransformerVisible}
-                            containerRef={containerRef}
                             stageRef={stageRef}
                             isDraggable={!locked}
+                            containerRef={containerRef}
                           />
                         );
                       }

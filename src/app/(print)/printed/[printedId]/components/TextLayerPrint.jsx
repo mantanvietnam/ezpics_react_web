@@ -17,6 +17,7 @@ export default function TextLayer(props) {
     text_align,
     gianchu,
     giandong,
+    rotate,
   } = data;
 
   const dispatch = useDispatch();
@@ -55,6 +56,9 @@ export default function TextLayer(props) {
   );
   const width = designSize.width * (widthValue / 100);
 
+  // Rotation
+  const rotationValue = parseFloat(rotate?.replace("deg", ""));
+
   // Hàm để tạo giá trị fontStyle dựa trên các cờ
   const getFontStyle = (indam, innghieng) => {
     let fontStyle = "";
@@ -86,6 +90,7 @@ export default function TextLayer(props) {
         y={positionY}
         width={width}
         draggable={true}
+        rotation={rotationValue}
         fill={data?.color}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}

@@ -37,7 +37,7 @@ const Footer = ({ containerRef }) => {
 
   const updateScale = (scale) => {
     if (containerRef?.current) {
-      const container = containerRef?.current;
+      const container = containerRef.current;
       container.style.transform = `scale(${scale})`;
       container.style.transformOrigin = "center"; // Set transform origin to center
       dispatch(setStageData({ ...stageData, scale }));
