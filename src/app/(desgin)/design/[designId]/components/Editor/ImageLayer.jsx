@@ -222,10 +222,7 @@ export default function ImageLayer(props) {
   };
 
   const handleClickOutside = (e) => {
-    if (
-      containerRef.current &&
-      !containerRef.current.contains(e.target)
-    ) {
+    if (containerRef.current && !containerRef.current.contains(e.target)) {
       setLocalIsSelected(false);
       setTransformerVisible(false);
     }
@@ -239,7 +236,7 @@ export default function ImageLayer(props) {
   }, []);
 
   return (
-    <div ref={containerRef} style={{ position: 'relative' }}>
+    <div ref={containerRef} style={{ position: "relative" }}>
       <Image
         ref={shapeRef}
         id={id}
@@ -261,42 +258,45 @@ export default function ImageLayer(props) {
         onTransformEnd={handleTransformEnd}
         onDragMove={handleDragMove}
       />
-      {isTransformerVisible && !lock && localIsSelected && transformerVisible && (
-        <Transformer
-          ref={trRef}
-          flipEnabled={false}
-          anchorStyleFunc={(anchor) => {
-            anchor.cornerRadius(10);
-            if (
-              anchor.hasName("top-center") ||
-              anchor.hasName("bottom-center")
-            ) {
-              anchor.visible(false);
-              anchor.height(6);
-              anchor.offsetY(3);
-              anchor.width(30);
-              anchor.offsetX(15);
-            }
-            if (
-              anchor.hasName("middle-left") ||
-              anchor.hasName("middle-right")
-            ) {
-              anchor.visible(false);
-              anchor.height(30);
-              anchor.offsetY(15);
-              anchor.width(6);
-              anchor.offsetX(3);
-            }
-          }}
-          boundBoxFunc={(oldBox, newBox) => {
-            if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
-              return oldBox;
-            }
-            return newBox;
-          }}
-          attachTo={shapeRef.current}
-        />
-      )}
+      {isTransformerVisible &&
+        !lock &&
+        localIsSelected &&
+        transformerVisible && (
+          <Transformer
+            ref={trRef}
+            flipEnabled={false}
+            anchorStyleFunc={(anchor) => {
+              anchor.cornerRadius(10);
+              if (
+                anchor.hasName("top-center") ||
+                anchor.hasName("bottom-center")
+              ) {
+                anchor.visible(false);
+                anchor.height(6);
+                anchor.offsetY(3);
+                anchor.width(30);
+                anchor.offsetX(15);
+              }
+              if (
+                anchor.hasName("middle-left") ||
+                anchor.hasName("middle-right")
+              ) {
+                anchor.visible(false);
+                anchor.height(30);
+                anchor.offsetY(15);
+                anchor.width(6);
+                anchor.offsetX(3);
+              }
+            }}
+            boundBoxFunc={(oldBox, newBox) => {
+              if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
+                return oldBox;
+              }
+              return newBox;
+            }}
+            attachTo={shapeRef.current}
+          />
+        )}
       {isTransformerVisible && !lock && showLine && (
         <GuideLines
           x={imageProps.x}

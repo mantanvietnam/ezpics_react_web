@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, Popover, Select, Slider } from "antd";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { updateLayer } from "@/redux/slices/print/printSlice";
 import ArrowTopIcon from "../icon/ArrowTop";
 import ArrowBottomIcon from "../icon/ArrowBottom";
 import ArrowLeftIcon from "../icon/ArrowLeft";
@@ -108,7 +108,7 @@ const DownLoadMenu = ({
 );
 
 const EditPrint = ({ stageRef }) => {
-  const stageData = useSelector((state) => state.stage.stageData);
+  const stageData = useSelector((state) => state.print.stageData);
   const dispatch = useDispatch();
   const { design, designLayers } = stageData;
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
