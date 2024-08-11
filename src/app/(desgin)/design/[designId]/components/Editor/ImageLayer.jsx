@@ -6,10 +6,17 @@ import React, {
   useCallback,
 } from "react";
 import { Image } from "react-konva";
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import { Image, Transformer } from "react-konva";
 import useImage from "use-image";
 import { useDispatch } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
 import Konva from "konva";
+import GuideLines from "./GuideLines";
+import {
+  deselectLayerTool,
+  selectLayerTool,
+} from "@/redux/slices/editor/stageSlice";
 
 const ImageLayer = (props) => {
   const {
@@ -21,8 +28,8 @@ const ImageLayer = (props) => {
     onSelect,
     onMaxPositionUpdate,
     isTransformerVisible,
+    stageRef,
     containerRef,
-    shapeRef,
   } = props;
   const {
     postion_left,
@@ -43,9 +50,23 @@ const ImageLayer = (props) => {
   console.log("shapeRef.current ImageLayer: ", shapeRef?.current);
 
   const dispatch = useDispatch();
+  const shapeRef = useRef();
+  const trRef = useRef();
   const [image] = useImage(data.banner, "anonymous");
+  const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
+
+  useEffect(() => {
+    if (shapeRef.current && image) {
+      if (image.width > 0 && image.height > 0) {
+        shapeRef.current.cache();
+        shapeRef.current.getLayer().batchDraw();
+      } else {
+        console.error("Hình ảnh không hợp lệ.");
+      }
+    }
+  }, [image]);
 
   const widthValue = parseFloat(data.width ? data.width.replace("vw", "") : 0);
   const width = designSize.width * (widthValue / 100);
@@ -142,15 +163,14 @@ const ImageLayer = (props) => {
   }, [lock, postionX, postionY]);
 
   const handleDragEnd = (e) => {
-    if (lock) return; // Prevent dragging if locked
+    if (lock) return;
 
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
     };
     dispatch(updateLayer({ id: id, data: data }));
-    setShowLine(false); // Hide lines after drag end
-    setLocalIsSelected(true); // Ensure the layer remains selected after dragging
+    setShowLine(false);
   };
 
   const handleTransformEnd = (e) => {
@@ -167,9 +187,12 @@ const ImageLayer = (props) => {
     dispatch(updateLayer({ id: id, data: data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
-    setShowLine(false); // Hide lines after transform end
-    setLocalIsSelected(true); // Ensure the layer remains selected after transformation
+    setShowLine(false);
   };
+
+  useEffect(() => {
+    setIsSelectLayer(!lock && Boolean(status));
+  }, [lock, status]);
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
@@ -202,41 +225,103 @@ const ImageLayer = (props) => {
     const newY = e.target.y();
 
     setImageProps((prev) => ({ ...prev, x: newX, y: newY }));
-    setShowLine(true); // Show lines while dragging
-    setLocalIsSelected(true);
+    setShowLine(true);
+  };
+
+  const handleClickOutside = (e) => {
+    if (containerRef.current && !containerRef.current.contains(e.target)) {
+      setLocalIsSelected(false);
+      setTransformerVisible(false);
+    }
   };
 
   const handleSelect = (e) => {
     if (lock) return;
-    e.cancelBubble = true;
     onSelect(e);
     setLocalIsSelected(true);
     // dispatch(selectLayerTool({ id })); // Dispatch action to select layer
   };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   return (
-    <Image
-      ref={shapeRef}
-      id={id}
-      image={image}
-      alt="layer"
-      x={postionX}
-      y={postionY}
-      width={width > 0 ? width : 200}
-      height={heightSize > 0 ? heightSize : 200}
-      opacity={opacity}
-      rotation={rotation}
-      scaleX={scaleX}
-      scaleY={scaleY}
-      draggable={!lock}
-      visible={Boolean(status)}
-      onClick={handleSelect}
-      onTap={handleSelect}
-      onDragEnd={handleDragEnd}
-      onTransformEnd={handleTransformEnd}
-      onDragMove={handleDragMove}
-    />
+    <div ref={containerRef} style={{ position: "relative" }}>
+      <Image
+        ref={shapeRef}
+        id={id}
+        image={image}
+        alt="layer"
+        x={postionX}
+        y={postionY}
+        width={width > 0 ? width : 200}
+        height={heightSize > 0 ? heightSize : 200}
+        opacity={opacity}
+        rotation={rotation}
+        scaleX={scaleX}
+        scaleY={scaleY}
+        draggable={!lock}
+        visible={Boolean(status)}
+        onClick={lock ? null : onSelect}
+        onTap={lock ? null : onSelect}
+        onDragEnd={handleDragEnd}
+        onTransformEnd={handleTransformEnd}
+        onDragMove={handleDragMove}
+      />
+      {isTransformerVisible &&
+        !lock &&
+        localIsSelected &&
+        transformerVisible && (
+          <Transformer
+            ref={trRef}
+            flipEnabled={false}
+            anchorStyleFunc={(anchor) => {
+              anchor.cornerRadius(10);
+              if (
+                anchor.hasName("top-center") ||
+                anchor.hasName("bottom-center")
+              ) {
+                anchor.visible(false);
+                anchor.height(6);
+                anchor.offsetY(3);
+                anchor.width(30);
+                anchor.offsetX(15);
+              }
+              if (
+                anchor.hasName("middle-left") ||
+                anchor.hasName("middle-right")
+              ) {
+                anchor.visible(false);
+                anchor.height(30);
+                anchor.offsetY(15);
+                anchor.width(6);
+                anchor.offsetX(3);
+              }
+            }}
+            boundBoxFunc={(oldBox, newBox) => {
+              if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
+                return oldBox;
+              }
+              return newBox;
+            }}
+            attachTo={shapeRef.current}
+          />
+        )}
+      {/* {isTransformerVisible && !lock && showLine && (
+        <GuideLines
+          x={imageProps.x}
+          y={imageProps.y}
+          width={imageProps.width}
+          height={imageProps.height}
+          stageWidth={designSize.width}
+          stageHeight={designSize.height}
+        />
+      )} */}
+    </div>
   );
 };
-
-export default ImageLayer;
