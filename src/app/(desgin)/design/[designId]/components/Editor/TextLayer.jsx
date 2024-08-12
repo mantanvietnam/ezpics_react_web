@@ -347,6 +347,7 @@ export default function TextLayer(props) {
             : parseFloat(giandong)
         }
         ellipsis
+        wrap="word"
         onClick={!lock ? handleSelect : null}
         onTap={!lock ? handleSelect : null}
         onDblClick={!lock ? handleDblClick : null}
