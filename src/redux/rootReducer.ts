@@ -12,6 +12,7 @@ import infoReducer from "./slices/user/userSlice";
 import authReducer from "./slices/auth";
 import ipv4Reducer from "./slices/network/networkSlice";
 import stageReducer from "./slices/editor/stageSlice"
+import printReducer from "./slices/print/printSlice"
 const rootReducer = combineReducers({
   token: tokenReducer,
   network: networkReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   ipv4: ipv4Reducer,
   stage: stageReducer,
+  print: printReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

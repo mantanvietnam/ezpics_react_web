@@ -74,8 +74,8 @@ const stageSlice = createSlice({
       const maxSort =
         state.stageData.designLayers.length > 0
           ? Math.max(
-              ...state.stageData.designLayers.map((layer: any) => layer.sort)
-            )
+            ...state.stageData.designLayers.map((layer: any) => layer.sort)
+          )
           : 0;
 
       const newLayer = {
@@ -96,10 +96,10 @@ const stageSlice = createSlice({
       const maxSort =
         state.stageData.currentPage.pageLayers.length > 0
           ? Math.max(
-              ...state.stageData.currentPage.pageLayers.map(
-                (layer: any) => layer.sort
-              )
+            ...state.stageData.currentPage.pageLayers.map(
+              (layer: any) => layer.sort
             )
+          )
           : 0;
 
       // Tạo phần tử mới với giá trị sort được cập nhật
@@ -115,6 +115,7 @@ const stageSlice = createSlice({
       ];
     },
     updateListLayers: (state, action: PayloadAction<any>) => {
+      // Cập nhật pageLayers với dữ liệu mới
       state.stageData.currentPage.pageLayers = action.payload;
 
       state.stageData.designLayers = state.stageData.designLayers.map(
@@ -147,18 +148,18 @@ const stageSlice = createSlice({
         (layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: { ...layer.content, ...action.payload.data },
-              }
+              ...layer,
+              content: { ...layer.content, ...action.payload.data },
+            }
             : layer
       );
       state.stageData.currentPage.pageLayers =
         state.stageData.currentPage.pageLayers.map((layer: any) =>
           layer.id === action.payload.id
             ? {
-                ...layer,
-                content: { ...layer.content, ...action.payload.data },
-              }
+              ...layer,
+              content: { ...layer.content, ...action.payload.data },
+            }
             : layer
         );
       const { history, historyStep } = addToHistory(state);

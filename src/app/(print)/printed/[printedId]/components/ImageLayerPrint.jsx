@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Image } from "react-konva";
 import useImage from "use-image";
 import { useDispatch } from "react-redux";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { updateLayer } from "@/redux/slices/print/printSlice";
 import Konva from "konva";
 
 export default function ImageLayer(props) {
@@ -15,6 +15,7 @@ export default function ImageLayer(props) {
     rotate,
     scaleX,
     scaleY,
+    opacity,
   } = data;
 
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ export default function ImageLayer(props) {
         scaleX={scaleX}
         scaleY={scaleY}
         draggable={false}
+        opacity={opacity}
       />
     </>
   );

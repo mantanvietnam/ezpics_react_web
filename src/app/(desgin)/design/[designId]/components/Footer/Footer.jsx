@@ -36,7 +36,7 @@ const Footer = ({ containerRef }) => {
   const { totalPages, designLayers } = stageData;
 
   const updateScale = (scale) => {
-    if (containerRef.current) {
+    if (containerRef?.current) {
       const container = containerRef.current;
       container.style.transform = `scale(${scale})`;
       container.style.transformOrigin = "center"; // Set transform origin to center

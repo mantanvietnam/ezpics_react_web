@@ -380,8 +380,8 @@ export default function ProductInfoPrinted(props) {
               )}
             </button>
             <button
-              onClick={() => {
-                router.push(`/printed/${id_param}`);
+             onClick={() => {
+                window.open(`/printed/${id_param}`, "_blank");
                 toast.success("Tạo ảnh thành công. Xin chờ giây lát!");
               }}
               style={{

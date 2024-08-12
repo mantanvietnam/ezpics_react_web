@@ -41,7 +41,8 @@ export default function ImageLayer(props) {
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
-  const [transformerVisible, setTransformerVisible] = useState(false);
+  const [transformerVisible, setTransformerVisible] =
+    useState(isTransformerVisible);
 
   useEffect(() => {
     if (shapeRef.current && image) {
@@ -222,10 +223,7 @@ export default function ImageLayer(props) {
   };
 
   const handleClickOutside = (e) => {
-    if (
-      containerRef.current &&
-      !containerRef.current.contains(e.target)
-    ) {
+    if (containerRef.current && !containerRef.current.contains(e.target)) {
       setLocalIsSelected(false);
       setTransformerVisible(false);
     }
@@ -239,7 +237,7 @@ export default function ImageLayer(props) {
   }, []);
 
   return (
-    <div ref={containerRef} style={{ position: 'relative' }}>
+    <div ref={containerRef} style={{ position: "relative" }}>
       <Image
         ref={shapeRef}
         id={id}
@@ -261,7 +259,7 @@ export default function ImageLayer(props) {
         onTransformEnd={handleTransformEnd}
         onDragMove={handleDragMove}
       />
-      {isTransformerVisible && !lock && localIsSelected && transformerVisible && (
+      {!lock && localIsSelected && transformerVisible && (
         <Transformer
           ref={trRef}
           flipEnabled={false}
@@ -297,7 +295,7 @@ export default function ImageLayer(props) {
           attachTo={shapeRef.current}
         />
       )}
-      {isTransformerVisible && !lock && showLine && (
+      {/* {isTransformerVisible && !lock && showLine && (
         <GuideLines
           x={imageProps.x}
           y={imageProps.y}
@@ -306,7 +304,7 @@ export default function ImageLayer(props) {
           stageWidth={designSize.width}
           stageHeight={designSize.height}
         />
-      )}
+      )} */}
     </div>
   );
 }

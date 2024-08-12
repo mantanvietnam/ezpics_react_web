@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { updateLayer } from "@/redux/slices/print/printSlice";
 
 export default function TextLayer(props) {
   const { data, designSize, id } = props;
@@ -14,6 +14,10 @@ export default function TextLayer(props) {
     indam,
     innghieng,
     gachchan,
+    text_align,
+    gianchu,
+    giandong,
+    rotate,
   } = data;
 
   const dispatch = useDispatch();
@@ -46,6 +50,15 @@ export default function TextLayer(props) {
   const sizeValue = parseFloat(size?.replace("vw", ""));
   const sizeConvertToPx = designSize.width * (sizeValue / 100);
 
+  // Width
+  const widthValue = parseFloat(
+    typeof data.width === "string" ? data.width.replace("vw", "") : data.width
+  );
+  const width = designSize.width * (widthValue / 100);
+
+  // Rotation
+  const rotationValue = parseFloat(rotate?.replace("deg", ""));
+
   // Hàm để tạo giá trị fontStyle dựa trên các cờ
   const getFontStyle = (indam, innghieng) => {
     let fontStyle = "";
@@ -75,12 +88,17 @@ export default function TextLayer(props) {
         text={textValue}
         x={positionX}
         y={positionY}
+        width={width}
         draggable={true}
+        rotation={rotationValue}
         fill={data?.color}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
+        align={text_align}
+        letterSpacing={gianchu === "normal" ? 0 : parseFloat(gianchu)}
+        lineHeight={giandong === "normal" ? 1 : parseFloat(giandong)}
       />
     </>
   );
