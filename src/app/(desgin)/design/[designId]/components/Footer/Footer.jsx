@@ -168,10 +168,10 @@ const Footer = ({ containerRef }) => {
 
   const handleAddPage = () => {
     dispatch(addPage());
-    setSelectedPage(totalPages + 1);
+    setSelectedPage(totalPages);
     dispatch(
       setCurrentPage({
-        page: totalPages + 1,
+        page: totalPages,
         pageLayers: [],
       })
     );
@@ -198,14 +198,13 @@ const Footer = ({ containerRef }) => {
     }
   };
 
-  useEffect(() => {}, [designLayers]);
+  useEffect(() => { }, [designLayers]);
 
   return (
     <div>
       <div
-        className={`flex items-center extra-space ${
-          showExtraSpace ? "h-[100px]" : "h-[0px]"
-        } transition-height duration-300 ease overflow-hidden pl-2 gap-3`}
+        className={`flex items-center extra-space ${showExtraSpace ? "h-[100px]" : "h-[0px]"
+          } transition-height duration-300 ease overflow-hidden pl-2 gap-3`}
         style={{ width: "100%", backgroundColor: "#f0f0f0" }}>
         <PagesList
           totalPages={totalPages}
@@ -222,9 +221,8 @@ const Footer = ({ containerRef }) => {
       </div>
       <div className="flex flex-row justify-between items-center h-[50px] border-l border-slate-300 px-8 bg-white">
         <div
-          className={`flex flex-row items-center cursor-pointer ${
-            showExtraSpace ? "bg-slate-300 p-1 rounded-lg" : ""
-          }`}
+          className={`flex flex-row items-center cursor-pointer ${showExtraSpace ? "bg-slate-300 p-1 rounded-lg" : ""
+            }`}
           onClick={() => setShowExtraSpace(!showExtraSpace)}>
           <LayerIcon size={20} />
           <p className="pl-2">Trang</p>

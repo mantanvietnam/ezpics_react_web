@@ -173,9 +173,8 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        (e.target.width() * e.target.scaleX() * 100) / designSize.width
-      }vw`,
+      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
+        }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -222,12 +221,12 @@ export default function ImageLayer(props) {
     setShowLine(true);
   };
 
-  const handleClickOutside = (e) => {
-    if (containerRef.current && !containerRef.current.contains(e.target)) {
-      setLocalIsSelected(false);
-      setTransformerVisible(false);
-    }
-  };
+  // const handleClickOutside = (e) => {
+  //   if (containerRef.current && !containerRef.current.contains(e.target)) {
+  //     setLocalIsSelected(false);
+  //     setTransformerVisible(false);
+  //   }
+  // };
 
   // useEffect(() => {
   //   document.addEventListener("mousedown", handleClickOutside);

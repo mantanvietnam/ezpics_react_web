@@ -52,7 +52,7 @@ export default function Customize() {
   const [categoryList, setCategoryList] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedOptionDisplay, setSelectedOptionDisplay] = useState("");
-  const [selectedOptionShow, setSelectedOptionShow] = useState("");
+  const [selectedOptionShow, setSelectedOptionShow] = useState(null);
   const [selectedFilesBackground, setSelectedFilesBackground] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [listWarehouse, setListWarehouse] = useState([]);
@@ -122,6 +122,14 @@ export default function Customize() {
     getDataStorage();
   }, []);
 
+  useEffect(() => {
+    if (stageData.design.display) {
+      setSelectedOptionShow(1)
+    } else {
+      setSelectedOptionShow(0)
+    }
+  }, [stageData])
+
   const handleSelectChange = (event) => {
     setCategoryId(event.target.value);
     handleChange("category_id", event.target.value);
@@ -141,6 +149,7 @@ export default function Customize() {
   };
 
   const handleSelectChangeStatusShow = (event) => {
+    console.log('🚀 ~ handleSelectChangeStatusShow ~ event.target.value:', event.target.value)
     setSelectedOptionShow(event.target.value);
     handleChange("display", event.target.value);
   };
