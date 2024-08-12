@@ -316,11 +316,16 @@ export default function TextLayer(props) {
   //   };
   // }, []);
 
+  const formatText = (text) => {
+    // Thay thế các thẻ <br /> và <br> bằng ký tự xuống dòng
+    return text.replace(/<br\s*\/?>/gi, "\n");
+  };
+
   return (
     <>
       <Text
         ref={shapeRef}
-        text={textValue}
+        text={formatText(textValue)}
         x={positionX}
         y={positionY}
         draggable={!lock}
@@ -334,7 +339,14 @@ export default function TextLayer(props) {
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
         letterSpacing={gianchu === "normal" ? 0 : parseFloat(gianchu)}
-        lineHeight={giandong === "normal" ? 1 : parseFloat(giandong)}
+        lineHeight={
+          giandong === "0.0vh"
+            ? 1
+            : giandong === "normal"
+            ? 1
+            : parseFloat(giandong)
+        }
+        ellipsis
         onClick={!lock ? handleSelect : null}
         onTap={!lock ? handleSelect : null}
         onDblClick={!lock ? handleDblClick : null}

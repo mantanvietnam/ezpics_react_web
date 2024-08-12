@@ -380,8 +380,13 @@ export default function ProductInfoPrinted(props) {
               )}
             </button>
             <button
-             onClick={() => {
-                window.open(`/printed/${id_param}`, "_blank");
+              onClick={() => {
+                const url = `/printed/${id_param}`;
+
+                // Thay đổi link và mở trong tab mới
+                window.open(url, "_blank");
+
+                // Hiển thị thông báo thành công
                 toast.success("Tạo ảnh thành công. Xin chờ giây lát!");
               }}
               style={{

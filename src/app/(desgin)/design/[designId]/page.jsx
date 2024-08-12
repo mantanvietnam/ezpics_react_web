@@ -195,7 +195,7 @@ const Page = () => {
     }
   };
 
-  // console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
+  console.log("🚀 ~ Layer ~ selected:", stageData.selectedLayer);
   // console.log("🚀 ~ Layer ~ designLayers:", designLayers);
 
   return (
