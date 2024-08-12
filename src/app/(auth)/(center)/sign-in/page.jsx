@@ -55,6 +55,7 @@ const schemaNewPassword = yup.object().shape({
 export default function Login() {
   const expirationHours = 3;
   const dispatch = useDispatch();
+  const [ReCheck, setReCheck] = useState(false);
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -95,6 +96,16 @@ export default function Login() {
 
   function handleRollBack() {
     setCheck(false);
+    setReCheck(false);
+    setCodeForgotPassword("");
+  }
+
+  function handleReCheck() {
+    setReCheck(true);
+  }
+
+  function handleReCheckFalse() {
+    setReCheck(false);
   }
 
   const handleSubmitLogin = async (e) => {
@@ -154,6 +165,7 @@ export default function Login() {
         });
         if (repon.code === 0) {
           setCodeForgotPassword(repon?.codeForgotPassword);
+          handleReCheck();
         } else {
           setCodeForgotPassword("");
           setcodeForgotPasswordError(repon?.messages[0]?.text);
@@ -228,7 +240,6 @@ export default function Login() {
                       <input
                         type="text"
                         value={phoneConfirm}
-                        placeholder="Số điện thoại"
                         onChange={(e) => setPhoneConfirm(e.target.value)}
                       />
                       {errors?.phoneConfirm && (
@@ -242,7 +253,8 @@ export default function Login() {
                       <button
                         className={styles.confirm}
                         onClick={handleConfirmForgotPassword}
-                        disabled={isConfirming}>
+                        disabled={isConfirming}
+                      >
                         {isConfirming ? (
                           <Spin
                             indicator={
@@ -261,7 +273,8 @@ export default function Login() {
                       </button>
                       <button
                         className={styles.rollback}
-                        onClick={handleRollBack}>
+                        onClick={handleRollBack}
+                      >
                         <ArrowLeftOutlined className={styles.icon} />
                         <p>Quay lại</p>
                       </button>
@@ -271,7 +284,6 @@ export default function Login() {
                       <p className={styles.label_input}>Số điện thoại</p>
                       <input
                         type="text"
-                        placeholder="Số điện thoại"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         onKeyDown={(e) => {
@@ -287,13 +299,13 @@ export default function Login() {
                         <p className={styles.label_input}>Mật khẩu</p>
                         <p
                           className={styles.forgot_pass}
-                          onClick={handleCheckForgot}>
+                          onClick={handleCheckForgot}
+                        >
                           Quên mật khẩu ?
                         </p>
                       </div>
                       <input
                         type="password"
-                        placeholder="Mật khẩu"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         onKeyDown={(e) => {
@@ -312,7 +324,8 @@ export default function Login() {
                         type="submit"
                         className={styles.login}
                         onClick={handleSubmitLogin}
-                        disabled={isLoading}>
+                        disabled={isLoading}
+                      >
                         {isLoading ? (
                           <Spin
                             indicator={
@@ -332,7 +345,8 @@ export default function Login() {
                       <p className={styles.or}>Hoặc</p>
                       <button
                         className={styles.register}
-                        onClick={handleLoginWithGoogle}>
+                        onClick={handleLoginWithGoogle}
+                      >
                         Đăng nhập bằng Google
                       </button>
                       <p className={styles.option_regis}>
@@ -341,13 +355,12 @@ export default function Login() {
                       </p>
                     </>
                   )
-                ) : (
+                ) : ReCheck ? (
                   <>
                     <p className={styles.label_input}>Mã xác nhận trong Zalo</p>
                     <input
                       type="text"
                       value={phoneConfirm}
-                      placeholder="Mã xác nhận trong Zalo"
                       onChange={(e) => setPhoneConfirm(e.target.value)}
                       className="bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed"
                       disabled
@@ -355,7 +368,6 @@ export default function Login() {
                     <p className={styles.label_input}>Nhập mã xác thực</p>
                     <input
                       type="password"
-                      placeholder="Nhập mã xác thực"
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value)}
                     />
@@ -365,7 +377,6 @@ export default function Login() {
                     <p className={styles.label_input}>Mật khẩu mới</p>
                     <input
                       type="password"
-                      placeholder="Mật khẩu mới"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
@@ -375,7 +386,6 @@ export default function Login() {
                     <p className={styles.label_input}>Nhập lại mật khẩu mới</p>
                     <input
                       type="password"
-                      placeholder="Nhập lại mật khẩu mới"
                       value={confirmNewPassword}
                       onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
@@ -390,7 +400,8 @@ export default function Login() {
                     <button
                       className={styles.confirm}
                       onClick={handleSubmitNewPassword}
-                      disabled={isSavingPassword}>
+                      disabled={isSavingPassword}
+                    >
                       {isSavingPassword ? (
                         <Spin
                           indicator={
@@ -409,12 +420,13 @@ export default function Login() {
                     </button>
                     <button
                       className={styles.rollback}
-                      onClick={handleRollBack}>
+                      onClick={handleRollBack}
+                    >
                       <ArrowLeftOutlined className={styles.icon} />
                       <p>Quay lại</p>
                     </button>
                   </>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
