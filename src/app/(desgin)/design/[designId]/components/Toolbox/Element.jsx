@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "@/hooks/hook";
-import { addLayerImage, addLayerText } from "@/redux/slices/editor/stageSlice";
+import { addLayerImage, addLayerText, updatePageLayer } from "@/redux/slices/editor/stageSlice";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -22,6 +22,7 @@ export default function Graphic() {
   const [loading, setLoading] = useState(true);
   const network = useAppSelector((state) => state.network.ipv4Address);
   const stageData = useSelector((state) => state.stage.stageData);
+  const { currentPage } = stageData
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -89,10 +90,11 @@ export default function Graphic() {
         idproduct: stageData.design.id,
         token: checkTokenCookie(),
         imageUrl: item.image,
-        page: 0,
+        page: currentPage.page,
       });
-      console.log("add imageeeeeeeee", item, res);
       dispatch(addLayerImage(res.data));
+      dispatch(updatePageLayer(res.data));
+
     } catch (error) {
       console.log(error);
     }

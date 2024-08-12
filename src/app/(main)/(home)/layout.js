@@ -11,6 +11,7 @@ import ProductCard from "@/components/YourProduct/ProductCard";
 import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { getMyProductApi } from '@/api/product';
 
 export default function HomeRoot(props) {
   const [products, setProducts] = useState([]);
