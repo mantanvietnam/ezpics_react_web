@@ -92,6 +92,8 @@ export function PanelsText({
   onColorButtonClick,
   onFontsButtonClick,
   onDuplicateLayer,
+  vwHeight,
+  vwWidth,
 }) {
   const { selectedLayer, initSize } = useSelector(
     (state) => state.stage.stageData
@@ -104,6 +106,45 @@ export function PanelsText({
     italic: "",
     underline: "",
   });
+
+  const sizeValue = parseFloat(selectedLayer?.content?.size?.replace("vw", ""));
+
+  // Hàm chuyển đổi từ vh sang pixel và từ pixel sang tỷ lệ lineHeight
+  const giandongToLineHeight = (giandong) => {
+    if (typeof giandong === "string" && giandong.endsWith("vh")) {
+      const vhValue = parseFloat(giandong);
+      if (!isNaN(vhValue)) {
+        const lineHeightInPx = (vhValue / 100) * vwHeight; // Chuyển đổi từ vh sang px
+        return lineHeightInPx / sizeValue; // Chuyển đổi từ px sang tỷ lệ
+      }
+    }
+    // Nếu không phải là dạng vh, trả về giá trị parseFloat hoặc giá trị mặc định
+    const parsedValue = parseFloat(giandong);
+    return isNaN(parsedValue) ? 1 : parsedValue;
+  };
+
+  const lineHeightToGiandong = (lineHeight) => {
+    const lineHeightInPx = lineHeight * sizeValue; // Chuyển đổi từ tỷ lệ lineHeight sang pixel
+    const vhValue = (lineHeightInPx / vwHeight) * 100; // Chuyển đổi từ pixel sang vh
+    return `${vhValue}vh`;
+  };
+
+  // Hàm chuyển đổi từ vw sang pixel và từ pixel sang giá trị letterSpacing
+  const vwToLetterSpacing = (vw) => {
+    if (typeof vw === "string" && vw.endsWith("vw")) {
+      const vwValue = parseFloat(vw);
+      if (!isNaN(vwValue)) {
+        return (vwValue / 100) * vwWidth; // Chuyển đổi từ vw sang px
+      }
+    }
+    return parseFloat(vw) || 0; // Giá trị mặc định nếu không thể chuyển đổi
+  };
+
+  // Hàm chuyển đổi từ giá trị letterSpacing sang vw
+  const letterSpacingToVw = (letterSpacing) => {
+    const vwValue = (letterSpacing / vwWidth) * 100; // Chuyển đổi từ pixel sang vw
+    return `${vwValue}vw`;
+  };
 
   //LetterSpacing
   const [valueLetterSpacing, setValueLetterSpacing] = useState(0);
@@ -125,8 +166,8 @@ export function PanelsText({
       setFontSize(sizeValue);
       setPostionText(selectedLayer.content.text_align);
       setColor(selectedLayer.content.color);
-      setValueLetterSpacing(selectedLayer.content.gianchu);
-      setValueLineSpacing(selectedLayer.content.giandong);
+      setValueLetterSpacing(vwToLetterSpacing(selectedLayer.content.gianchu));
+      setValueLineSpacing(giandongToLineHeight(selectedLayer.content.giandong));
     }
   }, [selectedLayer]);
 
@@ -178,8 +219,8 @@ export function PanelsText({
       gachchan: fontStyle.underline,
       color: color,
       text_align: postionText,
-      gianchu: valueLetterSpacing,
-      giandong: valueLineSpacing,
+      gianchu: letterSpacingToVw(valueLetterSpacing),
+      giandong: lineHeightToGiandong(valueLineSpacing),
     };
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   }, [
