@@ -29,7 +29,7 @@ export default function Page() {
 
   const fetchProducts = async () => {
     try {
-      const response = await getListWarehouseDesignerAPI({ 
+      const response = await getListWarehouseDesignerAPI({
         token: checkTokenCookie(),
       });
       setProducts(response.data || []);
@@ -49,7 +49,7 @@ export default function Page() {
     setSelectedProduct(productId);
     setDetailsLoading(true);
     try {
-      const response = await getProductsWarehousesAPI({ 
+      const response = await getProductsWarehousesAPI({
         idWarehouse: productId,
         limit: 100,
         page: 1
@@ -88,6 +88,7 @@ export default function Page() {
 
   const handleEdit = (productId) => {
     // edit logic here
+    router.push(`/design/${productId}`);
   };
 
   const handleShare = (productId) => {
@@ -118,10 +119,10 @@ export default function Page() {
               >&lt; Quay lại</button>
               {productDetails.length === 0 ? (
                 <div className="text-center mt-8">
-                  <p  className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
+                  <p className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
                   <Link href="/">
-                    <button 
-                      className="button-red" 
+                    <button
+                      className="button-red"
                     >
                       Về trang chủ
                     </button>
@@ -171,10 +172,10 @@ export default function Page() {
         <div>
           {products.length === 0 ? (
             <div className="text-center mt-8">
-              <p  className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
+              <p className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
               <Link href="/">
-                <button 
-                  className="button-red" 
+                <button
+                  className="button-red"
                 >
                   Về trang chủ
                 </button>
@@ -183,19 +184,19 @@ export default function Page() {
           ) : (
             <div className="flex flex-col">
               <div className="flex justify-end mb-4">
-                <button 
-                  className="button-red w-fit" 
+                <button
+                  className="button-red w-fit"
                   onClick={() => setOpen(true)}
                 >
                   + Tạo mới bộ sưu tập
                 </button>
               </div>
-                  
+
               <div className="grid grid-cols-4 grid-flow-row gap-4">
                 {products.map((product) => (
                   <div
                     className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
-                    key={product.id} 
+                    key={product.id}
                   >
                     <div className="relative bg-orange-100">
                       {product.thumbnail ? (
@@ -236,11 +237,11 @@ export default function Page() {
                     <div className="py-4 px-2">
                       <h2 className="text-lg font-medium h-20">{product.name}</h2>
                     </div>
-                  </div>       
+                  </div>
                 ))}
               </div>
             </div>
-           
+
           )}
         </div>
       )}
