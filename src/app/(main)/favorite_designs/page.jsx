@@ -8,7 +8,7 @@ import { Button, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { convertSLugUrl } from "../../../utils/url";
 const YourDesign = () => {
   const itemsPerRow = 3;
   const router = useRouter();
@@ -79,7 +79,7 @@ const YourDesign = () => {
                 <div
                   className="image-container"
                   onClick={() => {
-                    router.push(`/category/${item.id}`);
+                       router.push(`/category/${convertSLugUrl(item.name)}-${item.id}.html`);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}>
                   <img src={item.image} alt="" className="image" />

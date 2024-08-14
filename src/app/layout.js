@@ -9,6 +9,10 @@ export const metadata = {
   icons: {
     icon: "/images/EZPICS.png",
   },
+  openGraph: {
+    images:
+      "https://admin.ezpics.vn/upload/admin/files/1587a9df872656780f37.jpg",
+  },
 };
 
 export default function RootLayout({ children }) {

@@ -5,9 +5,20 @@ import IntroduceApp from "@/components/remove/IntroduceApp";
 import AdvantageApp from "@/components/remove/AdvantageApp";
 import PerformanceApp from "@/components/remove/PerformanceApp";
 import AskingApp from "@/components/remove/AskingApp";
-import ScrollToTopButton from "@/components/ScrollToTopButton";
 
-const page = () => {
+export const metadata = {
+  title: "Xóa nền | Ezpics",
+  description: "Ezpics - Dùng là thích",
+  icons: {
+    icon: "/images/EZPICS.png",
+  },
+  openGraph: {
+    images:
+      "https://admin.ezpics.vn/upload/admin/files/1587a9df872656780f37.jpg",
+  },
+};
+
+const Page = () => {
   return (
     <div>
       <HeaderRemove />
@@ -21,4 +32,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
