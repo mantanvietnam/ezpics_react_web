@@ -6,6 +6,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { convertSLugUrl } from "../utils/url";
 
 function Search({ searchAPI, searchParams, placeholder }) {
   const [searchValue, setSearchValue] = useState("");
@@ -65,7 +66,7 @@ function Search({ searchAPI, searchParams, placeholder }) {
         {searchResult.slice(0, 4).map((item, index) => (
           <Link
             key={index}
-            href={`/category/${item.id}`}
+            href={`/category/${convertSLugUrl(item.title)}-${item.id}.html`}
             className="flex items-center w-full p-2 hover:bg-gray-200">
             <Image
               src={item.image || item.thumbnail}

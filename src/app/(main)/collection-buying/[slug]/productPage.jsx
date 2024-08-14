@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import images from "../../../../../public/images/index2";
 import { setCookie } from "@/utils";
 import { useRouter } from "next/navigation";
+import { convertSLugUrl } from "../../../../utils/url";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -222,12 +223,14 @@ const Product = (props) => {
                   height: 25,
                   borderRadius: "50%",
                   fill: "currentColor",
-                }}>
+                }}
+              >
                 <path
                   d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
                   style={{
                     color: "rgb(255, 66, 78)",
-                  }}></path>
+                  }}
+                ></path>
               </svg>
               <span className="text-sm font-semibold">
                 Đã thích ({data?.favorites || 0})
@@ -255,36 +258,39 @@ const Product = (props) => {
               {userLogin?.member_pro === 1
                 ? "Miễn Phí"
                 : data?.sale_price
-                  ? VND.format(data?.sale_price)
-                  : "Miễn Phí"}
+                ? VND.format(data?.sale_price)
+                : "Miễn Phí"}
             </div>
             <div className="line-through text-slate-400 rounded-sm">
-              {userLogin?.member_pro === 1
-                ? ""
-                : VND.format(defaultPrice)}
+              {userLogin?.member_pro === 1 ? "" : VND.format(defaultPrice)}
             </div>
 
-            {userLogin?.member_pro === 1
-              ? ""
-              : <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">{data?.price
-                ? `Giảm ${Math.round(
-                  100 - (data?.price / defaultPrice) * 100
-                )}%`
-                : "Miễn Phí"}
-              </div>}
+            {userLogin?.member_pro === 1 ? (
+              ""
+            ) : (
+              <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+                {data?.price
+                  ? `Giảm ${Math.round(
+                      100 - (data?.price / defaultPrice) * 100
+                    )}%`
+                  : "Miễn Phí"}
+              </div>
+            )}
           </div>
-          {userLogin?.member_pro === 1 ? ""
-            : <div className="flex items-center gap-3 py-2">
+          {userLogin?.member_pro === 1 ? (
+            ""
+          ) : (
+            <div className="flex items-center gap-3 py-2">
               <div className="text-sm product-details-e">Khuyến mãi</div>
               <div className="bg-red-50 border border-red-500 text-red-500 p-2 font-semibold">
                 {data?.price
                   ? `Giảm ${Math.round(
-                    100 - (data?.price / defaultPrice) * 100
-                  )}%`
+                      100 - (data?.price / defaultPrice) * 100
+                    )}%`
                   : "Miễn Phí"}
               </div>
             </div>
-          }
+          )}
           <div className="flex items-center gap-3 py-2">
             <div className="product-details-e">Tác giả</div>
             <div className="w-[37px] h-[35px] mr-3 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
@@ -314,7 +320,8 @@ const Product = (props) => {
             <>
               <button
                 onClick={showLoading}
-                className="flex items-center justify-center py-2 bg-red-50 border border-red-500 text-red-500 w-[200px] cursor-pointer animate-pulse">
+                className="flex items-center justify-center py-2 bg-red-50 border border-red-500 text-red-500 w-[200px] cursor-pointer animate-pulse"
+              >
                 <div>Chi tiết sản phẩm</div>
               </button>
               <Modal
@@ -322,7 +329,8 @@ const Product = (props) => {
                 width={1200}
                 footer={null}
                 loading={loading}
-                onCancel={() => setOpen(false)}>
+                onCancel={() => setOpen(false)}
+              >
                 <h2 className="text-4xl text-center font-bold p-6">
                   Chi tiết thiết kế trong bộ sưu tập
                 </h2>
@@ -330,9 +338,12 @@ const Product = (props) => {
                   {Array.isArray(collection) && collection.length > 0 ? (
                     collection.map((item) => (
                       <Link
-                        href={`/category/${item.id}`}
+                        href={`/category/${convertSLugUrl(item.title)}-${
+                          item.id
+                        }.html`}
                         className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
-                        key={item.id}>
+                        key={item.id}
+                      >
                         <div className="relative bg-orange-100">
                           {item.image ? (
                             <Image
@@ -377,7 +388,8 @@ const Product = (props) => {
                 paddingTop: "11.5px",
                 paddingBottom: "11.5px",
               }}
-              onClick={showModal}>
+              onClick={showModal}
+            >
               Mua ngay
             </button>
           </div>
@@ -390,7 +402,8 @@ const Product = (props) => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={null}
-        className="buy-product-modal">
+        className="buy-product-modal"
+      >
         <div>
           <div className="flex gap-2 mb-[20px]">
             <div className="flex items-center text-slate-500">
@@ -428,19 +441,21 @@ const Product = (props) => {
             name="radiogroup"
             defaultValue={type}
             onChange={handleChangeRadio}
-            className="mb-[20px]">
+            className="mb-[20px]"
+          >
             <Radio value="">Mua bằng tiền tài khoản</Radio>
             <Radio value="ecoin">Mua bằng ecoin</Radio>
           </Radio.Group>
           <div className="flex gap-2 justify-end mb-[20px] items-center">
-            <div className="text-lg font-semibold">{userLogin?.member_pro === 1 ? "Tài khoản Pro:" : "Tổng tiền:"}</div>
+            <div className="text-lg font-semibold">
+              {userLogin?.member_pro === 1 ? "Tài khoản Pro:" : "Tổng tiền:"}
+            </div>
             <div className="text-lg font-semibold">
               {userLogin?.member_pro === 1
                 ? "Miễn Phí"
                 : type === "ecoin"
-                  ? `${data?.ecoin} eCoin`
-                  : VND.format(data?.price)
-              }
+                ? `${data?.ecoin} eCoin`
+                : VND.format(data?.price)}
             </div>
           </div>
           <div className="flex justify-end">
@@ -449,7 +464,8 @@ const Product = (props) => {
             </Button>
             <button
               className="button-red text-sm font-semibold h-[35px] w-[200px]"
-              onClick={handleOk}>
+              onClick={handleOk}
+            >
               {confirmLoading ? (
                 <div>
                   <Space>
@@ -474,7 +490,7 @@ const Product = (props) => {
   );
 };
 
-export default function Page({ params }) {
+export default function ProductPage({ params }) {
   const [data, setData] = useState([]);
   const [dataWarehouse, setDataWarehouse] = useState([]);
   const [user, setUser] = useState(null);
@@ -486,7 +502,7 @@ export default function Page({ params }) {
       setIsLoading(true);
       try {
         const response = await getInfoWarehouseApi({
-          idWarehouse: `${params.productId}`,
+          idWarehouse: `${params}`,
         });
         const productData = response.data;
         setData(productData);
@@ -514,7 +530,7 @@ export default function Page({ params }) {
     };
 
     fetchProduct();
-  }, [params.productId]);
+  }, [params]);
 
   return (
     <div className="flex flex-col w-[90%] mb-[100px]">
