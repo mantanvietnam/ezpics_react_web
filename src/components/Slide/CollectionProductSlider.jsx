@@ -16,6 +16,7 @@ import {
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { getCollectionProductApi } from "@/api/product";
+import { convertSLugUrl } from "@/utils/url";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
@@ -91,7 +92,8 @@ const CollectionProductSlider = ({ title }) => {
         </h1>
         <Link
           href="/dashboard-search"
-          className="font-bold text-red-500 text-sm">
+          className="font-bold text-red-500 text-sm"
+        >
           Xem thêm
         </Link>
       </div>
@@ -117,9 +119,10 @@ const CollectionProductSlider = ({ title }) => {
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
                 <Link
-                  href={`/collection-buying/${product.id}`}
+                  href={`/collection-buying/${convertSLugUrl(product.name)}-${product.id}.html`}
                   className="slide-content pr-8"
-                  key={product.id}>
+                  key={product.id}
+                >
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                     <div className="bg-orange-100 overflow-hidden group flex justify-center">
                       <Image

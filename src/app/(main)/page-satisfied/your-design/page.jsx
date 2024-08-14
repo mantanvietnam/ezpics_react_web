@@ -7,6 +7,7 @@ import { truncateText } from "@/utils/format";
 import { Button, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { convertSLugUrl } from "../../../../utils/url";
 
 const YourDesign = () => {
     const itemsPerRow = 3;
@@ -98,7 +99,7 @@ const YourDesign = () => {
                             <div
                                 className="image-container"
                                 onClick={() => {
-                                    router.push(`/category/${item.id}`);
+                                       router.push(`/category/${convertSLugUrl(item.name)}-${item.id}.html`);
                                     window.scrollTo({ top: 0, behavior: "smooth" });
                                 }}
                             >

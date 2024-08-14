@@ -70,7 +70,7 @@ const Sign_up = () => {
             console.log(response);
             if (response?.code === 0) {
               toast.success(
-                "thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại"
+                "Thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại"
               );
               dispatch(CHANGE_STATUS_AUTH(true));
               dispatch(CHANGE_VALUE_TOKEN(response?.info_member?.token_web));
