@@ -234,13 +234,15 @@ const Page = () => {
                 onDuplicateLayer={handleDuplicateLayer}
                 onColorButtonClick={() => setActiveTool("Color")}
                 onFontsButtonClick={() => setActiveTool("Fonts")}
+                vwHeight={initSize.height}
+                vwWidth={initSize.width}
               />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
           )}
           <div
-            className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center"
+            className="flex overflow-auto h-[calc(100%-100px)] justify-around items-center"
             style={{
               cursor: isDragging ? "grabbing" : "grab",
             }}
@@ -248,7 +250,7 @@ const Page = () => {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}>
-            <div ref={containerRef}>
+            <div ref={containerRef} className="mt-[200px] mb-[50px]">
               <div
                 ref={draggableDivRef}
                 style={{

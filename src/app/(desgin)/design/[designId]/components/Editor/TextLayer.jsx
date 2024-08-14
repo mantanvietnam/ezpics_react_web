@@ -321,6 +321,31 @@ export default function TextLayer(props) {
     return text.replace(/<br\s*\/?>/gi, "\n");
   };
 
+  // Hàm chuyển đổi từ vh sang pixel và từ pixel sang tỷ lệ lineHeight
+  const giandongToLineHeight = (giandong) => {
+    if (typeof giandong === "string" && giandong.endsWith("vh")) {
+      const vhValue = parseFloat(giandong);
+      if (!isNaN(vhValue)) {
+        const lineHeightInPx = (vhValue / 100) * designSize.height; // Chuyển đổi từ vh sang px
+        return lineHeightInPx / sizeValue; // Chuyển đổi từ px sang tỷ lệ
+      }
+    }
+    // Nếu không phải là dạng vh, trả về giá trị parseFloat hoặc giá trị mặc định
+    const parsedValue = parseFloat(giandong);
+    return isNaN(parsedValue) ? 1 : parsedValue;
+  };
+
+  // Hàm chuyển đổi từ vw sang pixel và từ pixel sang giá trị letterSpacing
+  const vwToLetterSpacing = (vw) => {
+    if (typeof vw === "string" && vw.endsWith("vw")) {
+      const vwValue = parseFloat(vw);
+      if (!isNaN(vwValue)) {
+        return (vwValue / 100) * designSize.width; // Chuyển đổi từ vw sang px
+      }
+    }
+    return parseFloat(vw) || 0; // Giá trị mặc định nếu không thể chuyển đổi
+  };
+
   return (
     <>
       <Text
@@ -338,14 +363,8 @@ export default function TextLayer(props) {
         fontFamily={data?.font}
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
-        letterSpacing={gianchu === "normal" ? 0 : parseFloat(gianchu)}
-        lineHeight={
-          giandong === "0.0vh"
-            ? 1
-            : giandong === "normal"
-              ? 1
-              : parseFloat(giandong)
-        }
+        letterSpacing={vwToLetterSpacing(gianchu)}
+        lineHeight={giandongToLineHeight(giandong)}
         ellipsis
         wrap="word"
         onClick={!lock ? handleSelect : null}
