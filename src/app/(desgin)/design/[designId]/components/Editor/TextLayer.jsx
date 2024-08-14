@@ -62,7 +62,7 @@ export default function TextLayer(props) {
 
   // Position of the text
   const positionX = designSize.width * (postion_left / 100);
-  const positionY = designSize.height * (postion_top / 100);
+  const positionY = designSize.height * (postion_top / 100) + 12;
 
   // Convert vw to px
   const sizeValue = parseFloat(size?.replace("vw", ""));
@@ -343,8 +343,8 @@ export default function TextLayer(props) {
           giandong === "0.0vh"
             ? 1
             : giandong === "normal"
-            ? 1
-            : parseFloat(giandong)
+              ? 1
+              : parseFloat(giandong)
         }
         ellipsis
         wrap="word"
