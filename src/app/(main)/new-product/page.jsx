@@ -10,9 +10,7 @@ import { Spin, Flex } from "antd";
 import { ControlOutlined } from "@ant-design/icons";
 import { checkTokenCookie } from "@/utils";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
-import { SkeletonCustom } from "@/components/Slide/CustomSlide";
 import { convertSLugUrl } from "../../../utils/url";
-
 
 function Page() {
   const [categories, setCategories] = useState([]);
@@ -357,7 +355,11 @@ function Page() {
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 sm:gap-3 gap-3 justify-center">
                 {products.map((item, index) => (
                   <div className="block" key={index}>
-                    <Link href={`/category/${convertSLugUrl(item.title)}-${item.id}.html`} key={item.id}>
+                    <Link
+                      href={`/category/${convertSLugUrl(item.title)}-${
+                        item.id
+                      }.html`}
+                      key={item.id}>
                       <div className="card bg-white rounded-lg shadow-md overflow-hidden">
                         <div className="bg-orange-100 overflow-hidden text-center">
                           <Image
