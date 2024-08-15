@@ -68,7 +68,7 @@ const DownLoadMenu = ({
           </div>
         </Select.Option>
       </Select>
-      {fileType === "png" && (
+      {/* {fileType === "png" && (
         <div className="mt-4">
           <label htmlFor="pixelRatio" className="mb-2 text-lg">
             Chọn kích cỡ x
@@ -97,7 +97,7 @@ const DownLoadMenu = ({
             </p>
           </div>
         </div>
-      )}
+      )} */}
       <button
         className="mt-4 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
         onClick={handleDownload}>
@@ -114,7 +114,7 @@ const EditPrint = ({ stageRef }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [imageURL, setImageURL] = useState("");
   const [fileType, setFileType] = useState("png");
-  const [pixelRatio, setPixelRatio] = useState(1);
+  const [pixelRatio, setPixelRatio] = useState(5);
   const [isProMember, setIsProMember] = useState(true);
 
   const [exportValue, setExportValue] = useState({
