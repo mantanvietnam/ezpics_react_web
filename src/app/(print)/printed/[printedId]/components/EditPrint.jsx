@@ -150,10 +150,42 @@ const EditPrint = ({ stageRef }) => {
     }
   };
 
+  function dataURLToBlob(dataURL) {
+    const parts = dataURL.split(",");
+    const mimeMatch = parts[0].match(/:(.*?);/);
+
+    if (!mimeMatch) {
+      throw new Error("Invalid data URL");
+    }
+
+    const mime = mimeMatch[1];
+    const bstr = atob(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
+  }
+
   const handleDownloadPNG = () => {
     if (imageURL) {
       const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Sử dụng pixelRatio từ thanh trượt
       downloadURI(dataURL, "download.png");
+      // Mở cửa sổ mới với ảnh
+
+      const img = new Image();
+      img.src = imageURL;
+
+      img.onload = () => {
+        const blob = dataURLToBlob(imageURL);
+        const newImgURL = URL.createObjectURL(blob);
+        window.open(newImgURL, "_blank");
+        URL.revokeObjectURL(newImgURL); // Giải phóng tài nguyên URL Blob
+      };
+
       setIsPopoverOpen(false); // Đóng modal sau khi tải về
     }
   };
