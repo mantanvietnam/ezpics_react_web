@@ -12,7 +12,6 @@ import { checkTokenCookie } from "@/utils";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { convertSLugUrl } from "../../../utils/url";
 
-
 function Page() {
   const [categories, setCategories] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);

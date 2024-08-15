@@ -38,7 +38,7 @@ const Page = () => {
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.stage.stageData);
   const [locked, setLocked] = useState(true);
-  const { design, designLayers, initSize, currentPage, totalPages } = stageData;
+  const { design, designLayers, initSize, currentPage, totalPages, selectedLayer } = stageData;
 
   const [selectedId, setSelectedId] = useState(null);
   const [activeTool, setActiveTool] = useState("Layer");
@@ -212,12 +212,10 @@ const Page = () => {
         />
         <div
           className={`
-          relative ${
-            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-          } h-full
-          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${
-            activeTool ? "ml-[408px]" : "ml-[108px]"
-          }`}>
+          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            } h-full
+          z-1 bg-gray-300 h-[calc(100%)] transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
+            }`}>
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
@@ -234,13 +232,15 @@ const Page = () => {
                 onDuplicateLayer={handleDuplicateLayer}
                 onColorButtonClick={() => setActiveTool("Color")}
                 onFontsButtonClick={() => setActiveTool("Fonts")}
+                vwHeight={initSize.height}
+                vwWidth={initSize.width}
               />
             </div>
           ) : (
             <div className="stick border-l border-slate-300 h-[50px] bg-white"></div>
           )}
           <div
-            className="flex overflow-auto h-[calc(100%-50px)] justify-around items-center"
+            className="flex overflow-auto h-[calc(100%-100px)] justify-around items-center"
             style={{
               cursor: isDragging ? "grabbing" : "grab",
             }}
@@ -248,7 +248,7 @@ const Page = () => {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}>
-            <div ref={containerRef}>
+            <div ref={containerRef} className="mt-[200px] mb-[50px]">
               <div
                 ref={draggableDivRef}
                 style={{
@@ -312,7 +312,7 @@ const Page = () => {
                             }}
                             id={layer.id}
                             data={layer.content}
-                            isSelected={layer.id === selectedId}
+                            isSelected={layer.id === selectedLayer?.id}
                             isSelectedFromToolbox={
                               layer.id === stageData?.selectedLayer?.id
                             }
@@ -334,9 +334,8 @@ const Page = () => {
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${
-              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-            }`}>
+            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+              }`}>
             <Footer containerRef={containerRef} />
           </div>
         </div>

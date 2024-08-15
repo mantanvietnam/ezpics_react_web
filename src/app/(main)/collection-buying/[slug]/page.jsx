@@ -1,5 +1,5 @@
 import { getInfoWarehouseApi } from "@/api/product";
-import ProductPage from "./ProductPage";
+import ProductPage from "./productPage";
 
 export async function generateMetadata({ params }) {
   const slug = params?.slug?.split(".html")[0];
@@ -23,8 +23,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async  function Page({ params }) {
-  const slug = params?.slug?.split(".html")[0]; 
+export default async function Page({ params }) {
+  const slug = params?.slug?.split(".html")[0];
   const temp = slug?.split("-");
   const productId = temp?.pop();
   return (
