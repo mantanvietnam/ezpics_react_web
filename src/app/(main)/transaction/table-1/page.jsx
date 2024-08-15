@@ -97,10 +97,10 @@ const Page = () => {
         <div className='p-12 w-full font-family-[Roboto,_Helvetica,_Arial,_sans-serif] font-normal text-sm'>
             <div className='flex justify-evenly '></div>
             <div className="flex space-x-4 mt-7">
-                <a href="/transaction/table-1" className="pb-2 border-b-2 font-weight text-lg border-transparent hover:border-red-600">
+                <a href="" className="pb-2 border-b-2 font-weight text-lg border-red-600">
                     Giao dịch tiền mặt
                 </a>
-                <a href="" className="pb-2 border-b-2 font-weight text-lg border-red-600">
+                <a href="/transaction/table-2" className="pb-2 border-b-2 font-weight text-lg border-transparent hover:border-red-600">
                     Giao dịch ecoin
                 </a>
             </div>

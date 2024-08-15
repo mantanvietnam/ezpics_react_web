@@ -12,6 +12,7 @@ import Link from 'next/link';
 import 'swiper/css';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import TruncatedText from '@/components/TruncatedText';
+import { convertSLugUrl } from '@/utils/url';
 
 const NewsPage = () => {
   const [news, setNews] = useState([]);
@@ -87,8 +88,14 @@ const NewsPage = () => {
         <Slider {...settings}>
           {news?.slice(0, 5).map((image, index) => (
             <div key={index} className="relative rounded-2xl overflow-hidden">
-              <img src={image.image} alt={`Slide ${index}`} className="w-full h-40 lg:h-72 xl:h-80 sm:h-52 md:h-60   object-cover mb-4 cursor-pointer" />
-              <Link href={`/post/${image.id}`}>
+              <img
+                src={image.image}
+                alt={`Slide ${index}`}
+                className="w-full h-40 lg:h-72 xl:h-80 sm:h-52 md:h-60   object-cover mb-4 cursor-pointer"
+              />
+              <Link
+                href={`/post/${convertSLugUrl(image.title)}-${image.id}.html`}
+              >
                 <div className="absolute bottom-0 left-0 w-full bg-gray-800 opacity-75 py-2 px-4 text-white text-center rounded-b-2xl">
                   <p className="text-sm">{image.title}</p>
                 </div>
@@ -104,35 +111,54 @@ const NewsPage = () => {
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {news?.map((article, index) => (
-              <div key={index} className="bg-white rounded-md shadow flex flex-col overflow-hidden relative  pb-7">
-                <Link href={`/post/${article?.id}`} className="text-blue-500 mt-2 self-start">
-                <img src={article?.image} alt={article?.title} className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110" />
+              <div
+                key={index}
+                className="bg-white rounded-md shadow flex flex-col overflow-hidden relative  pb-7"
+              >
+                <Link
+                  href={`/post/${convertSLugUrl(article?.title)}-${
+                    article?.id
+                  }.html`}
+                  className="text-blue-500 mt-2 self-start"
+                >
+                  <img
+                    src={article?.image}
+                    alt={article?.title}
+                    className="w-full h-32 object-cover mb-2 transition-transform duration-300 transform hover:scale-110"
+                  />
                   <div className="flex flex-col justify-between flex-grow">
                     <div>
                       <h3 className="text-xl font-bold mb-2 text-black p-1">
-                        <TruncatedText text={article?.title} maxLength={35}/>
+                        <TruncatedText text={article?.title} maxLength={35} />
                       </h3>
-                      <p className={`${styles.description} text-gray-700 text-xs p-1`}>
-                        <TruncatedText text={article.description} maxLength={90}/>
+                      <p
+                        className={`${styles.description} text-gray-700 text-xs p-1`}
+                      >
+                        <TruncatedText
+                          text={article.description}
+                          maxLength={90}
+                        />
                       </p>
                     </div>
-                    <p className='absolute bottom-1 left-1 pl-1'>
-                      Đọc thêm
-                    </p>
+                    <p className="absolute bottom-1 left-1 pl-1">Đọc thêm</p>
                   </div>
                 </Link>
               </div>
-              ))}
+            ))}
           </div>
-        {loadingMore && (
-          <div className="center text-center w-full">
-            <Flex align="center" gap="middle" className="flex justify-center items-center">
-              <Spin size="large" />
-            </Flex>
-          </div>
-        )}
+          {loadingMore && (
+            <div className="center text-center w-full">
+              <Flex
+                align="center"
+                gap="middle"
+                className="flex justify-center items-center"
+              >
+                <Spin size="large" />
+              </Flex>
+            </div>
+          )}
         </div>
-        <ScrollToTopButton/>
+        <ScrollToTopButton />
       </main>
     </div>
   );

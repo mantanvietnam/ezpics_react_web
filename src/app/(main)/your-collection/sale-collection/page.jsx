@@ -131,7 +131,7 @@ export default function Page() {
               ) : (
                 <div className='grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5'>
                   {productDetails.map((product) => (
-                    <Link href={`category/${convertSLugUrl(product.name)}-${product.id}.html`} className="slide-content" key={product.id}>
+                    <Link href={`/category/${convertSLugUrl(product.name)}-${product.id}.html`} className="slide-content" key={product.id}>
                       <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                         <div className="bg-orange-100 overflow-hidden group">
                           <Image
