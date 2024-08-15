@@ -112,7 +112,7 @@ export default function TextLayer(props) {
     dispatch(updateLayer({ id, data }));
 
     // Mark as selected when dragging ends
-    setLocalIsSelected(true);
+    // setLocalIsSelected(true);
   };
 
   const handleTransform = (e) => {
@@ -352,7 +352,7 @@ export default function TextLayer(props) {
         ref={shapeRef}
         text={formatText(textValue)}
         x={positionX}
-        y={positionY + 12}
+        y={positionY}
         draggable={!lock}
         visible={Boolean(status)}
         fill={data?.color}
