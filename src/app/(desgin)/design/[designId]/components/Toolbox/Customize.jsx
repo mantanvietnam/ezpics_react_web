@@ -51,7 +51,7 @@ export default function Customize() {
   const [typeUser, setTypeUser] = useState("");
   const [categoryList, setCategoryList] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
-  const [selectedOptionDisplay, setSelectedOptionDisplay] = useState("");
+  const [selectedOptionDisplay, setSelectedOptionDisplay] = useState(null);
   const [selectedOptionShow, setSelectedOptionShow] = useState(null);
   const [selectedFilesBackground, setSelectedFilesBackground] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState(null);
@@ -92,11 +92,11 @@ export default function Customize() {
           setPrice(response.data.data.sale_price);
           setsessPrice(response.data.data.price);
           setCategoryId(response.data.data.category_id);
-          setSelectedOption(response.data.data.status.toString());
+          setSelectedOption(response.data.data.display);
           setListWarehouse(response.data.data.listWarehouse);
           setCheckedItems(response.data.data.listWarehouse);
           setTypeUser(response.data.data.type);
-          setSelectedOptionDisplay(response.data?.data?.display ? "1" : "0");
+          setSelectedOptionDisplay(response.data.data.status);
         }
       } catch (error) {
         console.error(error);
@@ -123,10 +123,18 @@ export default function Customize() {
   }, []);
 
   useEffect(() => {
-    if (stageData.design.display) {
+    if (stageData.design.display === 1) {
       setSelectedOptionShow(1)
     } else {
       setSelectedOptionShow(0)
+    }
+  }, [stageData])
+
+  useEffect(() => {
+    if (stageData.design.status === 1) {
+      setSelectedOptionDisplay(1)
+    } else {
+      setSelectedOptionDisplay(0)
     }
   }, [stageData])
 
@@ -149,15 +157,13 @@ export default function Customize() {
   };
 
   const handleSelectChangeStatusShow = (event) => {
-    console.log('🚀 ~ handleSelectChangeStatusShow ~ event.target.value:', event.target.value)
     setSelectedOptionShow(event.target.value);
     handleChange("display", event.target.value);
   };
 
   const optionsDisplay = [
-    { value: "", label: "Chọn trạng thái" },
-    { value: "1", label: "Đã hoàn thành" },
-    { value: "0", label: "Đang chỉnh sửa" },
+    { value: 0, label: "Đang chỉnh sửa" },
+    { value: 1, label: "Đã hoàn thành" },
   ];
 
   const optionsShow = [
