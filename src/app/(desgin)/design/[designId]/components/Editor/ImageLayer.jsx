@@ -243,7 +243,7 @@ export default function ImageLayer(props) {
         image={image}
         alt="layer"
         x={postionX}
-        y={postionY}
+        y={postionY - 3}
         width={width > 0 ? width : 200}
         height={heightSize > 0 ? heightSize : 200}
         opacity={opacity}
