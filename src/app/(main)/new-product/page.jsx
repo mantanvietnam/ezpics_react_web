@@ -214,14 +214,16 @@ function Page() {
           <div className="flex items-start gap-3">
             <button
               onClick={toggleDrawer}
-              className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2">
+              className="h-10 bg-blue-500 text-white px-4 rounded-md flex items-center gap-2"
+            >
               <ControlOutlined />
               <span>Nâng cao</span>
             </button>
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className="p-2 border rounded-md">
+              className="p-2 border rounded-md"
+            >
               <option value="">Chọn danh mục</option>
               {categories?.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -239,7 +241,8 @@ function Page() {
           <div className="bg-white w-64 p-4 shadow-lg">
             <button
               onClick={toggleDrawer}
-              className="text-red-500 font-semibold mb-4">
+              className="text-red-500 font-semibold mb-4"
+            >
               Close
             </button>
             <h3 className="font-bold mb-2">Tìm kiếm nâng cao</h3>
@@ -326,14 +329,16 @@ function Page() {
             <div className="flex space-x-4">
               <button
                 onClick={handleCancel}
-                className="bg-gray-500 text-white p-2 rounded-md">
+                className="bg-gray-500 text-white p-2 rounded-md"
+              >
                 Xóa bộ lọc
               </button>
             </div>
           </div>
           <div
             className="flex-1 bg-gray-600 bg-opacity-50"
-            onClick={toggleDrawer}></div>
+            onClick={toggleDrawer}
+          ></div>
         </div>
       )}
 
@@ -343,7 +348,8 @@ function Page() {
           <Flex
             align="center"
             gap="middle"
-            className="flex justify-center items-center">
+            className="flex justify-center items-center"
+          >
             {/* Placeholder for loading spinner */}
           </Flex>
         </div>
@@ -356,10 +362,11 @@ function Page() {
                 {products.map((item, index) => (
                   <div className="block" key={index}>
                     <Link
-                      href={`/category/${convertSLugUrl(item.title)}-${
+                      href={`/category/${convertSLugUrl(item.name)}-${
                         item.id
                       }.html`}
-                      key={item.id}>
+                      key={item.id}
+                    >
                       <div className="card bg-white rounded-lg shadow-md overflow-hidden">
                         <div className="bg-orange-100 overflow-hidden text-center">
                           <Image
@@ -379,7 +386,7 @@ function Page() {
                             Đã bán {item.sold}
                           </p>
                           <div className="mt-2">
-                            <span className="text-red-500 mr-2 font-bold text-sm">
+                            <span className="text-red-500 mr-2 font-bold text-lg">
                               {item.sale_price === 0 ||
                               (dataInforUser?.member_pro === 1 &&
                                 item?.free_pro)
@@ -404,7 +411,8 @@ function Page() {
               <Flex
                 align="center"
                 gap="middle"
-                className="flex justify-center items-center">
+                className="flex justify-center items-center"
+              >
                 {/* Placeholder for no products found */}
                 <Spin size="large" />
               </Flex>
@@ -417,7 +425,8 @@ function Page() {
               <Flex
                 align="center"
                 gap="middle"
-                className="flex justify-center items-center">
+                className="flex justify-center items-center"
+              >
                 {/* Placeholder for loading more spinner */}
                 <Spin size="large" />
               </Flex>

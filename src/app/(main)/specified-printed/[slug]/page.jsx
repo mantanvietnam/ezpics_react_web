@@ -17,14 +17,16 @@ export default function Page({ params }) {
   const [dataLayer, setdataLayer] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(data);
+   const slug = params?.slug?.split(".html");
+   const temp = slug[0]?.split("-");
+   const product_id  = temp[temp.length - 1];
 
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
       try {
         const response = await detailProductSeriesAPI({
-          idProduct: `${params.product_id}`,
+          idProduct: `${product_id}`,
         });
         setData(response?.data?.product);
         setdataLayer(response?.data?.listLayer);
@@ -46,7 +48,7 @@ export default function Page({ params }) {
     };
     fetchProduct();
     getDataOther();
-  }, [params.product_id]);
+  }, [product_id]);
 
   const getDataOther = async () => {
     try {
@@ -71,7 +73,7 @@ export default function Page({ params }) {
           user={user}
           isLoading={isLoading}
           dataLayer={dataLayer}
-          id_param={params.product_id}
+          id_param={product_id}
         />
         {isLoading ? (
           <Skeleton

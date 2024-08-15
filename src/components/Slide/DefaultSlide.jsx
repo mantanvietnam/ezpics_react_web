@@ -124,7 +124,7 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
             <Slider {...settings} className="w-full relative">
               {products?.map((product) => (
                 <Link
-                  href={`category/${convertSLugUrl(product.name)}-${product.id}.html`}
+                  href={`https://ezpics.vn/category/${convertSLugUrl(product.name)}-${product.id}.html`}
                   className="slide-content pr-8"
                   key={product.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">

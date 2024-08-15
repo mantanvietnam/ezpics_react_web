@@ -3,10 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Spin } from 'antd';
-import styles from '../styles.module.css'
-import Link from 'next/link';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import TruncatedText from '@/components/TruncatedText';
 
 
 const NewsDetailPage = ({params}) => {
@@ -14,26 +11,33 @@ const NewsDetailPage = ({params}) => {
   const [news, setnews] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
+  const slug = params?.detailpost?.split(".html");
+  const temp = slug[0]?.split("-");
+  const postID = temp[temp.length - 1];
+  
   useEffect(() => {
     if (true) {
       const fetchArticle = async () => {
         try {
-          const response = await axios.post('https://apis.ezpics.vn/apis/getInfoPostAPI', {
-            id: params.detailpost,
-          });
-          console.log(response.data)
+          const response = await axios.post(
+            "https://apis.ezpics.vn/apis/getInfoPostAPI",
+            {
+              id: postID,
+            }
+          );
           setData(response.data.data);
           setnews(response.data.content);
           setLoading(false);
         } catch (error) {
-          console.error('Error fetching data:', error);
+          console.error("Error fetching data:", error);
           setLoading(false);
         }
       };
 
       fetchArticle();
     }
-  }, [params?.detailpost]);
+  }, [postID]);
 
   if (loading) {
     return (
@@ -58,31 +62,7 @@ const NewsDetailPage = ({params}) => {
         </div>
         <div className="text-gray-700 mt-4 img-center" dangerouslySetInnerHTML={{ __html: data?.content }}></div>
       </main>
-      {/* <div className="mb-8 mt-8">
-        <h1 className="text-4xl font-bold">Các bài viết khác</h1>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {news?.slice(0, 4).map((data, index) => (
-              <div key={index} className="bg-white rounded-md shadow flex flex-col overflow-hidden">
-                <img src={data?.image} alt={data?.title} className="w-full h-32 object-cover mb-2" />
-                <div className="flex flex-col justify-between flex-grow">
-                  <div>
-                    <h3 className="text-xl font-bold mb-2">
-                      <TruncatedText text={data?.title} maxLength={35}/>
-                    </h3>
-                    <p className={`${styles.description} text-gray-700`}>
-                      <TruncatedText text={data?.description} maxLength={90}/>
-                    </p>
-                  </div>
-                  <Link href={`/post/${data?.id}`} className="text-blue-500 mt-2 self-start">
-                    Đọc thêm
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div> */}
           <ScrollToTopButton/>
-
     </div>
   );
 };
