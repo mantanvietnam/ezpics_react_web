@@ -37,8 +37,6 @@ export default function ProductInfo(props) {
       console.error("Error parsing user_login JSON:", error);
     }
   }
-  console.log('🚀 ~ ProductInfo ~ userLogin:', userLogin)
-
   const token = Cookies.get("token");
 
   const [open, setOpen] = useState(false);

@@ -54,7 +54,7 @@ const Your_collection = () => {
                                 cursor: "pointer",
                             }}
                             onClick={() => {
-                                router.push(`/collection-buying/${item.id}`);
+                                router.push(`/collection-buying/${convertSLugUrl(item.title)}-${item.id}.html`);
                                 window.scrollTo({ top: 0, behavior: "smooth" });
                             }}
                         >

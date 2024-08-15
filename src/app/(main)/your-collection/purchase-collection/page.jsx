@@ -8,6 +8,7 @@ import {
 import { Skeleton } from "antd";
 import Image from "next/image";
 import Link from "next/link";
+import { convertSLugUrl } from "../../../../utils/url";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -90,7 +91,7 @@ export default function Page() {
                 <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5">
                   {productDetails.map((product) => (
                     <Link
-                      href={`/category/${product.id}`}
+                      href={`category/${convertSLugUrl(product.name)}-${product.id}.html`}
                       className="slide-content"
                       key={product.id}>
                       <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">

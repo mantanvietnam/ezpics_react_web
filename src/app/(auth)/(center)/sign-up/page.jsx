@@ -70,7 +70,7 @@ const Sign_up = () => {
             console.log(response);
             if (response?.code === 0) {
               toast.success(
-                "thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại"
+                "Thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại"
               );
               dispatch(CHANGE_STATUS_AUTH(true));
               dispatch(CHANGE_VALUE_TOKEN(response?.info_member?.token_web));
@@ -86,12 +86,12 @@ const Sign_up = () => {
               }, 3000);
               console.log(response.code);
             } else if (response.code === 2) {
-              toast.warning("gửi thiếu dữ liệu =)))");
+              toast.warning("Gửi thiếu dữ liệu");
             } else if (response.code === 3) {
-              toast.warning("Số điện thoại này đãn tồn tại");
+              toast.warning("Số điện thoại này đã tồn tại");
             } else if (response.code === 4) {
-              alert("pass nhập lại sai");
-              toast.error("pass nhập lại sai");
+              alert("Vui lòng nhập lại pass");
+              toast.error("Vui lòng nhập lại pass");
             }
           })
           .then(() => {
@@ -111,7 +111,8 @@ const Sign_up = () => {
         <form
           onSubmit={handleSubmit}
           action=""
-          className="form-submit flex-col mobile:flex-row">
+          className="form-submit flex-col mobile:flex-row"
+        >
           <div className="box-left w-full mobile:w-[50%]">
             {/* Image */}
             <Image

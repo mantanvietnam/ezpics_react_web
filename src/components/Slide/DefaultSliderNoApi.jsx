@@ -14,6 +14,7 @@ import {
 } from "./CustomSlide";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { convertSLugUrl } from "@/utils/url";
 
 const Slider = dynamic(() => import("react-slick"), { ssr: false });
 
@@ -94,7 +95,7 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
             <Slider {...settings} className="w-full relative">
               {products.map((product) => (
                 <Link
-                  href={`/category/${product.id}`}
+                  href={`category/${convertSLugUrl(product.name)}-${product.id}.html`}
                   className="slide-content pr-8"
                   key={product.id}>
                   <div className="card flex flex-col justify-between bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
