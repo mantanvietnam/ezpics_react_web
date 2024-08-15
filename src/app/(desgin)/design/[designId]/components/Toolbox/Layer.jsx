@@ -9,23 +9,26 @@ import Eye from "../../Icon/Eye";
 import EyeCrossed from "../../Icon/EyeCrossed";
 import Delete from "../../Icon/Delete";
 import Drapdrop from "../../Icon/Drapdrop";
+import SettingIcon from "../../Icon/Setting";
 
 import { deleteLayerAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
 import {
   addLayerText,
+  addLayerImage,
   removeLayer,
   selectLayer,
   selectLayerTool,
   deselectLayerTool,
   updateLayer,
   updateListLayers,
+  updatePageLayerText,
 } from "@/redux/slices/editor/stageSlice";
 import { useSelector } from "react-redux";
 import { Button, Tooltip, Popover, Input } from "antd";
-
 import "@/styles/loading.css";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const Layer = () => {
   const { designLayers, selectedLayer, design, currentPage } = useSelector(
@@ -128,17 +131,20 @@ const Layer = () => {
         color: "#333333",
         size: "10px",
         font: defaultFont.name,
+        page: currentPage.page,
       });
 
       if (res.data.code === 1) {
         const newLayer = res.data.data;
-        dispatch(addLayerText(newLayer));
+        dispatch(addLayerImage(newLayer));
+        dispatch(updatePageLayerText(newLayer));
 
         const data = {
           variable: textForm.variableName,
           variableLabel: textForm.displayName,
           text: getDisplayValue(),
         };
+
         dispatch(updateLayer({ id: newLayer.id, data: data }));
         setTextForm({ displayName: "", variableName: "", contentName: "" });
       } else {
@@ -164,7 +170,8 @@ const Layer = () => {
 
       if (res.data.code === 1) {
         const newLayer = res.data.data;
-        dispatch(addLayerText(newLayer));
+        dispatch(addLayerImage(newLayer));
+        dispatch(updatePageLayerText(newLayer));
 
         const data = {
           variable: imageForm.variableName,
@@ -181,12 +188,80 @@ const Layer = () => {
     }
   };
 
-  const handleLayerClick = (layerId) => {
-    if (selectedLayer?.id === layerId) {
-      dispatch(deselectLayerTool());
+  //Sua bien
+
+  const [textFormSetting, setTextFormSetting] = useState({
+    displayName: "",
+    variableName: "",
+    contentName: "",
+  });
+
+  const [imageFormSetting, setImageFormSetting] = useState({
+    displayName: "",
+    variableName: "",
+  });
+
+  const [initialContentSetting, setInitialContentSetting] = useState("");
+
+  // Cập nhật giá trị nội dung chữ mặc định khi variableName thay đổi
+  useEffect(() => {
+    if (textFormSetting.variableName) {
+      setInitialContentSetting(`%${textFormSetting.variableName}%`);
     } else {
-      dispatch(selectLayerTool({ id: layerId }));
+      setInitialContentSetting("");
     }
+  }, [textFormSetting.variableName]);
+
+  // Hàm xử lý khi nhấp vào ô input
+  const handleInputClickSetting = (e) => {
+    e.target.select(); // Chọn toàn bộ văn bản khi nhấp vào ô input
+  };
+
+  // Hàm xử lý sự thay đổi nội dung
+  const handleContentChangeSetting = (e) => {
+    setTextFormSetting({ ...textFormSetting, contentName: e.target.value });
+  };
+
+  const getDisplayValueSetting = () => {
+    if (textFormSetting.contentName) {
+      return textFormSetting.contentName;
+    }
+    return initialContentSetting;
+  };
+
+  const handleOpenTextSetting = (layer) => {
+    setTextFormSetting({
+      displayName: layer.content?.variableLabel || "",
+      variableName: layer.content?.variable || "",
+    });
+  };
+
+  const handleOpenImageSetting = (layer) => {
+    setImageFormSetting({
+      displayName: layer.content?.variableLabel || "",
+      variableName: layer.content?.variable || "",
+    });
+  };
+
+  const handleSettingTextVariable = (layer) => {
+    const data = {
+      variable: textFormSetting.variableName,
+      variableLabel: textFormSetting.displayName,
+      text: getDisplayValueSetting(),
+    };
+
+    dispatch(updateLayer({ id: layer.id, data: data }));
+    toast.success("Sửa thành công");
+  };
+
+  const handleSettingImageVariable = (layer) => {
+    const data = {
+      variable: imageFormSetting.variableName,
+      variableLabel: imageFormSetting.displayName,
+    };
+
+    dispatch(updateLayer({ id: layer.id, data: data }));
+    toast.success("Sửa thành công");
   };
 
   return (
@@ -319,6 +394,116 @@ const Layer = () => {
                               />
                             )}
                             <div className="flex items-center justify-end col-span-2">
+                              {layer.content.variable !== "" &&
+                                layer.content.type === "text" && (
+                                  <Popover
+                                    placement="rightBottom"
+                                    trigger="click"
+                                    autoFocus
+                                    returnFocus
+                                    content={
+                                      <div className="w-[200px] h-fit p-2">
+                                        <h4 className="text-base pb-2">
+                                          Tên trường hiển thị biến:
+                                        </h4>
+                                        <Input
+                                          value={textFormSetting.displayName}
+                                          onChange={(e) =>
+                                            setTextFormSetting({
+                                              ...textFormSetting,
+                                              displayName: e.target.value,
+                                            })
+                                          }
+                                        />
+                                        <h4 className="text-base py-2">
+                                          Tên biến:
+                                        </h4>
+                                        <Input
+                                          value={textFormSetting.variableName}
+                                          onChange={(e) =>
+                                            setTextFormSetting({
+                                              ...textFormSetting,
+                                              variableName: e.target.value,
+                                            })
+                                          }
+                                        />
+                                        <h4 className="text-base py-2">
+                                          Nội dung chữ:
+                                        </h4>
+                                        <Input
+                                          value={getDisplayValueSetting()}
+                                          onClick={handleInputClickSetting}
+                                          onChange={handleContentChangeSetting}
+                                        />
+                                        <button
+                                          className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300"
+                                          onClick={() =>
+                                            handleSettingTextVariable(layer)
+                                          }>
+                                          Sửa biến chữ
+                                        </button>
+                                      </div>
+                                    }>
+                                    <button
+                                      className="px-1"
+                                      onClick={() =>
+                                        handleOpenTextSetting(layer)
+                                      }>
+                                      <SettingIcon size={20} />
+                                    </button>
+                                  </Popover>
+                                )}
+                              {layer.content.variable !== "" &&
+                                layer.content.type === "image" && (
+                                  <Popover
+                                    placement="rightBottom"
+                                    trigger="click"
+                                    autoFocus
+                                    returnFocus
+                                    content={
+                                      <div className="w-[200px] h-fit p-2">
+                                        <h4 className="text-base pb-2">
+                                          Tên trường hiển thị biến:
+                                        </h4>
+                                        <Input
+                                          value={imageFormSetting.displayName}
+                                          onChange={(e) =>
+                                            setImageFormSetting({
+                                              ...imageFormSetting,
+                                              displayName: e.target.value,
+                                            })
+                                          }
+                                        />
+                                        <h4 className="text-base py-2">
+                                          Tên biến:
+                                        </h4>
+                                        <Input
+                                          value={imageFormSetting.variableName}
+                                          onChange={(e) =>
+                                            setImageFormSetting({
+                                              ...imageFormSetting,
+                                              variableName: e.target.value,
+                                            })
+                                          }
+                                        />
+                                        <button
+                                          className="w-[100%] bg-black rounded-lg border border-transparent text-white px-4 py-2 my-2 hover:bg-white hover:text-black hover:border-black transition-colors duration-300"
+                                          onClick={() =>
+                                            handleSettingImageVariable(layer)
+                                          }>
+                                          Sửa biến ảnh
+                                        </button>
+                                      </div>
+                                    }>
+                                    <button
+                                      className="px-1"
+                                      onClick={() =>
+                                        handleOpenImageSetting(layer)
+                                      }>
+                                      <SettingIcon size={20} />
+                                    </button>
+                                  </Popover>
+                                )}
                               <LockUnlock layer={layer} />
                               <VisibilityToggle layer={layer} />
                               <button
