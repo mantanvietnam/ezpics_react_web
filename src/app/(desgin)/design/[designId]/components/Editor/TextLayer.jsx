@@ -112,7 +112,7 @@ export default function TextLayer(props) {
     dispatch(updateLayer({ id, data }));
 
     // Mark as selected when dragging ends
-    setLocalIsSelected(true);
+    // setLocalIsSelected(true);
   };
 
   const handleTransform = (e) => {
