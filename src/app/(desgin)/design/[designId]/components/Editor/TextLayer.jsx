@@ -62,7 +62,7 @@ export default function TextLayer(props) {
 
   // Position of the text
   const positionX = designSize.width * (postion_left / 100);
-  const positionY = designSize.height * (postion_top / 100) + 12;
+  const positionY = designSize.height * (postion_top / 100);
 
   // Convert vw to px
   const sizeValue = parseFloat(size?.replace("vw", ""));
@@ -352,7 +352,7 @@ export default function TextLayer(props) {
         ref={shapeRef}
         text={formatText(textValue)}
         x={positionX}
-        y={positionY}
+        y={positionY + 12}
         draggable={!lock}
         visible={Boolean(status)}
         fill={data?.color}
