@@ -42,17 +42,19 @@ export default function ProductPageContent({ productId }) {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-8">
-      <ProductInfo data={data} user={user} isLoading={isLoading} />
-      {isLoading ? (
-        <Skeleton
-          avatar
-          paragraph={{
-            rows: 4,
-          }}
-        />
-      ) : (
-        <AuthorInfo user={user} />
-      )}
+      <div className="px-4">
+        <ProductInfo data={data} user={user} isLoading={isLoading} />
+        {isLoading ? (
+          <Skeleton
+            avatar
+            paragraph={{
+              rows: 4,
+            }}
+          />
+        ) : (
+          <AuthorInfo user={user} />
+        )}
+      </div>
       <DefaultSlideNoApi
         products={otherData}
         title="Mẫu thiết kế tương tự"

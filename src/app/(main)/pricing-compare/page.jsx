@@ -83,11 +83,11 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row pt-[2%] px-[2%] xl:px-[5%]">
+      <div className="flex flex-col md:flex-row pt-[2%] px-[2%] xl:px-[5%] mb-[3%]">
         <div className="w-full md:w-1/3 mb-3">
           <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="h-10 flex">
-              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black p-[2%]">
+              <p className="bg-white w-[60%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black p-[2%]">
                 Dành cho một người
               </p>
             </div>
@@ -122,7 +122,7 @@ const Page = () => {
         <div className="w-full md:w-1/3 mb-3">
           <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="flex justify-between h-10">
-              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
+              <p className="bg-white w-[60%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
                 Dành cho một người
               </p>
               <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
@@ -176,7 +176,7 @@ const Page = () => {
         <div className="w-full md:w-1/3 mb-3">
           <div className="w-full md:w-[95%] xl:w-[90%] bg-[#f2f3f5] p-6 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="flex justify-between h-10">
-              <p className="bg-white w-[40%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
+              <p className="bg-white w-[60%] flex items-center justify-center font-bold rounded-[10px] text-[11px] text-black font-semibold p-2">
                 Dành cho một người
               </p>
               <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
@@ -234,19 +234,6 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="w-full h-30 border-t border-[rgb(225,228,231)] mobile:flex justify-between items-center py-[3%] pl-[5%] mobile:px-[5%] mt-5 mobile:mt-10 mb-[50px] mobile:mb-[120px]">
-        <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3 pb-3 cursor-default">
-          <GlobalOutlined className="text-xl" />
-          <p className="pr-[2%] pl-[2%] my-3 text-[rgb(13,18,22)] text-sm">
-            Tiếng Việt (Việt Nam)
-          </p>
-          <DownOutlined />
-        </button>
-        <p className="pb-3">© 2024 Mọi quyền được bảo lưu, Ezpics®</p>
-        <a href="https://www.facebook.com/ezpicsvn" className="pb-3">
-          <img src="/images/fb_logo.png" alt="" className="w-[20px] h-[20px]" />
-        </a>
-      </div>
       <ModalUpPro open={open} handleCancel={handleCancel} />
     </div>
   );

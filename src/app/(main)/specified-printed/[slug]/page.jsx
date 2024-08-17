@@ -17,9 +17,9 @@ export default function Page({ params }) {
   const [dataLayer, setdataLayer] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-   const slug = params?.slug?.split(".html");
-   const temp = slug[0]?.split("-");
-   const product_id  = temp[temp.length - 1];
+  const slug = params?.slug?.split(".html");
+  const temp = slug[0]?.split("-");
+  const product_id = temp[temp.length - 1];
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -68,23 +68,25 @@ export default function Page({ params }) {
   return (
     <div className='className="flex-col w-[90%] mb-[100px]'>
       <div className="w-full flex flex-col items-center justify-center gap-8">
-        <ProductInfoPrinted
-          data={data}
-          user={user}
-          isLoading={isLoading}
-          dataLayer={dataLayer}
-          id_param={product_id}
-        />
-        {isLoading ? (
-          <Skeleton
-            avatar
-            paragraph={{
-              rows: 4,
-            }}
+        <div className="px-4">
+          <ProductInfoPrinted
+            data={data}
+            user={user}
+            isLoading={isLoading}
+            dataLayer={dataLayer}
+            id_param={product_id}
           />
-        ) : (
-          <AuthorInfo user={user} />
-        )}
+          {isLoading ? (
+            <Skeleton
+              avatar
+              paragraph={{
+                rows: 4,
+              }}
+            />
+          ) : (
+            <AuthorInfo user={user} />
+          )}
+        </div>
         <DefaultSlideNoApi
           products={otherData}
           title="Mẫu thiết kế tương tự"

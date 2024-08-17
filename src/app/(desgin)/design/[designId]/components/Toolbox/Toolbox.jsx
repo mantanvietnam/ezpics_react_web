@@ -122,7 +122,7 @@ const Toolbox = ({ onToolChange, activeTool, stageRef }) => {
           <p>Thành phần</p>
         </div>
 
-        <div
+        {/* <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -139,7 +139,7 @@ const Toolbox = ({ onToolChange, activeTool, stageRef }) => {
           }}>
           <ElementIcon size={20} />
           <p>Hình dạng</p>
-        </div>
+        </div> */}
 
         <div
           style={{
