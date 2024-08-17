@@ -18,6 +18,7 @@ import {
   addLayerImage,
   removeLayer,
   selectLayer,
+  deselectLayer,
   selectLayerTool,
   deselectLayerTool,
   updateLayer,
@@ -140,7 +141,7 @@ const Layer = () => {
         dispatch(updatePageLayerText(newLayer));
 
         const data = {
-          variable: textForm.variableName,
+          variable: textForm.variableName.replace(/\s+/g, ""),
           variableLabel: textForm.displayName,
           text: getDisplayValue(),
         };
@@ -174,7 +175,7 @@ const Layer = () => {
         dispatch(updatePageLayerText(newLayer));
 
         const data = {
-          variable: imageForm.variableName,
+          variable: imageForm.variableName.replace(/\s+/g, ""),
           variableLabel: imageForm.displayName,
         };
         dispatch(updateLayer({ id: newLayer.id, data: data }));
@@ -244,8 +245,17 @@ const Layer = () => {
   };
 
   const handleSettingTextVariable = (layer) => {
+    if (
+      !textFormSetting.variableName ||
+      !textFormSetting.displayName ||
+      !getDisplayValueSetting()
+    ) {
+      toast.error("Vui lòng không để trống các trường");
+      return;
+    }
+
     const data = {
-      variable: textFormSetting.variableName,
+      variable: textFormSetting.variableName.replace(/\s+/g, ""),
       variableLabel: textFormSetting.displayName,
       text: getDisplayValueSetting(),
     };
@@ -255,8 +265,11 @@ const Layer = () => {
   };
 
   const handleSettingImageVariable = (layer) => {
+    if (!imageFormSetting.displayName || !imageFormSetting.variableName) {
+      toast.error("Vui lòng không để trống cac trường");
+    }
     const data = {
-      variable: imageFormSetting.variableName,
+      variable: imageFormSetting.variableName.replace(/\s+/g, ""),
       variableLabel: imageFormSetting.displayName,
     };
 
@@ -370,7 +383,13 @@ const Layer = () => {
                                 : ""
                             }`}
                             onClick={() => {
-                              dispatch(selectLayer({ id: layer.id }));
+                              if (selectedLayer?.id === layer.id) {
+                                // Nếu layer hiện đang được chọn, thì bỏ chọn
+                                dispatch(deselectLayer({ id: layer.id }));
+                              } else {
+                                // Nếu layer chưa được chọn, thì chọn layer
+                                dispatch(selectLayer({ id: layer.id }));
+                              }
                             }}>
                             <button className="col-span-1 cursor-move">
                               <Drapdrop size={20} />

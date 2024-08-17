@@ -36,13 +36,10 @@ export default function ImageLayer(props) {
   const dispatch = useDispatch();
   const shapeRef = useRef();
   const trRef = useRef();
-  const containerRef = useRef(); // Ref for the container element
   const [image] = useImage(data.banner, "anonymous");
   const [isSelectLayer, setIsSelectLayer] = useState(isSelected);
   const [localIsSelected, setLocalIsSelected] = useState(false);
   const [showLine, setShowLine] = useState(false);
-  const [transformerVisible, setTransformerVisible] =
-    useState(isTransformerVisible);
 
   useEffect(() => {
     if (shapeRef.current && image) {
@@ -173,8 +170,9 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
-        }vw`,
+      width: `${
+        (e.target.width() * e.target.scaleX() * 100) / designSize.width
+      }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -221,22 +219,14 @@ export default function ImageLayer(props) {
     setShowLine(true);
   };
 
-  // const handleClickOutside = (e) => {
-  //   if (containerRef.current && !containerRef.current.contains(e.target)) {
-  //     setLocalIsSelected(false);
-  //     setTransformerVisible(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  const handleSelect = (e) => {
+    if (lock) return;
+    onSelect(e);
+    setLocalIsSelected(true);
+  };
 
   return (
-    <div ref={containerRef} style={{ position: "relative" }}>
+    <>
       <Image
         ref={shapeRef}
         id={id}
@@ -252,15 +242,16 @@ export default function ImageLayer(props) {
         scaleY={scaleY}
         draggable={!lock}
         visible={Boolean(status)}
-        onClick={lock ? null : onSelect}
-        onTap={lock ? null : onSelect}
+        onClick={!lock ? handleSelect : null}
+        onTap={!lock ? handleSelect : null}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
         onDragMove={handleDragMove}
       />
-      {!lock && localIsSelected && transformerVisible && (
+      {isTransformerVisible && !lock && localIsSelected && (
         <Transformer
           ref={trRef}
+          node={shapeRef.current}
           flipEnabled={false}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
@@ -294,16 +285,6 @@ export default function ImageLayer(props) {
           attachTo={shapeRef.current}
         />
       )}
-      {/* {isTransformerVisible && !lock && showLine && (
-        <GuideLines
-          x={imageProps.x}
-          y={imageProps.y}
-          width={imageProps.width}
-          height={imageProps.height}
-          stageWidth={designSize.width}
-          stageHeight={designSize.height}
-        />
-      )} */}
-    </div>
+    </>
   );
 }

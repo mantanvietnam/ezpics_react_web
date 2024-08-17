@@ -175,6 +175,9 @@ const stageSlice = createSlice({
         state.stageData.selectedLayer = { ...layer };
       }
     },
+    deselectLayer: (state) => {
+      state.stageData.selectedLayer = null;
+    },
     selectLayerTool: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload;
       const designLayers = [...state.stageData.currentPage.pageLayers];
@@ -431,6 +434,7 @@ export const {
   removeLayer,
   updateLayer,
   selectLayer,
+  deselectLayer,
   selectLayerTool,
   deselectLayerTool,
   updateListLayers,

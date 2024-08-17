@@ -246,44 +246,51 @@ export default function ProductInfo(props) {
           {isLoading ? (
             <Skeleton.Input active="true" />
           ) : (
-          <div className="flex items-center justify-center gap-1 border-l-2 border-slate-300 pl-1">
-            {data?.favorites !== 0 ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <g clip-path="url(#clip0_234_2)">
-              <path d="M11.466 22.776C11.607 22.92 11.799 23 12 23C12.201 23 12.393 22.92 12.534 22.776L22.128 13.055C26.129 9.002 23.286 2 17.596 2C14.179 2 12.611 4.511 12 4.98C11.386 4.509 9.82804 2 6.40404 2C0.732037 2 -2.14596 8.984 1.87304 13.055L11.466 22.776Z" fill="#F44336"/>
-              </g>
-              <defs>
-              <clipPath id="clip0_234_2">
-              <rect width="24" height="24" fill="white"/>
-              </clipPath>
-              </defs>
-              </svg>
-            ) : (
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: 25,
-                  height: 25,
-                  borderRadius: "50%",
-                  fill: "currentColor",
-                }}>
-                <path
-                  d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
+            <div className="flex items-center justify-center gap-1 border-l-2 border-slate-300 pl-1">
+              {data?.favorites !== 0 ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <g clip-path="url(#clip0_234_2)">
+                    <path
+                      d="M11.466 22.776C11.607 22.92 11.799 23 12 23C12.201 23 12.393 22.92 12.534 22.776L22.128 13.055C26.129 9.002 23.286 2 17.596 2C14.179 2 12.611 4.511 12 4.98C11.386 4.509 9.82804 2 6.40404 2C0.732037 2 -2.14596 8.984 1.87304 13.055L11.466 22.776Z"
+                      fill="#F44336"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_234_2">
+                      <rect width="24" height="24" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              ) : (
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
                   style={{
-                    color: "rgb(255, 66, 78)",
-                  }}></path>
-              </svg>
-            )}
-            <span className="text-sm font-semibold">
-              Đã thích ({data?.favorites || 0})
-            </span>
-          </div>
-
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 25,
+                    height: 25,
+                    borderRadius: "50%",
+                    fill: "currentColor",
+                  }}>
+                  <path
+                    d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
+                    style={{
+                      color: "rgb(255, 66, 78)",
+                    }}></path>
+                </svg>
+              )}
+              <span className="text-sm font-semibold">
+                Đã thích ({data?.favorites || 0})
+              </span>
+            </div>
           )}
         </div>
       </div>
@@ -310,48 +317,50 @@ export default function ProductInfo(props) {
               {userLogin?.member_pro === 1
                 ? "Miễn Phí"
                 : data?.sale_price
-                  ? VND.format(data?.sale_price)
-                  : "Miễn Phí"}
+                ? VND.format(data?.sale_price)
+                : "Miễn Phí"}
             </div>
             <div className="line-through text-slate-400 rounded-sm">
               {userLogin?.member_pro === 1
                 ? ""
-                : data?.price ? VND.format(data?.price) : ""}
+                : data?.price
+                ? VND.format(data?.price)
+                : ""}
             </div>
-            {userLogin?.member_pro === 1
-              ? ""
-              : data?.sale_price ? (
-                <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
-                  {`Giảm ${Math.round(
-                    100 - (data?.sale_price / data?.price) * 100
-                  )}%`}
-                </div>
-              ) : (
-                ""
-              )}
+            {userLogin?.member_pro === 1 ? (
+              ""
+            ) : data?.sale_price ? (
+              <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+                {`Giảm ${Math.round(
+                  100 - (data?.sale_price / data?.price) * 100
+                )}%`}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
 
           {userLogin?.member_pro === 1
             ? ""
             : data?.price !== 0 && (
-              <div className="flex items-center gap-3">
-                <div className="text-sm product-details-e">Khuyến mãi</div>
-                <div
-                  style={{
-                    backgroundColor: "rgb(255, 245, 241)",
-                    border: "1px solid rgb(255, 66, 78)",
-                    color: "rgb(255, 66, 78)",
-                    padding: "2px",
-                    fontWeight: "semibold",
-                  }}>
-                  {data?.sale_price
-                    ? `Lên đến ${Math.round(
-                      100 - (data?.sale_price / data?.price) * 100
-                    )}%`
-                    : "Miễn Phí"}
+                <div className="flex items-center gap-3">
+                  <div className="text-sm product-details-e">Khuyến mãi</div>
+                  <div
+                    style={{
+                      backgroundColor: "rgb(255, 245, 241)",
+                      border: "1px solid rgb(255, 66, 78)",
+                      color: "rgb(255, 66, 78)",
+                      padding: "2px",
+                      fontWeight: "semibold",
+                    }}>
+                    {data?.sale_price
+                      ? `Lên đến ${Math.round(
+                          100 - (data?.sale_price / data?.price) * 100
+                        )}%`
+                      : "Miễn Phí"}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
             <div className="w-[37px] h-[35px] mr-3 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
@@ -528,14 +537,15 @@ export default function ProductInfo(props) {
             <Radio value="ecoin">Mua bằng ecoin</Radio>
           </Radio.Group>
           <div className="flex gap-2 justify-end mb-[20px] items-center">
-            <div className="text-lg font-semibold">{userLogin?.member_pro === 1 ? "Tài khoản Pro:" : "Tổng tiền:"}</div>
+            <div className="text-lg font-semibold">
+              {userLogin?.member_pro === 1 ? "Tài khoản Pro:" : "Tổng tiền:"}
+            </div>
             <div className="text-lg font-semibold">
               {userLogin?.member_pro === 1
                 ? "Miễn Phí"
                 : type === "ecoin"
-                  ? `${data?.ecoin} eCoin`
-                  : VND.format(data?.sale_price)
-              }
+                ? `${data?.ecoin} eCoin`
+                : VND.format(data?.sale_price)}
             </div>
           </div>
           <div className="flex justify-end">

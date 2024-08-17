@@ -151,7 +151,7 @@ const Product = (props) => {
   ];
 
   return (
-    <div className="flex xl:flex-row flex-col justify-around w-full h-full mt-[100px] mb-5">
+    <div className="flex xl:flex-row flex-col justify-around w-full h-full mt-[100px] mb-5 px-4">
       <div className="xl:w-1/2 w-full h-full flex flex-col items-center justify-between gap-8">
         <div className="pr-6 flex items-center">
           {isLoading ? (
@@ -223,14 +223,12 @@ const Product = (props) => {
                   height: 25,
                   borderRadius: "50%",
                   fill: "currentColor",
-                }}
-              >
+                }}>
                 <path
                   d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
                   style={{
                     color: "rgb(255, 66, 78)",
-                  }}
-                ></path>
+                  }}></path>
               </svg>
               <span className="text-sm font-semibold">
                 Đã thích ({data?.favorites || 0})
@@ -320,8 +318,7 @@ const Product = (props) => {
             <>
               <button
                 onClick={showLoading}
-                className="flex items-center justify-center py-2 bg-red-50 border border-red-500 text-red-500 w-[200px] cursor-pointer animate-pulse"
-              >
+                className="flex items-center justify-center py-2 bg-red-50 border border-red-500 text-red-500 w-[200px] cursor-pointer animate-pulse">
                 <div>Chi tiết sản phẩm</div>
               </button>
               <Modal
@@ -329,8 +326,7 @@ const Product = (props) => {
                 width={1200}
                 footer={null}
                 loading={loading}
-                onCancel={() => setOpen(false)}
-              >
+                onCancel={() => setOpen(false)}>
                 <h2 className="text-4xl text-center font-bold p-6">
                   Chi tiết thiết kế trong bộ sưu tập
                 </h2>
@@ -342,8 +338,7 @@ const Product = (props) => {
                           item.id
                         }.html`}
                         className="relative card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58"
-                        key={item.id}
-                      >
+                        key={item.id}>
                         <div className="relative bg-orange-100">
                           {item.image ? (
                             <Image
@@ -388,8 +383,7 @@ const Product = (props) => {
                 paddingTop: "11.5px",
                 paddingBottom: "11.5px",
               }}
-              onClick={showModal}
-            >
+              onClick={showModal}>
               Mua ngay
             </button>
           </div>
@@ -402,8 +396,7 @@ const Product = (props) => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={null}
-        className="buy-product-modal"
-      >
+        className="buy-product-modal">
         <div>
           <div className="flex gap-2 mb-[20px]">
             <div className="flex items-center text-slate-500">
@@ -441,8 +434,7 @@ const Product = (props) => {
             name="radiogroup"
             defaultValue={type}
             onChange={handleChangeRadio}
-            className="mb-[20px]"
-          >
+            className="mb-[20px]">
             <Radio value="">Mua bằng tiền tài khoản</Radio>
             <Radio value="ecoin">Mua bằng ecoin</Radio>
           </Radio.Group>
@@ -464,8 +456,7 @@ const Product = (props) => {
             </Button>
             <button
               className="button-red text-sm font-semibold h-[35px] w-[200px]"
-              onClick={handleOk}
-            >
+              onClick={handleOk}>
               {confirmLoading ? (
                 <div>
                   <Space>
@@ -542,11 +533,13 @@ export default function ProductPage({ params }) {
           defaultPrice={defaultPrice}
           collection={dataWarehouse}
         />
-        {isLoading ? (
-          <Skeleton avatar paragraph={{ rows: 4 }} />
-        ) : (
-          <AuthorInfo user={user} />
-        )}
+        <div className="px-4 w-full">
+          {isLoading ? (
+            <Skeleton avatar paragraph={{ rows: 4 }} />
+          ) : (
+            <AuthorInfo user={user} />
+          )}
+        </div>
         <CollectionProductSlider title="Bộ sưu tập bạn có thể thích" />
       </div>
     </div>

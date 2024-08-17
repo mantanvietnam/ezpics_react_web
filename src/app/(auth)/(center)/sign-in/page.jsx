@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { toast } from "react-toastify";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -166,6 +167,7 @@ export default function Login() {
         if (repon.code === 0) {
           setCodeForgotPassword(repon?.codeForgotPassword);
           handleReCheck();
+          toast.success("Thay đổi mật khẩu thành công");
         } else {
           setCodeForgotPassword("");
           setcodeForgotPasswordError(repon?.messages[0]?.text);
@@ -253,8 +255,7 @@ export default function Login() {
                       <button
                         className={styles.confirm}
                         onClick={handleConfirmForgotPassword}
-                        disabled={isConfirming}
-                      >
+                        disabled={isConfirming}>
                         {isConfirming ? (
                           <Spin
                             indicator={
@@ -273,8 +274,7 @@ export default function Login() {
                       </button>
                       <button
                         className={styles.rollback}
-                        onClick={handleRollBack}
-                      >
+                        onClick={handleRollBack}>
                         <ArrowLeftOutlined className={styles.icon} />
                         <p>Quay lại</p>
                       </button>
@@ -299,8 +299,7 @@ export default function Login() {
                         <p className={styles.label_input}>Mật khẩu</p>
                         <p
                           className={styles.forgot_pass}
-                          onClick={handleCheckForgot}
-                        >
+                          onClick={handleCheckForgot}>
                           Quên mật khẩu ?
                         </p>
                       </div>
@@ -324,8 +323,7 @@ export default function Login() {
                         type="submit"
                         className={styles.login}
                         onClick={handleSubmitLogin}
-                        disabled={isLoading}
-                      >
+                        disabled={isLoading}>
                         {isLoading ? (
                           <Spin
                             indicator={
@@ -345,8 +343,7 @@ export default function Login() {
                       <p className={styles.or}>Hoặc</p>
                       <button
                         className={styles.register}
-                        onClick={handleLoginWithGoogle}
-                      >
+                        onClick={handleLoginWithGoogle}>
                         Đăng nhập bằng Google
                       </button>
                       <p className={styles.option_regis}>
@@ -400,8 +397,7 @@ export default function Login() {
                     <button
                       className={styles.confirm}
                       onClick={handleSubmitNewPassword}
-                      disabled={isSavingPassword}
-                    >
+                      disabled={isSavingPassword}>
                       {isSavingPassword ? (
                         <Spin
                           indicator={
@@ -420,8 +416,7 @@ export default function Login() {
                     </button>
                     <button
                       className={styles.rollback}
-                      onClick={handleRollBack}
-                    >
+                      onClick={handleRollBack}>
                       <ArrowLeftOutlined className={styles.icon} />
                       <p>Quay lại</p>
                     </button>
