@@ -1,5 +1,13 @@
 import axios from "axios";
 
+export const saveRequestDesignerAPI = async (data) => {
+  const response = await axios.post(
+    " https://apis.ezpics.vn/apis/saveRequestDesignerAPI",
+    data
+  );
+  return response.data;
+};
+
 export const getListLayerApi = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/listLayerAPI",
