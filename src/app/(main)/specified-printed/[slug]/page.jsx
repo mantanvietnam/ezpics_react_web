@@ -17,9 +17,9 @@ export default function Page({ params }) {
   const [dataLayer, setdataLayer] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-   const slug = params?.slug?.split(".html");
-   const temp = slug[0]?.split("-");
-   const product_id  = temp[temp.length - 1];
+  const slug = params?.slug?.split(".html");
+  const temp = slug[0]?.split("-");
+  const product_id = temp[temp.length - 1];
 
   useEffect(() => {
     const fetchProduct = async () => {

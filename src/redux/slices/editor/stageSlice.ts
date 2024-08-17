@@ -144,6 +144,7 @@ const stageSlice = createSlice({
       state.historyStep = historyStep;
     },
     updateLayer: (state, action: PayloadAction<{ id: string; data: any }>) => {
+      console.log("Data to update:", action.payload.id);
       state.stageData.designLayers = state.stageData.designLayers.map(
         (layer: any) =>
           layer.id === action.payload.id
@@ -173,6 +174,9 @@ const stageSlice = createSlice({
       if (layer) {
         state.stageData.selectedLayer = { ...layer };
       }
+    },
+    deselectLayer: (state) => {
+      state.stageData.selectedLayer = null;
     },
     selectLayerTool: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload;
@@ -430,6 +434,7 @@ export const {
   removeLayer,
   updateLayer,
   selectLayer,
+  deselectLayer,
   selectLayerTool,
   deselectLayerTool,
   updateListLayers,

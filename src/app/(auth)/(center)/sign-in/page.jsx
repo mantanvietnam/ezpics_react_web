@@ -19,6 +19,8 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { toast } from "react-toastify";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -72,6 +74,11 @@ export default function Login() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [savePasswordError, setSavePasswordError] = useState("");
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   const [deviceToken, setDeviceToken] = useState("");
   useEffect(() => {
@@ -166,6 +173,7 @@ export default function Login() {
         if (repon.code === 0) {
           setCodeForgotPassword(repon?.codeForgotPassword);
           handleReCheck();
+          toast.success("Thay đổi mật khẩu thành công");
         } else {
           setCodeForgotPassword("");
           setcodeForgotPasswordError(repon?.messages[0]?.text);
@@ -253,8 +261,7 @@ export default function Login() {
                       <button
                         className={styles.confirm}
                         onClick={handleConfirmForgotPassword}
-                        disabled={isConfirming}
-                      >
+                        disabled={isConfirming}>
                         {isConfirming ? (
                           <Spin
                             indicator={
@@ -273,8 +280,7 @@ export default function Login() {
                       </button>
                       <button
                         className={styles.rollback}
-                        onClick={handleRollBack}
-                      >
+                        onClick={handleRollBack}>
                         <ArrowLeftOutlined className={styles.icon} />
                         <p>Quay lại</p>
                       </button>
@@ -299,33 +305,51 @@ export default function Login() {
                         <p className={styles.label_input}>Mật khẩu</p>
                         <p
                           className={styles.forgot_pass}
-                          onClick={handleCheckForgot}
-                        >
+                          onClick={handleCheckForgot}>
                           Quên mật khẩu ?
                         </p>
                       </div>
-                      <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleSubmitLogin(e);
-                          }
-                        }}
-                      />
-                      {errors?.password && (
-                        <p className={styles.error}>{errors?.password}</p>
-                      )}
-                      {loginError && (
-                        <p className={styles.error}>{loginError}</p>
-                      )}
+                      <div
+                        style={{
+                          position: "relative",
+                        }}>
+                        <input
+                          type={isPasswordVisible ? "text" : "password"}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleSubmitLogin(e);
+                            }
+                          }}
+                        />
+                        <span
+                          onClick={togglePasswordVisibility}
+                          style={{
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                          }}>
+                          {isPasswordVisible ? (
+                            <EyeOutlined />
+                          ) : (
+                            <EyeInvisibleOutlined />
+                          )}
+                        </span>
+                        {errors?.password && (
+                          <p className={styles.error}>{errors?.password}</p>
+                        )}
+                        {loginError && (
+                          <p className={styles.error}>{loginError}</p>
+                        )}
+                      </div>
                       <button
                         type="submit"
                         className={styles.login}
                         onClick={handleSubmitLogin}
-                        disabled={isLoading}
-                      >
+                        disabled={isLoading}>
                         {isLoading ? (
                           <Spin
                             indicator={
@@ -345,8 +369,7 @@ export default function Login() {
                       <p className={styles.or}>Hoặc</p>
                       <button
                         className={styles.register}
-                        onClick={handleLoginWithGoogle}
-                      >
+                        onClick={handleLoginWithGoogle}>
                         Đăng nhập bằng Google
                       </button>
                       <p className={styles.option_regis}>
@@ -375,20 +398,54 @@ export default function Login() {
                       <p className={styles.error}>{errors?.verificationCode}</p>
                     )}
                     <p className={styles.label_input}>Mật khẩu mới</p>
-                    <input
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type={isPasswordVisible ? "text" : "password"}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
+                      <span
+                        onClick={togglePasswordVisibility}
+                        style={{
+                          position: "absolute",
+                          right: "10px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          cursor: "pointer",
+                        }}>
+                        {isPasswordVisible ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </span>
+                    </div>
                     {errors?.newPassword && (
                       <p className={styles.error}>{errors?.newPassword}</p>
                     )}
                     <p className={styles.label_input}>Nhập lại mật khẩu mới</p>
-                    <input
-                      type="password"
-                      value={confirmNewPassword}
-                      onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type={isPasswordVisible ? "text" : "password"}
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      />
+                      <span
+                        onClick={togglePasswordVisibility}
+                        style={{
+                          position: "absolute",
+                          right: "10px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          cursor: "pointer",
+                        }}>
+                        {isPasswordVisible ? (
+                          <EyeOutlined />
+                        ) : (
+                          <EyeInvisibleOutlined />
+                        )}
+                      </span>
+                    </div>
                     {errors?.confirmNewPassword && (
                       <p className={styles.error}>
                         {errors?.confirmNewPassword}
@@ -400,8 +457,7 @@ export default function Login() {
                     <button
                       className={styles.confirm}
                       onClick={handleSubmitNewPassword}
-                      disabled={isSavingPassword}
-                    >
+                      disabled={isSavingPassword}>
                       {isSavingPassword ? (
                         <Spin
                           indicator={
@@ -420,8 +476,7 @@ export default function Login() {
                     </button>
                     <button
                       className={styles.rollback}
-                      onClick={handleRollBack}
-                    >
+                      onClick={handleRollBack}>
                       <ArrowLeftOutlined className={styles.icon} />
                       <p>Quay lại</p>
                     </button>

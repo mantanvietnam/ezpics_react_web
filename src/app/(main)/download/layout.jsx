@@ -53,19 +53,6 @@ const page = () => {
           />
         </div>
       </div>
-      <div className="w-full h-30 border-t border-[rgb(225,228,231)] flex justify-between items-center py-[3%] px-[5%] mt-10">
-        <button className="border border-[rgb(225,228,231)] bg-white flex w-[220px] items-center justify-between px-3">
-          <GlobalOutlined className="text-xl" />
-          <p className="pr-[2%] pl-[2%] my-3 text-[rgb(13,18,22)] text-sm">
-            Tiếng Việt (Việt Nam)
-          </p>
-          <DownOutlined />
-        </button>
-        <p>© 2024 Mọi quyền được bảo lưu, Ezpics®</p>
-        <a href="https://www.facebook.com/ezpicsvn">
-          <img src="/images/fb_logo.png" alt="" className="w-[20px] h-[20px]" />
-        </a>
-      </div>
     </div>
   );
 };
