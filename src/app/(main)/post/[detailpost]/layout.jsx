@@ -16,11 +16,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: product.title,
       type: "website",
-      description: `Mẫu thiết kế ${product.title} của tác giả ${
-        product.author
-      } đã bán được ${product.sold} mẫu với giá bán ${
-        product.sale_price ? product.sale_price : "miễn phí"
-      }`,
+      description:product.description || `Bài viết ${product.title}`,
       images: product.thumbnail || product.thumn || product.image,
     },
   };

@@ -57,7 +57,7 @@ const Nav = ({
       { href: "/", label: "Trang chủ", icon: images.home },
       { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
       { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
-      { href: "/project/recommend", label: "Danh mục", icon: images.category },
+      { href: "/project", label: "Danh mục", icon: images.category },
     ],
     []
   );
