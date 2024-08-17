@@ -533,13 +533,11 @@ export default function ProductPage({ params }) {
           defaultPrice={defaultPrice}
           collection={dataWarehouse}
         />
-        <div className="px-4 w-full">
-          {isLoading ? (
-            <Skeleton avatar paragraph={{ rows: 4 }} />
-          ) : (
-            <AuthorInfo user={user} />
-          )}
-        </div>
+        {isLoading ? (
+          <Skeleton avatar paragraph={{ rows: 4 }} />
+        ) : (
+          <AuthorInfo user={user} />
+        )}
         <CollectionProductSlider title="Bộ sưu tập bạn có thể thích" />
       </div>
     </div>
