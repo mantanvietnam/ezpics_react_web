@@ -68,25 +68,23 @@ export default function Page({ params }) {
   return (
     <div className='className="flex-col w-[90%] mb-[100px]'>
       <div className="w-full flex flex-col items-center justify-center gap-8">
-        <div className="px-4">
-          <ProductInfoPrinted
-            data={data}
-            user={user}
-            isLoading={isLoading}
-            dataLayer={dataLayer}
-            id_param={product_id}
+        <ProductInfoPrinted
+          data={data}
+          user={user}
+          isLoading={isLoading}
+          dataLayer={dataLayer}
+          id_param={product_id}
+        />
+        {isLoading ? (
+          <Skeleton
+            avatar
+            paragraph={{
+              rows: 4,
+            }}
           />
-          {isLoading ? (
-            <Skeleton
-              avatar
-              paragraph={{
-                rows: 4,
-              }}
-            />
-          ) : (
-            <AuthorInfo user={user} />
-          )}
-        </div>
+        ) : (
+          <AuthorInfo user={user} />
+        )}
         <DefaultSlideNoApi
           products={otherData}
           title="Mẫu thiết kế tương tự"

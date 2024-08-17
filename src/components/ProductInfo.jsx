@@ -188,7 +188,7 @@ export default function ProductInfo(props) {
   console.log(data);
 
   return (
-    <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8">
+    <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8 px-4">
       <div className="xl:w-[50%] w-full h-full flex flex-col items-center justify-center gap-8">
         {isLoading ? (
           <SkeletonCustomProduct>

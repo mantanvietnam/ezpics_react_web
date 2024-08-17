@@ -13,7 +13,7 @@ export default function AuthorInfo(props) {
   const formattedDate = `Ngày ${day} Tháng ${month} Năm ${year}`;
 
   return (
-    <div className="flex flex-col gap-5 w-full">
+    <div className="flex flex-col gap-5 w-full px-4">
       <h2 className="text-lg font-semibold">Chi tiết tác giả</h2>
       <div className="flex w-fit xl:flex-row flex-col justify-between items-start w-full gap-8">
         <div className="flex justify-start">
