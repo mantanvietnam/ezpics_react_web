@@ -41,8 +41,10 @@ const Nav = ({
   let dataInforUser;
   if (getCookie("user_login")) {
     dataInforUser = JSON.parse(getCookie("user_login"));
+    console.log("dataInforUserdataInforUser", dataInforUser);
   } else if (session?.user_login) {
     dataInforUser = session?.user_login;
+    console.log("dataInforUserdataInforUser", dataInforUser);
   } else {
     dataInforUser = null;
   }
