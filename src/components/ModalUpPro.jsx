@@ -95,7 +95,8 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
               key={index}
               className={
                 index === currentIndex ? classes.imageActive : classes.image
-              }>
+              }
+            >
               <Image
                 className="object-contain rounded-lg"
                 alt="Image"
@@ -154,7 +155,8 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
               </div>
               <button
                 className="bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold"
-                onClick={() => setShowContent(false)}>
+                onClick={() => setShowContent(false)}
+              >
                 {isProMember ? "Gia hạn Ezpics Pro" : "Dùng thử Ezpics Pro"}
               </button>
             </>
@@ -209,10 +211,12 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
                           height="24"
-                          viewBox="0 0 24 24">
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             fill="rgb(12, 134, 21)"
-                            d="M4.53 11.9 9 16.38 19.44 5.97a.75.75 0 0 1 1.06 1.06L9.53 17.97c-.3.29-.77.29-1.06 0l-5-5c-.7-.71.35-1.77 1.06-1.07z"></path>
+                            d="M4.53 11.9 9 16.38 19.44 5.97a.75.75 0 0 1 1.06 1.06L9.53 17.97c-.3.29-.77.29-1.06 0l-5-5c-.7-.71.35-1.77 1.06-1.07z"
+                          ></path>
                         </svg>
                       </span>
                       <p className="m-0 text-base font-normal">{text}</p>
@@ -253,7 +257,8 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
                   </div>
                   <p
                     className="text-xs m-0 text-red-600 cursor-pointer"
-                    onClick={showDiscountModalHandler}>
+                    onClick={showDiscountModalHandler}
+                  >
                     Chọn để nhập mã
                   </p>
                 </div>
@@ -263,7 +268,8 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
                     isFormValid ? "" : "opacity-50 cursor-not-allowed"
                   }`}
                   onClick={handleButtonClick}
-                  disabled={!isFormValid}>
+                  disabled={!isFormValid}
+                >
                   Thanh toán
                 </button>
               </div>
@@ -283,13 +289,15 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
               className={
                 "boder-2 shadow-xl rounded px-5 py-2 ml-4 h-fit w-fit font-semibold"
               }
-              onClick={hideModal}>
+              onClick={hideModal}
+            >
               Hủy
             </button>
             <button
               className={
                 "bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-fit font-semibold opacity-50 cursor-not-allowed"
-              }>
+              }
+            >
               Chọn voucher
             </button>
           </div>
