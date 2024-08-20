@@ -267,9 +267,7 @@ export default function ProductInfoPrinted(props) {
           <div className="flex items-center gap-3">
             <div className="text-sm product-details-e">Lượt Tạo :</div>
             <div>
-              {data?.sale_price
-                ? `Lên đến ${100 - (data?.sale_price / data?.price) * 100}%`
-                : "Miễn Phí"}
+              {data?.export_image}
             </div>
           </div>
           <div className="flex items-center gap-3">
