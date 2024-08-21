@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLayer } from "@/redux/slices/print/printSlice";
+import { selectLayer, updateLayer } from "@/redux/slices/print/printSlice";
 
 export default function TextLayer(props) {
   const { data, designSize, id } = props;
@@ -79,13 +79,42 @@ export default function TextLayer(props) {
     setTextValue(data.text || "");
   }, [data.text]);
 
-  //   console.log("data", textValue);
+  const formatText = (text) => {
+    // Thay thế các thẻ <br /> và <br> bằng ký tự xuống dòng
+    return text.replace(/<br\s*\/?>/gi, "\n");
+  };
+
+  
+  // Hàm chuyển đổi từ vh sang pixel và từ pixel sang tỷ lệ lineHeight
+  const giandongToLineHeight = (giandong) => {
+    if (typeof giandong === "string" && giandong.endsWith("vh")) {
+      const vhValue = parseFloat(giandong);
+      if (!isNaN(vhValue)) {
+        const lineHeightInPx = (vhValue / 100) * designSize.height; // Chuyển đổi từ vh sang px
+        return lineHeightInPx / sizeValue; // Chuyển đổi từ px sang tỷ lệ
+      }
+    }
+    // Nếu không phải là dạng vh, trả về giá trị parseFloat hoặc giá trị mặc định
+    const parsedValue = parseFloat(giandong);
+    return isNaN(parsedValue) ? 1 : parsedValue;
+  };
+
+  // Hàm chuyển đổi từ vw sang pixel và từ pixel sang giá trị letterSpacing
+  const vwToLetterSpacing = (vw) => {
+    if (typeof vw === "string" && vw.endsWith("vw")) {
+      const vwValue = parseFloat(vw);
+      if (!isNaN(vwValue)) {
+        return (vwValue / 100) * designSize.width; // Chuyển đổi từ vw sang px
+      }
+    }
+    return parseFloat(vw) || 0; // Giá trị mặc định nếu không thể chuyển đổi
+  };
 
   return (
     <>
       <Text
         ref={shapeRef}
-        text={textValue}
+        text={formatText(textValue)}
         x={positionX}
         y={positionY}
         width={width}
@@ -97,8 +126,8 @@ export default function TextLayer(props) {
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
         align={text_align}
-        letterSpacing={gianchu === "normal" ? 0 : parseFloat(gianchu)}
-        lineHeight={giandong === "normal" ? 1 : parseFloat(giandong)}
+        letterSpacing={vwToLetterSpacing(gianchu)}
+        lineHeight={giandongToLineHeight(giandong)}
       />
     </>
   );
