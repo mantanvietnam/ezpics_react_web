@@ -110,6 +110,11 @@ export default function TextLayer(props) {
       postion_top: (e.target.y() / designSize.height) * 100,
     };
     dispatch(updateLayer({ id, data }));
+    // Trả layer về vị trí ban đầu sau khi di chuyển xong
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   const handleTransform = (e) => {
@@ -299,6 +304,26 @@ export default function TextLayer(props) {
     }
     return parseFloat(vw) || 0; // Giá trị mặc định nếu không thể chuyển đổi
   };
+
+  const [previousZIndex, setPreviousZIndex] = useState(null);
+
+  useEffect(() => {
+    if (shapeRef.current && trRef.current) {
+      if (localIsSelected) {
+        // Lưu trữ zIndex ban đầu trước khi di chuyển lên trên cùng
+        setPreviousZIndex(shapeRef.current.getZIndex());
+        // Di chuyển layer lên trên cùng
+        shapeRef.current.moveToTop();
+        trRef.current.moveToTop();
+      } else {
+        // Trả layer về vị trí ban đầu khi không còn được chọn
+        if (previousZIndex !== null) {
+          shapeRef.current.setZIndex(previousZIndex);
+          setPreviousZIndex(null); // Reset lại giá trị zIndex ban đầu
+        }
+      }
+    }
+  }, [localIsSelected]);
 
   return (
     <>
