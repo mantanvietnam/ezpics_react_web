@@ -162,6 +162,11 @@ export default function ImageLayer(props) {
     };
     dispatch(updateLayer({ id: id, data: data }));
     setShowLine(false);
+    // Trả layer về vị trí ban đầu sau khi di chuyển xong
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   const handleTransformEnd = (e) => {
@@ -170,9 +175,8 @@ export default function ImageLayer(props) {
     const data = {
       postion_left: (e.target.x() / designSize.width) * 100,
       postion_top: (e.target.y() / designSize.height) * 100,
-      width: `${
-        (e.target.width() * e.target.scaleX() * 100) / designSize.width
-      }vw`,
+      width: `${(e.target.width() * e.target.scaleX() * 100) / designSize.width
+        }vw`,
       rotate: `${e.target.rotation()}deg`,
     };
     dispatch(updateLayer({ id: id, data: data }));
@@ -225,6 +229,26 @@ export default function ImageLayer(props) {
     setLocalIsSelected(true);
   };
 
+  const [previousZIndex, setPreviousZIndex] = useState(null);
+
+  useEffect(() => {
+    if (shapeRef.current && trRef.current) {
+      if (localIsSelected) {
+        // Lưu trữ zIndex ban đầu trước khi di chuyển lên trên cùng
+        setPreviousZIndex(shapeRef.current.getZIndex());
+        // Di chuyển layer lên trên cùng
+        shapeRef.current.moveToTop();
+        trRef.current.moveToTop();
+      } else {
+        // Trả layer về vị trí ban đầu khi không còn được chọn
+        if (previousZIndex !== null) {
+          shapeRef.current.setZIndex(previousZIndex);
+          setPreviousZIndex(null); // Reset lại giá trị zIndex ban đầu
+        }
+      }
+    }
+  }, [localIsSelected]);
+
   return (
     <>
       <Image
@@ -246,6 +270,7 @@ export default function ImageLayer(props) {
         onTap={!lock ? handleSelect : null}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
+        // onMouseEnter={!lock ? handleSelect : null}
         onDragMove={handleDragMove}
       />
       {isTransformerVisible && !lock && localIsSelected && (

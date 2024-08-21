@@ -117,7 +117,6 @@ const Layer = () => {
   const network = useSelector((state) => state.network.ipv4Address);
 
   const handleCreateVariableText = async () => {
-    console.log("Text Variable Info:", textForm);
 
     const defaultFont = {
       name: "Open Sans",
@@ -377,11 +376,10 @@ const Layer = () => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className={`grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-blue-200 ${
-                              selectedLayer?.id === layer.id
-                                ? "bg-blue-100"
-                                : ""
-                            }`}
+                            className={`grid grid-cols-6 text-sm items-center py-2 my-1 border border-slate-200 hover:bg-blue-200 ${selectedLayer?.id === layer.id
+                              ? "bg-blue-100"
+                              : ""
+                              }`}
                             onClick={() => {
                               if (selectedLayer?.id === layer.id) {
                                 // Nếu layer hiện đang được chọn, thì bỏ chọn
