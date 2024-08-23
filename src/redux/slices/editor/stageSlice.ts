@@ -144,7 +144,6 @@ const stageSlice = createSlice({
       state.historyStep = historyStep;
     },
     updateLayer: (state, action: PayloadAction<{ id: string; data: any }>) => {
-      console.log("Data to update:", action.payload.id);
       state.stageData.designLayers = state.stageData.designLayers.map(
         (layer: any) =>
           layer.id === action.payload.id
