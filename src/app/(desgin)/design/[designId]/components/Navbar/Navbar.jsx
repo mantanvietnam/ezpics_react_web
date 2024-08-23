@@ -341,7 +341,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
             <input
               type="text"
               placeholder={stageData.design.name}
-              value={nameDesign || stageData.design.name} // Hiển thị giá trị hiện tại hoặc nameDesign nếu đã được thay đổi
+              value={nameDesign || ""} // Hiển thị giá trị hiện tại hoặc nameDesign nếu đã được thay đổi
               onChange={(e) => {
                 setNameDesign(e.target.value);
               }}
