@@ -12,7 +12,7 @@ const ExportIcon = ({ size }) => (
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="#000"
+        fill="none"
       />
     </g>
   </svg>

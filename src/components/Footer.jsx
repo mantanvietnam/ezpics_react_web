@@ -41,7 +41,7 @@ const Footer = () => {
 
   const pageItems = [
     { label: "Chính sách quyền riêng tư", link: "https://ezpics.vn/post/27" },
-    { label: "Hình thức thanh toán", link: " https://ezpics.vn/post/28" },
+    { label: "Hướng dẫn Nạp tiền và tài khoản eCoin được sử dụng sau khi đăng nhập", link: " https://ezpics.vn/post/28" },
     { label: "Chính sách bảo mật", link: "https://ezpics.vn/post/29" },
     {
       label: "Hướng dẫn sử dụng ",

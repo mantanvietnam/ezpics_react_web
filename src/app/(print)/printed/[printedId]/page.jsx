@@ -14,6 +14,7 @@ import images from "../../../../../public/images/index2";
 import Link from "next/link";
 import Image from "next/image";
 import "@/styles/loading.css";
+import useFonts from "../../../../hooks/useLoadFont";
 
 const Page = () => {
   const params = useParams();
@@ -26,6 +27,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [designLayers, setDesignLayer] = useState([]);
   const [sizeRespon, setSizeRespon] = useState(1); // Initial sizeRespon
+  const { fonts, setFonts } = useFonts();
 
   useEffect(() => {
     if (stageData && stageData.designLayers) {
