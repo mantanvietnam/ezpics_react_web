@@ -183,6 +183,10 @@ export default function ImageLayer(props) {
     e.target.scaleX(1);
     e.target.scaleY(1);
     setShowLine(false);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   useEffect(() => {
@@ -191,6 +195,10 @@ export default function ImageLayer(props) {
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   }, [isSelected, isSelectedFromToolbox]);
 
   const [imageProps, setImageProps] = useState({
