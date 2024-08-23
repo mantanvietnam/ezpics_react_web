@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import NextImage from "next/image";
-import imageIcon from "./save.png";
-import exportIcon from "./Layer 2.png";
 import { useSelector } from "react-redux";
-import { downloadListLayer, saveListLayer } from "@/api/design";
+import { saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
 import { Button, Popover, Select, Slider, Tooltip } from "antd";
 import { jsPDF } from "jspdf";
-import { checkTokenCookie, getCookie } from "@/utils";
+import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
 import SaveIcon from "../../Icon/SaveIcon";
 import ExportIcon from "../../Icon/ExportIcon";
@@ -382,6 +380,32 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 </Button>
               </Tooltip>
             </div>
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={handleUndo}
+            >
+              <Undo />
+              <p className="pl-2">Undo</p>
+            </button>
+
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={handleRedo}
+            >
+              <Redo />
+              <p className="pl-2">Redo</p>
+            </button>
+
             <button
               style={{
                 marginRight: "50px",
