@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import NextImage from "next/image";
-import imageIcon from "./save.png";
-import exportIcon from "./Layer 2.png";
 import { useSelector } from "react-redux";
-import { downloadListLayer, saveListLayer } from "@/api/design";
+import { saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
 import { Button, Popover, Select, Slider, Tooltip } from "antd";
 import { jsPDF } from "jspdf";
-import { checkTokenCookie, getCookie } from "@/utils";
+import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
 import SaveIcon from "../../Icon/SaveIcon";
 import ExportIcon from "../../Icon/ExportIcon";
@@ -288,7 +286,8 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
           zIndex: "10",
           position: "fixed",
           width: "100vw",
-        }}>
+        }}
+      >
         <div
           style={{
             height: "64px",
@@ -300,7 +299,8 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             borderBottom: "1px solid #fff",
-          }}>
+          }}
+        >
           <Link href="/" className="flex flex-center">
             <NextImage
               alt=""
@@ -318,19 +318,8 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               alignItems: "center",
               color: "#ffffff",
               height: "100%",
-            }}>
-            <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
-              <Tooltip placement="bottom" title="Undo">
-                <Button onClick={handleUndo} size="small" type="text">
-                  <Undo className="" />
-                </Button>
-              </Tooltip>
-              <Tooltip placement="bottom" title="Redo">
-                <Button onClick={handleRedo} size="small" type="text">
-                  <Redo />
-                </Button>
-              </Tooltip>
-            </div>
+            }}
+          >
             <button
               style={{
                 marginRight: "50px",
@@ -338,7 +327,34 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 alignItems: "flex-start",
                 fontSize: "18px",
               }}
-              onClick={handleSaveDesign}>
+              onClick={handleUndo}
+            >
+              <Undo />
+              <p className="pl-2">Undo</p>
+            </button>
+
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={handleRedo}
+            >
+              <Redo />
+              <p className="pl-2">Redo</p>
+            </button>
+
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={handleSaveDesign}
+            >
               <SaveIcon size={22} />
               <p className="pl-2">Lưu mẫu thiết kế</p>
             </button>
@@ -359,7 +375,8 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 />
               }
               open={isPopoverOpen}
-              onOpenChange={setIsPopoverOpen}>
+              onOpenChange={setIsPopoverOpen}
+            >
               <button
                 style={{
                   marginRight: "4px",
@@ -367,7 +384,8 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                   alignItems: "flex-start",
                   fontSize: "18px",
                 }}
-                onClick={handleDownLoadDesign}>
+                onClick={handleDownLoadDesign}
+              >
                 <ExportIcon size={23} />
                 <p className="pl-1">Xuất ảnh</p>
               </button>
