@@ -368,7 +368,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               height: "100%",
             }}
           >
-            <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
+            {/* <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
               <Tooltip placement="bottom" title="Undo">
                 <Button onClick={handleUndo} size="small" type="text">
                   <Undo className="" />
@@ -379,7 +379,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                   <Redo />
                 </Button>
               </Tooltip>
-            </div>
+            </div> */}
             <button
               style={{
                 marginRight: "50px",

@@ -170,7 +170,7 @@ const Layer = () => {
 
       if (res.data.code === 1) {
         const newLayer = res.data.data;
-        dispatch(addLayerImage(newLayer));
+        dispatch(addLayerText(newLayer));
         dispatch(updatePageLayerText(newLayer));
 
         const data = {
