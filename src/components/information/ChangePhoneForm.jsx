@@ -48,7 +48,9 @@ const ChangePhoneForm = ({ data, setData }) => {
             dispatch(CHANGE_VALUE_USER(responseInfo?.data?.data));
             setData(responseInfo?.data?.data); // Cập nhật state dữ liệu mới
 
-            toast.success("Thay đổi số điện thoại thành công");
+            toast.success("Thay đổi số điện thoại thành công", {
+              autoClose: 500,
+            });
             setInputPhone(false);
           } else {
             setLoadingPhone(false);

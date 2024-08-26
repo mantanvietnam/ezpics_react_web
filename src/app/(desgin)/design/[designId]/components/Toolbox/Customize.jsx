@@ -216,7 +216,9 @@ export default function Customize() {
           ...state,
         });
         if (res.code === 1) {
-          toast.success("Bạn đã lưu thông tin mẫu thiết kế thành công");
+          toast.success("Bạn đã lưu thông tin mẫu thiết kế thành công", {
+            autoClose: 500,
+          });
         }
       } catch (error) {
         console.log(error);

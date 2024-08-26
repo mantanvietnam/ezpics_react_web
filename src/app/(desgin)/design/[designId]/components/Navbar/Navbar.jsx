@@ -271,9 +271,13 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
         listLayer: jsonData,
       });
       if (response.code == 1) {
-        toast.success("Bạn đã lưu thiết kế thành công");
+        toast.success("Bạn đã lưu thiết kế thành công", {
+          autoClose: 500,
+        });
       } else {
-        toast.error("Lưu thiết kế thất bại!");
+        toast.error("Lưu thiết kế thất bại!", {
+          autoClose: 500,
+        });
       }
     } catch (error) {
       console.error("Error saving design:", error);
@@ -368,18 +372,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               height: "100%",
             }}
           >
-            {/* <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
-              <Tooltip placement="bottom" title="Undo">
-                <Button onClick={handleUndo} size="small" type="text">
-                  <Undo className="" />
-                </Button>
-              </Tooltip>
-              <Tooltip placement="bottom" title="Redo">
-                <Button onClick={handleRedo} size="small" type="text">
-                  <Redo />
-                </Button>
-              </Tooltip>
-            </div> */}
             <button
               style={{
                 marginRight: "50px",
@@ -390,7 +382,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               onClick={handleUndo}
             >
               <Undo />
-              <p className="pl-2">Undo</p>
+              <p className="pl-2">Hoàn tác</p>
             </button>
 
             <button
@@ -403,7 +395,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               onClick={handleRedo}
             >
               <Redo />
-              <p className="pl-2">Redo</p>
+              <p className="pl-2">Làm lại</p>
             </button>
 
             <button

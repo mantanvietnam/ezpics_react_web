@@ -260,7 +260,9 @@ const Layer = () => {
     };
 
     dispatch(updateLayer({ id: layer.id, data: data }));
-    toast.success("Sửa thành công");
+    toast.success("Sửa thành công", {
+      autoClose: 500,
+    });
   };
 
   const handleSettingImageVariable = (layer) => {
@@ -273,7 +275,9 @@ const Layer = () => {
     };
 
     dispatch(updateLayer({ id: layer.id, data: data }));
-    toast.success("Sửa thành công");
+    toast.success("Sửa thành công", {
+      autoClose: 500,
+    });
   };
 
   return (

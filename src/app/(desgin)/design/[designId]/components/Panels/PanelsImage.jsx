@@ -369,7 +369,9 @@ export function PanelsImage({
             banner: responseRemoveBackground.data.linkOnline,
           };
           dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
-          toast.success("Xóa nền ảnh thành công");
+          toast.success("Xóa nền ảnh thành công", {
+            autoClose: 500,
+          });
         }
       } catch (error) {
         console.error(error);
@@ -738,7 +740,9 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
         }, 0);
         onCancel();
         setLoading(false);
-        toast.success("Cắt ảnh thành công");
+        toast.success("Cắt ảnh thành công", {
+          autoClose: 500,
+        });
       }
     };
   };
@@ -893,7 +897,9 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
       dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
       setLoading(false);
       handleCancel();
-      toast.success("Thay ảnh thành công");
+      toast.success("Thay ảnh thành công", {
+        autoClose: 500,
+      });
     }
   }
 
@@ -1059,7 +1065,9 @@ export function ModalChangeImage({ isOpen, onCancel }) {
       console.log(data);
       dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
       onCancel();
-      toast.success("Thay ảnh thành công");
+      toast.success("Thay ảnh thành công", {
+        autoClose: 500,
+      });
     }
   };
 

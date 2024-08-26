@@ -63,7 +63,9 @@ export default function DefaultPage({ getData, searchValue }) {
         (product) => product.id !== productId
       );
       setProducts(updatedProducts);
-      toast.success("Xóa thành công !!!");
+      toast.success("Xóa thành công !!!", {
+        autoClose: 500,
+      });
     } catch (error) {
       console.error("Error deleting product:", error.message);
     }
@@ -76,7 +78,9 @@ export default function DefaultPage({ getData, searchValue }) {
       });
       const updatedProducts = [response.data, ...products];
       setProducts(updatedProducts);
-      toast.success("Nhân bản thành công");
+      toast.success("Nhân bản thành công", {
+          autoClose: 500, 
+        })
     } catch (error) {
       console.error("Error duplicating product:", error.message);
     }
@@ -102,7 +106,9 @@ export default function DefaultPage({ getData, searchValue }) {
       document.body.removeChild(a);
 
       URL.revokeObjectURL(url);
-      toast.success("Tải xuống thành công !!!");
+      toast.success("Tải xuống thành công !!!", {
+        autoClose: 500,
+      });
     } catch (error) {
       console.error("Error downloading the image:", error);
     }

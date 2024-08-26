@@ -50,7 +50,9 @@ function Ordered() {
         token: checkTokenCookie(),
         content: contactText,
       });
-      toast.success("Gửi thông tin liên hệ thành công");
+      toast.success("Gửi thông tin liên hệ thành công", {
+        autoClose: 500,
+      });
     } catch (error) {
       console.error("Error:", error.message);
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại sau.");
