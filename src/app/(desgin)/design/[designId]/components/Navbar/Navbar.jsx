@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import NextImage from "next/image";
-import imageIcon from "./save.png";
-import exportIcon from "./Layer 2.png";
 import { useSelector } from "react-redux";
-import { downloadListLayer, saveListLayer } from "@/api/design";
+import { saveListLayer } from "@/api/design";
 import { toast } from "react-toastify";
 import { Button, Popover, Select, Slider, Tooltip } from "antd";
 import { jsPDF } from "jspdf";
-import { checkTokenCookie, getCookie } from "@/utils";
+import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
 import SaveIcon from "../../Icon/SaveIcon";
 import ExportIcon from "../../Icon/ExportIcon";
@@ -341,7 +339,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
             <input
               type="text"
               placeholder={stageData.design.name}
-              value={nameDesign || stageData.design.name} // Hiển thị giá trị hiện tại hoặc nameDesign nếu đã được thay đổi
+              value={nameDesign || ""} // Hiển thị giá trị hiện tại hoặc nameDesign nếu đã được thay đổi
               onChange={(e) => {
                 setNameDesign(e.target.value);
               }}
@@ -370,7 +368,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               height: "100%",
             }}
           >
-            <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
+            {/* <div className="mx-2 pt-1 flex items-center justify-center cursor-pointer">
               <Tooltip placement="bottom" title="Undo">
                 <Button onClick={handleUndo} size="small" type="text">
                   <Undo className="" />
@@ -381,7 +379,33 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                   <Redo />
                 </Button>
               </Tooltip>
-            </div>
+            </div> */}
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={handleUndo}
+            >
+              <Undo />
+              <p className="pl-2">Undo</p>
+            </button>
+
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={handleRedo}
+            >
+              <Redo />
+              <p className="pl-2">Redo</p>
+            </button>
+
             <button
               style={{
                 marginRight: "50px",

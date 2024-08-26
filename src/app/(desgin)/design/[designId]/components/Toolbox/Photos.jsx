@@ -5,7 +5,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { addLayerImageUrlAPI } from "@/api/design";
 import { useDispatch } from "react-redux";
-import { addLayerImage, addLayerText, updatePageLayer } from "@/redux/slices/editor/stageSlice";
+import { addLayerImage, addLayerText, updatePageLayer, updatePageLayerText } from "@/redux/slices/editor/stageSlice";
 import { toast } from "react-toastify";
 import "@/styles/newloading.css";
 import Image from "next/image";
@@ -86,7 +86,8 @@ const Photos = () => {
       // console.log(res.data);
       // Cập nhật lại danh sách ảnh sau khi thêm thành công
       fetchData();
-      dispatch(addLayerImage(res.data.data));
+      dispatch(addLayerText(res.data.data));
+      dispatch(updatePageLayerText(res.data.data));
     }
   };
 
