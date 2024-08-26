@@ -4,6 +4,7 @@ import { DownOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import PanelsCommon from "./PanelsCommon";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { upperCase } from 'lodash';
 
 const fontSizes = [
   8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64,
@@ -105,6 +106,7 @@ export function PanelsText({
     bold: "",
     italic: "",
     underline: "",
+    uppercase: "",
   });
 
   const sizeValue = parseFloat(selectedLayer?.content?.size?.replace("vw", ""));
@@ -162,6 +164,7 @@ export function PanelsText({
         bold: selectedLayer.content.indam,
         italic: selectedLayer.content.innghieng,
         underline: selectedLayer.content.gachchan,
+        uppercase: selectedLayer.content.uppercase
       });
       setFontSize(sizeValue);
       setPostionText(selectedLayer.content.text_align);
@@ -217,6 +220,7 @@ export function PanelsText({
       indam: fontStyle.bold,
       innghieng: fontStyle.italic,
       gachchan: fontStyle.underline,
+      uppercase: fontStyle.uppercase,
       color: color,
       text_align: postionText,
       gianchu: letterSpacingToVw(valueLetterSpacing),
@@ -233,6 +237,8 @@ export function PanelsText({
     valueLineSpacing,
     dispatch,
   ]);
+  console.log('🚀 ~ fontStyle:', fontStyle)
+
 
   // console.log("color panestext:", color);
 
@@ -301,11 +307,10 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.bold === "bold" || fontStyle.bold === "bolder"
-                    ? "bg-gray-300"
-                    : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.bold === "bold" || fontStyle.bold === "bolder"
+                  ? "bg-gray-300"
+                  : ""
+                  }`}
                 onClick={() => handleFontStyleChange("bold", "bolder")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -325,9 +330,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.italic === "italic" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.italic === "italic" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("italic", "italic")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -348,9 +352,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.underline === "underline" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.underline === "underline" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("underline", "underline")}>
                 <div className="flex flex-col justify-center w-full h-8">
                   <svg
@@ -361,6 +364,20 @@ export function PanelsText({
                     height="20">
                     <path d="M200 224a8 8 0 0 1-8 8H64a8 8 0 0 1 0-16h128a8 8 0 0 1 8 8Zm-72-24a64.07 64.07 0 0 0 64-64V56a8 8 0 0 0-16 0v80a48 48 0 0 1-96 0V56a8 8 0 0 0-16 0v80a64.07 64.07 0 0 0 64 64Z"></path>
                   </svg>
+                </div>
+              </Button>
+            </Tooltip>
+          </div>
+
+          <div className="px-1">
+            <Tooltip title="Viết in hoa toàn bộ" placement="bottom">
+              <Button
+                type="text"
+                className={`flex items-center px-2 ${fontStyle.uppercase === "uppercase" ? "bg-gray-300" : ""
+                  }`}
+                onClick={() => handleFontStyleChange("uppercase", "uppercase")}>
+                <div className="flex flex-col justify-center w-full h-8">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m8.77 19-.29-1.37h-.07c-.48.6-.96 1.01-1.44 1.22-.47.22-1.07.33-1.79.33-.95 0-1.7-.25-2.24-.74-.54-.5-.81-1.2-.81-2.1 0-1.95 1.55-2.97 4.66-3.06l1.64-.05v-.6c0-.76-.17-1.32-.5-1.68-.32-.36-.84-.54-1.55-.54-.8 0-1.71.25-2.73.74l-.44-1.11a6.86 6.86 0 0 1 3.26-.83c1.15 0 2 .25 2.55.76.55.51.83 1.33.83 2.46V19H8.77zm-3.3-1.03c.91 0 1.63-.25 2.14-.75.52-.5.78-1.2.78-2.09v-.87l-1.46.06a5.3 5.3 0 0 0-2.5.54c-.52.32-.78.82-.78 1.5 0 .52.16.92.48 1.2.32.27.77.41 1.34.41zM21.15 19l-1.6-4.09H14.4L12.82 19h-1.51l5.08-12.9h1.26L22.7 19h-1.55zm-2.06-5.43-1.5-3.98c-.19-.5-.39-1.13-.6-1.86-.12.56-.3 1.18-.55 1.86l-1.5 3.98h4.15z"></path></svg>
                 </div>
               </Button>
             </Tooltip>

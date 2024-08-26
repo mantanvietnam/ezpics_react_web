@@ -32,9 +32,6 @@ export default function ImageLayer(props) {
     status,
     saturate,
   } = data;
-  console.log('🚀 ~ ImageLayer ~ saturate:', saturate)
-  console.log('🚀 ~ ImageLayer ~ brightness:', brightness)
-  console.log('🚀 ~ ImageLayer ~ contrast:', contrast)
 
   const dispatch = useDispatch();
   const shapeRef = useRef();
