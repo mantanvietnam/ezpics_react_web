@@ -49,7 +49,9 @@ const ChangeMailForm = ({ data, setData }) => {
             setData(responseInfo?.data?.data); // Cập nhật state dữ liệu mới
             window.location.reload();
 
-            toast.success("Thay đổi email thành công");
+            toast.success("Thay đổi email thành công", {
+              autoClose: 500,
+            });
             setInputMail(false);
           } else {
             setLoadingName(false);

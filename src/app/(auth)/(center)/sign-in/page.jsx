@@ -173,7 +173,9 @@ export default function Login() {
         if (repon.code === 0) {
           setCodeForgotPassword(repon?.codeForgotPassword);
           handleReCheck();
-          toast.success("Thay đổi mật khẩu thành công");
+          toast.success("Thay đổi mật khẩu thành công", {
+            autoClose: 500,
+          });
         } else {
           setCodeForgotPassword("");
           setcodeForgotPasswordError(repon?.messages[0]?.text);

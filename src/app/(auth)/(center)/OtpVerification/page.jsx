@@ -55,7 +55,9 @@ const OtpVerification = () => {
       const response = await SendOtp({ phone: dataUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
       if (response?.code == 0) {
         console.log("response::", response);
-        toast.success("Mã OTP đã được gửi lại !");
+        toast.success("Mã OTP đã được gửi lại !", {
+          autoClose: 500,
+        });
         setOtp(["", "", "", "", "", ""]); // Reset lại các ô nhập OTP
         setIsOtpSent(true); // Đã gửi mã OTP thành công
         document.getElementById("otp-input-0").focus(); // Focus vào ô nhập OTP đầu tiên
@@ -94,7 +96,9 @@ const OtpVerification = () => {
       const response = await SendOtp({ phone: dataUser?.phone }); // Gọi hàm sendOtp để nhận mã OTP
       if (response?.code == 0) {
         console.log("respone: ", response);
-        toast.success("Đã gửi mã OTP!2");
+        toast.success("Đã gửi mã OTP!", {
+          autoClose: 500,
+        });
         document.getElementById("otp-input-0").focus(); // Focus vào ô nhập OTP đầu tiên
         setIsOtpSent(true); // Đã gửi mã OTP thành công
         setCanResendOtp(false); // Đặt lại để chờ 1 phút
@@ -129,7 +133,9 @@ const OtpVerification = () => {
         const response = await acceptMemberAPI({ token: token, otp: otpCode });
         console.log(response);
         if (response?.code === 1) {
-          toast.success("Xác thực thành công!");
+          toast.success("Xác thực thành công!", {
+            autoClose: 500,
+          });
           router.push("/"); // Redirect to a welcome page or dashboard after successful verification
         } else {
           toast.error("Mã OTP không hợp lệ, vui lòng thử lại.");

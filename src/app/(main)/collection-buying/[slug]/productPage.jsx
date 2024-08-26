@@ -70,7 +70,9 @@ const Product = (props) => {
         type: type,
       });
       if (response.code === 1) {
-        toast.success("Bạn đã mua thiết kế thành công");
+        toast.success("Bạn đã mua thiết kế thành công", {
+          autoClose: 500,
+        });
         router.path(`/your-collection/purchase-collection`);
         try {
           const response = await getInfoMemberAPI({ token: token });
