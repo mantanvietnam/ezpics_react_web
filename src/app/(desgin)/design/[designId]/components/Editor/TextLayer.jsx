@@ -124,6 +124,10 @@ export default function TextLayer(props) {
     const newWidth = node.width() * newScaleX;
     node.width(newWidth);
     node.scaleX(1);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   const handleTransformEnd = (e) => {
@@ -138,6 +142,10 @@ export default function TextLayer(props) {
     dispatch(updateLayer({ id, data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   const handleDblClick = () => {
@@ -267,6 +275,10 @@ export default function TextLayer(props) {
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   }, [isSelected, isSelectedFromToolbox]);
 
   const handleSelect = (e) => {
