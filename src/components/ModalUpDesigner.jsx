@@ -50,7 +50,9 @@ const ModalUpDesigner = ({ open, handleCancel }) => {
     try {
       const response = await saveRequestDesignerAPI(formData);
       if (response.code === 0) {
-        toast.success("Yêu cầu đăng kí làm Designer đã được lưu!");
+        toast.success("Yêu cầu đăng kí làm Designer đã được lưu!", {
+          autoClose: 500,
+        });
         resetForm(); 
         handleCancel();
       }

@@ -53,7 +53,9 @@ const ChangeNameForm = ({ data, setData }) => {
             setData(responseInfo?.data?.data); // Cập nhật state dữ liệu mới
             window.location.reload();
 
-            toast.success("Thay đổi tên thành công");
+            toast.success("Thay đổi tên thành công", {
+              autoClose: 500,
+            });
             setInputName(false);
           } else {
             setLoadingName(false);

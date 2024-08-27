@@ -133,6 +133,76 @@ const Page = () => {
   };
 
   const handleDuplicateLayer = () => {
+    const handleSaveDesign = async () => {
+      try {
+        if (!stageData || !stageData.designLayers) {
+          throw new Error("Invalid stageData or designLayers not found");
+        }
+
+        const updatedLayers = await Promise.all(
+          stageData.designLayers.map(async (layer) => {
+            if (
+              layer.content.banner &&
+              layer.content.banner.startsWith("data:image/png;base64")
+            ) {
+              const bannerBlob = dataURLToBlob(layer.content.banner);
+              const token = checkTokenCookie();
+              const formData = new FormData();
+
+              formData.append("idproduct", stageData.design.id);
+              formData.append("token", token);
+              formData.append("idlayer", layer.id);
+              formData.append("file", bannerBlob);
+
+              const headers = {
+                "Content-Type": "multipart/form-data",
+              };
+
+              const config = {
+                headers: headers,
+              };
+
+              const response = await axios.post(
+                "https://apis.ezpics.vn/apis/changeLayerImageNew",
+                formData,
+                config
+              );
+              console.log(response);
+
+              if (response && response?.data?.code === 1) {
+                return {
+                  id: layer.id,
+                  content: {
+                    ...layer.content,
+                    banner: response.data?.link, // Cập nhật banner thành Blob
+                  },
+                  sort: layer.sort,
+                };
+              }
+            }
+            return {
+              id: layer.id,
+              content: {
+                ...layer.content,
+              },
+              sort: layer.sort,
+            };
+          })
+        );
+
+        const jsonData = JSON.stringify(updatedLayers);
+
+        const response = await saveListLayer({
+          idProduct: stageData.design?.id,
+          token: checkTokenCookie(),
+          listLayer: jsonData,
+        });
+      } catch (error) {
+        console.error("Error saving design:", error);
+      }
+    }; 
+
+    handleSaveDesign();
     const copyLayer = async () => {
       try {
         const res = await axios.post(
@@ -144,7 +214,9 @@ const Page = () => {
           }
         );
         if (res.data.code === 1) {
-          toast.success("Nhân bản layer đã chọn thành công");
+          toast.success("Nhân bản layer đã chọn thành công", {
+            autoClose: 500, 
+          });
           fetchData();
         }
       } catch (error) {

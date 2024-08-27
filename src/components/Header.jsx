@@ -257,7 +257,9 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           setLoadingButtonModalCreate(false);
           setOpenModalCreating(false);
           document.body.style.overflowY = "auto";
-          toast.success("Tạo thiết kế thành công, xin chờ giây lát");
+          toast.success("Tạo thiết kế thành công, xin chờ giây lát", {
+            autoClose: 500,
+          });
 
           setTimeout(function () {
             router.push(`/design/${response.data.product_id}`);
@@ -308,7 +310,9 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           setLoadingButtonModalCreate(false);
           setOpenModalCreating(false);
           document.body.style.overflowY = "auto";
-          toast.success("Tạo thiết kế thành công, xin chờ giây lát");
+          toast.success("Tạo thiết kế thành công, xin chờ giây lát", {
+            autoClose: 500,
+          });
 
           setTimeout(function () {
             router.push(`/design/${response.data.product_id}`);
@@ -346,7 +350,9 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
       );
 
       if (response && response.data && response.data.code === 0) {
-        toast.success("Tạo thiết kế thành công, xin chờ giây lát");
+        toast.success("Tạo thiết kế thành công, xin chờ giây lát", {
+          autoClose: 500,
+        });s
         setTimeout(function () {
           router.push(`/design/${response.data.product_id}`);
         }, 1500);

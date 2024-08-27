@@ -33,7 +33,9 @@ export default function TextLayer(props) {
     text_align,
     gianchu,
     giandong,
+    uppercase
   } = data;
+  console.log('🚀 ~ TextLayer ~ uppercase:', uppercase)
 
   const getScaleFromTransform = (transformString) => {
     const regex = /scale\(([^)]+)\)/;
@@ -124,6 +126,10 @@ export default function TextLayer(props) {
     const newWidth = node.width() * newScaleX;
     node.width(newWidth);
     node.scaleX(1);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   const handleTransformEnd = (e) => {
@@ -138,6 +144,10 @@ export default function TextLayer(props) {
     dispatch(updateLayer({ id, data }));
     e.target.scaleX(1);
     e.target.scaleY(1);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   };
 
   const handleDblClick = () => {
@@ -267,6 +277,10 @@ export default function TextLayer(props) {
 
   useEffect(() => {
     setLocalIsSelected(isSelected || isSelectedFromToolbox);
+    if (previousZIndex !== null) {
+      shapeRef.current.setZIndex(previousZIndex);
+      setPreviousZIndex(null);
+    }
   }, [isSelected, isSelectedFromToolbox]);
 
   const handleSelect = (e) => {
@@ -277,8 +291,14 @@ export default function TextLayer(props) {
 
   const formatText = (text) => {
     // Thay thế các thẻ <br /> và <br> bằng ký tự xuống dòng
-    return text.replace(/<br\s*\/?>/gi, "\n");
+    const newText = text.replace(/<br\s*\/?>/gi, "\n");
+    if (uppercase === 'uppercase') {
+      return newText.toUpperCase();
+    }
+    return newText
   };
+
+
 
   // Hàm chuyển đổi từ vh sang pixel và từ pixel sang tỷ lệ lineHeight
   const giandongToLineHeight = (giandong) => {

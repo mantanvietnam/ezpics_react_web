@@ -31,7 +31,9 @@ const Page = () => {
       const response = await memberTrialProAPI({ token: token });
 
       if (response?.code === 1) {
-        toast.success(response.mess);
+        toast.success(response.mess, {
+          autoClose: 500,
+        });
         router.push("/sign-in");
       } else {
         toast.info(response.mess);

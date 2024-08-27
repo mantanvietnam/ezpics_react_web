@@ -76,7 +76,9 @@ export default function Page() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(data.link_affiliate).then(() => {
-      toast.success("Copy link thành công !!!")
+      toast.success("Copy link thành công !!!", {
+        autoClose: 500,
+      });
     });
   };
 

@@ -51,7 +51,9 @@ const ChangePasswordForm = () => {
           if (responseInfo && responseInfo?.data?.code === 0) {
             setCookie("user_login", responseInfo?.data?.data, 1);
             dispatch(CHANGE_VALUE_USER(responseInfo?.data?.data));
-            toast.success("Thay đổi mật khẩu thành công");
+            toast.success("Thay đổi mật khẩu thành công", {
+              autoClose: 500,
+            });
             router.path("/sign-in");
           }
         }

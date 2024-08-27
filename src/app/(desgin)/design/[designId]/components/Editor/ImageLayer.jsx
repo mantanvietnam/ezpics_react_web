@@ -122,36 +122,31 @@ export default function ImageLayer(props) {
   useEffect(() => {
     if (shapeRef.current && image && image.width > 0 && image.height > 0) {
       shapeRef.current.cache();
-      shapeRef.current.filters([Konva.Filters.Brighten]);
-      shapeRef.current.brightness(brightness / 100 - 1);
-      shapeRef.current.getLayer().batchDraw();
-    }
-  }, [brightness, image]);
+      const filters = [];
 
-  useEffect(() => {
-    if (shapeRef.current && image && image.width > 0 && image.height > 0) {
-      shapeRef.current.cache();
-      shapeRef.current.filters([Konva.Filters.Contrast]);
-      shapeRef.current.contrast(contrast - 100);
-      shapeRef.current.getLayer().batchDraw();
-    }
-  }, [contrast, image]);
+      // Áp dụng bộ lọc Brightness
+      if (brightness !== undefined) {
+        shapeRef.current.brightness(brightness / 100 - 1);
+        filters.push(Konva.Filters.Brighten);
+      }
 
-  useEffect(() => {
-    if (shapeRef.current && image && image.width > 0 && image.height > 0) {
-      shapeRef.current.cache();
-      shapeRef.current.filters([Konva.Filters.HSL]);
-      shapeRef.current.saturation(saturate / 100 - 1);
-      shapeRef.current.getLayer().batchDraw();
-    }
-  }, [saturate, image]);
+      // Áp dụng bộ lọc Contrast
+      if (contrast !== undefined) {
+        shapeRef.current.contrast(contrast - 100);
+        filters.push(Konva.Filters.Contrast);
+      }
 
-  useEffect(() => {
-    if (shapeRef.current) {
-      shapeRef.current.cache();
+      // Áp dụng bộ lọc Saturation
+      if (saturate !== undefined) {
+        shapeRef.current.saturation(saturate / 100 - 1);
+        filters.push(Konva.Filters.HSL);
+      }
+
+      shapeRef.current.filters(filters);
       shapeRef.current.getLayer().batchDraw();
     }
-  }, [lock, postionX, postionY]);
+  }, [brightness, contrast, saturate, image]);
+
 
   const handleDragEnd = (e) => {
     if (lock) return;

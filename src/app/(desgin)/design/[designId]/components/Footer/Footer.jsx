@@ -189,7 +189,9 @@ const Footer = ({ containerRef }) => {
         page: page,
       });
       if (response.code === 0) {
-        toast.success("Xóa trang thành công");
+        toast.success("Xóa trang thành công", {
+          autoClose: 500,
+        });
       } else {
         toast.error("Vui lòng thử lại!");
       }

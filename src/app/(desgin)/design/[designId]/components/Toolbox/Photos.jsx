@@ -82,7 +82,9 @@ const Photos = () => {
     );
 
     if (res.data.code === 1) {
-      toast.success("Thêm ảnh thành công");
+      toast.success("Thêm ảnh thành công", {
+        autoClose: 500,
+      });
       // console.log(res.data);
       // Cập nhật lại danh sách ảnh sau khi thêm thành công
       fetchData();
