@@ -325,6 +325,16 @@ export default function TextLayer(props) {
     }
   }, [localIsSelected]);
 
+  const giandongToPx = (giandong) => {
+    if (typeof giandong === "string" && giandong.endsWith("vh")) {
+      const vhValue = parseFloat(giandong);
+      if (!isNaN(vhValue)) {
+        const lineHeightInPx = (vhValue / 100) * designSize.height; // Chuyển đổi từ vh sang px
+        return lineHeightInPx;
+      }
+    }
+  };
+
   return (
     <>
       <Text
@@ -336,7 +346,9 @@ export default function TextLayer(props) {
         visible={Boolean(status)}
         fill={data?.color}
         width={width}
+        height={giandongToPx(sizeConvertToPx * giandong)}
         align={text_align}
+        verticalAlign="middle"
         rotation={rotationValue}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
@@ -344,7 +356,6 @@ export default function TextLayer(props) {
         textDecoration={gachchan}
         letterSpacing={vwToLetterSpacing(gianchu)}
         lineHeight={giandongToLineHeight(giandong)}
-        ellipsis
         wrap="word"
         onClick={!lock ? handleSelect : null}
         onTap={!lock ? handleSelect : null}
