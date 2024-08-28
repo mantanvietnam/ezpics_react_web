@@ -346,15 +346,6 @@ export default function TextLayer(props) {
     }
   }, [localIsSelected]);
 
-  const giandongToPx = (giandong) => {
-    if (typeof giandong === "string" && giandong.endsWith("vh")) {
-      const vhValue = parseFloat(giandong);
-      if (!isNaN(vhValue)) {
-        const lineHeightInPx = (vhValue / 100) * designSize.height; // Chuyển đổi từ vh sang px
-        return lineHeightInPx;
-      }
-    }
-  };
  const isGradientArrayCorrectFormat = (arr) => {
    // Kiểm tra nếu mảng có số lượng phần tử chia hết cho 2 và mỗi cặp có dạng [position, color]
    return (
@@ -401,7 +392,6 @@ export default function TextLayer(props) {
         draggable={!lock}
         visible={Boolean(status)}
         width={width}
-        height={giandongToPx(sizeConvertToPx * giandong)}
         align={text_align}
         verticalAlign="middle"
         rotation={rotationValue}
