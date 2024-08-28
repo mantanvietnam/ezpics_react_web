@@ -16,6 +16,8 @@ export default function ImageLayer(props) {
     onSelect,
     onMaxPositionUpdate,
     isTransformerVisible,
+    checkAlignment,
+    deleteOldLine
   } = props;
   const {
     postion_left,
@@ -162,6 +164,7 @@ export default function ImageLayer(props) {
       shapeRef.current.setZIndex(previousZIndex);
       setPreviousZIndex(null);
     }
+    deleteOldLine()
   };
 
   const handleTransformEnd = (e) => {
@@ -224,6 +227,12 @@ export default function ImageLayer(props) {
 
     setImageProps((prev) => ({ ...prev, x: newX, y: newY }));
     setShowLine(true);
+
+    const node = e.target;
+    const { x, y } = node.position();
+
+    // Gọi hàm để kiểm tra căn chỉnh
+    checkAlignment(x, y, node);
   };
 
   const handleSelect = (e) => {
