@@ -261,6 +261,13 @@ export default function ImageLayer(props) {
     }
   }, [localIsSelected]);
 
+  useEffect(() => {
+    if (shapeRef.current) {
+      shapeRef.current.cache();
+      shapeRef.current.getLayer().batchDraw();
+    }
+  }, [lock, postionX, postionY]);
+
   return (
     <>
       <Image
