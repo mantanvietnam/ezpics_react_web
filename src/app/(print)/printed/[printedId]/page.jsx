@@ -41,8 +41,6 @@ const Page = () => {
     const handleResize = () => {
       const windowWidth = window.innerWidth;
 
-      console.log("Window width:", windowWidth); // Check window width
-
       const calculateSizeFactor = () => {
         if (windowWidth >= 1600) {
           return 0.5;
@@ -58,7 +56,6 @@ const Page = () => {
       };
 
       const newSizeRespon = calculateSizeFactor();
-      console.log("New sizeRespon:", newSizeRespon); // Check new sizeRespon value
       setSizeRespon(newSizeRespon);
     };
 
@@ -80,7 +77,7 @@ const Page = () => {
         const { width, height } = response.data;
         let sizeFactor;
 
-        console.log("width, heigh", width, height);
+        // console.log("width, heigh", width, height);
 
         // Determine sizeFactor based on dimensions
         sizeFactor =
