@@ -285,11 +285,9 @@ const Page = () => {
         clickY < innerRect.top - outerRect.top ||
         clickY > innerRect.bottom - outerRect.top
       ) {
-        console.log("Click nằm ngoài innerDiv nhưng trong outerDiv");
+       
         dispatch(deselectLayer());
-      } else {
-        console.log("Click nằm trong innerDiv");
-      }
+      } 
     }
   };
 

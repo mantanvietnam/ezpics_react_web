@@ -76,7 +76,7 @@ const SliderMenu = ({
             value={valueLineSpacing}
             onChange={onChangeLineSpacingInput}
             className="w-[70px] text-center"
-            min={1}
+            min={0}
             max={5}
             step={0.1}
           />
@@ -84,11 +84,11 @@ const SliderMenu = ({
         <Slider
           onChange={onChangeLineSpacing}
           value={valueLineSpacing}
-          min={1}
+          min={0}
           max={5}
           step={0.1}
           marks={{
-            1: "1",
+            0: "0",
             5: "5",
           }}
         />
