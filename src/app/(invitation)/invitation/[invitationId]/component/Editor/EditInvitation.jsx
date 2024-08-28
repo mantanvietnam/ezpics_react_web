@@ -414,8 +414,9 @@ const EditInvitation = () => {
                       value={
                         layer.content.size
                           ? layer.content.size.replace("vw", "")
-                          : ""
+                          : 5
                       }
+                      min={1}
                       className="w-[80px] text-lg font-bold text-center border-x rounded-none ml-2"
                     />
                   </div>
