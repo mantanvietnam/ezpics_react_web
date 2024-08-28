@@ -292,7 +292,15 @@ export default function ImageLayer(props) {
           flipEnabled={false}
           anchorStyleFunc={(anchor) => {
             anchor.cornerRadius(10);
-            if (
+            if (anchor.hasName("top-left") || anchor.hasName("top-right") ||
+              anchor.hasName("bottom-left") || anchor.hasName("bottom-right")) {
+              // Các núm góc
+              anchor.visible(true); // Đảm bảo núm góc hiển thị
+              anchor.height(15); // Thay đổi chiều cao của núm góc
+              anchor.width(15);  // Thay đổi chiều rộng của núm góc
+              anchor.offsetY(8); // Điều chỉnh khoảng cách trên trục y
+              anchor.offsetX(8); // Điều chỉnh khoảng cách trên trục x
+            } else if (
               anchor.hasName("top-center") ||
               anchor.hasName("bottom-center")
             ) {
@@ -301,8 +309,7 @@ export default function ImageLayer(props) {
               anchor.offsetY(3);
               anchor.width(30);
               anchor.offsetX(15);
-            }
-            if (
+            } else if (
               anchor.hasName("middle-left") ||
               anchor.hasName("middle-right")
             ) {
