@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { useParams } from "next/navigation";
 import { getListLayerApi } from "@/api/design";
 import { checkTokenCookie } from "@/utils";
@@ -30,12 +36,12 @@ const Page = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.print.stageData);
-  const { design, initSize , designLayers} = stageData;
+  const { design, initSize, designLayers } = stageData;
   const [loading, setLoading] = useState(true);
   const [sizeRespon, setSizeRespon] = useState(1); // Initial sizeRespon
   const { fonts, setFonts } = useFonts();
 
-  console.log("design layers:", designLayers)
+  console.log("design layers:", designLayers);
 
   useEffect(() => {
     const handleResize = () => {
@@ -118,62 +124,66 @@ const Page = () => {
   }, [invitationId]);
 
   return (
-    <div>
+    <div className="flex h-screen">
       <Navbar />
-      <div>
-        <div className="h-screen pt-[65px] overflow-y-auto">
-          <div className="flex mt-[2%]">
-            <div className="w-[30%] mr-[10%] ml-[5%]">
-              <EditInvitation />
-            </div>
-            <Stage
-              ref={stageRef}
-              width={initSize.width}
-              height={initSize.height}
-              style={{
-                overflow: "auto",
-                backgroundColor: "#fff",
-                display:"flex",
-                alignItems: "center"
-              }}
-            >
-              <Layer>
-                <BackgroundLayerInvitation
-                  src={design?.thumn}
-                  width={initSize.width}
-                  height={initSize.height}
-                />
+      <div className="flex flex-grow mt-[65px]">
+        {/* Thanh công cụ bên trái */}
+        <div className="w-[30%] overflow-y-auto border-r border-gray-300 p-4">
+          <EditInvitation />
+        </div>
 
-                {designLayers.map((layer) => {
-                  if (layer.content?.type === "image") {
-                    return (
-                      <ImageLayerInvitation
-                        key={layer.id}
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                      />
-                    );
-                  } else if (layer.content?.type === "text") {
-                    return (
-                      <TextLayerInvitation
-                        key={layer.id}
-                        designSize={{
-                          width: initSize.width,
-                          height: initSize.height,
-                        }}
-                        id={layer.id}
-                        data={layer.content}
-                      />
-                    );
-                  }
-                })}
-              </Layer>
-            </Stage>
-          </div>
+        {/* Phần chính chứa Stage */}
+        <div className="flex-1">
+          <Stage
+            ref={stageRef}
+            width={initSize.width}
+            height={initSize.height}
+            style={{
+              overflow: "auto",
+              backgroundColor: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              height: "100%"
+            }}
+          >
+            <Layer>
+              <BackgroundLayerInvitation
+                src={design?.thumn}
+                width={initSize.width}
+                height={initSize.height}
+              />
+
+              {designLayers.map((layer) => {
+                if (layer.content?.type === "image") {
+                  return (
+                    <ImageLayerInvitation
+                      key={layer.id}
+                      designSize={{
+                        width: initSize.width,
+                        height: initSize.height,
+                      }}
+                      id={layer.id}
+                      data={layer.content}
+                    />
+                  );
+                } else if (layer.content?.type === "text") {
+                  return (
+                    <TextLayerInvitation
+                      key={layer.id}
+                      designSize={{
+                        width: initSize.width,
+                        height: initSize.height,
+                      }}
+                      id={layer.id}
+                      data={layer.content}
+                    />
+                  );
+                }
+              })}
+            </Layer>
+          </Stage>
         </div>
       </div>
     </div>
