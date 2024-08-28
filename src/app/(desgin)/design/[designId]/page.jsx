@@ -6,7 +6,7 @@ import Toolbox from "./components/Toolbox/Toolbox";
 import { useParams } from "next/navigation";
 import { getListLayerApi, saveListLayer } from "../../../../api/design";
 import { checkTokenCookie } from "@/utils";
-import { Stage, Layer } from "react-konva";
+import { Stage, Layer, Line } from "react-konva";
 import BackgroundLayer from "./components/Editor/BackgroundLayer";
 import ImageLayer from "./components/Editor/ImageLayer";
 import TextLayer from "./components/Editor/TextLayer";
@@ -55,6 +55,7 @@ const Page = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [guidelines, setGuidelines] = useState([])
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -124,9 +125,6 @@ const Page = () => {
 
   const checkDeselect = (e) => {
     const clickedOnEmpty = e.target === e.target.getStage();
-    // console.log("🚀 ~ Page ~ currentPage:", currentPage);
-    // console.log("🚀 ~ Page ~ totalPages:", totalPages);
-
     if (clickedOnEmpty) {
       setSelectedId(null);
     }
@@ -293,7 +291,70 @@ const Page = () => {
     }
   };
 
-  console.log("🚀 ~ Page ~ selectlayer:", selectedLayer);
+  const checkAlignment = (x, y, currentLayer) => {
+    const layers = stageRef.current.children[0].children;
+    let newGuidelines = [];
+    let horizontalGuidelines = new Set();
+    let verticalGuidelines = new Set();
+
+    // Lưu lại các bounding box của currentLayer
+    const currentBox = currentLayer.getClientRect();
+
+    layers.forEach((layer) => {
+      if (layer === currentLayer || layer.attrs.alt === "background") {
+        return;
+      }
+
+      const shapeBox = layer.getClientRect();
+
+      // Tính toán khoảng cách giữa các cạnh
+      const horizontalDistanceStart = Math.abs(shapeBox.x - currentBox.x);
+      const horizontalDistanceEnd = Math.abs((shapeBox.x + shapeBox.width) - (currentBox.x + currentBox.width));
+      const verticalDistanceStart = Math.abs(shapeBox.y - currentBox.y);
+      const verticalDistanceEnd = Math.abs((shapeBox.y + shapeBox.height) - (currentBox.y + currentBox.height));
+
+      // Kiểm tra căn chỉnh ngang
+      if (horizontalDistanceStart < 5 || horizontalDistanceEnd < 5) {
+        const xStart = shapeBox.x < currentBox.x ? shapeBox.x : currentBox.x;
+        const xEnd = shapeBox.x + shapeBox.width > currentBox.x + currentBox.width
+          ? shapeBox.x + shapeBox.width
+          : currentBox.x + currentBox.width;
+        if (!horizontalGuidelines.has(xStart)) {
+          horizontalGuidelines.add(xStart);
+          newGuidelines.push({ x: xStart, y1: 0, y2: stageRef.current.height() });
+        }
+        if (!horizontalGuidelines.has(xEnd)) {
+          horizontalGuidelines.add(xEnd);
+          newGuidelines.push({ x: xEnd, y1: 0, y2: stageRef.current.height() });
+        }
+      }
+
+      // Kiểm tra căn chỉnh dọc
+      if (verticalDistanceStart < 5 || verticalDistanceEnd < 5) {
+        const yStart = shapeBox.y < currentBox.y ? shapeBox.y : currentBox.y;
+        const yEnd = shapeBox.y + shapeBox.height > currentBox.y + currentBox.height
+          ? shapeBox.y + shapeBox.height
+          : currentBox.y + currentBox.height;
+        if (!verticalGuidelines.has(yStart)) {
+          verticalGuidelines.add(yStart);
+          newGuidelines.push({ y: yStart, x1: 0, x2: stageRef.current.width() });
+        }
+        if (!verticalGuidelines.has(yEnd)) {
+          verticalGuidelines.add(yEnd);
+          newGuidelines.push({ y: yEnd, x1: 0, x2: stageRef.current.width() });
+        }
+      }
+    });
+
+    // Cập nhật state để hiển thị các đường căn chỉnh
+    setGuidelines(newGuidelines);
+  };
+
+
+
+  const deleteOldLine = () => {
+    setGuidelines([]);
+  }
 
   return (
     <>
@@ -399,6 +460,8 @@ const Page = () => {
                             isDraggable={!locked} // Only allow dragging when unlocked
                             stageRef={stageRef}
                             containerRef={containerRef}
+                            checkAlignment={checkAlignment}
+                            deleteOldLine={deleteOldLine}
                           />
                         );
                       } else if (layer.content?.type === "text") {
@@ -427,6 +490,23 @@ const Page = () => {
                         );
                       }
                     })}
+                    {guidelines.map((line, index) => (
+                      <Line
+                        key={index}
+                        points={
+                          line.x !== undefined
+                            ? [line.x, line.y1, line.x, line.y2]
+                            : [line.x1, line.y, line.x2, line.y]
+                        }
+                        stroke="blue" // Thay đổi màu sắc
+                        strokeWidth={0.3} // Tăng độ dày
+                        dash={[10, 5]} // Định dạng kiểu đường nét đứt
+                        opacity={0.7} // Độ trong suốt
+                        lineCap="round" // Đầu đường bo tròn
+                        lineJoin="round" // Góc đường bo tròn
+                      />
+                    ))}
+
                   </Layer>
                 </Stage>
               </div>

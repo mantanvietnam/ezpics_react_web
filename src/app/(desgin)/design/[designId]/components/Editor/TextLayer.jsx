@@ -23,6 +23,7 @@ export default function TextLayer(props) {
   const {
     postion_left,
     postion_top,
+    gradient_color,
     size,
     lock,
     status,
@@ -354,6 +355,41 @@ export default function TextLayer(props) {
       }
     }
   };
+ const isGradientArrayCorrectFormat = (arr) => {
+   // Kiểm tra nếu mảng có số lượng phần tử chia hết cho 2 và mỗi cặp có dạng [position, color]
+   return (
+     Array.isArray(arr) &&
+     arr.length % 2 === 0 &&
+     arr.every((_, i) =>
+       i % 2 === 0 ? typeof arr[i] === "number" : typeof arr[i] === "string"
+     )
+   );
+ };
+
+ // Kiểm tra xem tất cả các giá trị màu trong gradient có giống nhau không
+ const isSingleColorGradient = (arr) => {
+   const colors = arr.filter((_, i) => i % 2 !== 0); // Lấy tất cả giá trị màu
+   return new Set(colors).size === 1; // Kiểm tra xem có bao nhiêu màu khác nhau
+ };
+
+ const gradientArray = Array.isArray(gradient_color[0])
+   ? gradient_color
+   : isGradientArrayCorrectFormat(gradient_color) &&
+     !isSingleColorGradient(gradient_color)
+   ? gradient_color
+   : gradient_color.reduce((acc, { position, color }) => {
+       acc.push(position, color);
+       return acc;
+     }, []);
+
+ // Trả về null nếu mảng gradient có cùng một màu
+    const finalGradient = isSingleColorGradient(gradientArray)
+      ? null
+      : gradientArray;
+
+
+ console.log(finalGradient);
+
 
   return (
     <>
@@ -364,7 +400,6 @@ export default function TextLayer(props) {
         y={positionY}
         draggable={!lock}
         visible={Boolean(status)}
-        fill={data?.color}
         width={width}
         height={giandongToPx(sizeConvertToPx * giandong)}
         align={text_align}
@@ -384,7 +419,18 @@ export default function TextLayer(props) {
         onDragEnd={handleDragEnd}
         onTransform={handleTransform}
         onTransformEnd={handleTransformEnd}
+        fill={finalGradient ? null : data?.color}
+        fillLinearGradientStartPoint={
+          finalGradient ? { x: 0, y: 0 } : undefined
+        }
+        fillLinearGradientEndPoint={
+          finalGradient ? { x: width, y: sizeConvertToPx } : undefined
+        }
+        fillLinearGradientColorStops={
+          finalGradient ? gradientArray : undefined
+        }
       />
+
       {isTransformerVisible && !lock && localIsSelected && (
         <Transformer
           ref={trRef}

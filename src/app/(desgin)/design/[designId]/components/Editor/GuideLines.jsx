@@ -1,24 +1,18 @@
-import React from 'react';
 import { Line } from 'react-konva';
 
-const GuideLines = ({ x, y, width, height, stageWidth, stageHeight }) => {
-  const getCenter = (x, y, width, height) => {
-    const centerX = x + width / 2;
-    const centerY = y + height / 2;
-    return { centerX, centerY };
-  };
-
-  const { centerX, centerY } = getCenter(x, y, width, height);
-
+export const Guidelines = ({ guidelines }) => {
   return (
     <>
-      {/* Vertical guide */}
-      <Line points={[centerX, 0, centerX, stageHeight]} stroke="blue" strokeWidth={1} dash={[4, 4]} />
-
-      {/* Horizontal guide */}
-      <Line points={[0, centerY, stageWidth, centerY]} stroke="blue" strokeWidth={1} dash={[4, 4]} />
+      {guidelines.map((line, index) => (
+        <Line
+          key={index}
+          points={[line.x1, line.y1, line.x2, line.y2]}
+          stroke="red" // Màu sắc của đường căn chỉnh
+          strokeWidth={2} // Độ dày của đường căn chỉnh
+          dash={[10, 5]} // Định dạng kiểu đường nét đứt
+          opacity={0.8} // Độ trong suốt
+        />
+      ))}
     </>
   );
 };
-
-export default GuideLines;
