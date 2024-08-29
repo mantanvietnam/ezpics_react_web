@@ -16,13 +16,16 @@ import UnlockedIcon from "../../Icon/Unlocked";
 import DuplicateIcon from "../../Icon/Duplicate";
 import DeleteIcon from "../../Icon/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { removeLayer, updateLayer } from "@/redux/slices/editor/stageSlice";
 import {
   bringLayerForward,
   moveLayerToFinal,
   moveLayerToFront,
   sendLayerBack,
 } from "@/redux/slices/editor/stageSlice";
+import { deleteLayerAPI } from "@/api/design";
+import { checkTokenCookie } from "@/utils";
+import { toast } from "react-toastify";
 
 const LayersPopoverContent = ({
   onBringForward,
@@ -144,7 +147,6 @@ const CommonAlign = ({ maxPositions }) => {
   const { maxLeft, maxTop, centerX, centerY } = maxPositions;
 
   const onAlignLeftIcon = () => {
-    console.log("sang trai");
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
@@ -157,7 +159,6 @@ const CommonAlign = ({ maxPositions }) => {
   };
 
   const onAlignRightIcon = () => {
-    console.log("sang phai");
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
@@ -334,6 +335,39 @@ const LockUnlock = () => {
 };
 
 export default function PanelsCommon({ maxPositions, onDuplicateLayer }) {
+
+    const dispatch = useDispatch();
+    const stageData = useSelector((state) => state.stage.stageData);
+    const [selectedLayer, setSelectedLayer] = useState({});
+
+    useEffect(() => {
+      if (stageData && stageData.selectedLayer) {
+        setSelectedLayer(stageData.selectedLayer);
+      }
+    }, [stageData, stageData.selectedLayer]);
+  
+   const handleDeleteLayer = () => {
+     const deleteLayerApi = async () => {
+       try {
+         const res = await deleteLayerAPI({
+           idproduct: selectedLayer.products_id,
+           idlayer: selectedLayer.id,
+           token: checkTokenCookie(),
+         });
+         if (res.code === 1) {
+           dispatch(removeLayer(selectedLayer.id));
+           toast.success("Xóa layer thành công !", {
+             autoClose: 500,
+           });
+         }
+       } catch (error) {
+         console.log(error);
+       }
+     };
+     deleteLayerApi();
+   };
+
+  
   return (
     <div className="flex">
       <div className="px-1 w-[50px]">
@@ -356,7 +390,11 @@ export default function PanelsCommon({ maxPositions, onDuplicateLayer }) {
 
       <div className="px-1 w-[50px]">
         <Tooltip placement="bottom" title="Xóa layer đã chọn">
-          <Button size="small" type="text">
+          <Button
+            size="small"
+            type="text"
+            onClick={() => handleDeleteLayer()}
+          >
             <DeleteIcon size={25} />
           </Button>
         </Tooltip>
