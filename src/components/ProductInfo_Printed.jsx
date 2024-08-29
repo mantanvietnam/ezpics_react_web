@@ -134,7 +134,9 @@ export default function ProductInfoPrinted(props) {
             token: checkTokenCookie(),
           });
           setIsFavorited(0);
-          toast.success("Xóa khỏi danh sách yêu thích");
+          toast.success("Xóa khỏi danh sách yêu thích", {
+            autoClose: 500,
+          });
           setLoadingFavorite(false);
         } catch (error) {
           console.log(error);
@@ -148,7 +150,9 @@ export default function ProductInfoPrinted(props) {
             product_id: data.id,
             token: checkTokenCookie(),
           });
-          toast.success("Thêm vào danh sách yêu thích");
+          toast.success("Thêm vào danh sách yêu thích", {
+            autoClose: 500,
+          });
           setIsFavorited(1);
           setLoadingFavorite(false);
         } catch (error) {
@@ -389,7 +393,9 @@ export default function ProductInfoPrinted(props) {
                 window.open(url, "_blank");
 
                 // Hiển thị thông báo thành công
-                toast.success("Tạo ảnh thành công. Xin chờ giây lát!");
+                toast.success("Tạo ảnh thành công. Xin chờ giây lát!", {
+                  autoClose: 500,
+                });
               }}
               style={{
                 backgroundColor: "rgb(255, 66, 78)",

@@ -60,7 +60,9 @@ export default function ProductInfo(props) {
         type: type,
       });
       if (response.code === 0) {
-        toast.success("Bạn đã mua thiết kế thành công, xin chờ giây lát");
+        toast.success("Bạn đã mua thiết kế thành công, xin chờ giây lát", {
+          autoClose: 500,
+        });
         try {
           const response = await getInfoMemberAPI({ token: token });
           if (response.code === 0) {

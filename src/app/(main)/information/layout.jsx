@@ -236,7 +236,9 @@ const Page = () => {
 
           console.log(response);
           if (response.data.code === 0) {
-            toast.success("Thay đổi mật khẩu thành công");
+            toast.success("Thay đổi mật khẩu thành công", {
+              autoClose: 500,
+            });
             router.push("/sign-in");
             console.log("push");
           } else {

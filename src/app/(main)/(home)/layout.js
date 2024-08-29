@@ -44,7 +44,9 @@ export default function HomeRoot(props) {
         (product) => product.id !== productId
       );
       setProducts(updatedProducts);
-      toast.success("Xóa thành công !!!");
+      toast.success("Xóa thành công !!!", {
+        autoClose: 500,
+      });
     } catch (error) {
       console.error("Error deleting product:", error.message);
       toast.error("Xóa sản phẩm không thành công.");
