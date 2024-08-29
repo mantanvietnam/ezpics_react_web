@@ -75,6 +75,9 @@ const Layer = () => {
         });
         if (res.code === 1) {
           dispatch(removeLayer(layer.id));
+          toast.success("Xóa layer thành công !", {
+            autoClose: 500,
+          });
         }
       } catch (error) {
         console.log(error);

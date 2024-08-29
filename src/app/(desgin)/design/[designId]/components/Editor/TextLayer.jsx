@@ -36,7 +36,6 @@ export default function TextLayer(props) {
     giandong,
     uppercase
   } = data;
-  console.log('🚀 ~ TextLayer ~ uppercase:', uppercase)
 
   const getScaleFromTransform = (transformString) => {
     const regex = /scale\(([^)]+)\)/;
@@ -377,10 +376,6 @@ export default function TextLayer(props) {
     const finalGradient = isSingleColorGradient(gradientArray)
       ? null
       : gradientArray;
-
-
- console.log(finalGradient);
-
 
   return (
     <>

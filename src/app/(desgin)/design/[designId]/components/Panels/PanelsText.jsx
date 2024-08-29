@@ -169,6 +169,9 @@ export function PanelsText({
     selectedLayer?.content?.gradient_color || null
   );
 
+   const [isGradient, setIsGradient] = useState(
+     selectedLayer?.content?.gradient
+  );
    
 const handleAddColor = () => {
   // Find the maximum position to increment for the new color
@@ -187,7 +190,7 @@ const handleColorChange = (newColor, index) => {
   const newColors = gradientColors.map((colorObj, i) =>
     i === index ? { ...colorObj, color: newColor } : colorObj
   );
-
+  setIsGradient(1)
   setGradientColors(newColors);
 };
 
@@ -295,7 +298,10 @@ const handleRemoveColor = (index) => {
       setColor(selectedLayer.content.color);
       setValueLetterSpacing(vwToLetterSpacing(selectedLayer.content.gianchu));
       setValueLineSpacing(giandongToLineHeight(selectedLayer.content.giandong));
-       setGradientColors(selectedLayer.content.gradient_color);
+      setGradientColors(selectedLayer.content.gradient_color);
+      setIsGradient(
+        selectedLayer.content.gradient_color ? 1 : selectedLayer?.content?.gradient
+      );
     }
   }, [selectedLayer]);
 
@@ -352,6 +358,7 @@ const handleRemoveColor = (index) => {
       gianchu: letterSpacingToVw(valueLetterSpacing),
       giandong: lineHeightToGiandong(valueLineSpacing),
       gradient_color: gradientColors,
+      gradient: isGradient
     };
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   }, [
@@ -365,7 +372,6 @@ const handleRemoveColor = (index) => {
     gradientColors,
     dispatch,
   ]);
-  console.log("🚀 ~ fontStyle:", gradientColors);
 
   return (
     <div className="stick border-l border-slate-300 h-[50px] bg-white">
@@ -640,10 +646,10 @@ const handleRemoveColor = (index) => {
               <div className="w-[150px]">
                 <div className="flex">
                   <strong className="w-[100px]">Chọn màu</strong>
-                  {/* <Button onClick={handleAddColor}>
-                    Thêm màu <PlusOutlined />
-                  </Button> */}
                 </div>
+                {/* <Button onClick={handleAddColor}>
+                  Thêm màu <PlusOutlined />
+                </Button> */}
                 {gradientColors.map((colorObj, index) => (
                   <div key={index} className="flex items-center my-2">
                     <Input
