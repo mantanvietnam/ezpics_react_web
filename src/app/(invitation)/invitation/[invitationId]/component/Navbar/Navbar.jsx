@@ -6,13 +6,16 @@ import { toast } from "react-toastify";
 import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
 import SaveIcon from "@/app/(desgin)/design/[designId]/Icon/SaveIcon";
+import ExportIcon from "@/app/(desgin)/design/[designId]/Icon/ExportIcon";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { updateDesign } from "@/api/design";
 import "./navbar.css";
+import { useRouter } from "next/navigation";
 
-const Navbar = () => {
+const Navbar = ({invitationId}) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const stageData = useSelector((state) => state.print.stageData);
 
   const handleSaveDesign = async () => {
@@ -195,6 +198,21 @@ const Navbar = () => {
             >
               <SaveIcon size={22} />
               <p className="pl-2">Lưu mẫu thiệp mời</p>
+            </button>
+
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={()=> {
+              handleSaveDesign();
+              router.push(`/printed/${invitationId}`)}}
+            >
+              <ExportIcon size={22} />
+              <p className="pl-2">Xuất link in thiệp</p>
             </button>
           </div>
         </div>

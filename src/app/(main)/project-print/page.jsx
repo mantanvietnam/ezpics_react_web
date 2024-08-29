@@ -6,10 +6,10 @@ import {
   SkeletonCustom,
   StyledSlider,
 } from "@/components/Slide/CustomSlide";
-import TruncatedText from "@/components/TruncatedText";
-import { getProductCategoryAPI } from "@/api/product";
-import { getCookie } from "@/utils";
+import { getserisProductApi, getLogoProductApi } from "@/api/product";
 import { convertSLugUrl } from "@/utils/url";
+import TruncatedText from "@/components/TruncatedText";
+import { getCookie } from "@/utils";
 import { Skeleton, Slider } from "antd";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -22,79 +22,24 @@ const VND = new Intl.NumberFormat("vi-VN", {
   currency: "VND",
 });
 
-export default function Page({ params }) {
+export default function Page() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1); // Page state
   const limit = 24; // Items per page
   const observer = useRef(); // Ref for IntersectionObserver
-  const [categoryName, setCategoryName] =useState("");
-
-  const slug = params?.detailCategory?.split(".html")?.[0];
-  const temp = slug?.split("-");
-  const id = temp[temp.length - 1];
-
-  useEffect( ()=> {
-    const name = getNameCategory();
-    setCategoryName(name);
-  },[])
-
-  console.log("categoryName",categoryName)
-
-  const getNameCategory = async () => {
-    try {
-      const response = await getProductCategoryAPI();
-  
-      if (!response) {
-        throw new Error("No listData found in the API response.");
-      }
-  
-      const category = response.listData.find((item) => item.id == id);
-  
-      console.log("categorycategorycategorycategory", category);
-      if (!category) {
-        throw new Error(`No category found with ID ${id}`);
-      }
-      return category.name;
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const { data: session } = useSession();
-  let dataInforUser;
-  if (getCookie("user_login")) {
-    dataInforUser = JSON.parse(getCookie("user_login"));
-  } else if (session?.user_login) {
-    dataInforUser = session?.user_login;
-  } else {
-    dataInforUser = null;
-  }
 
   useEffect(() => {
-    const fetchArticle = async () => {
+    const fetchData = async () => {
       try {
-        setLoading(true);
-        const response = await axios.post(
-          "https://apis.ezpics.vn/apis/getProductByCategoryAPI",
-          {
-            category_id: id,
-            limit: limit,
-            page: page,
-          }
-        );
-        setCategories((prevCategories) => [
-          ...prevCategories,
-          ...response.data.listData,
-        ]);
-        setLoading(false);
+        const response = await getserisProductApi();
+        setCategories(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.log(error);
       }
     };
-
-    fetchArticle();
-  }, [id, page]);
+    fetchData(categories);
+  }, []);
 
   // IntersectionObserver callback
   const handleObserver = (entities) => {
@@ -158,7 +103,6 @@ export default function Page({ params }) {
 
   return (
     <div className="w-[100%] mx-auto pt-4">
-      <h1 className="text-2xl font-bold">{categoryName}</h1>
       <div>
         <StyledSlider>
           {loading && page === 1 ? (
@@ -205,9 +149,7 @@ export default function Page({ params }) {
                       </p>
                       <div className="mt-2">
                         <span className="text-red-500 mr-2 font-bold text-lg">
-                          {category.sale_price === 0 ||
-                          (dataInforUser?.member_pro === 1 &&
-                            category?.free_pro)
+                          {category.sale_price === 0 
                             ? "Miễn phí"
                             : VND.format(category.sale_price)}
                         </span>
@@ -229,3 +171,4 @@ export default function Page({ params }) {
     </div>
   );
 }
+8;

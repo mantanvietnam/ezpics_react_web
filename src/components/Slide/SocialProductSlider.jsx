@@ -14,7 +14,7 @@ const SocialProductSlider = () => {
         return products; // Return the fetched products
       }}
       title="Ảnh bìa mạng xã hội"
-      pathString="/dashboard-search"
+      pathString="/project/anh-bia-mang-xa-hoi-17.html"
     />
   );
 };

@@ -14,7 +14,7 @@ const LogoProductSlider = () => {
         return products; // Return the fetched products
       }}
       title="Logo thương hiêu cá nhân"
-      pathString="/dashboard-search"
+      pathString="/project/logo-thuong-hieu-ca-nhan-39.html"
     />
   );
 };

@@ -91,7 +91,7 @@ const CollectionProductSlider = ({ title }) => {
           {title || "Bộ sưu tập bạn có thể thích"}
         </h1>
         <Link
-          href="/dashboard-search"
+          href="/project-product"
           className="font-bold text-red-500 text-sm"
         >
           Xem thêm
