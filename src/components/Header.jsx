@@ -902,9 +902,11 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               <button
                 className="flex items-center border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap text-xs mobile:text-base"
                 onClick={() => {
-                  const path = window.location.pathname || '/';
-                  const redirectUrl = encodeURIComponent(path);
-                  router.push(`/sign-in?redirect=${redirectUrl}`);
+                  // const path = window.location.pathname || '/';
+                  // const redirectUrl = encodeURIComponent(path);
+                  // router.push(`/sign-in?redirect=${redirectUrl}`);
+
+                  router.push(`/sign-in`);
                 }}
               >
                 <UserOutlined />
