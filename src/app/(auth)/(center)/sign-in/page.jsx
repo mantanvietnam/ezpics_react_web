@@ -59,6 +59,8 @@ export default function Login() {
   const dispatch = useDispatch();
   const [ReCheck, setReCheck] = useState(false);
   const router = useRouter();
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirect = urlParams.get('redirect') || '/';
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [phoneConfirm, setPhoneConfirm] = useState("");
@@ -140,7 +142,7 @@ export default function Login() {
           dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
           setCookie("token", repon?.info_member?.token_web, expirationHours);
           setCookie("user_login", repon?.info_member, expirationHours);
-          router.push("/");
+          router.push(redirect);
         } else {
           setLoginError(repon?.messages[0]?.text);
         }

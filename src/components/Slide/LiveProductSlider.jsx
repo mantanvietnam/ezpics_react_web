@@ -14,7 +14,7 @@ const LiveProductSlider = () => {
         return products; // Return the fetched products
       }}
       title="Banner LiveStream"
-      pathString="/dashboard-search"
+      pathString="/project/banner-livestream-2.html"
     />
   );
 };

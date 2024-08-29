@@ -11,7 +11,7 @@ const SerisProductSlider = () => {
         return data; // Return the fetched products
       }}
       title="Mẫu thiết kế in hàng loạt"
-      pathString="/dashboard-search"
+      pathString="/project-print"
     />
   );
 };

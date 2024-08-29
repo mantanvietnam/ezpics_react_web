@@ -14,7 +14,7 @@ const EndowProduct = () => {
         return products;
       }}
       title="Banner Ưu đãi"
-      pathString="/dashboard-search"
+      pathString="/project/uu-dai-khuyen-mai-12.html"
     />
   );
 };
