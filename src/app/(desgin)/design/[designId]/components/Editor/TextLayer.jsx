@@ -388,6 +388,7 @@ export default function TextLayer(props) {
         visible={Boolean(status)}
         width={width}
         align={text_align}
+        verticalAlign="middle"
         rotation={rotationValue}
         fontSize={sizeConvertToPx}
         fontFamily={data?.font}
@@ -395,7 +396,6 @@ export default function TextLayer(props) {
         textDecoration={gachchan}
         letterSpacing={vwToLetterSpacing(gianchu)}
         lineHeight={giandongToLineHeight(giandong)}
-        ellipsis
         wrap="word"
         onClick={!lock ? handleSelect : null}
         onTap={!lock ? handleSelect : null}

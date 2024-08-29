@@ -16,8 +16,6 @@ const DownLoadMenu = ({
   handleDownload,
   fileType,
   setFileType,
-  pixelRatio,
-  setPixelRatio,
   isProMember,
 }) => (
   <div className="w-[300px] mobile:w-[400px] md:w-[500px] h-fit p-3">
@@ -29,7 +27,8 @@ const DownLoadMenu = ({
         id="fileType"
         value={fileType}
         onChange={(value) => setFileType(value)}
-        style={{ width: "100%", height: 50 }}>
+        style={{ width: "100%", height: 50 }}
+      >
         <Select.Option value="png">
           <div className="flex items-center">
             <svg
@@ -37,15 +36,18 @@ const DownLoadMenu = ({
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M10.5 8.75a1.75 1.75 0 1 1-3.5 0 1.75 1.75 0 0 1 3.5 0Z"
-                fill="currentColor"></path>
+                fill="currentColor"
+              ></path>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7Zm4-2.5h10A2.5 2.5 0 0 1 19.5 7v4.23l-.853-.854c-.485-.485-.892-.892-1.257-1.184-.384-.307-.79-.546-1.287-.616a2.625 2.625 0 0 0-.74 0c-.497.07-.903.309-1.287.616-.365.292-.772.7-1.257 1.184l-7.943 7.943A2.488 2.488 0 0 1 4.5 17V7A2.5 2.5 0 0 1 7 4.5Zm-.983 14.8c.302.128.634.2.983.2h10a2.5 2.5 0 0 0 2.5-2.5v-3.65l-1.884-1.884c-.522-.522-.871-.869-1.163-1.103-.281-.224-.439-.285-.562-.302a1.122 1.122 0 0 0-.317 0c-.122.017-.28.078-.561.302-.292.234-.64.581-1.163 1.103L6.017 19.3Z"
-                fill="currentColor"></path>
+                fill="currentColor"
+              ></path>
             </svg>
             <p className="text-xl pl-3">PNG</p>
           </div>
@@ -57,12 +59,14 @@ const DownLoadMenu = ({
               width="28"
               height="28"
               fill="none"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path
                 fill="currentColor"
                 fillRule="evenodd"
                 d="M6.5 4a.5.5 0 0 1 .5-.5h4.002v4.503a2 2 0 0 0 2 2h5.248a.75.75 0 0 0 .75-.75V9.25a.747.747 0 0 0-.22-.531l-6.134-6.134A2.002 2.002 0 0 0 11.231 2h-4.23A2 2 0 0 0 5 4v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7.75a.75.75 0 0 0-1.5 0V20a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V4Zm9.942 4.503-3.94-3.94v3.44a.5.5 0 0 0 .5.5h3.44ZM9 17a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 9 17Zm.75-4.754a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Z"
-                clipRule="evenodd"></path>
+                clipRule="evenodd"
+              ></path>
             </svg>
             <p className="text-xl pl-3">PDF</p>
           </div>
@@ -100,7 +104,8 @@ const DownLoadMenu = ({
       )} */}
       <button
         className="mt-4 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-        onClick={handleDownload}>
+        onClick={handleDownload}
+      >
         Tải xuống
       </button>
     </div>
@@ -114,7 +119,6 @@ const EditPrint = ({ stageRef }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [imageURL, setImageURL] = useState("");
   const [fileType, setFileType] = useState("png");
-  const [pixelRatio, setPixelRatio] = useState(5);
   const [isProMember, setIsProMember] = useState(true);
 
   const [exportValue, setExportValue] = useState({
@@ -135,6 +139,18 @@ const EditPrint = ({ stageRef }) => {
   };
 
   const handleDownLoadDesign = () => {
+    const originalWidth = stageData.design.width;
+    const originalHeight = stageData.design.height;
+
+    const currentWidth = stageRef.current.width();
+    const currentHeight = stageRef.current.height();
+
+    const pixelRatioWidth = originalWidth / currentWidth;
+    const pixelRatioHeight = originalHeight / currentHeight;
+    const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
+
+    console.log("pixelRatioNew", pixelRatio);
+
     setTimeout(() => {
       const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Tăng pixelRatio để tăng chất lượng
       setImageURL(dataURL); // Thiết lập URL cho modal
@@ -172,6 +188,16 @@ const EditPrint = ({ stageRef }) => {
 
   const handleDownloadPNG = () => {
     if (imageURL) {
+      const originalWidth = stageData.design.width;
+      const originalHeight = stageData.design.height;
+
+      const currentWidth = stageRef.current.width();
+      const currentHeight = stageRef.current.height();
+
+      const pixelRatioWidth = originalWidth / currentWidth;
+      const pixelRatioHeight = originalHeight / currentHeight;
+      const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
+
       const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Sử dụng pixelRatio từ thanh trượt
       downloadURI(dataURL, "download.png");
       // Mở cửa sổ mới với ảnh
@@ -425,7 +451,8 @@ const EditPrint = ({ stageRef }) => {
                         overflow: "hidden", // Ẩn phần ảnh bị tràn
                         width: "30%",
                         height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
-                      }}>
+                      }}
+                    >
                       <img
                         src={imgSrc}
                         alt=""
@@ -439,35 +466,41 @@ const EditPrint = ({ stageRef }) => {
                     <div className="w-full flex justify-between items-center bg-gray-100 p-2 my-2 rounded-lg">
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                        onClick={() => moveLayer(layer.id, "left")}>
+                        onClick={() => moveLayer(layer.id, "left")}
+                      >
                         <ArrowLeftIcon size={25} />
                       </div>
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                        onClick={() => moveLayer(layer.id, "up")}>
+                        onClick={() => moveLayer(layer.id, "up")}
+                      >
                         <ArrowTopIcon size={25} />
                       </div>
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                        onClick={() => moveLayer(layer.id, "right")}>
+                        onClick={() => moveLayer(layer.id, "right")}
+                      >
                         <ArrowRightIcon size={25} />
                       </div>
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                        onClick={() => moveLayer(layer.id, "down")}>
+                        onClick={() => moveLayer(layer.id, "down")}
+                      >
                         <ArrowBottomIcon size={25} />
                       </div>
                     </div>
                     <div className="w-[100%] mobile:w-[90%] lg:w-[70%] flex justify-around items-center mb-2">
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
-                        onClick={() => zoomLayer(layer.id, "zoomin")}>
+                        onClick={() => zoomLayer(layer.id, "zoomin")}
+                      >
                         <ZoomInIcon size={25} />
                         <p className="pl-2">Phóng to</p>
                       </div>
                       <div
                         className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
-                        onClick={() => zoomLayer(layer.id, "zoomout")}>
+                        onClick={() => zoomLayer(layer.id, "zoomout")}
+                      >
                         <ZoomOutIcon size={25} />
                         <p className="pl-2">Thu nhỏ</p>
                       </div>
@@ -477,7 +510,8 @@ const EditPrint = ({ stageRef }) => {
                   <div className="flex flex-col relative mobile:pt-4">
                     <form
                       id="file-upload-form"
-                      className="block clear-both mx-auto w-full max-w-600">
+                      className="block clear-both mx-auto w-full max-w-600"
+                    >
                       <input
                         className="hidden"
                         id="file-upload"
@@ -491,7 +525,8 @@ const EditPrint = ({ stageRef }) => {
                         className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
                         htmlFor="file-upload"
                         id="file-drag"
-                        style={{ cursor: "pointer" }}>
+                        style={{ cursor: "pointer" }}
+                      >
                         <img
                           id="file-image"
                           src="#"
@@ -538,22 +573,26 @@ const EditPrint = ({ stageRef }) => {
                 <div className="flex justify-between items-center bg-gray-100 p-2 my-2 rounded-lg shadow-md">
                   <div
                     className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                    onClick={() => moveLayer(layer.id, "left")}>
+                    onClick={() => moveLayer(layer.id, "left")}
+                  >
                     <ArrowLeftIcon size={25} />
                   </div>
                   <div
                     className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                    onClick={() => moveLayer(layer.id, "up")}>
+                    onClick={() => moveLayer(layer.id, "up")}
+                  >
                     <ArrowTopIcon size={25} />
                   </div>
                   <div
                     className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                    onClick={() => moveLayer(layer.id, "right")}>
+                    onClick={() => moveLayer(layer.id, "right")}
+                  >
                     <ArrowRightIcon size={25} />
                   </div>
                   <div
                     className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
-                    onClick={() => moveLayer(layer.id, "down")}>
+                    onClick={() => moveLayer(layer.id, "down")}
+                  >
                     <ArrowBottomIcon size={25} />
                   </div>
                 </div>
@@ -573,23 +612,24 @@ const EditPrint = ({ stageRef }) => {
               handleDownload={handleDownload}
               fileType={fileType}
               setFileType={setFileType}
-              pixelRatio={pixelRatio}
-              setPixelRatio={setPixelRatio}
               isProMember={isProMember}
             />
           }
           open={isPopoverOpen}
-          onOpenChange={setIsPopoverOpen}>
+          onOpenChange={setIsPopoverOpen}
+        >
           <button
             className="flex items-center mt-4 mr-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-            onClick={handleDownLoadDesign}>
+            onClick={handleDownLoadDesign}
+          >
             <PrintedIcon size={25} />
             <p className="pl-2">In ảnh</p>
           </button>
         </Popover>
         <button
           className="flex items-center mt-4 mx-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-          onClick={handleCancel}>
+          onClick={handleCancel}
+        >
           <CancelIcon size={25} />
           <p className="pl-2">Nhập lại</p>
         </button>

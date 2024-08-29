@@ -114,8 +114,8 @@ export default function Text() {
         idproduct: stageData.design.id,
         token: token,
         text: "Thêm chữ",
-        color: "#333333",
-        size: "10px",
+        color: "#000000",
+        size: "10vw",
         font: defaultFont.name,
         page: currentPage.page
       });

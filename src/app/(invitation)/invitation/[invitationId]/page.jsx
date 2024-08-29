@@ -1,41 +1,47 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { useParams } from "next/navigation";
 import { getListLayerApi } from "@/api/design";
 import { checkTokenCookie } from "@/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { setStageData } from "@/redux/slices/print/printSlice";
+import {
+  setStageData,
+  updateLayer,
+  addLayerImage,
+  removeLayer,
+  addLayerText,
+} from "@/redux/slices/print/printSlice";
 import { Stage, Layer } from "react-konva";
-import BackgroundLayerPrint from "./components/BackgroundLayerPrint";
-import ImageLayerPrint from "./components/ImageLayerPrint";
-import TextLayerPrint from "./components/TextLayerPrint";
-import EditPrint from "./components/EditPrint";
 import images from "../../../../../public/images/index2";
 import Link from "next/link";
 import Image from "next/image";
 import "@/styles/loading.css";
 import useFonts from "../../../../hooks/useLoadFont";
+import Navbar from "./component/Navbar/Navbar";
+import BackgroundLayerInvitation from "./component/Editor/BackgroundLayerInvitation";
+import ImageLayerInvitation from "./component/Editor/ImageLayerInvitation";
+import TextLayerInvitation from "./component/Editor/TextLayerInvitation";
+import EditInvitation from "./component/Editor/EditInvitation";
 
 const Page = () => {
   const params = useParams();
-  const { printedId } = params;
+  const { invitationId } = params;
   const stageRef = useRef(null);
   const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.print.stageData);
-  const { design, initSize } = stageData;
+  const { design, initSize, designLayers } = stageData;
   const [loading, setLoading] = useState(true);
-  const [designLayers, setDesignLayer] = useState([]);
   const [sizeRespon, setSizeRespon] = useState(1); // Initial sizeRespon
   const { fonts, setFonts } = useFonts();
 
-  useEffect(() => {
-    if (stageData && stageData.designLayers) {
-      setDesignLayer(stageData.designLayers);
-    }
-  }, [stageData]);
-
-  console.log("stageData print:", stageData);
+  console.log("design layers:", designLayers);
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,7 +76,7 @@ const Page = () => {
   const fetchData = async () => {
     try {
       const response = await getListLayerApi({
-        idproduct: printedId,
+        idproduct: invitationId,
         token: checkTokenCookie(),
       });
       if (response.code === 1) {
@@ -115,55 +121,48 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-  }, [printedId]);
+  }, [invitationId]);
 
   return (
-    <div className="flex flex-col lg:flex-row overflow-auto h-screen pt-[70px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]">
-      <div className="logo flex items-center justify-center absolute top-4 left-4 lg:top-6 lg:left-6">
-        <Link href="/" className="flex flex-center">
-          <Image
-            className="object-contain rounded_image"
-            priority={true}
-            src={images.logo}
-            style={{ maxWidth: "40px", maxHeight: "40px" }}
-            alt="Ezpics Logo"
-          />
-        </Link>
-      </div>
-      <div ref={containerRef} className="stage-container">
-        <div
-          style={{
-            width: initSize.width / sizeRespon,
-            height: initSize.height / sizeRespon,
-            maxWidth: "100vw",
-            maxHeight: "100vh",
-          }}>
+    <div className="flex h-screen">
+      <Navbar />
+      <div className="flex flex-grow mt-[65px]">
+        {/* Thanh công cụ bên trái */}
+        <div className="w-[30%] overflow-y-auto border-r border-gray-300 p-4">
+          <EditInvitation />
+        </div>
+
+        {/* Phần chính chứa Stage */}
+        <div className="flex-1">
           <Stage
             ref={stageRef}
-            width={initSize.width / sizeRespon}
-            height={initSize.height / sizeRespon}
+            width={initSize.width}
+            height={initSize.height}
             style={{
-              zIndex: 1,
               overflow: "auto",
               backgroundColor: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              height: "100%"
             }}
-            draggable={false}
-            onMouseDown={(e) => e.target.getStage().draggable(false)}>
+          >
             <Layer>
-              <BackgroundLayerPrint
+              <BackgroundLayerInvitation
                 src={design?.thumn}
-                width={initSize.width / sizeRespon}
-                height={initSize.height / sizeRespon}
-                draggable={false}
+                width={initSize.width}
+                height={initSize.height}
               />
+
               {designLayers.map((layer) => {
                 if (layer.content?.type === "image") {
                   return (
-                    <ImageLayerPrint
+                    <ImageLayerInvitation
                       key={layer.id}
                       designSize={{
-                        width: initSize.width / sizeRespon,
-                        height: initSize.height / sizeRespon,
+                        width: initSize.width,
+                        height: initSize.height,
                       }}
                       id={layer.id}
                       data={layer.content}
@@ -171,11 +170,11 @@ const Page = () => {
                   );
                 } else if (layer.content?.type === "text") {
                   return (
-                    <TextLayerPrint
+                    <TextLayerInvitation
                       key={layer.id}
                       designSize={{
-                        width: initSize.width / sizeRespon,
-                        height: initSize.height / sizeRespon,
+                        width: initSize.width,
+                        height: initSize.height,
                       }}
                       id={layer.id}
                       data={layer.content}
@@ -187,34 +186,6 @@ const Page = () => {
           </Stage>
         </div>
       </div>
-      {loading ? (
-        <div className="loading-overlay">
-          <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
-            <div className="ldio-4qpid53rus92">
-              <div></div>
-              <div>
-                <div></div>
-              </div>
-            </div>
-            <Image
-              style={{
-                position: "absolute",
-                top: 25,
-                left: 30,
-                width: 40,
-                height: 40,
-                zIndex: 999999,
-              }}
-              alt=""
-              width={50}
-              height={50}
-              src="/images/EZPICS.png"
-            />
-          </div>
-        </div>
-      ) : (
-        <EditPrint stageRef={stageRef} />
-      )}
     </div>
   );
 };
