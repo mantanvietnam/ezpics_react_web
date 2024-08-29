@@ -140,7 +140,7 @@ export default function Login() {
           dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
           setCookie("token", repon?.info_member?.token_web, expirationHours);
           setCookie("user_login", repon?.info_member, expirationHours);
-          router.push(redirect);
+          router.push("/");
         } else {
           setLoginError(repon?.messages[0]?.text);
         }
