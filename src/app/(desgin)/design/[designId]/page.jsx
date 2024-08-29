@@ -314,7 +314,7 @@ const Page = () => {
       const verticalDistanceEnd = Math.abs((shapeBox.y + shapeBox.height) - (currentBox.y + currentBox.height));
 
       // Kiểm tra căn chỉnh ngang
-      if (horizontalDistanceStart < 5 || horizontalDistanceEnd < 5) {
+      if (horizontalDistanceStart < 0.7 || horizontalDistanceEnd < 0.7) {
         const xStart = shapeBox.x < currentBox.x ? shapeBox.x : currentBox.x;
         const xEnd = shapeBox.x + shapeBox.width > currentBox.x + currentBox.width
           ? shapeBox.x + shapeBox.width
@@ -330,7 +330,7 @@ const Page = () => {
       }
 
       // Kiểm tra căn chỉnh dọc
-      if (verticalDistanceStart < 5 || verticalDistanceEnd < 5) {
+      if (verticalDistanceStart < 0.7 || verticalDistanceEnd < 0.7) {
         const yStart = shapeBox.y < currentBox.y ? shapeBox.y : currentBox.y;
         const yEnd = shapeBox.y + shapeBox.height > currentBox.y + currentBox.height
           ? shapeBox.y + shapeBox.height
@@ -498,10 +498,10 @@ const Page = () => {
                             ? [line.x, line.y1, line.x, line.y2]
                             : [line.x1, line.y, line.x2, line.y]
                         }
-                        stroke="blue" // Thay đổi màu sắc
-                        strokeWidth={0.3} // Tăng độ dày
+                        stroke="rgba(255, 0, 0, 0.8)" // Thay đổi màu sắc
+                        strokeWidth={0.4} // Tăng độ dày
                         dash={[10, 5]} // Định dạng kiểu đường nét đứt
-                        opacity={0.7} // Độ trong suốt
+                        opacity={1} // Độ trong suốt
                         lineCap="round" // Đầu đường bo tròn
                         lineJoin="round" // Góc đường bo tròn
                       />
