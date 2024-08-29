@@ -59,8 +59,6 @@ export default function Login() {
   const dispatch = useDispatch();
   const [ReCheck, setReCheck] = useState(false);
   const router = useRouter();
-  const urlParams = new URLSearchParams(window.location.search);
-  const redirect = urlParams.get('redirect') || '/';
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [phoneConfirm, setPhoneConfirm] = useState("");
