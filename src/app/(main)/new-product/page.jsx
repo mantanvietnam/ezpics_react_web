@@ -61,7 +61,6 @@ function Page() {
     };
     fetchDataUser();
   }, [cookie]);
-  console.log("dataInforUser", dataInforUser);
 
   useEffect(() => {
     const fetchCategories = async () => {
