@@ -173,26 +173,46 @@ export function PanelsText({
      selectedLayer?.content?.gradient
   );
    
-const handleAddColor = () => {
-  // Find the maximum position to increment for the new color
-  const maxPosition = gradientColors.length
-    ? Math.max(...gradientColors.map((color) => color.position))
-    : 0;
+ 
+  
+  const handleAddColor = () => {
+    const newPosition = gradientColors.length
+      ? gradientColors.length / (gradientColors.length + 1)
+      : 1;
 
-  setGradientColors([
-    ...gradientColors,
-    { position: maxPosition + 1, color: "#ffffff" },
-  ]);
-};
+    setGradientColors([
+      ...gradientColors,
+      { position: newPosition, color: "#ffffff" },
+    ]);
+  };
 
-const handleColorChange = (newColor, index) => {
-  // Create a new array with updated color
-  const newColors = gradientColors.map((colorObj, i) =>
-    i === index ? { ...colorObj, color: newColor } : colorObj
-  );
-  setIsGradient(1)
-  setGradientColors(newColors);
-};
+  const handleColorChange = (newColor, index) => {
+    const newColors = gradientColors.map((colorObj, i) =>
+      i === index ? { ...colorObj, color: newColor } : colorObj
+    );
+    setIsGradient(true);
+    setGradientColors(newColors);
+  };
+
+  const handlePositionChange = (newPosition, index) => {
+    const newColors = gradientColors.map((colorObj, i) =>
+      i === index
+        ? { ...colorObj, position: parseFloat(newPosition) }
+        : colorObj
+    );
+    setGradientColors(newColors);
+  };
+
+  const handleRemoveColor = (index) => {
+    const newColors = gradientColors.filter((_, i) => i !== index);
+
+    const adjustedColors = newColors.map((colorObj, i) => ({
+      ...colorObj,
+      position: i / (newColors.length - 1),
+    }));
+
+    setGradientColors(adjustedColors);
+  };
 
  const handleSaveDesign = async () => {
    try {
@@ -271,16 +291,6 @@ const handleColorChange = (newColor, index) => {
      console.error("Error saving design:", error);
    }
  };
-
-const handleRemoveColor = (index) => {
-  if (gradientColors.length > 2) {
-    const newColors = gradientColors.filter((_, i) => i !== index);
-    setGradientColors(newColors);
-  } else {
-    toast.error("Không thể xóa. Cần ít nhất 2 màu.");
-  }
-};
-
 
   useEffect(() => {
     if (selectedLayer) {
@@ -532,7 +542,7 @@ const handleRemoveColor = (index) => {
                   >
                     <path
                       fill="currentColor"
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="m8.77 19-.29-1.37h-.07c-.48.6-.96 1.01-1.44 1.22-.47.22-1.07.33-1.79.33-.95 0-1.7-.25-2.24-.74-.54-.5-.81-1.2-.81-2.1 0-1.95 1.55-2.97 4.66-3.06l1.64-.05v-.6c0-.76-.17-1.32-.5-1.68-.32-.36-.84-.54-1.55-.54-.8 0-1.71.25-2.73.74l-.44-1.11a6.86 6.86 0 0 1 3.26-.83c1.15 0 2 .25 2.55.76.55.51.83 1.33.83 2.46V19H8.77zm-3.3-1.03c.91 0 1.63-.25 2.14-.75.52-.5.78-1.2.78-2.09v-.87l-1.46.06a5.3 5.3 0 0 0-2.5.54c-.52.32-.78.82-.78 1.5 0 .52.16.92.48 1.2.32.27.77.41 1.34.41zM21.15 19l-1.6-4.09H14.4L12.82 19h-1.51l5.08-12.9h1.26L22.7 19h-1.55zm-2.06-5.43-1.5-3.98c-.19-.5-.39-1.13-.6-1.86-.12.56-.3 1.18-.55 1.86l-1.5 3.98h4.15z"
                     ></path>
                   </svg>
@@ -643,30 +653,45 @@ const handleRemoveColor = (index) => {
             trigger="click"
             placement="bottom"
             content={
-              <div className="w-[150px]">
-                <div className="flex">
-                  <strong className="w-[100px]">Chọn màu</strong>
+              <div className="w-[250px]">
+                <div className="flex mb-2">
+                  <strong className="w-full">Chọn màu</strong>
                 </div>
-                {/* <Button onClick={handleAddColor}>
+                <Button onClick={handleAddColor}>
                   Thêm màu <PlusOutlined />
-                </Button> */}
+                </Button>
                 {gradientColors.map((colorObj, index) => (
                   <div key={index} className="flex items-center my-2">
+                    <div className="w-[100px]">
+                      <Input
+                        type="color"
+                        value={colorObj.color}
+                        onChange={(e) =>
+                          handleColorChange(e.target.value, index)
+                        }
+                      />
+                    </div>
                     <Input
-                      type="color"
-                      value={colorObj.color}
-                      onChange={(e) => handleColorChange(e.target.value, index)}
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="1"
+                      value={colorObj.position.toFixed(2)} // Display the position directly in the input
+                      onChange={(e) =>
+                        handlePositionChange(e.target.value, index)
+                      }
+                      className="w-[80px] ml-2 text-center" // Adjusted width and centered text
                     />
                     <Button
                       onClick={() => handleRemoveColor(index)}
                       type="text"
                       danger
+                      className="ml-2"
                     >
                       Xóa
                     </Button>
                   </div>
                 ))}
-                {/* Apply button to save design */}
                 <Button
                   className="text-sm font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
                   onClick={handleSaveDesign}
@@ -683,11 +708,13 @@ const handleRemoveColor = (index) => {
               <div
                 className="w-[50px] h-[30px] flex items-center justify-center"
                 style={{
-                  background: `linear-gradient(to right, ${gradientColors
+                  background: `linear-gradient(to right, ${[...gradientColors]
+                    .sort((a, b) => a.position - b.position) // Sort by position
                     .map((c) => c.color)
                     .join(", ")})`,
                 }}
               ></div>
+
               <DownOutlined />
             </Button>
           </Popover>

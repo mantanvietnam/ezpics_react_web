@@ -19,7 +19,6 @@ export async function generateMetadata({ params }) {
 
     const category = response.listData.find((item) => item.id == id);
 
-    console.log("categorycategorycategorycategory", category);
     if (!category) {
       throw new Error(`No category found with ID ${id}`);
     }

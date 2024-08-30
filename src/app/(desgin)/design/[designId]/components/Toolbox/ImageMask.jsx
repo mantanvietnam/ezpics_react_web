@@ -73,7 +73,6 @@ const ImageMask = () => {
     // Chuyển URL Base64 thành chuỗi SVG
     const svgString = dataUrlToSvg(dataUrl);
 
-    console.log("svgString", svgString);
 
     return (
       <div
