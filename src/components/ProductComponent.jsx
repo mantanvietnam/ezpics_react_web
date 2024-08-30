@@ -22,30 +22,7 @@ export default function ProductComponent({ product }) {
   } else {
     dataInforUser = null;
   }
-  // console.log('dataInforUser', dataInforUser)
-
-  //   const cookie = checkTokenCookie()
-  // useEffect(() => {
-  //     const fetchDataUser = async () => {
-  //         try {
-  //             const response = await axios.post('https://apis.ezpics.vn/apis/getInfoMemberAPI', {
-  //                 token: cookie
-  //             });
-
-  //             if (response) {
-  //                 // console.log('response',response?.data?.data);
-  //                 setdataInforUser(response?.data?.data)
-  //             } else {
-  //                 console.error("Invalid response format for categories");
-  //             }
-
-  //         } catch (error) {
-  //             throw new Error(error)
-  //         }
-  //     }
-  //     fetchDataUser();
-  // }, [cookie])
-
+ 
   return (
     <Link
       href={`/category/${product?.id}`}
