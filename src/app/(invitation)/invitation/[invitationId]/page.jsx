@@ -125,7 +125,7 @@ const Page = () => {
 
   return (
     <div className="flex h-screen">
-      <Navbar />
+      <Navbar invitationId={invitationId}/>
       <div className="flex flex-grow mt-[65px]">
         {/* Thanh công cụ bên trái */}
         <div className="w-[30%] overflow-y-auto border-r border-gray-300 p-4">

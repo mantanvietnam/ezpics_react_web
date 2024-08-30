@@ -15,7 +15,7 @@ export default function CongratulationProductSlider() {
         return products; // Return the fetched products
       }}
       title="Thiệp chúc mừng"
-      pathString="/dashboard-search"
+      pathString="/project/thiep-chuc-mung-11.html"
     />
   );
 }

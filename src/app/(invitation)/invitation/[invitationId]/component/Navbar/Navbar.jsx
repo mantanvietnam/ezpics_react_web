@@ -6,13 +6,16 @@ import { toast } from "react-toastify";
 import { checkTokenCookie } from "@/utils";
 import Link from "next/link";
 import SaveIcon from "@/app/(desgin)/design/[designId]/Icon/SaveIcon";
+import ExportIcon from "@/app/(desgin)/design/[designId]/Icon/ExportIcon";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { updateDesign } from "@/api/design";
 import "./navbar.css";
+import { useRouter } from "next/navigation";
 
-const Navbar = () => {
+const Navbar = ({ invitationId }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const stageData = useSelector((state) => state.print.stageData);
 
   const handleSaveDesign = async () => {
@@ -94,7 +97,7 @@ const Navbar = () => {
   };
 
   //them sua ten mau thiet ke
-  const [nameDesign, setNameDesign] = useState("");
+  const [nameDesign, setNameDesign] = useState(stageData.design.name || "");
 
   const handleSaveNameDesign = async () => {
     try {
@@ -126,8 +129,7 @@ const Navbar = () => {
           zIndex: "10",
           position: "fixed",
           width: "100vw",
-        }}
-      >
+        }}>
         <div
           style={{
             height: "64px",
@@ -140,8 +142,7 @@ const Navbar = () => {
             flexDirection: "row",
             justifyContent: "space-between",
             borderBottom: "1px solid #fff",
-          }}
-        >
+          }}>
           <div className="flex">
             <Link href="/" className="flex flex-center">
               <NextImage
@@ -169,7 +170,7 @@ const Navbar = () => {
                 handleSaveNameDesign();
               }}
               onFocus={() => {
-                setNameDesign(stageData.design.name); // Đặt giá trị của nameDesign khi input được focus
+                setNameDesign(nameDesign || stageData.design.name); // Đặt giá trị của nameDesign khi input được focus
               }}
               className="custom-input text-white bg-transparent rounded-lg p-1 w-full hover:ring-1 hover:ring-zinc-100 focus:ring-1 focus:ring-zinc-100 focus:outline-none ml-10"
             />
@@ -182,8 +183,7 @@ const Navbar = () => {
               alignItems: "center",
               color: "#ffffff",
               height: "100%",
-            }}
-          >
+            }}>
             <button
               style={{
                 marginRight: "50px",
@@ -191,10 +191,24 @@ const Navbar = () => {
                 alignItems: "flex-start",
                 fontSize: "18px",
               }}
-              onClick={handleSaveDesign}
-            >
+              onClick={handleSaveDesign}>
               <SaveIcon size={22} />
               <p className="pl-2">Lưu mẫu thiệp mời</p>
+            </button>
+
+            <button
+              style={{
+                marginRight: "50px",
+                display: "flex",
+                alignItems: "flex-start",
+                fontSize: "18px",
+              }}
+              onClick={() => {
+                handleSaveDesign();
+                router.push(`/printed/${invitationId}`);
+              }}>
+              <ExportIcon size={22} />
+              <p className="pl-2">Xuất link in thiệp</p>
             </button>
           </div>
         </div>

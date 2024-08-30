@@ -15,7 +15,7 @@ const EventProductSlider = () => {
         return products;
       }}
       title="Banner event"
-      pathString="/dashboard-search"
+      pathString="/project/su-kien-chuong-trinh-cuoc-thi-9.html"
     />
   );
 };

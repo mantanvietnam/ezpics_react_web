@@ -440,7 +440,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
     }
   };
 
-
   const handleLogout = async (e) => {
     const response = await logoutService({
       token: checkTokenCookie(),
@@ -695,24 +694,21 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 <div
                   key={index}
                   className={`${getHiddenClass(menuItem.hiddenOn)} `}
-                  onClick={() => handleHeaderItem(index)}
-                >
+                  onClick={() => handleHeaderItem(index)}>
                   {!menuItem.subMenu ? (
                     <Link
                       href={menuItem.href}
                       className={`primary_btn pl-10 whitespace-nowrap ${
                         activeHeader === index &&
                         "underline decoration-yellow-600 underline-offset-4"
-                      } rounded-lg`}
-                    >
+                      } rounded-lg`}>
                       {menuItem.label}
                     </Link>
                   ) : (
                     <div>
                       <button
                         className="primary_btn pl-10 whitespace-nowrap flex items-center"
-                        onClick={() => toggleSubmenu()}
-                      >
+                        onClick={() => toggleSubmenu()}>
                         {menuItem.label}
                         <DownOutlined className="ml-2" />
                       </button>
@@ -722,8 +718,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                             <Link
                               key={subIndex}
                               href={subItem.href}
-                              className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap"
-                            >
+                              className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
                               {subItem.label}
                             </Link>
                           ))}
@@ -737,8 +732,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             <div className="relative">
               <button
                 className="text-xl pl-10 xl:hidden"
-                onClick={() => toggleDropdown()}
-              >
+                onClick={() => toggleDropdown()}>
                 <EllipsisOutlined />
               </button>
               {dropdownVisible && (
@@ -750,16 +744,14 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                         <Link
                           key={index}
                           href={menuItem.href}
-                          className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap"
-                        >
+                          className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
                           {menuItem.label}
                         </Link>
                       ) : (
                         <div key={index} className="relative">
                           <button
                             className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap items-center w-full text-left"
-                            onClick={() => toggleSubmenu()}
-                          >
+                            onClick={() => toggleSubmenu()}>
                             {menuItem.label}
                             <RightOutlined className="ml-2" />
                           </button>
@@ -769,8 +761,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                                 <Link
                                   key={subIndex}
                                   href={subItem.href}
-                                  className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap"
-                                >
+                                  className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap">
                                   {subItem.label}
                                 </Link>
                               ))}
@@ -788,42 +779,36 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
         <div className="action flex justify-center items-center">
           <button
             className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white px-[1.25rem] py-[0.5rem] rounded-[0.25rem] whitespace-nowrap text-xs mobile:text-base"
-            onClick={() => handleAddNewInvitation()}
-          >
+            onClick={() => handleAddNewInvitation()}>
             Tạo thiệp mời
           </button>
 
           <button
             className="button-red whitespace-nowrap text-xs mobile:text-base"
-            onClick={() => handleAddNewDesign()}
-          >
+            onClick={() => handleAddNewDesign()}>
             Tạo thiết kế
           </button>
           {creatingBucket && (
             <div className="relative">
               <div
                 className="absolute top-7 right-full w-[330px] max-h-[400px] bg-white overflow-y-auto rounded-[10px]"
-                style={{ scrollbarWidth: "thin", scrollbars: "false" }}
-              >
+                style={{ scrollbarWidth: "thin", scrollbars: "false" }}>
                 <div
                   className="list-item"
                   onClick={() => {
                     setCreatingBucket(false);
                     handleShowModalCreating();
                     document.body.style.overflowY = "hidden";
-                  }}
-                >
+                  }}>
                   <svg
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 6.165V19a2 2 0 0 0 2 2h12.835c-.06-.05-.12-.102-.176-.159L16.318 19.5H5a.5.5 0 0 1-.5-.5V7.682L3.159 6.341A2.275 2.275 0 0 1 3 6.165ZM17.28 4.22a.75.75 0 0 1 0 1.06l-2 2a.75.75 0 1 1-1.06-1.06l.72-.72H6.56l.72.72a.75.75 0 0 1-1.06 1.06l-2-2a.75.75 0 0 1 0-1.06l2-2a.75.75 0 0 1 1.06 1.06L6.56 4h8.38l-.72-.72a.75.75 0 0 1 1.06-1.06l2 2ZM19.78 19.78a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l.72.72V9.06l-.72.72a.75.75 0 1 1-1.06-1.06l2-2a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1-1.06 1.06L20 9.06v8.38l.72-.72a.75.75 0 1 1 1.06 1.06l-2 2Z"
-                      fill="black"
-                    ></path>
+                      fill="black"></path>
                   </svg>
                   <p className="item-text">Cỡ tùy chỉnh</p>
                 </div>
@@ -833,8 +818,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                     setCreatingBucket(false);
                     handleShowModalCreatingPrint();
                     document.body.style.overflowY = "hidden";
-                  }}
-                >
+                  }}>
                   <Image
                     src={designIcon.paperRolls}
                     alt=""
@@ -874,19 +858,16 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                     borderRadius: "10px",
                     scrollbarWidth: "thin",
                     scrollbars: "false",
-                  }}
-                >
+                  }}>
                   {itemsDropdowUser.map((item) => (
                     <div key={item.key}>{item.label}</div>
                   ))}
                 </div>
-              )}
-            >
+              )}>
               <div
                 style={{
                   cursor: "pointer",
-                }}
-              >
+                }}>
                 <Space>
                   <div className="w-10 h-10 rounded-full overflow-hidden m-5">
                     <img
@@ -903,9 +884,12 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               <button
                 className="flex items-center border-red-600 text-red-600 border-2 rounded px-5 py-2 mx-4 whitespace-nowrap text-xs mobile:text-base"
                 onClick={() => {
-                  router.push("/sign-in");
-                }}
-              >
+                  // const path = window.location.pathname || '/';
+                  // const redirectUrl = encodeURIComponent(path);
+                  // router.push(`/sign-in?redirect=${redirectUrl}`);
+
+                  router.push(`/sign-in`);
+                }}>
                 <UserOutlined />
                 <p className="pl-2">Đăng nhập</p>
               </button>
@@ -918,8 +902,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               ? "bg-green-500 text-white opacity-0"
               : "bg-red-500 text-white opacity-100"
           } ${show ? "opacity-100" : "opacity-0"}`}
-          style={{ transition: "opacity 1s" }}
-        >
+          style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>
           ) : (
@@ -935,8 +918,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           open={modalLogoutDevice}
           onClose={handleLogoutDevice}
           aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+          aria-describedby="modal-modal-description">
           <Box className="flex flex-col items-center justify-center">
             <p
               style={{
@@ -944,8 +926,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 fontSize: 22,
                 fontWeight: "bold",
                 paddingBottom: "10px",
-              }}
-            >
+              }}>
               Cảnh báo
             </p>
             <Image src={contactInfo.warning} alt="" width={150} height={150} />
@@ -957,8 +938,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 variant="contained"
                 size="medium"
                 className="button-red"
-                onClick={() => handleLogoutNew()}
-              >
+                onClick={() => handleLogoutNew()}>
                 Đăng nhập lại
               </Button>
             </div>
@@ -969,8 +949,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           open={openModalCreating}
           onCancel={handleCanCelModalCreating}
           footer={null}
-          width={"30%"}
-        >
+          width={"30%"}>
           <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
             <h1 className="text-2xl font-bold text-[#735400] ml-[22px] mt-10">
               Bắt đầu tạo mẫu thiết kế
@@ -987,8 +966,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: "24px",
-              }}
-            >
+              }}>
               <img
                 src={urlSelectedFile}
                 alt=""
@@ -1005,8 +983,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               <form
                 id="file-upload-form"
                 className="block clear-both mx-auto w-full max-w-600"
-                style={{ marginTop: 40 }}
-              >
+                style={{ marginTop: 40 }}>
                 <input
                   className="hidden"
                   id="file-upload"
@@ -1020,8 +997,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                   className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
                   htmlFor="file-upload"
                   id="file-drag"
-                  style={{ height: 200, cursor: "pointer" }}
-                >
+                  style={{ height: 200, cursor: "pointer" }}>
                   <img
                     id="file-image"
                     src="#"
@@ -1068,8 +1044,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                  onClick={(e) => handleCreateCustom(e)}
-                >
+                  onClick={(e) => handleCreateCustom(e)}>
                   {loadingButtonModalCreate ? (
                     <span>
                       <Spin
@@ -1094,8 +1069,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 <button
                   className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
                   style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
-                  disabled
-                >
+                  disabled>
                   Bắt đầu tạo mẫu
                 </button>
               </div>
@@ -1115,8 +1089,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           open={openModalCreatingPrint}
           onCancel={handleCanCelModalCreatingPrint}
           footer={null}
-          width={"30%"}
-        >
+          width={"30%"}>
           <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
             <h1 className="text-2xl font-bold text-[#735400] ml-[14px] mt-10">
               Bắt đầu tạo mẫu in hàng loạt
@@ -1133,8 +1106,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: "24px",
-              }}
-            >
+              }}>
               <img
                 src={urlSelectedFile}
                 alt=""
@@ -1151,8 +1123,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               <form
                 id="file-upload-form"
                 className="block clear-both mx-auto w-full max-w-600"
-                style={{ marginTop: 40 }}
-              >
+                style={{ marginTop: 40 }}>
                 <input
                   className="hidden"
                   id="file-upload"
@@ -1166,8 +1137,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                   className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
                   htmlFor="file-upload"
                   id="file-drag"
-                  style={{ height: 200, cursor: "pointer" }}
-                >
+                  style={{ height: 200, cursor: "pointer" }}>
                   <img
                     id="file-image"
                     src="#"
@@ -1214,8 +1184,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                  onClick={(e) => handleCreatePrint(e)}
-                >
+                  onClick={(e) => handleCreatePrint(e)}>
                   {loadingButtonModalCreate ? (
                     <span>
                       <Spin
@@ -1240,8 +1209,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 <button
                   className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
                   style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
-                  disabled
-                >
+                  disabled>
                   Bắt đầu tạo mẫu
                 </button>
               </div>
@@ -1261,8 +1229,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           open={openModalCreatingInvitation}
           onCancel={handleCanCelModalCreatingInvitation}
           footer={null}
-          width={"30%"}
-        >
+          width={"30%"}>
           <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
             <h1 className="text-2xl font-bold text-[#735400] ml-[14px] mt-10">
               Bắt đầu tạo mẫu thiệp mời
@@ -1279,8 +1246,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: "24px",
-              }}
-            >
+              }}>
               <img
                 src={urlSelectedFile}
                 alt=""
@@ -1297,8 +1263,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               <form
                 id="file-upload-form"
                 className="block clear-both mx-auto w-full max-w-600"
-                style={{ marginTop: 40 }}
-              >
+                style={{ marginTop: 40 }}>
                 <input
                   className="hidden"
                   id="file-upload"
@@ -1312,8 +1277,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                   className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
                   htmlFor="file-upload"
                   id="file-drag"
-                  style={{ height: 200, cursor: "pointer" }}
-                >
+                  style={{ height: 200, cursor: "pointer" }}>
                   <img
                     id="file-image"
                     src="#"
@@ -1360,8 +1324,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                  onClick={(e) => handleCreateInvitation(e)}
-                >
+                  onClick={(e) => handleCreateInvitation(e)}>
                   {loadingButtonModalCreate ? (
                     <span>
                       <Spin
@@ -1386,8 +1349,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 <button
                   className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
                   style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
-                  disabled
-                >
+                  disabled>
                   Bắt đầu tạo mẫu
                 </button>
               </div>
