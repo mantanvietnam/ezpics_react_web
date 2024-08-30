@@ -235,13 +235,12 @@ const EditInvitation = () => {
     <div>
       <div>
         <div className="border-b border-gray-500 mb-5 pb-3">
-          <div className="mb-2 flex">
-            <p>Ảnh đại diện</p>
+          <div className="mb-2 flex justify-between">
+            <h1 className="text-xl font-bold">Ảnh đại diện</h1>
             {(imgSrc || filteredLayerImage[0]?.content?.banner) && (
               <button
                 className="text-[12px] bg-red-600 text-white ml-2 px-1 rounded"
-                onClick={() => handleDeleteLayer()}
-              >
+                onClick={() => handleDeleteLayer()}>
                 Xóa
               </button>
             )}
@@ -258,8 +257,7 @@ const EditInvitation = () => {
                     overflow: "hidden", // Ẩn phần ảnh bị tràn
                     width: "40%",
                     height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
-                  }}
-                >
+                  }}>
                   <img
                     src={imgSrc || filteredLayerImage[0]?.content?.banner}
                     alt=""
@@ -275,8 +273,7 @@ const EditInvitation = () => {
               <div className="flex flex-col relative mobile:pt-4">
                 <form
                   id="file-upload-form"
-                  className="block clear-both mx-auto w-full max-w-600"
-                >
+                  className="block clear-both mx-auto w-full max-w-600">
                   <input
                     className="hidden"
                     id="file-upload"
@@ -290,8 +287,7 @@ const EditInvitation = () => {
                     className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
                     htmlFor="file-upload"
                     id="file-drag"
-                    style={{ cursor: "pointer" }}
-                  >
+                    style={{ cursor: "pointer" }}>
                     <img
                       id="file-image"
                       src="#"
@@ -361,14 +357,12 @@ const EditInvitation = () => {
             .map((layer) => (
               <div
                 key={layer.id}
-                className="border-b border-gray-500 mb-4 pb-3"
-              >
-                <div className="mb-2 flex">
-                  <p>Chỉnh sửa chữ</p>
+                className="border-b border-gray-500 mb-4 pb-3">
+                <div className="mb-2 flex justify-between">
+                  <h1 className="text-xl font-bold">Chỉnh sửa chữ</h1>
                   <button
                     className="text-[12px] bg-red-600 text-white ml-2 px-1 rounded"
-                    onClick={() => handleDeleteLayerText(layer)}
-                  >
+                    onClick={() => handleDeleteLayerText(layer)}>
                     Xóa
                   </button>
                 </div>
@@ -412,7 +406,7 @@ const EditInvitation = () => {
                         handleUpdateLayerText("size", e.target.value, layer)
                       }
                       value={
-                        layer.content.size
+                        layer?.content?.size
                           ? layer.content.size.replace("vw", "")
                           : 5
                       }
@@ -444,15 +438,13 @@ const EditInvitation = () => {
                               key={font.name}
                               onClick={() => handleFontSelect(font, layer)}
                               className="p-2 cursor-pointer hover:bg-gray-100"
-                              style={{ fontFamily: font.name }}
-                            >
+                              style={{ fontFamily: font.name }}>
                               {font.name}
                             </div>
                           ))}
                         </div>
                       }
-                      trigger="click"
-                    >
+                      trigger="click">
                       <Input
                         value={selectedFont ? selectedFont : layer.content.font}
                         placeholder="Chọn font"
@@ -467,8 +459,7 @@ const EditInvitation = () => {
 
           <button
             className="px-2 py-1 my-2 text-white bg-black hover:text-black hover:bg-white rounded border"
-            onClick={handleCreateVariableText}
-          >
+            onClick={handleCreateVariableText}>
             Tạo biến chữ
           </button>
         </div>

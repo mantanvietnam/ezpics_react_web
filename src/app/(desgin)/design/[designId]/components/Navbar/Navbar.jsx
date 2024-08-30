@@ -54,8 +54,7 @@ const DownLoadMenu = ({
         id="fileType"
         value={fileType}
         onChange={(value) => setFileType(value)}
-        style={{ width: "100%", height: 50 }}
-      >
+        style={{ width: "100%", height: 50 }}>
         <Select.Option value="png">
           <div className="flex items-center">
             <svg
@@ -63,18 +62,15 @@ const DownLoadMenu = ({
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M10.5 8.75a1.75 1.75 0 1 1-3.5 0 1.75 1.75 0 0 1 3.5 0Z"
-                fill="currentColor"
-              ></path>
+                fill="currentColor"></path>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7Zm4-2.5h10A2.5 2.5 0 0 1 19.5 7v4.23l-.853-.854c-.485-.485-.892-.892-1.257-1.184-.384-.307-.79-.546-1.287-.616a2.625 2.625 0 0 0-.74 0c-.497.07-.903.309-1.287.616-.365.292-.772.7-1.257 1.184l-7.943 7.943A2.488 2.488 0 0 1 4.5 17V7A2.5 2.5 0 0 1 7 4.5Zm-.983 14.8c.302.128.634.2.983.2h10a2.5 2.5 0 0 0 2.5-2.5v-3.65l-1.884-1.884c-.522-.522-.871-.869-1.163-1.103-.281-.224-.439-.285-.562-.302a1.122 1.122 0 0 0-.317 0c-.122.017-.28.078-.561.302-.292.234-.64.581-1.163 1.103L6.017 19.3Z"
-                fill="currentColor"
-              ></path>
+                fill="currentColor"></path>
             </svg>
             <p className="text-xl pl-3">PNG</p>
           </div>
@@ -86,14 +82,12 @@ const DownLoadMenu = ({
               width="28"
               height="28"
               fill="none"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 fillRule="evenodd"
                 d="M6.5 4a.5.5 0 0 1 .5-.5h4.002v4.503a2 2 0 0 0 2 2h5.248a.75.75 0 0 0 .75-.75V9.25a.747.747 0 0 0-.22-.531l-6.134-6.134A2.002 2.002 0 0 0 11.231 2h-4.23A2 2 0 0 0 5 4v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7.75a.75.75 0 0 0-1.5 0V20a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V4Zm9.942 4.503-3.94-3.94v3.44a.5.5 0 0 0 .5.5h3.44ZM9 17a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 9 17Zm.75-4.754a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Z"
-                clipRule="evenodd"
-              ></path>
+                clipRule="evenodd"></path>
             </svg>
             <p className="text-xl pl-3">PDF</p>
           </div>
@@ -131,8 +125,7 @@ const DownLoadMenu = ({
       )}
       <button
         className="mt-4 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-        onClick={handleDownload}
-      >
+        onClick={handleDownload}>
         Tải xuống
       </button>
     </div>
@@ -293,7 +286,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
   };
 
   //them sua ten mau thiet ke
-  const [nameDesign,setNameDesign]= useState("");
+  const [nameDesign, setNameDesign] = useState(stageData.design.name || "");
 
   const handleSaveNameDesign = async () => {
     try {
@@ -302,11 +295,10 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
         idProduct: stageData.design.id,
         name: nameDesign,
       });
-     
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
@@ -315,12 +307,12 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
           zIndex: "10",
           position: "fixed",
           width: "100vw",
-        }}
-      >
+        }}>
         <div
           style={{
             height: "64px",
-            background: "linear-gradient(90deg, rgba(160,112,34,1) 42%, rgba(223,180,54,0.8632703081232493) 60%)",
+            background:
+              "linear-gradient(90deg, rgba(160,112,34,1) 42%, rgba(223,180,54,0.8632703081232493) 60%)",
             display: "flex",
             padding: "0 1.25rem",
             gridTemplateColumns: "240px 1fr 240px",
@@ -328,8 +320,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             borderBottom: "1px solid #fff",
-          }}
-        >
+          }}>
           <div className="flex">
             <Link href="/" className="flex flex-center">
               <NextImage
@@ -357,7 +348,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 handleSaveNameDesign();
               }}
               onFocus={() => {
-                setNameDesign(stageData.design.name); // Đặt giá trị của nameDesign khi input được focus
+                setNameDesign(nameDesign || stageData.design.name); // Đặt giá trị của nameDesign khi input được focus
               }}
               className="custom-input text-white bg-transparent rounded-lg p-1 w-full hover:ring-1 hover:ring-zinc-100 focus:ring-1 focus:ring-zinc-100 focus:outline-none ml-10"
             />
@@ -370,8 +361,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               alignItems: "center",
               color: "#ffffff",
               height: "100%",
-            }}
-          >
+            }}>
             <button
               style={{
                 marginRight: "50px",
@@ -379,8 +369,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 alignItems: "flex-start",
                 fontSize: "18px",
               }}
-              onClick={handleUndo}
-            >
+              onClick={handleUndo}>
               <Undo />
               <p className="pl-2">Hoàn tác</p>
             </button>
@@ -392,8 +381,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 alignItems: "flex-start",
                 fontSize: "18px",
               }}
-              onClick={handleRedo}
-            >
+              onClick={handleRedo}>
               <Redo />
               <p className="pl-2">Làm lại</p>
             </button>
@@ -405,8 +393,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 alignItems: "flex-start",
                 fontSize: "18px",
               }}
-              onClick={handleSaveDesign}
-            >
+              onClick={handleSaveDesign}>
               <SaveIcon size={22} />
               <p className="pl-2">Lưu mẫu thiết kế</p>
             </button>
@@ -427,8 +414,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                 />
               }
               open={isPopoverOpen}
-              onOpenChange={setIsPopoverOpen}
-            >
+              onOpenChange={setIsPopoverOpen}>
               <button
                 style={{
                   marginRight: "4px",
@@ -436,8 +422,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
                   alignItems: "flex-start",
                   fontSize: "18px",
                 }}
-                onClick={handleDownLoadDesign}
-              >
+                onClick={handleDownLoadDesign}>
                 <ExportIcon size={23} />
                 <p className="pl-1">Xuất ảnh</p>
               </button>
