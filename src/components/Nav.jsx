@@ -119,7 +119,7 @@ const Nav = ({
 
   return (
     <div
-      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 overflow-y-auto ${
+      className={`fixed left-0 top-[var(--header-height)] h-[calc(100%-64px)] bg-white border-r border-gray-300 w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 overflow-y-auto ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
       {isAuthenticated ? (
