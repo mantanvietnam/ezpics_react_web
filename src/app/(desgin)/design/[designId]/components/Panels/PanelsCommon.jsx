@@ -171,7 +171,6 @@ const CommonAlign = ({ maxPositions }) => {
   };
 
   const onAlignCenterIcon = () => {
-    console.log("trung tam");
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
@@ -184,7 +183,6 @@ const CommonAlign = ({ maxPositions }) => {
   };
 
   const onAlignTopIcon = () => {
-    console.log("len tren");
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
@@ -197,7 +195,6 @@ const CommonAlign = ({ maxPositions }) => {
   };
 
   const onAlignMiddleIcon = () => {
-    console.log("o giua");
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
@@ -210,7 +207,6 @@ const CommonAlign = ({ maxPositions }) => {
   };
 
   const onAlignBottomIcon = () => {
-    console.log("xuong duoi");
     if (selectedLayer) {
       // Cập nhật dữ liệu layer
       const updatedData = {
@@ -335,7 +331,6 @@ const LockUnlock = () => {
 };
 
 export default function PanelsCommon({ maxPositions, onDuplicateLayer }) {
-
     const dispatch = useDispatch();
     const stageData = useSelector((state) => state.stage.stageData);
     const [selectedLayer, setSelectedLayer] = useState({});

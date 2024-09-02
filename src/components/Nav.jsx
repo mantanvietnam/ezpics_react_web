@@ -41,10 +41,8 @@ const Nav = ({
   let dataInforUser;
   if (getCookie("user_login")) {
     dataInforUser = JSON.parse(getCookie("user_login"));
-    console.log("dataInforUserdataInforUser", dataInforUser);
   } else if (session?.user_login) {
     dataInforUser = session?.user_login;
-    console.log("dataInforUserdataInforUser", dataInforUser);
   } else {
     dataInforUser = null;
   }
@@ -121,10 +119,9 @@ const Nav = ({
 
   return (
     <div
-      className={`fixed left-0 top-[var(--header-height)] bg-white border-r border-gray-300 h-screen w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 overflow-y-auto ${
+      className={`fixed left-0 top-[var(--header-height)] h-[calc(100%-64px)] bg-white border-r border-gray-300 w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 overflow-y-auto ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
-    >
+      }`}>
       {isAuthenticated ? (
         <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
           <div className="relative flex justify-around items-center">
@@ -183,8 +180,7 @@ const Nav = ({
         <div>
           <Link
             href={"/sign-in"}
-            className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer"
-          >
+            className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
             <UserOutlined className="text-2xl p-[10px] bg-gray-300 rounded-full" />
             <p>Đăng nhập</p>
           </Link>
@@ -196,8 +192,7 @@ const Nav = ({
             key={index}
             href={navItem.href}
             className={`rounded-lg ${activeItem === index && "bg-gray-300"}`}
-            onClick={() => handleNavItem(index)}
-          >
+            onClick={() => handleNavItem(index)}>
             <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
               <Image
                 src={navItem.icon}
@@ -219,12 +214,10 @@ const Nav = ({
               key={index}
               href={userFunc.href}
               className={`rounded-lg ${activeFunc === index && "bg-gray-300"}`}
-              onClick={() => hanldeFuncItem(index)}
-            >
+              onClick={() => hanldeFuncItem(index)}>
               <div
                 className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer"
-                onClick={userFunc.onClick}
-              >
+                onClick={userFunc.onClick}>
                 <Image
                   src={userFunc.icon}
                   alt=""

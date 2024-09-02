@@ -34,7 +34,7 @@ export default function TextLayer(props) {
     text_align,
     gianchu,
     giandong,
-    uppercase
+    uppercase,
   } = data;
 
   const getScaleFromTransform = (transformString) => {
@@ -292,13 +292,11 @@ export default function TextLayer(props) {
   const formatText = (text) => {
     // Thay thế các thẻ <br /> và <br> bằng ký tự xuống dòng
     const newText = text.replace(/<br\s*\/?>/gi, "\n");
-    if (uppercase === 'uppercase') {
+    if (uppercase === "uppercase") {
       return newText.toUpperCase();
     }
-    return newText
+    return newText;
   };
-
-
 
   // Hàm chuyển đổi từ vh sang pixel và từ pixel sang tỷ lệ lineHeight
   const giandongToLineHeight = (giandong) => {
@@ -345,37 +343,37 @@ export default function TextLayer(props) {
     }
   }, [localIsSelected]);
 
- const isGradientArrayCorrectFormat = (arr) => {
-   // Kiểm tra nếu mảng có số lượng phần tử chia hết cho 2 và mỗi cặp có dạng [position, color]
-   return (
-     Array.isArray(arr) &&
-     arr.length % 2 === 0 &&
-     arr.every((_, i) =>
-       i % 2 === 0 ? typeof arr[i] === "number" : typeof arr[i] === "string"
-     )
-   );
- };
+  const isGradientArrayCorrectFormat = (arr) => {
+    // Kiểm tra nếu mảng có số lượng phần tử chia hết cho 2 và mỗi cặp có dạng [position, color]
+    return (
+      Array.isArray(arr) &&
+      arr.length % 2 === 0 &&
+      arr.every((_, i) =>
+        i % 2 === 0 ? typeof arr[i] === "number" : typeof arr[i] === "string"
+      )
+    );
+  };
 
- // Kiểm tra xem tất cả các giá trị màu trong gradient có giống nhau không
- const isSingleColorGradient = (arr) => {
-   const colors = arr.filter((_, i) => i % 2 !== 0); // Lấy tất cả giá trị màu
-   return new Set(colors).size === 1; // Kiểm tra xem có bao nhiêu màu khác nhau
- };
+  // Kiểm tra xem tất cả các giá trị màu trong gradient có giống nhau không
+  const isSingleColorGradient = (arr) => {
+    const colors = arr.filter((_, i) => i % 2 !== 0); // Lấy tất cả giá trị màu
+    return new Set(colors).size === 1; // Kiểm tra xem có bao nhiêu màu khác nhau
+  };
 
- const gradientArray = Array.isArray(gradient_color[0])
-   ? gradient_color
-   : isGradientArrayCorrectFormat(gradient_color) &&
-     !isSingleColorGradient(gradient_color)
-   ? gradient_color
-   : gradient_color.reduce((acc, { position, color }) => {
-       acc.push(position, color);
-       return acc;
-     }, []);
+  const gradientArray = Array.isArray(gradient_color[0])
+    ? gradient_color
+    : isGradientArrayCorrectFormat(gradient_color) &&
+      !isSingleColorGradient(gradient_color)
+    ? gradient_color
+    : gradient_color.reduce((acc, { position, color }) => {
+        acc.push(position, color);
+        return acc;
+      }, []);
 
- // Trả về null nếu mảng gradient có cùng một màu
-    const finalGradient = isSingleColorGradient(gradientArray)
-      ? null
-      : gradientArray;
+  // Trả về null nếu mảng gradient có cùng một màu
+  const finalGradient = isSingleColorGradient(gradientArray)
+    ? null
+    : gradientArray;
 
   return (
     <>
@@ -395,7 +393,11 @@ export default function TextLayer(props) {
         fontStyle={getFontStyle(indam, innghieng)}
         textDecoration={gachchan}
         letterSpacing={vwToLetterSpacing(gianchu)}
-        lineHeight={giandongToLineHeight(giandong)}
+        lineHeight={
+          giandongToLineHeight(giandong) == 0
+            ? 1
+            : giandongToLineHeight(giandong)
+        }
         wrap="word"
         onClick={!lock ? handleSelect : null}
         onTap={!lock ? handleSelect : null}
@@ -411,9 +413,7 @@ export default function TextLayer(props) {
         fillLinearGradientEndPoint={
           finalGradient ? { x: width, y: sizeConvertToPx } : undefined
         }
-        fillLinearGradientColorStops={
-          finalGradient ? gradientArray : undefined
-        }
+        fillLinearGradientColorStops={finalGradient ? gradientArray : undefined}
       />
 
       {isTransformerVisible && !lock && localIsSelected && (
