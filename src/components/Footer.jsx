@@ -41,8 +41,20 @@ const Footer = () => {
 
   const pageItems = [
     { label: "Chính sách quyền riêng tư", link: "https://ezpics.vn/post/27" },
-    { label: "Hướng dẫn Nạp tiền và tài khoản eCoin được sử dụng sau khi đăng nhập", link: " https://ezpics.vn/post/28" },
     { label: "Chính sách bảo mật", link: "https://ezpics.vn/post/29" },
+    {
+      label: "Chính sách kiểm hàng - Báo cáo",
+      link: "https://ezpics.vn/post/31",
+    },
+    {
+      label: "Điều khoản dịch vụ của Ezpics",
+      link: "https://ezpics.vn/post/32",
+    },
+    {
+      label:
+        "Hướng dẫn Nạp tiền và tài khoản eCoin được sử dụng sau khi đăng nhập",
+      link: " https://ezpics.vn/post/28",
+    },
     {
       label: "Hướng dẫn sử dụng ",
       link: "https://www.youtube.com/playlist?list=PLngg14zy8vvwLxThvcL8g35G0F9VlNXUh",
@@ -68,7 +80,10 @@ const Footer = () => {
               <div className="pl-10 mobile:pl-20 sm:pl-5">
                 <p className="w-fit font-bold py-5">CÔNG TY TNHH EZPICS</p>
                 <p className="footer_text text_white pb-7">
-                  <strong>Mã số thuế: </strong>0110457409
+                  Mã số thuế: 0110457409,{" "}
+                  <p>
+                    do Sở Kế Hoạch và Đầu Tư thành phố Hà Nội cấp ngày 21/8/2023
+                  </p>
                 </p>
                 <p className="footer_text text_white pb-7">
                   <strong>Đại diện pháp luật: </strong>Đặng Thị Thanh Hường
@@ -117,7 +132,8 @@ const Footer = () => {
                   key={index}
                   href={iconItem.link}
                   target="_blank"
-                  className={iconItem.parentClass}>
+                  className={iconItem.parentClass}
+                >
                   <FontAwesomeIcon icon={iconItem.icon} size="2x" />
                 </Link>
               ))}
