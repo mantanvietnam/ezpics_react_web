@@ -205,6 +205,10 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
         throw new Error("Invalid stageData or designLayers not found");
       }
 
+      toast.warn("Đang thực hiện lưu thiết kế", {
+        autoClose: 2500,
+      });
+
       const updatedLayers = await Promise.all(
         stageData.designLayers.map(async (layer) => {
           if (
