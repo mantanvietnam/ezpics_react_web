@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/YourProduct/ProductCard";
+import ConfirmDeleteModal from "@/components/YourProduct/ConfirmDeleteModal";
 import { deleteProductAPI, duplicateProductAPI } from "@/api/product";
 import { checkTokenCookie } from "@/utils/cookie";
 import { toast } from "react-toastify";
 import { Skeleton } from "antd";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 export default function DefaultPage({ getData, searchValue }) {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // console.log(products);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getData;
-        // setProducts(response.listData || response.data);
         setProducts(response);
         setLoading(false);
       } catch (error) {
@@ -30,37 +29,24 @@ export default function DefaultPage({ getData, searchValue }) {
     };
     fetchData();
   }, [getData]);
-  // console.log(searchValue)
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const response = await axios.post('https://apis.ezpics.vn/apis/getMyProductAPI',{
-  //           token: checkTokenCookie(),
-  //           name: searchValue?.name
-  //         });
-  //         setProducts(response?.listData || response?.data?.listData);
-  //         setLoading(false);
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error.message);
-  //         setError(error.message);
-  //         setLoading(false);
-  //       }
-  //     };
-  //     fetchData();
-  //   }, [searchValue]);
 
   const onEditProduct = async (productId) => {
     router.push(`/design/${productId}`);
   };
 
-  const onDeleteProduct = async (productId) => {
+  const showDeleteModal = (productId) => {
+    setProductIdToDelete(productId);
+    setDeleteModalVisible(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
       await deleteProductAPI({
         token: checkTokenCookie(),
-        id: productId,
+        id: productIdToDelete,
       });
       const updatedProducts = products.filter(
-        (product) => product.id !== productId
+        (product) => product.id !== productIdToDelete
       );
       setProducts(updatedProducts);
       toast.success("Xóa thành công !!!", {
@@ -68,8 +54,17 @@ export default function DefaultPage({ getData, searchValue }) {
       });
     } catch (error) {
       console.error("Error deleting product:", error.message);
+    } finally {
+      setDeleteModalVisible(false);
+      setProductIdToDelete(null);
     }
   };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalVisible(false);
+    setProductIdToDelete(null);
+  };
+
   const onDuplicateProduct = async (productId) => {
     try {
       const response = await duplicateProductAPI({
@@ -79,14 +74,14 @@ export default function DefaultPage({ getData, searchValue }) {
       const updatedProducts = [response.data, ...products];
       setProducts(updatedProducts);
       toast.success("Nhân bản thành công", {
-          autoClose: 500, 
-        })
+        autoClose: 500,
+      });
     } catch (error) {
       console.error("Error duplicating product:", error.message);
     }
   };
+
   const onPrintedPhoto = async (productId) => {
-    // router.push(`/specified-printed/${productId}`);
     console.log(productId);
   };
 
@@ -99,7 +94,7 @@ export default function DefaultPage({ getData, searchValue }) {
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "downloaded_image.png"; // Set the desired filename
+      a.download = "downloaded_image.png";
 
       document.body.appendChild(a);
       a.click();
@@ -130,13 +125,20 @@ export default function DefaultPage({ getData, searchValue }) {
   }
 
   return (
-    <ProductCard
-      products={products}
-      onEditProduct={onEditProduct}
-      onDeleteProduct={onDeleteProduct}
-      onDownloadProduct={onDownloadProduct}
-      onDuplicateProduct={onDuplicateProduct}
-      onPrintedPhoto={onPrintedPhoto}
-    />
+    <>
+      <ProductCard
+        products={products}
+        onEditProduct={onEditProduct}
+        onDeleteProduct={showDeleteModal}
+        onDownloadProduct={onDownloadProduct}
+        onDuplicateProduct={onDuplicateProduct}
+        onPrintedPhoto={onPrintedPhoto}
+      />
+      <ConfirmDeleteModal
+        visible={deleteModalVisible}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
+    </>
   );
 }
