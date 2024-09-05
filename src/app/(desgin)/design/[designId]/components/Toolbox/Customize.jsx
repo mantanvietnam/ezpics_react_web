@@ -196,25 +196,45 @@ export default function Customize() {
 
   const handleChangeInputFile = (event) => {
     const file = event?.target?.files[0];
+    console.log('🚀 ~ handleChangeInputFile ~ file:', file)
     if (!file || !/(png|jpg|jpeg)$/i.test(file.name)) {
       setSelectedFiles(null);
       toast.error("Chỉ chấp nhận file png, jpg hoặc jpeg");
       return;
     }
     setSelectedFiles(file);
-    handleChange("background", file);
+    handleChange("thumbnail", file);
   };
 
   const handleSaveInformation = async () => {
+    console.log('🚀 ~ handleSaveInformation ~ state:', state);
+
     if (!name) {
       toast.error("Vui lòng nhập tên thiết kế");
     } else {
       try {
-        const res = await updateDesign({
-          token: checkTokenCookie(),
-          idProduct: idProduct,
-          ...state,
+        // Create FormData object to handle the file upload
+        const formData = new FormData();
+
+        // Append necessary fields to formData
+        formData.append('token', checkTokenCookie());
+        formData.append('idProduct', idProduct);
+
+        // Append the file (thumbnail) if it exists in the state
+        if (state.thumbnail) {
+          formData.append('thumbnail', state.thumbnail);
+        }
+
+        // Append other fields from the state (excluding thumbnail)
+        Object.keys(state).forEach((key) => {
+          if (key !== 'thumbnail') {
+            formData.append(key, state[key]);
+          }
         });
+
+        // Make the API call with formData
+        const res = await updateDesign(formData);
+
         if (res.code === 1) {
           toast.success("Bạn đã lưu thông tin mẫu thiết kế thành công", {
             autoClose: 500,
@@ -225,6 +245,7 @@ export default function Customize() {
       }
     }
   };
+
 
   return (
     <Block className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto">
@@ -349,7 +370,18 @@ export default function Customize() {
                     ))}
                   </select>
                 </div>
-                {/* <div>
+                <div>
+                  <label className="block">Ảnh nền</label>
+                  <input
+                    onChange={handleChangeInputFile}
+                    type="file"
+                    ref={inputFileRef}
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                {
+                /* <div>
                   <label className="block">Ảnh nền</label>
                   <input
                     onChange={handleChangeInputFile}
