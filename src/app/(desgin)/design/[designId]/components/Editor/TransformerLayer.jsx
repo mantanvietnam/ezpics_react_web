@@ -4,8 +4,6 @@ import { Transformer } from "react-konva";
 const TransformerLayer = ({ shapeRef, id }) => {
   const trRef = useRef(null);
 
-  console.log("shapeRef.current Transformer: ", shapeRef?.current);
-
   useEffect(() => {
     if (trRef.current && shapeRef.current) {
       trRef.current.nodes([shapeRef.current]);

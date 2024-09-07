@@ -35,8 +35,6 @@ const Page = () => {
     }
   }, [stageData]);
 
-  console.log("stageData print:", stageData);
-
   useEffect(() => {
     const handleResize = () => {
       const windowWidth = window.innerWidth;
@@ -77,23 +75,21 @@ const Page = () => {
         const { width, height } = response.data;
         let sizeFactor;
 
-        // console.log("width, heigh", width, height);
-
         // Determine sizeFactor based on dimensions
         sizeFactor =
           width >= 4000 || height >= 4000
             ? 7
             : width >= 3000 || height >= 3000
-            ? 5
-            : width >= 2500 || height >= 2500
-            ? 3.7
-            : width >= 1920 || height >= 1920
-            ? 3
-            : width >= 1600 || height >= 1600
-            ? 2
-            : width >= 1000 || height >= 1000
-            ? 1.5
-            : 1;
+              ? 5
+              : width >= 2500 || height >= 2500
+                ? 3.7
+                : width >= 1920 || height >= 1920
+                  ? 3
+                  : width >= 1600 || height >= 1600
+                    ? 2
+                    : width >= 1000 || height >= 1000
+                      ? 1.5
+                      : 1;
 
         dispatch(
           setStageData({

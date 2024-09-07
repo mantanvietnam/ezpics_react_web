@@ -17,7 +17,6 @@ const DataTable = () => {
         });
         const data = response?.data || [];
         setData(Array.isArray(data) ? data : []);
-        console.log(data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

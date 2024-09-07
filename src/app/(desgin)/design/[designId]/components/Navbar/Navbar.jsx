@@ -237,7 +237,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               formData,
               config
             );
-            console.log(response);
 
             if (response && response?.data?.code === 1) {
               return {

@@ -81,7 +81,6 @@ const TextFill = () => {
       value: newColor,
       idlayer: layer.id,
     });
-    console.log(res);
   };
 
   const updateObjectFill = (color) => {

@@ -62,7 +62,6 @@ const Layer = () => {
     }));
 
     dispatch(updateListLayers(updatedItems));
-    console.log("updatedItems", updatedItems);
   };
 
   const handleDeleteLayer = (layer) => {
@@ -160,7 +159,6 @@ const Layer = () => {
   };
 
   const handleCreateVariableImage = async () => {
-    console.log("Image Variable Info:", imageForm);
 
     try {
       const res = await axios.post(`${network}/addLayerImageUrlAPI`, {

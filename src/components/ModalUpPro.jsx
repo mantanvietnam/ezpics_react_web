@@ -34,8 +34,6 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
   }, [open]);
 
   const handleButtonClick = async () => {
-    console.log("Selected Subscription Option:", formData.subscriptionOption);
-    console.log("Selected Payment Option:", formData.paymentOption);
 
     // Xử lý logic thanh toán ở đây
     let apiCall;
@@ -264,9 +262,8 @@ const ModalUpPro = ({ open, handleCancel, isProMember }) => {
                 </div>
 
                 <button
-                  className={`bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold ${
-                    isFormValid ? "" : "opacity-50 cursor-not-allowed"
-                  }`}
+                  className={`bg-red-600 text-white rounded px-5 py-2 ml-4 h-fit w-96 font-semibold ${isFormValid ? "" : "opacity-50 cursor-not-allowed"
+                    }`}
                   onClick={handleButtonClick}
                   disabled={!isFormValid}
                 >
