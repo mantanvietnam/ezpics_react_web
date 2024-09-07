@@ -36,7 +36,6 @@ const OpenPopup = () => {
     }
   }, [pathname, data]);
 
-  console.log("data", data?.link_open_app);
 
   return (
     <a

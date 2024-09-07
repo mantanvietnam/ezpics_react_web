@@ -99,7 +99,6 @@ export default function Customize() {
           setSelectedOptionDisplay(response.data.data.status);
           setSelectedOptionShow(response.data.data.display ? 1 : 0)
         }
-        console.log('🚀 ~ getData ~ response.data.data.display:', response.data.data.display)
       } catch (error) {
         console.error(error);
       } finally {
@@ -123,8 +122,6 @@ export default function Customize() {
     };
     getDataStorage();
   }, []);
-
-  console.log('🚀 ~ Customize ~ selectedOptionShow:', selectedOptionShow)
 
   useEffect(() => {
     if (stageData.design.status === 1) {
@@ -192,7 +189,6 @@ export default function Customize() {
 
   const handleChangeInputFile = (event) => {
     const file = event?.target?.files[0];
-    console.log('🚀 ~ handleChangeInputFile ~ file:', file)
     if (!file || !/(png|jpg|jpeg)$/i.test(file.name)) {
       setSelectedFiles(null);
       toast.error("Chỉ chấp nhận file png, jpg hoặc jpeg");

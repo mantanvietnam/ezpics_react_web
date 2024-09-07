@@ -187,7 +187,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
 
     if (files.length > 0) {
       const file = files[0];
-      console.log("Selected file:", file);
 
       // Lưu trữ thông tin về tệp tin trong trạng thái của component
       setSelectedFile(file);
@@ -273,8 +272,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           }
         );
 
-        console.log(response);
-
         if (response && response.data && response.data.code === 0) {
           setLoadingButtonModalCreate(false);
           setOpenModalCreating(false);
@@ -326,7 +323,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           }
         );
 
-        console.log(response);
 
         if (response && response.data && response.data.code === 0) {
           setLoadingButtonModalCreate(false);
@@ -381,7 +377,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
         // console.log(response.data.product_id);
       }
 
-      console.log(response.data);
     } catch (error) {
       // Xử lý lỗi ở đây
       console.error("Error creating product:", error);
@@ -698,10 +693,9 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                   {!menuItem.subMenu ? (
                     <Link
                       href={menuItem.href}
-                      className={`primary_btn pl-10 whitespace-nowrap ${
-                        activeHeader === index &&
+                      className={`primary_btn pl-10 whitespace-nowrap ${activeHeader === index &&
                         "underline decoration-yellow-600 underline-offset-4"
-                      } rounded-lg`}>
+                        } rounded-lg`}>
                       {menuItem.label}
                     </Link>
                   ) : (
@@ -897,11 +891,10 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           )}
         </div>
         <div
-          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${
-            isOnline
+          className={`fixed bottom-4 right-4 p-2 rounded-lg shadow-lg transition-opacity duration-500 ${isOnline
               ? "bg-green-500 text-white opacity-0"
               : "bg-red-500 text-white opacity-100"
-          } ${show ? "opacity-100" : "opacity-0"}`}
+            } ${show ? "opacity-100" : "opacity-0"}`}
           style={{ transition: "opacity 1s" }}>
           {isOnline ? (
             <p>Bạn đang trực tuyến.</p>

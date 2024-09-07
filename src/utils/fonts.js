@@ -23,14 +23,12 @@ export const loadTemplateFonts = async (design) => {
 };
 
 export const loadFonts = (fonts) => {
-  console.log("Loadfont");
   const promisesList = fonts.map(async (font) => {
     try {
       const loadedFont = await new FontFace(
         font.name,
         `url(${font.url})`
       ).load();
-      console.log(loadedFont);
       return loadedFont;
     } catch (err) {
       console.error(`Failed to load font ${font.name}:`, err);

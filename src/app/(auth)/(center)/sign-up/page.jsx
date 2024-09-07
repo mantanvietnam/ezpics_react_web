@@ -68,7 +68,6 @@ const Sign_up = () => {
 
         register(values)
           .then((response) => {
-            console.log(response);
             if (response?.code === 0) {
               toast.success(
                 "Thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại",
@@ -88,7 +87,6 @@ const Sign_up = () => {
               setTimeout(() => {
                 router.push("/OtpVerification");
               }, 3000);
-              console.log(response.code);
             } else if (response.code === 2) {
               toast.warning("Gửi thiếu dữ liệu");
             } else if (response.code === 3) {

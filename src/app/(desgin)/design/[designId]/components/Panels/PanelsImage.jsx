@@ -360,10 +360,7 @@ export function PanelsImage({
         // );
         // console.log("responseChangeImage", responseChangeImage);
 
-        console.log(
-          "responseRemoveBackground.data?.link",
-          responseRemoveBackground.data
-        );
+
         if (responseRemoveBackground.data.code === 0) {
           const data = {
             banner: responseRemoveBackground.data.linkOnline,
@@ -416,7 +413,6 @@ export function PanelsImage({
       image.src = imageSrc;
 
       image.onload = () => {
-        console.log("Image loaded with dimensions:", image.width, image.height);
 
         const width = image.width;
         const height = image.height;
@@ -706,7 +702,6 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
         formData.append("token", token);
         formData.append("idlayer", stageData.selectedLayer.id);
         formData.append("file", imageBlob);
-        console.log(formData);
       }
 
       //Chuyen thay doi anh api
@@ -726,10 +721,8 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
         formData,
         config
       );
-      console.log(response);
 
       if (response && response?.data?.code === 1) {
-        console.log("response.data", response.data);
         const data = {
           ...stageData.selectedLayer.content,
           banner: response.data?.link,
@@ -867,7 +860,6 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
       formData.append("token", token);
       formData.append("idlayer", stageData.selectedLayer.id);
       formData.append("file", imageBlob);
-      console.log(formData);
     }
     //Chuyen thay doi anh api
     const headers = {
@@ -886,14 +878,12 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
       formData,
       config
     );
-    console.log(response);
 
     if (response && response?.data?.code === 1) {
       const data = {
         ...stageData.selectedLayer.content,
         banner: response.data?.link,
       };
-      console.log(data);
       dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
       setLoading(false);
       handleCancel();
@@ -1027,7 +1017,6 @@ export function ModalChangeImage({ isOpen, onCancel }) {
   }, []);
 
   const handleChangePhoto = async (item) => {
-    console.log(item);
     const token = checkTokenCookie();
     const formData = new FormData();
 
@@ -1055,14 +1044,12 @@ export function ModalChangeImage({ isOpen, onCancel }) {
       formData,
       config
     );
-    console.log(response);
 
     if (response && response?.data?.code === 1) {
       const data = {
         ...stageData.selectedLayer.content,
         banner: response.data?.link,
       };
-      console.log(data);
       dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
       onCancel();
       toast.success("Thay ảnh thành công", {

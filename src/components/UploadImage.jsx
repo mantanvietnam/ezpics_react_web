@@ -22,13 +22,12 @@ const ImageUpload = () => {
   const [image, setImage] = useState(null);
 
   const handleChange = (info) => {
-    console.log(info)
-  if (info.file.status !== 'uploading' && info.file.status !== 'removed') {
-    setImage(info.file.originFileObj);
-  } else if (info.file.status === 'removed') {
-    setImage(null);
-  }
-};
+    if (info.file.status !== 'uploading' && info.file.status !== 'removed') {
+      setImage(info.file.originFileObj);
+    } else if (info.file.status === 'removed') {
+      setImage(null);
+    }
+  };
 
   const handleUpload = async () => {
     if (image) {

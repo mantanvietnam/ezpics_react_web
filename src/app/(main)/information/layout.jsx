@@ -80,9 +80,6 @@ const Page = () => {
     }
   }, [setData]);
 
-  console.log(data);
-  console.log(dataInforUser);
-
   // Btn xem anh hien tai
   const [modalImage, setModalImage] = useState(false);
   const handleCloseModalFreeExtend = () => {
@@ -158,7 +155,6 @@ const Page = () => {
           setLoadingImage(false);
 
           //   window.location.reload();
-          console.log(responseInfoApi.data);
           setCookie("user_login", responseInfoApi.data.data, 1);
           dispatch(CHANGE_VALUE_USER(responseInfoApi.data.data));
           setData(responseInfoApi?.data?.data);
@@ -234,13 +230,11 @@ const Page = () => {
             }
           );
 
-          console.log(response);
           if (response.data.code === 0) {
             toast.success("Thay đổi mật khẩu thành công", {
               autoClose: 500,
             });
             router.push("/sign-in");
-            console.log("push");
           } else {
             toast.error(response.data.messages[0].text);
           }

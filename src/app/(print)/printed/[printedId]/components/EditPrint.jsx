@@ -149,7 +149,6 @@ const EditPrint = ({ stageRef }) => {
     const pixelRatioHeight = originalHeight / currentHeight;
     const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
 
-    console.log("pixelRatioNew", pixelRatio);
 
     setTimeout(() => {
       const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Tăng pixelRatio để tăng chất lượng
@@ -333,14 +332,12 @@ const EditPrint = ({ stageRef }) => {
 
   // Xử lý khi nhấn nút "In ảnh"
   const exportButtonClick = () => {
-    console.log("In ảnh");
     filteredLayers.forEach((layer) => {
       if (layer.content.type === "image" && imgSrc) {
         const data = {
           ...layer.content,
           banner: imgSrc,
         };
-        console.log("layer image", layer.id, data);
         dispatch(
           updateLayer({
             id: layer.id,

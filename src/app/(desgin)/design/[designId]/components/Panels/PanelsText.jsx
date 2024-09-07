@@ -246,7 +246,6 @@ export function PanelsText({
               formData,
               config
             );
-            console.log(response);
 
             if (response && response?.data?.code === 1) {
               return {
@@ -450,11 +449,10 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.bold === "bold" || fontStyle.bold === "bolder"
+                className={`flex items-center px-2 ${fontStyle.bold === "bold" || fontStyle.bold === "bolder"
                     ? "bg-gray-300"
                     : ""
-                }`}
+                  }`}
                 onClick={() => handleFontStyleChange("bold", "bolder")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
@@ -476,9 +474,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.italic === "italic" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.italic === "italic" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("italic", "italic")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
@@ -502,9 +499,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.underline === "underline" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.underline === "underline" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("underline", "underline")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
@@ -526,9 +522,8 @@ export function PanelsText({
             <Tooltip title="Viết in hoa toàn bộ" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.uppercase === "uppercase" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.uppercase === "uppercase" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("uppercase", "uppercase")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
