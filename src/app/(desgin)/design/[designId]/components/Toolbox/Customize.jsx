@@ -97,7 +97,9 @@ export default function Customize() {
           setCheckedItems(response.data.data.listWarehouse);
           setTypeUser(response.data.data.type);
           setSelectedOptionDisplay(response.data.data.status);
+          setSelectedOptionShow(response.data.data.display ? 1 : 0)
         }
+        console.log('🚀 ~ getData ~ response.data.data.display:', response.data.data.display)
       } catch (error) {
         console.error(error);
       } finally {
@@ -122,13 +124,7 @@ export default function Customize() {
     getDataStorage();
   }, []);
 
-  useEffect(() => {
-    if (stageData.design.display === 1) {
-      setSelectedOptionShow(1)
-    } else {
-      setSelectedOptionShow(0)
-    }
-  }, [stageData])
+  console.log('🚀 ~ Customize ~ selectedOptionShow:', selectedOptionShow)
 
   useEffect(() => {
     if (stageData.design.status === 1) {
@@ -207,7 +203,7 @@ export default function Customize() {
   };
 
   const handleSaveInformation = async () => {
-    console.log('🚀 ~ handleSaveInformation ~ state:', state);
+    toast.info("Đang lưu mẫu thiết kế");
 
     if (!name) {
       toast.error("Vui lòng nhập tên thiết kế");
