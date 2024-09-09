@@ -124,14 +124,16 @@ const DefaultSlide = ({ apiAction, title, pathString }) => {
             <Slider {...settings} className="w-full relative">
               {products?.map((product) => (
                 <Link
-                  href={`/specified-printed/${convertSLugUrl(product?.name)}-${product?.id}.html`}
+                  href={`/specified-printed/${convertSLugUrl(product?.name)}-${
+                    product?.id
+                  }.html`}
                   className="slide-content pr-8"
                   key={product.id}
                 >
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                     <div className="bg-orange-100 overflow-hidden group flex justify-center">
                       <Image
-                        src={product.image}
+                        src={product?.thumbnail || product?.image}
                         width={300}
                         height={200}
                         className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
