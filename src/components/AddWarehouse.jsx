@@ -91,7 +91,6 @@ const AddWarehouse = ({ open, handleCancel, onSuccess }) => {
 
     try {
       const response = await addWarehouseAPI(formData);
-      console.log(response);
       toast.success('Tạo mới bộ sưu tập thành công.');
       setInitialModalVisible(false);
       setIsFormModalVisible(false);

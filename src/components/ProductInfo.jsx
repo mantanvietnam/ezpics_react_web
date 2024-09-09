@@ -85,7 +85,6 @@ export default function ProductInfo(props) {
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -186,8 +185,6 @@ export default function ProductInfo(props) {
   const handleChangeRadio = (e) => {
     setType(e.target.value);
   };
-
-  console.log(data);
 
   return (
     <div className="flex flex-col xl:flex-row w-full h-full mt-[100px] gap-8 px-4">
@@ -322,15 +319,15 @@ export default function ProductInfo(props) {
               {userLogin?.member_pro === 1
                 ? "Miễn Phí"
                 : data?.sale_price
-                ? VND.format(data?.sale_price)
-                : "Miễn Phí"}
+                  ? VND.format(data?.sale_price)
+                  : "Miễn Phí"}
             </div>
             <div className="line-through text-slate-400 rounded-sm">
               {userLogin?.member_pro === 1
                 ? ""
                 : data?.price
-                ? VND.format(data?.price)
-                : ""}
+                  ? VND.format(data?.price)
+                  : ""}
             </div>
             {userLogin?.member_pro === 1 ? (
               ""
@@ -348,25 +345,24 @@ export default function ProductInfo(props) {
           {userLogin?.member_pro === 1
             ? ""
             : data?.price !== 0 && (
-                <div className="flex items-center gap-3">
-                  <div className="text-sm product-details-e">Khuyến mãi</div>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(255, 245, 241)",
-                      border: "1px solid rgb(255, 66, 78)",
-                      color: "rgb(255, 66, 78)",
-                      padding: "2px",
-                      fontWeight: "semibold",
-                    }}
-                  >
-                    {data?.sale_price
-                      ? `Lên đến ${Math.round(
-                          100 - (data?.sale_price / data?.price) * 100
-                        )}%`
-                      : "Miễn Phí"}
-                  </div>
+              <div className="flex items-center gap-3">
+                <div className="text-sm product-details-e">Khuyến mãi</div>
+                <div
+                  style={{
+                    backgroundColor: "rgb(255, 245, 241)",
+                    border: "1px solid rgb(255, 66, 78)",
+                    color: "rgb(255, 66, 78)",
+                    padding: "2px",
+                    fontWeight: "semibold",
+                  }}>
+                  {data?.sale_price
+                    ? `Lên đến ${Math.round(
+                      100 - (data?.sale_price / data?.price) * 100
+                    )}%`
+                    : "Miễn Phí"}
                 </div>
-              )}
+              </div>
+            )}
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
             <div className="w-[37px] h-[35px] mr-3 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
@@ -557,8 +553,8 @@ export default function ProductInfo(props) {
               {userLogin?.member_pro === 1
                 ? "Miễn Phí"
                 : type === "ecoin"
-                ? `${data?.ecoin} eCoin`
-                : VND.format(data?.sale_price)}
+                  ? `${data?.ecoin} eCoin`
+                  : VND.format(data?.sale_price)}
             </div>
           </div>
           <div className="flex justify-end">

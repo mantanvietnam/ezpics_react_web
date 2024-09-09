@@ -239,7 +239,7 @@ const EditInvitation = () => {
             <h1 className="text-xl font-bold">Ảnh đại diện</h1>
             {(imgSrc || filteredLayerImage[0]?.content?.banner) && (
               <button
-                className="text-[12px] bg-red-600 text-white ml-2 px-1 rounded"
+                className="text-[12px] bg-red-600 text-white ml-2 px-2 rounded"
                 onClick={() => handleDeleteLayer()}>
                 Xóa
               </button>
@@ -361,7 +361,7 @@ const EditInvitation = () => {
                 <div className="mb-2 flex justify-between">
                   <h1 className="text-xl font-bold">Chỉnh sửa chữ</h1>
                   <button
-                    className="text-[12px] bg-red-600 text-white ml-2 px-1 rounded"
+                    className="text-[12px] bg-red-600 text-white ml-2 px-2 rounded"
                     onClick={() => handleDeleteLayerText(layer)}>
                     Xóa
                   </button>
@@ -407,8 +407,8 @@ const EditInvitation = () => {
                       }
                       value={
                         layer?.content?.size
-                          ? layer.content.size.replace("vw", "")
-                          : 5
+                          ? layer?.content?.size.replace("vw", "")
+                          : "5"
                       }
                       min={1}
                       className="w-[80px] text-lg font-bold text-center border-x rounded-none ml-2"
@@ -460,7 +460,7 @@ const EditInvitation = () => {
           <button
             className="px-2 py-1 my-2 text-white bg-black hover:text-black hover:bg-white rounded border"
             onClick={handleCreateVariableText}>
-            Tạo biến chữ
+            Tạo chữ
           </button>
         </div>
       </div>

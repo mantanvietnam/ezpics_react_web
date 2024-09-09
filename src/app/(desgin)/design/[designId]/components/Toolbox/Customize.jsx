@@ -97,6 +97,7 @@ export default function Customize() {
           setCheckedItems(response.data.data.listWarehouse);
           setTypeUser(response.data.data.type);
           setSelectedOptionDisplay(response.data.data.status);
+          setSelectedOptionShow(response.data.data.display ? 1 : 0)
         }
       } catch (error) {
         console.error(error);
@@ -121,14 +122,6 @@ export default function Customize() {
     };
     getDataStorage();
   }, []);
-
-  useEffect(() => {
-    if (stageData.design.display === 1) {
-      setSelectedOptionShow(1)
-    } else {
-      setSelectedOptionShow(0)
-    }
-  }, [stageData])
 
   useEffect(() => {
     if (stageData.design.status === 1) {
@@ -202,19 +195,38 @@ export default function Customize() {
       return;
     }
     setSelectedFiles(file);
-    handleChange("background", file);
+    handleChange("thumbnail", file);
   };
 
   const handleSaveInformation = async () => {
+    toast.info("Đang lưu mẫu thiết kế");
+
     if (!name) {
       toast.error("Vui lòng nhập tên thiết kế");
     } else {
       try {
-        const res = await updateDesign({
-          token: checkTokenCookie(),
-          idProduct: idProduct,
-          ...state,
+        // Create FormData object to handle the file upload
+        const formData = new FormData();
+
+        // Append necessary fields to formData
+        formData.append('token', checkTokenCookie());
+        formData.append('idProduct', idProduct);
+
+        // Append the file (thumbnail) if it exists in the state
+        if (state.thumbnail) {
+          formData.append('thumbnail', state.thumbnail);
+        }
+
+        // Append other fields from the state (excluding thumbnail)
+        Object.keys(state).forEach((key) => {
+          if (key !== 'thumbnail') {
+            formData.append(key, state[key]);
+          }
         });
+
+        // Make the API call with formData
+        const res = await updateDesign(formData);
+
         if (res.code === 1) {
           toast.success("Bạn đã lưu thông tin mẫu thiết kế thành công", {
             autoClose: 500,
@@ -225,6 +237,7 @@ export default function Customize() {
       }
     }
   };
+
 
   return (
     <Block className="absolute top-0 left-[108px] h-full w-[300px] pb-[65px] overflow-y-auto">
@@ -349,7 +362,18 @@ export default function Customize() {
                     ))}
                   </select>
                 </div>
-                {/* <div>
+                <div>
+                  <label className="block">Ảnh nền</label>
+                  <input
+                    onChange={handleChangeInputFile}
+                    type="file"
+                    ref={inputFileRef}
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                {
+                /* <div>
                   <label className="block">Ảnh nền</label>
                   <input
                     onChange={handleChangeInputFile}

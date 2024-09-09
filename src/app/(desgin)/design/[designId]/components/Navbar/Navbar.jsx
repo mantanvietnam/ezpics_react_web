@@ -115,7 +115,7 @@ const DownLoadMenu = ({
               }}
               step={1}
               style={{ width: 400 }}
-              // disabled={!isProMember}
+            // disabled={!isProMember}
             />
             <p className="text-base font-bold border border-slate-300 rounded ml-3 py-2 px-3">
               {pixelRatio}
@@ -205,7 +205,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
         throw new Error("Invalid stageData or designLayers not found");
       }
 
-      toast.warn("Đang thực hiện lưu thiết kế", {
+      toast.info("Đang thực hiện lưu thiết kế", {
         autoClose: 2500,
       });
 
@@ -237,7 +237,6 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               formData,
               config
             );
-            console.log(response);
 
             if (response && response?.data?.code === 1) {
               return {

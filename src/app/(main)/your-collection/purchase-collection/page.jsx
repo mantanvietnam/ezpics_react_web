@@ -28,7 +28,6 @@ export default function Page() {
         const response = await getListBuyWarehousesAPI({
           token: checkTokenCookie(),
         });
-        console.log(response.data);
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -48,7 +47,6 @@ export default function Page() {
         limit: 100,
         page: 1,
       });
-      console.log(response.data);
       setProductDetails(response.data);
       setDetailsLoading(false);
     } catch (error) {
@@ -82,7 +80,7 @@ export default function Page() {
 
               {productDetails.length === 0 ? (
                 <div className="text-center mt-8 my-2">
-                  <p  className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
+                  <p className="text-center my-4">Bạn chưa có mẫu thiết kế nào.</p>
                   <Link href="/">
                     <button className="button-red">Về trang chủ</button>
                   </Link>

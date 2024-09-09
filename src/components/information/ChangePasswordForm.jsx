@@ -39,14 +39,12 @@ const ChangePasswordForm = () => {
           passAgain: values?.passAgain,
         });
 
-        console.log(response);
 
         if (response && response?.data?.code === 0) {
           const responseInfo = await axios.post(`${network}/getInfoMemberAPI`, {
             token: checkTokenCookie(),
           });
 
-          console.log(responseInfo);
 
           if (responseInfo && responseInfo?.data?.code === 0) {
             setCookie("user_login", responseInfo?.data?.data, 1);

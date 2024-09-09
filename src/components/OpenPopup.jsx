@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { detailProductSeriesAPI } from "@/api/product";
 
 const OpenPopup = () => {
@@ -37,12 +36,13 @@ const OpenPopup = () => {
     }
   }, [pathname, data]);
 
-  console.log("data", data?.link_open_app);
 
   return (
-    <div className="h-10 bg-slate-900 text-white flex items-center pl-3 text-base">
-      <Link href={linkPrint}>Mở ứng dụng</Link>
-    </div>
+    <a
+      href={linkPrint}
+      className="h-10 bg-slate-900 text-white flex items-center pl-3 text-sm font-poppins">
+      Mở ứng dụng
+    </a>
   );
 };
 

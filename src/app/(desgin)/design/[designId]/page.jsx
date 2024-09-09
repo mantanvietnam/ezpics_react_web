@@ -165,7 +165,6 @@ const Page = () => {
                 formData,
                 config
               );
-              console.log(response);
 
               if (response && response?.data?.code === 1) {
                 return {
@@ -198,7 +197,7 @@ const Page = () => {
       } catch (error) {
         console.error("Error saving design:", error);
       }
-    }; 
+    };
 
     handleSaveDesign();
     const copyLayer = async () => {
@@ -213,7 +212,7 @@ const Page = () => {
         );
         if (res.data.code === 1) {
           toast.success("Nhân bản layer đã chọn thành công", {
-            autoClose: 500, 
+            autoClose: 500,
           });
           fetchData();
         }
@@ -285,9 +284,9 @@ const Page = () => {
         clickY < innerRect.top - outerRect.top ||
         clickY > innerRect.bottom - outerRect.top
       ) {
-       
+
         dispatch(deselectLayer());
-      } 
+      }
     }
   };
 

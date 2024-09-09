@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import { register } from "@/api/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Spin } from "antd";
+import { Checkbox, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/utils";
@@ -16,6 +16,7 @@ import {
   CHANGE_VALUE_TOKEN,
 } from "../../../../redux/slices/auth";
 import { useDispatch } from "react-redux";
+import Link from "next/link";
 
 const Sign_up = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +68,6 @@ const Sign_up = () => {
 
         register(values)
           .then((response) => {
-            console.log(response);
             if (response?.code === 0) {
               toast.success(
                 "Thành công ! chúng tôi đang chuyển hướng tới xác thực số điện thoại",
@@ -87,7 +87,6 @@ const Sign_up = () => {
               setTimeout(() => {
                 router.push("/OtpVerification");
               }, 3000);
-              console.log(response.code);
             } else if (response.code === 2) {
               toast.warning("Gửi thiếu dữ liệu");
             } else if (response.code === 3) {
@@ -127,37 +126,36 @@ const Sign_up = () => {
           </div>
           <div className="box-right">
             <h2 className="title-sign">Ezpics - Dùng là thích! 👋</h2>
-            <div className="group-input">
-              <p htmlFor="">Tên</p>
-              <input
-                type="text"
-                placeholder="Tên"
-                name="name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-              />
-              {touched.name && errors.name && (
-                <span className="text-red-500 text-base">{errors.name}</span>
-              )}
-            </div>
-            <div className="group-input">
-              <p htmlFor="">Số điện thoại</p>
-              <input
-                type="text"
-                placeholder="Số điện thoại"
-                name="phone"
-                onBlur={handleBlur}
-                onChange={handleChange}
-              />
-              {touched.phone && errors.phone && (
-                <span className="text-red-500 text-base">{errors.phone}</span>
-              )}
+            <div className="group-input-pasword">
+              <div className="group-input">
+                <p htmlFor="">Họ và tên</p>
+                <input
+                  type="text"
+                  name="name"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+                {touched.name && errors.name && (
+                  <span className="text-red-500 text-base">{errors.name}</span>
+                )}
+              </div>
+              <div className="group-input">
+                <p htmlFor="">Số điện thoại</p>
+                <input
+                  type="text"
+                  name="phone"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+                {touched.phone && errors.phone && (
+                  <span className="text-red-500 text-base">{errors.phone}</span>
+                )}
+              </div>
             </div>
             <div className="group-input">
               <p htmlFor="">Email</p>
               <input
                 type="text"
-                placeholder="Email"
                 name="email"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -171,7 +169,6 @@ const Sign_up = () => {
                 <p htmlFor="">Mật khẩu</p>
                 <input
                   type="password"
-                  placeholder="Mật khẩu"
                   name="password"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -186,7 +183,6 @@ const Sign_up = () => {
                 <p htmlFor="">Nhập lại mật khẩu</p>
                 <input
                   type="password"
-                  placeholder="Nhập lại mật khẩu"
                   name="password_again"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -202,12 +198,12 @@ const Sign_up = () => {
               <p htmlFor="">Mã giới thiệu</p>
               <input
                 type="text"
-                placeholder="Mã giới thiệu"
                 name="affsource"
                 onBlur={handleBlur}
                 onChange={handleChange}
               />
             </div>
+            <Checkbox className="mt-2 font-semibold">Tôi đồng ý với các <Link href={`https://ezpics.vn/post/32`} className="text-blue-600">Điều khoản dịch vụ của Ezpics</Link></Checkbox>
             <button type="submit" className="btn-submit-sign">
               {isLoading ? (
                 <Spin

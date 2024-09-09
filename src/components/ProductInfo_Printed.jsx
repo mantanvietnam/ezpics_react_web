@@ -93,7 +93,6 @@ export default function ProductInfoPrinted(props) {
       const filteredInputValues = Object.fromEntries(
         Object.entries(inputValues).filter(([_, value]) => value !== "")
       );
-      console.log(filteredInputValues);
       const response = await createImageSeriesAPI({
         idProduct: id_param,
         full_name: filteredInputValues["Họ tên"],
