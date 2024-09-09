@@ -168,7 +168,6 @@ export function PanelsText({
   const [gradientColors, setGradientColors] = useState(
     selectedLayer?.content?.gradient_color || null
   );
-
   const [isGradient, setIsGradient] = useState(
     selectedLayer?.content?.gradient
   );
@@ -217,7 +216,7 @@ export function PanelsText({
       if (!stageData || !stageData.designLayers) {
         throw new Error("Invalid stageData or designLayers not found");
       }
-
+      setIsGradient(1)
       const updatedLayers = await Promise.all(
         stageData.designLayers.map(async (layer) => {
           if (
@@ -305,12 +304,18 @@ export function PanelsText({
       setColor(selectedLayer.content.color);
       setValueLetterSpacing(vwToLetterSpacing(selectedLayer.content.gianchu));
       setValueLineSpacing(giandongToLineHeight(selectedLayer.content.giandong));
-      setGradientColors(selectedLayer.content.gradient_color);
-      setIsGradient(
-        selectedLayer.content.gradient_color
-          ? 1
-          : selectedLayer?.content?.gradient
-      );
+      {selectedLayer.content.gradient_color &&
+        setGradientColors(selectedLayer.content.gradient_color);
+        setIsGradient(
+          selectedLayer.content.gradient
+          // JSON.stringify(selectedLayer.content.gradient_color) ===
+          //   JSON.stringify([
+          //     { position: 0, color: "#000" },
+          //     { position: 1, color: "#000" },
+          //   ]) || !selectedLayer.content.gradient_color
+          //   ? 0
+          //   : 1
+        );}
     }
   }, [selectedLayer]);
 
