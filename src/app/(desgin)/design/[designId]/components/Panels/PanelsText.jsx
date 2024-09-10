@@ -169,12 +169,10 @@ export function PanelsText({
     selectedLayer?.content?.gradient_color || null
   );
 
-   const [isGradient, setIsGradient] = useState(
-     selectedLayer?.content?.gradient
+  const [isGradient, setIsGradient] = useState(
+    selectedLayer?.content?.gradient
   );
-   
- 
-  
+
   const handleAddColor = () => {
     const newPosition = gradientColors.length
       ? gradientColors.length / (gradientColors.length + 1)
@@ -214,83 +212,83 @@ export function PanelsText({
     setGradientColors(adjustedColors);
   };
 
- const handleSaveDesign = async () => {
-   try {
-     if (!stageData || !stageData.designLayers) {
-       throw new Error("Invalid stageData or designLayers not found");
-     }
+  const handleSaveDesign = async () => {
+    try {
+      if (!stageData || !stageData.designLayers) {
+        throw new Error("Invalid stageData or designLayers not found");
+      }
 
-     const updatedLayers = await Promise.all(
-       stageData.designLayers.map(async (layer) => {
-         if (
-           layer.content.banner &&
-           layer.content.banner.startsWith("data:image/png;base64")
-         ) {
-           const bannerBlob = dataURLToBlob(layer.content.banner);
-           const token = checkTokenCookie();
-           const formData = new FormData();
+      const updatedLayers = await Promise.all(
+        stageData.designLayers.map(async (layer) => {
+          if (
+            layer.content.banner &&
+            layer.content.banner.startsWith("data:image/png;base64")
+          ) {
+            const bannerBlob = dataURLToBlob(layer.content.banner);
+            const token = checkTokenCookie();
+            const formData = new FormData();
 
-           formData.append("idproduct", stageData.design.id);
-           formData.append("token", token);
-           formData.append("idlayer", layer.id);
-           formData.append("file", bannerBlob);
+            formData.append("idproduct", stageData.design.id);
+            formData.append("token", token);
+            formData.append("idlayer", layer.id);
+            formData.append("file", bannerBlob);
 
-           const headers = {
-             "Content-Type": "multipart/form-data",
-           };
+            const headers = {
+              "Content-Type": "multipart/form-data",
+            };
 
-           const config = {
-             headers: headers,
-           };
+            const config = {
+              headers: headers,
+            };
 
-           const response = await axios.post(
-             "https://apis.ezpics.vn/apis/changeLayerImageNew",
-             formData,
-             config
-           );
-           console.log(response);
+            const response = await axios.post(
+              "https://apis.ezpics.vn/apis/changeLayerImageNew",
+              formData,
+              config
+            );
+            console.log(response);
 
-           if (response && response?.data?.code === 1) {
-             return {
-               id: layer.id,
-               content: {
-                 ...layer.content,
-                 banner: response.data?.link, // Cập nhật banner thành Blob
-               },
-               sort: layer.sort,
-             };
-           }
-         }
-         return {
-           id: layer.id,
-           content: {
-             ...layer.content,
-           },
-           sort: layer.sort,
-         };
-       })
-     );
+            if (response && response?.data?.code === 1) {
+              return {
+                id: layer.id,
+                content: {
+                  ...layer.content,
+                  banner: response.data?.link, // Cập nhật banner thành Blob
+                },
+                sort: layer.sort,
+              };
+            }
+          }
+          return {
+            id: layer.id,
+            content: {
+              ...layer.content,
+            },
+            sort: layer.sort,
+          };
+        })
+      );
 
-     const jsonData = JSON.stringify(updatedLayers);
+      const jsonData = JSON.stringify(updatedLayers);
 
-     const response = await saveListLayer({
-       idProduct: stageData.design?.id,
-       token: checkTokenCookie(),
-       listLayer: jsonData,
-     });
-     if (response.code == 1) {
-       toast.success("Áp dụng màu gradient thành công", {
-         autoClose: 500,
-       });
-     } else {
-       toast.error("Áp dụng màu gradient thất bại!", {
-         autoClose: 500,
-       });
-     }
-   } catch (error) {
-     console.error("Error saving design:", error);
-   }
- };
+      const response = await saveListLayer({
+        idProduct: stageData.design?.id,
+        token: checkTokenCookie(),
+        listLayer: jsonData,
+      });
+      if (response.code == 1) {
+        toast.success("Áp dụng màu gradient thành công", {
+          autoClose: 500,
+        });
+      } else {
+        toast.error("Áp dụng màu gradient thất bại!", {
+          autoClose: 500,
+        });
+      }
+    } catch (error) {
+      console.error("Error saving design:", error);
+    }
+  };
 
   useEffect(() => {
     if (selectedLayer) {
@@ -310,7 +308,9 @@ export function PanelsText({
       setValueLineSpacing(giandongToLineHeight(selectedLayer.content.giandong));
       setGradientColors(selectedLayer.content.gradient_color);
       setIsGradient(
-        selectedLayer.content.gradient_color ? 1 : selectedLayer?.content?.gradient
+        selectedLayer.content.gradient_color
+          ? 1
+          : selectedLayer?.content?.gradient
       );
     }
   }, [selectedLayer]);
@@ -355,7 +355,6 @@ export function PanelsText({
     setPostionText(textAlign);
   };
 
-
   useEffect(() => {
     const data = {
       size: `${fontSize}vw`,
@@ -363,12 +362,11 @@ export function PanelsText({
       innghieng: fontStyle.italic,
       gachchan: fontStyle.underline,
       uppercase: fontStyle.uppercase,
-      color: color,
       text_align: postionText,
       gianchu: letterSpacingToVw(valueLetterSpacing),
       giandong: lineHeightToGiandong(valueLineSpacing),
       gradient_color: gradientColors,
-      gradient: isGradient
+      gradient: isGradient,
     };
     dispatch(updateLayer({ id: selectedLayer.id, data: data }));
   }, [
