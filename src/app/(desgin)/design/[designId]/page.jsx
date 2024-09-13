@@ -299,12 +299,20 @@ const Page = () => {
     // Lưu lại các bounding box của currentLayer
     const currentBox = currentLayer.getClientRect();
 
+    // Tính toán tâm của currentLayer
+    const currentCenterX = currentBox.x + currentBox.width / 2;
+    const currentCenterY = currentBox.y + currentBox.height / 2;
+
     layers.forEach((layer) => {
       if (layer === currentLayer || layer.attrs.alt === "background") {
         return;
       }
 
       const shapeBox = layer.getClientRect();
+
+      // Tính toán tâm của layer hiện tại
+      const shapeCenterX = shapeBox.x + shapeBox.width / 2;
+      const shapeCenterY = shapeBox.y + shapeBox.height / 2;
 
       // Tính toán khoảng cách giữa các cạnh
       const horizontalDistanceStart = Math.abs(shapeBox.x - currentBox.x);
@@ -313,7 +321,7 @@ const Page = () => {
       const verticalDistanceEnd = Math.abs((shapeBox.y + shapeBox.height) - (currentBox.y + currentBox.height));
 
       // Kiểm tra căn chỉnh ngang
-      if (horizontalDistanceStart < 0.7 || horizontalDistanceEnd < 0.7) {
+      if (horizontalDistanceStart < 1 || horizontalDistanceEnd < 1) {
         const xStart = shapeBox.x < currentBox.x ? shapeBox.x : currentBox.x;
         const xEnd = shapeBox.x + shapeBox.width > currentBox.x + currentBox.width
           ? shapeBox.x + shapeBox.width
@@ -329,7 +337,7 @@ const Page = () => {
       }
 
       // Kiểm tra căn chỉnh dọc
-      if (verticalDistanceStart < 0.7 || verticalDistanceEnd < 0.7) {
+      if (verticalDistanceStart < 1 || verticalDistanceEnd < 1) {
         const yStart = shapeBox.y < currentBox.y ? shapeBox.y : currentBox.y;
         const yEnd = shapeBox.y + shapeBox.height > currentBox.y + currentBox.height
           ? shapeBox.y + shapeBox.height
@@ -343,13 +351,29 @@ const Page = () => {
           newGuidelines.push({ y: yEnd, x1: 0, x2: stageRef.current.width() });
         }
       }
+
+      // Kiểm tra căn chỉnh theo tâm ngang
+      const centerXDistance = Math.abs(shapeCenterX - currentCenterX);
+      if (centerXDistance < 1) {
+        if (!verticalGuidelines.has(currentCenterX)) {
+          verticalGuidelines.add(currentCenterX);
+          newGuidelines.push({ x: currentCenterX, y1: 0, y2: stageRef.current.height() });
+        }
+      }
+
+      // Kiểm tra căn chỉnh theo tâm dọc
+      const centerYDistance = Math.abs(shapeCenterY - currentCenterY);
+      if (centerYDistance < 1) {
+        if (!horizontalGuidelines.has(currentCenterY)) {
+          horizontalGuidelines.add(currentCenterY);
+          newGuidelines.push({ y: currentCenterY, x1: 0, x2: stageRef.current.width() });
+        }
+      }
     });
 
     // Cập nhật state để hiển thị các đường căn chỉnh
     setGuidelines(newGuidelines);
   };
-
-
 
   const deleteOldLine = () => {
     setGuidelines([]);
