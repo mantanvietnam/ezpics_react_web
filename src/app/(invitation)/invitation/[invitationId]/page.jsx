@@ -36,12 +36,10 @@ const Page = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.print.stageData);
-  const { design, initSize, designLayers } = stageData;
+  const { design, initSize, designLayers, selectedLayer } = stageData;
   const [loading, setLoading] = useState(true);
   const [sizeRespon, setSizeRespon] = useState(1); // Initial sizeRespon
   const { fonts, setFonts } = useFonts();
-
-  console.log("design layers:", designLayers);
 
   useEffect(() => {
     const handleResize = () => {
@@ -125,7 +123,7 @@ const Page = () => {
 
   return (
     <div className="flex h-screen">
-      <Navbar invitationId={invitationId}/>
+      <Navbar invitationId={invitationId} />
       <div className="flex flex-grow mt-[65px]">
         {/* Thanh công cụ bên trái */}
         <div className="w-[30%] overflow-y-auto border-r border-gray-300 p-4">
@@ -145,7 +143,7 @@ const Page = () => {
               alignItems: "center",
               justifyContent: "center",
               position: "relative",
-              height: "100%"
+              height: "100%",
             }}
           >
             <Layer>
@@ -166,6 +164,7 @@ const Page = () => {
                       }}
                       id={layer.id}
                       data={layer.content}
+                      isSelected={layer.id === selectedLayer?.id}
                     />
                   );
                 } else if (layer.content?.type === "text") {
