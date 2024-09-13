@@ -124,7 +124,6 @@ const Footer = ({ containerRef }) => {
 
       setLocked(!locked);
       dispatch(updateListLayers(updatedLayers));
-      console.log("updatedLayers :", updatedLayers);
     };
 
     return (

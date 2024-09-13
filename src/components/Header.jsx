@@ -187,7 +187,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
 
     if (files.length > 0) {
       const file = files[0];
-      console.log("Selected file:", file);
 
       // Lưu trữ thông tin về tệp tin trong trạng thái của component
       setSelectedFile(file);
@@ -273,8 +272,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           }
         );
 
-        console.log(response);
-
         if (response && response.data && response.data.code === 0) {
           setLoadingButtonModalCreate(false);
           setOpenModalCreating(false);
@@ -326,8 +323,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             },
           }
         );
-
-        console.log(response);
 
         if (response && response.data && response.data.code === 0) {
           setLoadingButtonModalCreate(false);
@@ -381,8 +376,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
         }, 1500);
         // console.log(response.data.product_id);
       }
-
-      console.log(response.data);
     } catch (error) {
       // Xử lý lỗi ở đây
       console.error("Error creating product:", error);

@@ -28,30 +28,28 @@ export default function Page({ params }) {
   const [page, setPage] = useState(1); // Page state
   const limit = 24; // Items per page
   const observer = useRef(); // Ref for IntersectionObserver
-  const [categoryName, setCategoryName] =useState("");
+  const [categoryName, setCategoryName] = useState("");
 
   const slug = params?.detailCategory?.split(".html")?.[0];
   const temp = slug?.split("-");
   const id = temp[temp.length - 1];
 
-  useEffect( ()=> {
+  useEffect(() => {
     const name = getNameCategory();
     setCategoryName(name);
-  },[])
+  }, [])
 
-  console.log("categoryName",categoryName)
 
   const getNameCategory = async () => {
     try {
       const response = await getProductCategoryAPI();
-  
+
       if (!response) {
         throw new Error("No listData found in the API response.");
       }
-  
+
       const category = response.listData.find((item) => item.id == id);
-  
-      console.log("categorycategorycategorycategory", category);
+
       if (!category) {
         throw new Error(`No category found with ID ${id}`);
       }
@@ -180,9 +178,8 @@ export default function Page({ params }) {
             <div className="grid grid-cols-4 grid-flow-row gap-4">
               {categories?.map((category) => (
                 <Link
-                  href={`/category/${convertSLugUrl(category.name)}-${
-                    category.id
-                  }.html`}
+                  href={`/category/${convertSLugUrl(category.name)}-${category.id
+                    }.html`}
                   className="slide-content py-2"
                   key={category.id}
                 >
@@ -206,8 +203,8 @@ export default function Page({ params }) {
                       <div className="mt-2">
                         <span className="text-red-500 mr-2 font-bold text-lg">
                           {category.sale_price === 0 ||
-                          (dataInforUser?.member_pro === 1 &&
-                            category?.free_pro)
+                            (dataInforUser?.member_pro === 1 &&
+                              category?.free_pro)
                             ? "Miễn phí"
                             : VND.format(category.sale_price)}
                         </span>

@@ -40,7 +40,6 @@ const OtpVerification = () => {
           token: checkTokenCookie(),
         });
         setDataUser(response.data);
-        console.log("page:", response);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -54,7 +53,6 @@ const OtpVerification = () => {
     try {
       const response = await SendOtp({ phone: dataUser?.phone }); // Gọi hàm sendOtp để nhận lại mã OTP mới
       if (response?.code == 0) {
-        console.log("response::", response);
         toast.success("Mã OTP đã được gửi lại !", {
           autoClose: 500,
         });
@@ -95,7 +93,6 @@ const OtpVerification = () => {
     try {
       const response = await SendOtp({ phone: dataUser?.phone }); // Gọi hàm sendOtp để nhận mã OTP
       if (response?.code == 0) {
-        console.log("respone: ", response);
         toast.success("Đã gửi mã OTP!", {
           autoClose: 500,
         });
@@ -131,7 +128,6 @@ const OtpVerification = () => {
       setIsLoading(true);
       try {
         const response = await acceptMemberAPI({ token: token, otp: otpCode });
-        console.log(response);
         if (response?.code === 1) {
           toast.success("Xác thực thành công!", {
             autoClose: 500,

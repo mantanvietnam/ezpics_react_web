@@ -168,7 +168,6 @@ export function PanelsText({
   const [gradientColors, setGradientColors] = useState(
     selectedLayer?.content?.gradient_color || null
   );
-
   const [isGradient, setIsGradient] = useState(
     selectedLayer?.content?.gradient
   );
@@ -217,7 +216,7 @@ export function PanelsText({
       if (!stageData || !stageData.designLayers) {
         throw new Error("Invalid stageData or designLayers not found");
       }
-
+      setIsGradient(1)
       const updatedLayers = await Promise.all(
         stageData.designLayers.map(async (layer) => {
           if (
@@ -246,7 +245,6 @@ export function PanelsText({
               formData,
               config
             );
-            console.log(response);
 
             if (response && response?.data?.code === 1) {
               return {
@@ -306,12 +304,18 @@ export function PanelsText({
       setColor(selectedLayer.content.color);
       setValueLetterSpacing(vwToLetterSpacing(selectedLayer.content.gianchu));
       setValueLineSpacing(giandongToLineHeight(selectedLayer.content.giandong));
-      setGradientColors(selectedLayer.content.gradient_color);
-      setIsGradient(
-        selectedLayer.content.gradient_color
-          ? 1
-          : selectedLayer?.content?.gradient
-      );
+      {selectedLayer.content.gradient_color &&
+        setGradientColors(selectedLayer.content.gradient_color);
+        setIsGradient(
+          selectedLayer.content.gradient
+          // JSON.stringify(selectedLayer.content.gradient_color) ===
+          //   JSON.stringify([
+          //     { position: 0, color: "#000" },
+          //     { position: 1, color: "#000" },
+          //   ]) || !selectedLayer.content.gradient_color
+          //   ? 0
+          //   : 1
+        );}
     }
   }, [selectedLayer]);
 
@@ -450,11 +454,10 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ đậm" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.bold === "bold" || fontStyle.bold === "bolder"
+                className={`flex items-center px-2 ${fontStyle.bold === "bold" || fontStyle.bold === "bolder"
                     ? "bg-gray-300"
                     : ""
-                }`}
+                  }`}
                 onClick={() => handleFontStyleChange("bold", "bolder")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
@@ -476,9 +479,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ nghiêng" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.italic === "italic" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.italic === "italic" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("italic", "italic")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
@@ -502,9 +504,8 @@ export function PanelsText({
             <Tooltip title="Chọn kiểu chữ gạch dưới" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.underline === "underline" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.underline === "underline" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("underline", "underline")}
               >
                 <div className="flex flex-col justify-center w-full h-8">
@@ -526,9 +527,8 @@ export function PanelsText({
             <Tooltip title="Viết in hoa toàn bộ" placement="bottom">
               <Button
                 type="text"
-                className={`flex items-center px-2 ${
-                  fontStyle.uppercase === "uppercase" ? "bg-gray-300" : ""
-                }`}
+                className={`flex items-center px-2 ${fontStyle.uppercase === "uppercase" ? "bg-gray-300" : ""
+                  }`}
                 onClick={() => handleFontStyleChange("uppercase", "uppercase")}
               >
                 <div className="flex flex-col justify-center w-full h-8">

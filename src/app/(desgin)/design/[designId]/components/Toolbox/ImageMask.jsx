@@ -124,7 +124,6 @@ const ImageMask = () => {
     });
     dispatch(addLayerText(res.data));
     const { naturalWidth, naturalHeight } = getSvgDimensions(initialSvgString);
-    // console.log(res.data);
     const data = {
       ...res.data.content,
       naturalWidth: naturalWidth,

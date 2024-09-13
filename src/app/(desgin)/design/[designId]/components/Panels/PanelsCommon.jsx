@@ -302,12 +302,6 @@ const LockUnlock = () => {
 
       setLocked(!locked);
       dispatch(updateLayer({ id: selectedLayer.id, data: updatedData }));
-      console.log(
-        "selectedLayer :",
-        selectedLayer,
-        "updatedData :",
-        updatedData
-      );
     }
   };
 
@@ -331,38 +325,38 @@ const LockUnlock = () => {
 };
 
 export default function PanelsCommon({ maxPositions, onDuplicateLayer }) {
-    const dispatch = useDispatch();
-    const stageData = useSelector((state) => state.stage.stageData);
-    const [selectedLayer, setSelectedLayer] = useState({});
+  const dispatch = useDispatch();
+  const stageData = useSelector((state) => state.stage.stageData);
+  const [selectedLayer, setSelectedLayer] = useState({});
 
-    useEffect(() => {
-      if (stageData && stageData.selectedLayer) {
-        setSelectedLayer(stageData.selectedLayer);
+  useEffect(() => {
+    if (stageData && stageData.selectedLayer) {
+      setSelectedLayer(stageData.selectedLayer);
+    }
+  }, [stageData, stageData.selectedLayer]);
+
+  const handleDeleteLayer = () => {
+    const deleteLayerApi = async () => {
+      try {
+        const res = await deleteLayerAPI({
+          idproduct: selectedLayer.products_id,
+          idlayer: selectedLayer.id,
+          token: checkTokenCookie(),
+        });
+        if (res.code === 1) {
+          dispatch(removeLayer(selectedLayer.id));
+          toast.success("Xóa layer thành công !", {
+            autoClose: 500,
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
-    }, [stageData, stageData.selectedLayer]);
-  
-   const handleDeleteLayer = () => {
-     const deleteLayerApi = async () => {
-       try {
-         const res = await deleteLayerAPI({
-           idproduct: selectedLayer.products_id,
-           idlayer: selectedLayer.id,
-           token: checkTokenCookie(),
-         });
-         if (res.code === 1) {
-           dispatch(removeLayer(selectedLayer.id));
-           toast.success("Xóa layer thành công !", {
-             autoClose: 500,
-           });
-         }
-       } catch (error) {
-         console.log(error);
-       }
-     };
-     deleteLayerApi();
-   };
+    };
+    deleteLayerApi();
+  };
 
-  
+
   return (
     <div className="flex">
       <div className="px-1 w-[50px]">
