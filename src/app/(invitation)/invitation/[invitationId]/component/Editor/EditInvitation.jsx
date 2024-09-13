@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   updateLayer,
   addLayerImage,
   removeLayer,
   addLayerText,
   moveLayerToFinal,
+  moveLayerToFront,
+  selectLayer,
+  deselectLayerTool,
 } from "@/redux/slices/print/printSlice";
 import { deleteLayerAPI } from "@/api/design";
 import { useSelector, useDispatch } from "react-redux";
@@ -84,7 +87,7 @@ const EditInvitation = () => {
       );
       if (res.data.code === 1) {
         const newLayer = res.data.data;
-        dispatch(addLayerImage(newLayer));
+        dispatch(addLayerText(newLayer));
         dispatch(updateLayer(newLayer));
 
         const data = {
@@ -92,7 +95,6 @@ const EditInvitation = () => {
           variableLabel: "Thay ảnh avatar",
         };
         dispatch(updateLayer({ id: newLayer.id, data: data }));
-        dispatch(moveLayerToFinal({ id: newLayer.id }));
       } else {
         console.error("Failed to add text layer:", res.data);
       }
@@ -231,6 +233,51 @@ const EditInvitation = () => {
     }
   };
 
+  const buttonEditRef = useRef(null);
+
+  const handleEditAvatar = () => {
+    dispatch(moveLayerToFront({ id: filteredLayerImage[0]?.id }));
+    dispatch(selectLayer({ id: filteredLayerImage[0]?.id }));
+  };
+
+  const handleSaveAvatar = () => {
+    dispatch(moveLayerToFinal({ id: filteredLayerImage[0]?.id }));
+    // dispatch(deselectLayerTool());
+  };
+
+  // Effect to handle 'blur' and 'Enter' events
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If click is outside the button, call handleSaveAvatar
+      if (
+        buttonEditRef.current &&
+        !buttonEditRef.current.contains(event.target) &&
+        filteredLayerImage[0]?.id
+      ) {
+        console.log("save");
+        handleSaveAvatar(); // Using handleSaveAvatar function for clarity
+      }
+    };
+
+    const handleKeyPress = (event) => {
+      // If the Enter key is pressed, call handleSaveAvatar
+      if (event.key === "Enter" && filteredLayerImage[0]?.id) {
+        handleSaveAvatar();
+      }
+    };
+
+    // Add event listeners for clicks outside and key presses
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keypress", handleKeyPress);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  }, [dispatch, filteredLayerImage]);
+
   return (
     <div>
       <div>
@@ -240,7 +287,8 @@ const EditInvitation = () => {
             {(imgSrc || filteredLayerImage[0]?.content?.banner) && (
               <button
                 className="text-[12px] bg-red-600 text-white ml-2 px-2 rounded"
-                onClick={() => handleDeleteLayer()}>
+                onClick={() => handleDeleteLayer()}
+              >
                 Xóa
               </button>
             )}
@@ -249,6 +297,7 @@ const EditInvitation = () => {
             {imgSrc || filteredLayerImage[0]?.content?.banner ? (
               <div className="flex flex-col justify-center items-center">
                 <div
+                  ref={buttonEditRef}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -257,7 +306,11 @@ const EditInvitation = () => {
                     overflow: "hidden", // Ẩn phần ảnh bị tràn
                     width: "40%",
                     height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
-                  }}>
+                    cursor: "pointer",
+                  }}
+                  className="hover:shadow-lg hover:shadow-yellow-500/50"
+                  onClick={handleEditAvatar}
+                >
                   <img
                     src={imgSrc || filteredLayerImage[0]?.content?.banner}
                     alt=""
@@ -273,7 +326,8 @@ const EditInvitation = () => {
               <div className="flex flex-col relative mobile:pt-4">
                 <form
                   id="file-upload-form"
-                  className="block clear-both mx-auto w-full max-w-600">
+                  className="block clear-both mx-auto w-full max-w-600"
+                >
                   <input
                     className="hidden"
                     id="file-upload"
@@ -287,7 +341,8 @@ const EditInvitation = () => {
                     className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
                     htmlFor="file-upload"
                     id="file-drag"
-                    style={{ cursor: "pointer" }}>
+                    style={{ cursor: "pointer" }}
+                  >
                     <img
                       id="file-image"
                       src="#"
@@ -357,12 +412,14 @@ const EditInvitation = () => {
             .map((layer) => (
               <div
                 key={layer.id}
-                className="border-b border-gray-500 mb-4 pb-3">
+                className="border-b border-gray-500 mb-4 pb-3"
+              >
                 <div className="mb-2 flex justify-between">
                   <h1 className="text-xl font-bold">Chỉnh sửa chữ</h1>
                   <button
                     className="text-[12px] bg-red-600 text-white ml-2 px-2 rounded"
-                    onClick={() => handleDeleteLayerText(layer)}>
+                    onClick={() => handleDeleteLayerText(layer)}
+                  >
                     Xóa
                   </button>
                 </div>
@@ -438,13 +495,15 @@ const EditInvitation = () => {
                               key={font.name}
                               onClick={() => handleFontSelect(font, layer)}
                               className="p-2 cursor-pointer hover:bg-gray-100"
-                              style={{ fontFamily: font.name }}>
+                              style={{ fontFamily: font.name }}
+                            >
                               {font.name}
                             </div>
                           ))}
                         </div>
                       }
-                      trigger="click">
+                      trigger="click"
+                    >
                       <Input
                         value={selectedFont ? selectedFont : layer.content.font}
                         placeholder="Chọn font"
@@ -459,7 +518,8 @@ const EditInvitation = () => {
 
           <button
             className="px-2 py-1 my-2 text-white bg-black hover:text-black hover:bg-white rounded border"
-            onClick={handleCreateVariableText}>
+            onClick={handleCreateVariableText}
+          >
             Tạo chữ
           </button>
         </div>

@@ -55,7 +55,7 @@ const Page = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [guidelines, setGuidelines] = useState([])
+  const [guidelines, setGuidelines] = useState([]);
 
   const { fonts, loading } = useFonts();
   const [maxPositions, setMaxPositions] = useState({
@@ -284,7 +284,6 @@ const Page = () => {
         clickY < innerRect.top - outerRect.top ||
         clickY > innerRect.bottom - outerRect.top
       ) {
-
         dispatch(deselectLayer());
       }
     }
@@ -316,19 +315,28 @@ const Page = () => {
 
       // Tính toán khoảng cách giữa các cạnh
       const horizontalDistanceStart = Math.abs(shapeBox.x - currentBox.x);
-      const horizontalDistanceEnd = Math.abs((shapeBox.x + shapeBox.width) - (currentBox.x + currentBox.width));
+      const horizontalDistanceEnd = Math.abs(
+        shapeBox.x + shapeBox.width - (currentBox.x + currentBox.width)
+      );
       const verticalDistanceStart = Math.abs(shapeBox.y - currentBox.y);
-      const verticalDistanceEnd = Math.abs((shapeBox.y + shapeBox.height) - (currentBox.y + currentBox.height));
+      const verticalDistanceEnd = Math.abs(
+        shapeBox.y + shapeBox.height - (currentBox.y + currentBox.height)
+      );
 
       // Kiểm tra căn chỉnh ngang
       if (horizontalDistanceStart < 1 || horizontalDistanceEnd < 1) {
         const xStart = shapeBox.x < currentBox.x ? shapeBox.x : currentBox.x;
-        const xEnd = shapeBox.x + shapeBox.width > currentBox.x + currentBox.width
-          ? shapeBox.x + shapeBox.width
-          : currentBox.x + currentBox.width;
+        const xEnd =
+          shapeBox.x + shapeBox.width > currentBox.x + currentBox.width
+            ? shapeBox.x + shapeBox.width
+            : currentBox.x + currentBox.width;
         if (!horizontalGuidelines.has(xStart)) {
           horizontalGuidelines.add(xStart);
-          newGuidelines.push({ x: xStart, y1: 0, y2: stageRef.current.height() });
+          newGuidelines.push({
+            x: xStart,
+            y1: 0,
+            y2: stageRef.current.height(),
+          });
         }
         if (!horizontalGuidelines.has(xEnd)) {
           horizontalGuidelines.add(xEnd);
@@ -339,12 +347,17 @@ const Page = () => {
       // Kiểm tra căn chỉnh dọc
       if (verticalDistanceStart < 1 || verticalDistanceEnd < 1) {
         const yStart = shapeBox.y < currentBox.y ? shapeBox.y : currentBox.y;
-        const yEnd = shapeBox.y + shapeBox.height > currentBox.y + currentBox.height
-          ? shapeBox.y + shapeBox.height
-          : currentBox.y + currentBox.height;
+        const yEnd =
+          shapeBox.y + shapeBox.height > currentBox.y + currentBox.height
+            ? shapeBox.y + shapeBox.height
+            : currentBox.y + currentBox.height;
         if (!verticalGuidelines.has(yStart)) {
           verticalGuidelines.add(yStart);
-          newGuidelines.push({ y: yStart, x1: 0, x2: stageRef.current.width() });
+          newGuidelines.push({
+            y: yStart,
+            x1: 0,
+            x2: stageRef.current.width(),
+          });
         }
         if (!verticalGuidelines.has(yEnd)) {
           verticalGuidelines.add(yEnd);
@@ -377,7 +390,9 @@ const Page = () => {
 
   const deleteOldLine = () => {
     setGuidelines([]);
-  }
+  };
+
+  // console.log(stageData);
 
   return (
     <>
@@ -393,10 +408,13 @@ const Page = () => {
         />
         <div
           className={`
-          relative ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-            } h-full
-          z-1 bg-gray-300 transition-all duration-300 ${activeTool ? "ml-[408px]" : "ml-[108px]"
-            }`}>
+          relative ${
+            activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+          } h-full
+          z-1 bg-gray-300 transition-all duration-300 ${
+            activeTool ? "ml-[408px]" : "ml-[108px]"
+          }`}
+        >
           {stageData.selectedLayer?.content?.type === "image" ? (
             <div>
               <PanelsImage
@@ -430,7 +448,8 @@ const Page = () => {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
             ref={previewRef}
-            onClick={handleClickOutSide}>
+            onClick={handleClickOutSide}
+          >
             <div ref={containerRef} className="mt-[300px] mb-[50px]">
               <div
                 ref={draggableDivRef}
@@ -440,7 +459,8 @@ const Page = () => {
                   transform: locked
                     ? `translate(${dragOffset.x}px, ${dragOffset.y}px)`
                     : "none",
-                }}>
+                }}
+              >
                 <Stage
                   ref={stageRef}
                   width={initSize.width}
@@ -451,7 +471,8 @@ const Page = () => {
                     backgroundColor: "#fff",
                   }}
                   onMouseDown={checkDeselect}
-                  onTouchStart={checkDeselect}>
+                  onTouchStart={checkDeselect}
+                >
                   <Layer>
                     <BackgroundLayer
                       src={design?.thumn}
@@ -529,15 +550,16 @@ const Page = () => {
                         lineJoin="round" // Góc đường bo tròn
                       />
                     ))}
-
                   </Layer>
                 </Stage>
               </div>
             </div>
           </div>
           <div
-            className={`fixed bottom-0 z-10 ${activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
-              }`}>
+            className={`fixed bottom-0 z-10 ${
+              activeTool ? "w-[calc(100%-408px)]" : "w-[calc(100%-108px)]"
+            }`}
+          >
             <Footer containerRef={containerRef} />
           </div>
         </div>
