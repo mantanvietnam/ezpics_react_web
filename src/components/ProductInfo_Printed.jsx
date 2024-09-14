@@ -252,7 +252,7 @@ export default function ProductInfoPrinted(props) {
         <div className="flex xl:w-1/2 w-full h-full flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <img src="/images/crown.svg" alt="" />
-            <span className="text-xl font-semibold">{data?.name}</span>
+            <h1 className="text-xl font-semibold">{data?.name}</h1>
           </div>
           <div className="flex items-center gap-5 bg-slate-100 p-5">
             <div className="text-3xl text-red-500">
