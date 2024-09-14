@@ -23,7 +23,7 @@ const Page = () => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
   const stageData = useSelector((state) => state.print.stageData);
-  const { design, initSize } = stageData;
+  const { design, initSize, selectedLayer } = stageData;
   const [loading, setLoading] = useState(true);
   const [designLayers, setDesignLayer] = useState([]);
   const [sizeRespon, setSizeRespon] = useState(1); // Initial sizeRespon
@@ -80,16 +80,16 @@ const Page = () => {
           width >= 4000 || height >= 4000
             ? 7
             : width >= 3000 || height >= 3000
-              ? 5
-              : width >= 2500 || height >= 2500
-                ? 3.7
-                : width >= 1920 || height >= 1920
-                  ? 3
-                  : width >= 1600 || height >= 1600
-                    ? 2
-                    : width >= 1000 || height >= 1000
-                      ? 1.5
-                      : 1;
+            ? 5
+            : width >= 2500 || height >= 2500
+            ? 3.7
+            : width >= 1920 || height >= 1920
+            ? 3
+            : width >= 1600 || height >= 1600
+            ? 2
+            : width >= 1000 || height >= 1000
+            ? 1.5
+            : 1;
 
         dispatch(
           setStageData({
@@ -133,7 +133,8 @@ const Page = () => {
             height: initSize.height / sizeRespon,
             maxWidth: "100vw",
             maxHeight: "100vh",
-          }}>
+          }}
+        >
           <Stage
             ref={stageRef}
             width={initSize.width / sizeRespon}
@@ -144,7 +145,8 @@ const Page = () => {
               backgroundColor: "#fff",
             }}
             draggable={false}
-            onMouseDown={(e) => e.target.getStage().draggable(false)}>
+            onMouseDown={(e) => e.target.getStage().draggable(false)}
+          >
             <Layer>
               <BackgroundLayerPrint
                 src={design?.thumn}
@@ -163,6 +165,7 @@ const Page = () => {
                       }}
                       id={layer.id}
                       data={layer.content}
+                      isSelected={layer.id === selectedLayer?.id}
                     />
                   );
                 } else if (layer.content?.type === "text") {
