@@ -1,7 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, Popover, Select, Slider } from "antd";
-import { updateLayer } from "@/redux/slices/print/printSlice";
+import {
+  updateLayer,
+  moveLayerToFront,
+  selectLayer,
+  moveLayerToFinal,
+} from "@/redux/slices/print/printSlice";
 import ArrowTopIcon from "../icon/ArrowTop";
 import ArrowBottomIcon from "../icon/ArrowBottom";
 import ArrowLeftIcon from "../icon/ArrowLeft";
@@ -148,7 +153,6 @@ const EditPrint = ({ stageRef }) => {
     const pixelRatioWidth = originalWidth / currentWidth;
     const pixelRatioHeight = originalHeight / currentHeight;
     const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
-
 
     setTimeout(() => {
       const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Tăng pixelRatio để tăng chất lượng
@@ -425,6 +429,41 @@ const EditPrint = ({ stageRef }) => {
     });
   };
 
+  const buttonEditRef = useRef(null);
+  const [layerId, setLayerId] = useState(null);
+
+  const handleEditAvatar = (layerId) => {
+    setLayerId(layerId);
+    dispatch(moveLayerToFront({ id: layerId }));
+    dispatch(selectLayer({ id: layerId }));
+  };
+
+  const handleSaveAvatar = () => {
+    dispatch(moveLayerToFinal({ id: layerId }));
+  };
+
+  // Effect to handle 'blur' and 'Enter' events
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If click is outside the button, call handleSaveAvatar
+      if (
+        buttonEditRef.current &&
+        !buttonEditRef.current.contains(event.target)
+      ) {
+        console.log("save");
+        handleSaveAvatar(); // Using handleSaveAvatar function for clarity
+      }
+    };
+
+    // Add event listeners for clicks outside and key presses
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [buttonEditRef, handleSaveAvatar, layerId, dispatch]);
+
   return (
     <div>
       {filteredLayers.map((layer) => {
@@ -438,6 +477,7 @@ const EditPrint = ({ stageRef }) => {
                 {imgSrc ? (
                   <div className="flex flex-col justify-center items-center bg-gray-100">
                     <div
+                      ref={buttonEditRef}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -449,6 +489,8 @@ const EditPrint = ({ stageRef }) => {
                         width: "30%",
                         height: "auto", // Chiều cao tự động dựa trên kích thước ảnh
                       }}
+                      className="hover:shadow-lg hover:shadow-yellow-500/50"
+                      onClick={() => handleEditAvatar(layer.id)}
                     >
                       <img
                         src={imgSrc}
@@ -620,7 +662,7 @@ const EditPrint = ({ stageRef }) => {
             onClick={handleDownLoadDesign}
           >
             <PrintedIcon size={25} />
-            <p className="pl-2">In ảnh</p>
+            <p className="pl-2">Tải ảnh</p>
           </button>
         </Popover>
         <button

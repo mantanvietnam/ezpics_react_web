@@ -260,6 +260,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
             id: layer.id,
             content: {
               ...layer.content,
+              giandong: layer.content.giandong - 1.15,
             },
             sort: layer.sort,
           };

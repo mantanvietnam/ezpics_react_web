@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Image } from "react-konva";
 import useImage from "use-image";
 import { useDispatch } from "react-redux";
-import { updateLayer } from "@/redux/slices/print/printSlice";
+import {
+  updateLayer,
+  moveLayerToFinal,
+  moveLayerToFront,
+} from "@/redux/slices/print/printSlice";
 import Konva from "konva";
 
 export default function ImageLayer(props) {
-  const { data, designSize, id, onMaxPositionUpdate } = props;
+  const { data, designSize, id, isSelected } = props;
   const {
     postion_left,
     postion_top,
@@ -40,7 +44,19 @@ export default function ImageLayer(props) {
   // Rotation
   const rotation = parseFloat(rotate?.replace("deg", ""));
 
-  //   console.log("image", image);
+  const handleDragEnd = (e) => {
+    const data = {
+      postion_left: (e.target.x() / designSize.width) * 100,
+      postion_top: (e.target.y() / designSize.height) * 100,
+    };
+    dispatch(updateLayer({ id: id, data: data }));
+
+    dispatch(moveLayerToFinal({ id: id }));
+  };
+
+  const handleDragMove = (e) => {
+    dispatch(moveLayerToFront({ id: id }));
+  };
 
   return (
     <>
@@ -56,8 +72,10 @@ export default function ImageLayer(props) {
         rotation={rotation}
         scaleX={scaleX}
         scaleY={scaleY}
-        draggable={false}
+        draggable={isSelected ? true : false}
         opacity={opacity}
+        onDragEnd={handleDragEnd}
+        onDragMove={handleDragMove}
       />
     </>
   );

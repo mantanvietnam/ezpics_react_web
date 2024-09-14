@@ -394,9 +394,10 @@ export default function TextLayer(props) {
         textDecoration={gachchan}
         letterSpacing={vwToLetterSpacing(gianchu)}
         lineHeight={
-          giandongToLineHeight(giandong) == 0
-            ? 1
-            : giandongToLineHeight(giandong)
+          giandongToLineHeight(giandong) === 0 ||
+          giandongToLineHeight(giandong) === 1
+            ? 2.15
+            : giandongToLineHeight(giandong) + 1.15
         }
         wrap="word"
         onClick={!lock ? handleSelect : null}
