@@ -58,7 +58,7 @@ export default function Page() {
       }
     });
 
-    const target = document.querySelector('#loadMoreTrigger');
+    const target = document.querySelector("#loadMoreTrigger");
     if (target) observer.current.observe(target);
 
     return () => {
@@ -73,6 +73,8 @@ export default function Page() {
     setProducts([]);
     setHasMore(true);
   };
+
+  console.log(products);
 
   return (
     <>
