@@ -68,7 +68,7 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-lg mobile:text-2xl font-bold mb-4">{title}</h1>
+        <h2 className="text-lg mobile:text-2xl font-bold mb-4">{title}</h2>
         <Link href={pathString} className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
