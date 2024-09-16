@@ -183,7 +183,7 @@ const Page = () => {
     <div
       ref={previewRef}
       onClick={handleClickOutSide}
-      className="flex flex-col lg:flex-row overflow-auto h-screen pt-[70px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]"
+      className="flex flex-col lg:flex-row overflow-auto h-full mobile:h-screen pt-[70px] pb-[30px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]"
     >
       <div className="logo flex items-center justify-center absolute top-4 left-4 lg:top-6 lg:left-6">
         <Link href="/" className="flex flex-center">

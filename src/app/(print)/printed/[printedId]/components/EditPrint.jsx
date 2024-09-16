@@ -12,7 +12,7 @@ import ArrowBottomIcon from "../icon/ArrowBottom";
 import ArrowLeftIcon from "../icon/ArrowLeft";
 import ArrowRightIcon from "../icon/ArrowRight";
 import jsPDF from "jspdf";
-import ContinueIcon from "../icon/Continue";
+import PrintedIcon from "../icon/PrintedIcon";
 import CancelIcon from "../icon/CancelIcon";
 import ZoomInIcon from "../icon/ZoomIn";
 import ZoomOutIcon from "../icon/ZoomOut";
@@ -287,11 +287,11 @@ const EditPrint = ({ stageRef, printedId }) => {
   };
 
   return (
-    <div>
+    <div className="mb-[100px] pb-[100px] mobile:pb-0">
       {filteredLayers.map((layer) => {
         if (layer.content?.type === "image") {
           return (
-            <div className="w-[300px] md:w-[400px] h-fit" key={layer.id}>
+            <div className="w-[300px] md:w-[400px] h-full" key={layer.id}>
               <h4 className="text-lg font-bold py-2 text-white">
                 {layer.content.variableLabel}
               </h4>
@@ -462,15 +462,13 @@ const EditPrint = ({ stageRef, printedId }) => {
           );
         }
       })}
-      <div className="flex">
+      <div className="flex pb-[100px] mobile:pb-0">
         <button
           className="flex items-center mt-4 mr-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-          onClick={() => {
-            handleNavigateDownload();
-          }}
+          onClick={handleNavigateDownload}
         >
-          <ContinueIcon size={25} />
-          <p className="pl-2">Tiếp tục</p>
+          <PrintedIcon size={25} />
+          <p className="pl-2">Tải ảnh</p>
         </button>
 
         <button
