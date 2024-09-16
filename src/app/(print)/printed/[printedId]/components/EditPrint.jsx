@@ -12,112 +12,15 @@ import ArrowBottomIcon from "../icon/ArrowBottom";
 import ArrowLeftIcon from "../icon/ArrowLeft";
 import ArrowRightIcon from "../icon/ArrowRight";
 import jsPDF from "jspdf";
-import PrintedIcon from "../icon/PrintedIcon";
+import ContinueIcon from "../icon/Continue";
 import CancelIcon from "../icon/CancelIcon";
 import ZoomInIcon from "../icon/ZoomIn";
 import ZoomOutIcon from "../icon/ZoomOut";
+import { useRouter } from "next/navigation";
+import { saveImageToDB } from "./indexedDB";
 
-const DownLoadMenu = ({
-  handleDownload,
-  fileType,
-  setFileType,
-  isProMember,
-}) => (
-  <div className="w-[300px] mobile:w-[400px] md:w-[500px] h-fit p-3">
-    <div className="mt-4 flex flex-col">
-      <label htmlFor="fileType" className="mb-2 text-lg">
-        Chọn loại tệp:
-      </label>
-      <Select
-        id="fileType"
-        value={fileType}
-        onChange={(value) => setFileType(value)}
-        style={{ width: "100%", height: 50 }}
-      >
-        <Select.Option value="png">
-          <div className="flex items-center">
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.5 8.75a1.75 1.75 0 1 1-3.5 0 1.75 1.75 0 0 1 3.5 0Z"
-                fill="currentColor"
-              ></path>
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7Zm4-2.5h10A2.5 2.5 0 0 1 19.5 7v4.23l-.853-.854c-.485-.485-.892-.892-1.257-1.184-.384-.307-.79-.546-1.287-.616a2.625 2.625 0 0 0-.74 0c-.497.07-.903.309-1.287.616-.365.292-.772.7-1.257 1.184l-7.943 7.943A2.488 2.488 0 0 1 4.5 17V7A2.5 2.5 0 0 1 7 4.5Zm-.983 14.8c.302.128.634.2.983.2h10a2.5 2.5 0 0 0 2.5-2.5v-3.65l-1.884-1.884c-.522-.522-.871-.869-1.163-1.103-.281-.224-.439-.285-.562-.302a1.122 1.122 0 0 0-.317 0c-.122.017-.28.078-.561.302-.292.234-.64.581-1.163 1.103L6.017 19.3Z"
-                fill="currentColor"
-              ></path>
-            </svg>
-            <p className="text-xl pl-3">PNG</p>
-          </div>
-        </Select.Option>
-        <Select.Option value="pdf">
-          <div className="flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                fillRule="evenodd"
-                d="M6.5 4a.5.5 0 0 1 .5-.5h4.002v4.503a2 2 0 0 0 2 2h5.248a.75.75 0 0 0 .75-.75V9.25a.747.747 0 0 0-.22-.531l-6.134-6.134A2.002 2.002 0 0 0 11.231 2h-4.23A2 2 0 0 0 5 4v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7.75a.75.75 0 0 0-1.5 0V20a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5V4Zm9.942 4.503-3.94-3.94v3.44a.5.5 0 0 0 .5.5h3.44ZM9 17a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 9 17Zm.75-4.754a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <p className="text-xl pl-3">PDF</p>
-          </div>
-        </Select.Option>
-      </Select>
-      {/* {fileType === "png" && (
-        <div className="mt-4">
-          <label htmlFor="pixelRatio" className="mb-2 text-lg">
-            Chọn kích cỡ x
-          </label>
-          <div className="flex items-center justify-between">
-            <Slider
-              id="pixelRatio"
-              min={1}
-              max={5}
-              value={pixelRatio || 1}
-              onChange={(value) => {
-                if (isProMember) {
-                  setPixelRatio(value);
-                } else {
-                  toast.warning(
-                    "Bạn cần là thành viên Pro để thay đổi kích cỡ."
-                  );
-                }
-              }}
-              step={1}
-              style={{ width: 400 }}
-              // disabled={!isProMember}
-            />
-            <p className="text-base font-bold border border-slate-300 rounded ml-3 py-2 px-3">
-              {pixelRatio}
-            </p>
-          </div>
-        </div>
-      )} */}
-      <button
-        className="mt-4 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-        onClick={handleDownload}
-      >
-        Tải xuống
-      </button>
-    </div>
-  </div>
-);
-
-const EditPrint = ({ stageRef }) => {
+const EditPrint = ({ stageRef, printedId }) => {
+  const router = useRouter();
   const stageData = useSelector((state) => state.print.stageData);
   const dispatch = useDispatch();
   const { design, designLayers } = stageData;
@@ -143,32 +46,6 @@ const EditPrint = ({ stageRef }) => {
     document.body.removeChild(link);
   };
 
-  const handleDownLoadDesign = () => {
-    const originalWidth = stageData.design.width;
-    const originalHeight = stageData.design.height;
-
-    const currentWidth = stageRef.current.width();
-    const currentHeight = stageRef.current.height();
-
-    const pixelRatioWidth = originalWidth / currentWidth;
-    const pixelRatioHeight = originalHeight / currentHeight;
-    const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
-
-    setTimeout(() => {
-      const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Tăng pixelRatio để tăng chất lượng
-      setImageURL(dataURL); // Thiết lập URL cho modal
-      setIsPopoverOpen(!isPopoverOpen); // Hiển thị modal
-    }, 100); // Độ trễ để đảm bảo Transformer đã bị ẩn
-  };
-
-  const handleDownload = () => {
-    if (fileType === "png") {
-      handleDownloadPNG();
-    } else if (fileType === "pdf") {
-      handleDownloadPDF();
-    }
-  };
-
   function dataURLToBlob(dataURL) {
     const parts = dataURL.split(",");
     const mimeMatch = parts[0].match(/:(.*?);/);
@@ -190,55 +67,33 @@ const EditPrint = ({ stageRef }) => {
   }
 
   const handleDownloadPNG = () => {
-    if (imageURL) {
-      const originalWidth = stageData.design.width;
-      const originalHeight = stageData.design.height;
+    const originalWidth = stageData.design.width;
+    const originalHeight = stageData.design.height;
 
-      const currentWidth = stageRef.current.width();
-      const currentHeight = stageRef.current.height();
+    const currentWidth = stageRef.current.width();
+    const currentHeight = stageRef.current.height();
 
-      const pixelRatioWidth = originalWidth / currentWidth;
-      const pixelRatioHeight = originalHeight / currentHeight;
-      const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
+    const pixelRatioWidth = originalWidth / currentWidth;
+    const pixelRatioHeight = originalHeight / currentHeight;
+    const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
 
-      const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Sử dụng pixelRatio từ thanh trượt
-      downloadURI(dataURL, "download.png");
-      // Mở cửa sổ mới với ảnh
+    const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Sử dụng pixelRatio từ thanh trượt
+    downloadURI(dataURL, "download.png");
+    // Mở cửa sổ mới với ảnh
 
-      const img = new Image();
-      img.src = imageURL;
+    const img = new Image();
+    img.src = imageURL;
 
-      img.onload = () => {
-        const blob = dataURLToBlob(imageURL);
-        const newImgURL = URL.createObjectURL(blob);
-        window.open(newImgURL, "_blank");
-        URL.revokeObjectURL(newImgURL); // Giải phóng tài nguyên URL Blob
-      };
+    img.onload = () => {
+      const blob = dataURLToBlob(imageURL);
+      const newImgURL = URL.createObjectURL(blob);
+      window.open(newImgURL, "_blank");
+      URL.revokeObjectURL(newImgURL);
+    };
 
-      setIsPopoverOpen(false); // Đóng modal sau khi tải về
-    }
-  };
+    // console.log(img);
 
-  const handleDownloadPDF = () => {
-    if (imageURL) {
-      const img = new Image();
-      img.src = imageURL;
-      img.onload = () => {
-        const imgWidth = img.width;
-        const imgHeight = img.height;
-
-        // Tạo một trang PDF với kích thước khớp với ảnh
-        const pdf = new jsPDF({
-          orientation: imgWidth > imgHeight ? "landscape" : "portrait",
-          unit: "px",
-          format: [imgWidth, imgHeight],
-        });
-
-        pdf.addImage(img, "PNG", 0, 0, imgWidth, imgHeight);
-        pdf.save("download.pdf");
-        setIsPopoverOpen(false);
-      };
-    }
+    setIsPopoverOpen(false); // Đóng modal sau khi tải về
   };
 
   const handleCancel = () => {
@@ -334,36 +189,6 @@ const EditPrint = ({ stageRef }) => {
     });
   };
 
-  // Xử lý khi nhấn nút "In ảnh"
-  const exportButtonClick = () => {
-    filteredLayers.forEach((layer) => {
-      if (layer.content.type === "image" && imgSrc) {
-        const data = {
-          ...layer.content,
-          banner: imgSrc,
-        };
-        dispatch(
-          updateLayer({
-            id: layer.id,
-            data: data,
-          })
-        );
-      } else if (layer.content.type === "text" && exportValue.valueText) {
-        const data = {
-          ...layer.content,
-          text: exportValue.valueText,
-        };
-        // console.log("layer text", layer.id, data);
-        dispatch(
-          updateLayer({
-            id: layer.id,
-            data: data,
-          })
-        );
-      }
-    });
-  };
-
   const moveLayer = (layerId, direction) => {
     filteredLayers.forEach((layer) => {
       if (layer.id === layerId) {
@@ -442,27 +267,24 @@ const EditPrint = ({ stageRef }) => {
     dispatch(moveLayerToFinal({ id: layerId }));
   };
 
-  // Effect to handle 'blur' and 'Enter' events
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      // If click is outside the button, call handleSaveAvatar
-      if (
-        buttonEditRef.current &&
-        !buttonEditRef.current.contains(event.target)
-      ) {
-        console.log("save");
-        handleSaveAvatar(); // Using handleSaveAvatar function for clarity
-      }
-    };
+  // Hàm để chuyển hướng và lưu ảnh
+  const handleNavigateDownload = async () => {
+    const originalWidth = stageData.design.width;
+    const originalHeight = stageData.design.height;
 
-    // Add event listeners for clicks outside and key presses
-    document.addEventListener("mousedown", handleClickOutside);
+    const currentWidth = stageRef.current.width();
+    const currentHeight = stageRef.current.height();
 
-    // Cleanup event listeners on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [buttonEditRef, handleSaveAvatar, layerId, dispatch]);
+    const pixelRatioWidth = originalWidth / currentWidth;
+    const pixelRatioHeight = originalHeight / currentHeight;
+    const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
+
+    const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Tăng pixelRatio để tăng chất lượng
+    // Lưu imageURL vào IndexedDB
+    await saveImageToDB("my-image-id", dataURL);
+    // Chuyển hướng đến trang tải ảnh
+    router.push(`/printed/${printedId}/download`);
+  };
 
   return (
     <div>
@@ -641,30 +463,16 @@ const EditPrint = ({ stageRef }) => {
         }
       })}
       <div className="flex">
-        <Popover
-          placement="top"
-          trigger="click"
-          autoFocus
-          returnFocus
-          content={
-            <DownLoadMenu
-              handleDownload={handleDownload}
-              fileType={fileType}
-              setFileType={setFileType}
-              isProMember={isProMember}
-            />
-          }
-          open={isPopoverOpen}
-          onOpenChange={setIsPopoverOpen}
+        <button
+          className="flex items-center mt-4 mr-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+          onClick={() => {
+            handleNavigateDownload();
+          }}
         >
-          <button
-            className="flex items-center mt-4 mr-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
-            onClick={handleDownLoadDesign}
-          >
-            <PrintedIcon size={25} />
-            <p className="pl-2">Tải ảnh</p>
-          </button>
-        </Popover>
+          <ContinueIcon size={25} />
+          <p className="pl-2">Tiếp tục</p>
+        </button>
+
         <button
           className="flex items-center mt-4 mx-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
           onClick={handleCancel}
