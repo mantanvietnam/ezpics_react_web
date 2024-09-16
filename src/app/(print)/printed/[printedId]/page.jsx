@@ -4,7 +4,11 @@ import { useParams } from "next/navigation";
 import { getListLayerApi } from "@/api/design";
 import { checkTokenCookie } from "@/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { setStageData } from "@/redux/slices/print/printSlice";
+import {
+  setStageData,
+  moveLayerToFront,
+  moveLayerToFinal,
+} from "@/redux/slices/print/printSlice";
 import { Stage, Layer } from "react-konva";
 import BackgroundLayerPrint from "./components/BackgroundLayerPrint";
 import ImageLayerPrint from "./components/ImageLayerPrint";
@@ -113,8 +117,74 @@ const Page = () => {
     fetchData();
   }, [printedId]);
 
+  //Select bien anh
+
+  const [layerImageId, setLayerImageId] = useState(null);
+
+  const handleStageMouseDown = (e) => {
+    const stage = e.target.getStage();
+    if (!stage) return;
+    const pointerPosition = stage.getPointerPosition(); // Lấy vị trí của con trỏ
+    const clickedLayers = stage.getAllIntersections(pointerPosition); // Tìm tất cả các layer tại vị trí này
+
+    // Duyệt qua tất cả các lớp được nhấp vào
+    for (let i = 0; i < clickedLayers.length; i++) {
+      const clickedLayer = clickedLayers[i];
+      const layerId = clickedLayer.attrs.id; // Lấy id của layer được nhấp vào
+
+      // Tìm lớp tương ứng trong danh sách các lớp
+      const layer = designLayers.find((layer) => layer.id === layerId);
+
+      // Kiểm tra nếu lớp này là lớp biến
+      if (
+        layer &&
+        layer.content?.variable &&
+        layer.content.variable.trim() !== ""
+      ) {
+        // Nếu là lớp biến, cập nhật selectedLayer và dừng vòng lặp
+        dispatch(setStageData({ ...stageData, selectedLayer: layer }));
+        dispatch(moveLayerToFront({ id: layer.id }));
+        setLayerImageId(layer.id);
+        return;
+      }
+    }
+
+    // Nếu không có lớp biến nào được chọn, bỏ chọn lớp hiện tại
+    dispatch(setStageData({ ...stageData, selectedLayer: null }));
+  };
+
+  const previewRef = useRef(null);
+
+  const handleClickOutSide = (event) => {
+    const outerDiv = previewRef.current;
+    const innerDiv = containerRef.current;
+
+    if (outerDiv && innerDiv) {
+      const outerRect = outerDiv.getBoundingClientRect();
+      const innerRect = innerDiv.getBoundingClientRect();
+
+      // Vị trí click tương đối với outerDiv
+      const clickX = event.clientX - outerRect.left;
+      const clickY = event.clientY - outerRect.top;
+
+      // Kiểm tra nếu vị trí click nằm ngoài innerDiv nhưng trong outerDiv
+      if (
+        clickX < innerRect.left - outerRect.left ||
+        clickX > innerRect.right - outerRect.left ||
+        clickY < innerRect.top - outerRect.top ||
+        clickY > innerRect.bottom - outerRect.top
+      ) {
+        dispatch(moveLayerToFinal({ id: layerImageId }));
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row overflow-auto h-screen pt-[70px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]">
+    <div
+      ref={previewRef}
+      onClick={handleClickOutSide}
+      className="flex flex-col lg:flex-row overflow-auto h-screen pt-[70px] mobile:pt-[0] mobile:justify-around items-center bg-[#222831]"
+    >
       <div className="logo flex items-center justify-center absolute top-4 left-4 lg:top-6 lg:left-6">
         <Link href="/" className="flex flex-center">
           <Image
@@ -145,7 +215,8 @@ const Page = () => {
               backgroundColor: "#fff",
             }}
             draggable={false}
-            onMouseDown={(e) => e.target.getStage().draggable(false)}
+            onMouseDown={handleStageMouseDown}
+            onTouchStart={handleStageMouseDown}
           >
             <Layer>
               <BackgroundLayerPrint
@@ -212,7 +283,7 @@ const Page = () => {
           </div>
         </div>
       ) : (
-        <EditPrint stageRef={stageRef} />
+        <EditPrint stageRef={stageRef} printedId={printedId} />
       )}
     </div>
   );
