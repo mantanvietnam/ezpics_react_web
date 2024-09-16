@@ -14,7 +14,7 @@ const DownloadPage = () => {
   const { printedId } = params;
   const router = useRouter();
   const [imageURL, setImageURL] = useState(null);
-  const [noteDownload, setNoteDownload] = useState(false);
+  const [noteDownload, setNoteDownload] = useState(true);
 
   useEffect(() => {
     const loadImage = async () => {
@@ -29,17 +29,34 @@ const DownloadPage = () => {
     loadImage();
   }, []);
 
+  // const handleDownload = () => {
+  //   if (imageURL) {
+  //     const link = document.createElement("a");
+  //     link.href = imageURL;
+  //     link.download = "download.png";
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   }
+
+  //   setNoteDownload(true);
+  // };
+
   const handleDownload = () => {
     if (imageURL) {
-      const link = document.createElement("a");
-      link.href = imageURL;
-      link.download = "download.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      fetch(imageURL)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = "download.png";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch((error) => console.error("Tải ảnh thất bại", error));
     }
-
-    setNoteDownload(true);
   };
 
   return (
