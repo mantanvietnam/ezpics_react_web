@@ -396,8 +396,8 @@ export default function TextLayer(props) {
         lineHeight={
           giandongToLineHeight(giandong) === 0 ||
           giandongToLineHeight(giandong) === 1
-            ? 2.15
-            : giandongToLineHeight(giandong) + 1.15
+            ? 1.6
+            : giandongToLineHeight(giandong) + 0.6
         }
         wrap="word"
         onClick={!lock ? handleSelect : null}
