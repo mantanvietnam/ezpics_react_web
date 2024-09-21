@@ -10,12 +10,12 @@ import { getNewProducts } from "@/api/product";
 import { convertSLugUrl } from "@/utils/url";
 import TruncatedText from "@/components/TruncatedText";
 import { getCookie } from "@/utils";
-import { Skeleton, Slider } from "antd";
-import axios from "axios";
-import { useSession } from "next-auth/react";
+import { Skeleton } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -24,10 +24,12 @@ const VND = new Intl.NumberFormat("vi-VN", {
 
 export default function Page() {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1); // Page state
-  const limit = 24; // Items per page
-  const observer = useRef(); // Ref for IntersectionObserver
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 12;
+  const observer = useRef();
+  const loadingRef = useRef(false);
 
   const { data: session } = useSession();
   let dataInforUser;
@@ -39,22 +41,36 @@ export default function Page() {
     dataInforUser = null;
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getNewProducts();
-        setCategories(response.listData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData(categories);
-  }, []);
+  
+   useEffect(() => {
+     const fetchData = async (currentPage) => {
+       if (loadingRef.current) return; 
+       loadingRef.current = true; 
+       setLoading(true);
+       try {
+         const response = await getNewProducts({ page: currentPage, limit });
+         toast.error(`Page: ${page}, Response: ${JSON.stringify(response)}`);
+         if (response.listData.length > 0) {
+           setCategories((prev) => [...prev, ...response.listData]);
+         } else {
+           setHasMore(false);
+         }
+       } catch (error) {
+         console.error("Error fetching data:", error);
+         setHasMore(false);
+       } finally {
+         loadingRef.current = false; // Đánh dấu không còn loading
+         setLoading(false);
+       }
+     };
 
-  // IntersectionObserver callback
+     fetchData(page);
+   }, [page]);
+
+
   const handleObserver = (entities) => {
     const target = entities[0];
-    if (target.isIntersecting) {
+    if (target.isIntersecting && hasMore && !loading) {
       setPage((prevPage) => prevPage + 1);
     }
   };
@@ -70,12 +86,12 @@ export default function Page() {
         observer.current.unobserve(loadMoreRef);
       }
     };
-  }, []);
+  }, [hasMore, loading]);
 
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 4, // Show 4 items per row
+    slidesToShow: 4,
     slidesToScroll: 2,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -116,23 +132,10 @@ export default function Page() {
       <div>
         <StyledSlider>
           {loading && page === 1 ? (
-            <Slider {...settings} className="w-full relative">
-              {[...Array(4).keys()].map((index) => (
-                <div key={index}>
-                  <SkeletonCustom>
-                    <Skeleton.Image active />
-                    <Skeleton.Input
-                      active
-                      size="small"
-                      className="w-full pt-4"
-                    />
-                  </SkeletonCustom>
-                </div>
-              ))}
-            </Slider>
+            <Skeleton active paragraph={{ rows: 4 }} />
           ) : (
             <div className="grid grid-cols-4 grid-flow-row gap-4">
-              {categories?.map((category) => (
+              {categories.map((category) => (
                 <Link
                   href={`/category/${convertSLugUrl(category.name)}-${
                     category.id
@@ -175,7 +178,7 @@ export default function Page() {
                   </div>
                 </Link>
               ))}
-              <div id="load-more-ref" className="h-1 w-full"></div>
+              {hasMore && <div id="load-more-ref" className="h-1 w-full"></div>}
             </div>
           )}
         </StyledSlider>
@@ -183,4 +186,3 @@ export default function Page() {
     </div>
   );
 }
-8;
