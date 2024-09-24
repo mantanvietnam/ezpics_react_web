@@ -87,9 +87,9 @@ const CollectionProductSlider = ({ title }) => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-2">
       <div className="flex justify-between">
-        <h1 className="text-lg mobile:text-2xl font-bold mb-4">
+        <p className="text-lg mobile:text-2xl font-bold mb-4">
           {title || "Bộ sưu tập bạn có thể thích"}
-        </h1>
+        </p>
         <Link
           href="/project-product"
           className="font-bold text-red-500 text-sm"
@@ -134,9 +134,9 @@ const CollectionProductSlider = ({ title }) => {
                       />
                     </div>
                     <div className="p-2">
-                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                      <p className="text-lg font-medium h-12 mobile:h-20">
                         <TruncatedText text={product.name} maxLength={33} />
-                      </h2>
+                      </p>
                       <p className="text-gray-500 mt-2">
                         Số lượng mẫu {product?.number_product}
                       </p>
