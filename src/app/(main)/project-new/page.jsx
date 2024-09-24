@@ -49,7 +49,6 @@ export default function Page() {
        setLoading(true);
        try {
          const response = await getNewProducts({ page: currentPage, limit });
-         toast.error(`Page: ${page}, Response: ${JSON.stringify(response)}`);
          if (response.listData.length > 0) {
            setCategories((prev) => [...prev, ...response.listData]);
          } else {
