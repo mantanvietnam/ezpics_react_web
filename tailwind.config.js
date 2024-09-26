@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       backgroundImage: {
         "modal-creating": "url('/images/coffee_1.jpg')",
