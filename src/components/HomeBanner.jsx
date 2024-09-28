@@ -332,9 +332,9 @@ export default function HomeBanner() {
       }}
       className="flex flex-col items-center justify-center gap-8 p-[10px] mobile:p-[50px] rounded-[20px] relative overflow-hidden w-full h-fit">
       <div>
-        <h2 className="text-white font-bold text-nowrap text-lg mobile:text-[2.2rem]">
+        <p className="text-white font-bold text-nowrap text-lg mobile:text-[2.2rem]">
           Bạn muốn thiết kế gì ?
-        </h2>
+        </p>
       </div>
 
       <Search

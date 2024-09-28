@@ -44,6 +44,7 @@ export default function Customize() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [freePro, setFreePro] = useState("");
   const [price, setPrice] = useState(0);
   const [sessPrice, setsessPrice] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -59,7 +60,7 @@ export default function Customize() {
   const [dataStorage, setDataStorage] = useState([]);
   const token = checkTokenCookie();
   const [checkedItems, setCheckedItems] = useState([]);
-
+  console.log(freePro)
   const handleCheckboxChange = (event) => {
     const { id, checked } = event.target;
     setCheckedItems((prev) =>
@@ -96,6 +97,7 @@ export default function Customize() {
           setListWarehouse(response.data.data.listWarehouse);
           setCheckedItems(response.data.data.listWarehouse);
           setTypeUser(response.data.data.type);
+          setFreePro(response.data.data.free_pro);
           setSelectedOptionDisplay(response.data.data.status);
           setSelectedOptionShow(response.data.data.display ? 1 : 0)
         }
@@ -137,6 +139,10 @@ export default function Customize() {
   };
 
   const handleChange = (type, value) => {
+    setState({ ...state, [type]: value });
+  };
+
+  const handleChangeFreePro = (type, value) => {
     setState({ ...state, [type]: value });
   };
 
@@ -267,6 +273,23 @@ export default function Customize() {
 
         <Block className="mt-4">
           <h4 className="font-semibold">Thông tin thiết kế</h4>
+          <div className="flex flex-row justify-between items-center">
+            <label className="block my-4 text-lg">Miễn phí cho EZPICS PRO</label>
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={freePro}
+                onChange={(e) => {
+                  const value = e.target.checked;
+                  setFreePro(value);
+                  handleChangeFreePro("free_pro", value ? 1 : 0);
+                }}
+                className={`appearance-none h-6 w-6 border border-gray-300 rounded-lg ${
+                  freePro ? "bg-red-700" : ""
+                }`}
+              />
+            </div>
+          </div>
           <div className="space-y-4">
             <div>
               <label className="block">Tên thiết kế</label>
@@ -296,13 +319,12 @@ export default function Customize() {
             {typeUser !== "user_edit" && (
               <>
                 <div>
-                  <label className="block">
-                    Trạng thái chỉnh sửa
-                  </label>
+                  <label className="block">Trạng thái chỉnh sửa</label>
                   <select
                     value={selectedOptionDisplay}
                     onChange={handleSelectChangeStatusDisplay}
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  >
                     {optionsDisplay.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -311,13 +333,12 @@ export default function Customize() {
                   </select>
                 </div>
                 <div>
-                  <label className="block">
-                    Chế độ hiển thị
-                  </label>
+                  <label className="block">Chế độ hiển thị</label>
                   <select
                     value={selectedOptionShow}
                     onChange={handleSelectChangeStatusShow}
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  >
                     {optionsShow.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -349,12 +370,14 @@ export default function Customize() {
                     className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                 </div>
+
                 <div>
                   <label className="block">Danh mục</label>
                   <select
                     value={categoryId}
                     onChange={handleSelectChange}
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  >
                     {optionsCategories.map((category) => (
                       <option key={category.value} value={category.value}>
                         {category.label}
@@ -372,8 +395,7 @@ export default function Customize() {
                   />
                 </div>
 
-                {
-                /* <div>
+                {/* <div>
                   <label className="block">Ảnh nền</label>
                   <input
                     onChange={handleChangeInputFile}
@@ -411,7 +433,8 @@ export default function Customize() {
             <Button
               onClick={handleSaveInformation}
               size={SIZE.compact}
-              className="button-red">
+              className="button-red"
+            >
               Lưu thông tin
             </Button>
           </div>
@@ -427,7 +450,8 @@ export default function Customize() {
             position: "absolute",
             zIndex: 20000000000,
             top: "-50px",
-          }}>
+          }}
+        >
           <div className="loadingio-spinner-dual-ring-hz44svgc0ld2">
             <div className="ldio-4qpid53rus92">
               <div></div>

@@ -99,7 +99,7 @@ export default function CenteredLayouts(props) {
           rel="stylesheet"
         />
       </Head>
-      <SessionProvider className="font-poppins">
+      <SessionProvider className="font-montserrat">
         {popupMobile && isVisible && <OpenPopup />}
         <Header
           toggleNavbar={toggleNavbar}
@@ -113,7 +113,7 @@ export default function CenteredLayouts(props) {
               : "opacity-0 pointer-events-none"
           }`}
           onClick={toggleNavbar}></div>
-        <main className="flex pt-[var(--header-height)] font-poppins">
+        <main className="flex pt-[var(--header-height)] font-montserrat">
           <Nav
             isOpen={isNavbarOpen}
             closeNavbar={closeNavbar}

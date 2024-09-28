@@ -68,7 +68,7 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
   return (
     <div className="w-[100%] mx-auto px-4 pt-4">
       <div className="flex justify-between">
-        <h1 className="text-lg mobile:text-2xl font-bold mb-4">{title}</h1>
+        <p className="text-lg mobile:text-2xl font-bold mb-4">{title}</p>
         <Link href={pathString} className="font-bold text-red-500 text-sm">
           Xem thêm
         </Link>
@@ -109,9 +109,9 @@ const DefaultSlideNoApi = ({ products, title, pathString }) => {
                       />
                     </div>
                     <div className="p-2">
-                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                      <p className="text-lg font-medium h-12 mobile:h-20">
                         <TruncatedText text={product.name} maxLength={33} />
-                      </h2>
+                      </p>
                       <p className="text-gray-500 mt-2 text-sm">
                         Đã bán {product.sold}
                       </p>

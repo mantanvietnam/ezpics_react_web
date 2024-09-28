@@ -51,7 +51,7 @@ const TextFonts = () => {
   return (
     <div className="absolute top-0 left-[108px] h-full w-[300px] px-2">
       <div className="relative h-full">
-        <h4 className="py-2">Font</h4>
+        <h4 className="py-2 text-xl">Font</h4>
         <div className="mb-2">
           <input
             type="text"

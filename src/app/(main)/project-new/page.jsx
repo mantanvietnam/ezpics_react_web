@@ -10,12 +10,12 @@ import { getNewProducts } from "@/api/product";
 import { convertSLugUrl } from "@/utils/url";
 import TruncatedText from "@/components/TruncatedText";
 import { getCookie } from "@/utils";
-import { Skeleton, Slider } from "antd";
-import axios from "axios";
-import { useSession } from "next-auth/react";
+import { Skeleton } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -24,10 +24,12 @@ const VND = new Intl.NumberFormat("vi-VN", {
 
 export default function Page() {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1); // Page state
-  const limit = 24; // Items per page
-  const observer = useRef(); // Ref for IntersectionObserver
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 12;
+  const observer = useRef();
+  const loadingRef = useRef(false);
 
   const { data: session } = useSession();
   let dataInforUser;
@@ -40,23 +42,32 @@ export default function Page() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (currentPage) => {
+      if (loadingRef.current) return;
+      loadingRef.current = true;
+      setLoading(true);
       try {
-        const response = await getNewProducts();
-        setCategories(response.listData);
+        const response = await getNewProducts({ page: currentPage, limit });
+        if (response.listData.length > 0) {
+          setCategories((prev) => [...prev, ...response.listData]);
+        } else {
+          setHasMore(false);
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching data:", error);
+        setHasMore(false);
+      } finally {
+        loadingRef.current = false; // Đánh dấu không còn loading
+        setLoading(false);
       }
     };
-    fetchData(categories);
-  }, []);
 
-  console.log("categories", categories);
+    fetchData(page);
+  }, [page]);
 
-  // IntersectionObserver callback
   const handleObserver = (entities) => {
     const target = entities[0];
-    if (target.isIntersecting) {
+    if (target.isIntersecting && hasMore && !loading) {
       setPage((prevPage) => prevPage + 1);
     }
   };
@@ -72,12 +83,12 @@ export default function Page() {
         observer.current.unobserve(loadMoreRef);
       }
     };
-  }, []);
+  }, [hasMore, loading]);
 
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 4, // Show 4 items per row
+    slidesToShow: 4,
     slidesToScroll: 2,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -118,49 +129,36 @@ export default function Page() {
       <div>
         <StyledSlider>
           {loading && page === 1 ? (
-            <Slider {...settings} className="w-full relative">
-              {[...Array(4).keys()].map((index) => (
-                <div key={index}>
-                  <SkeletonCustom>
-                    <Skeleton.Image active />
-                    <Skeleton.Input
-                      active
-                      size="small"
-                      className="w-full pt-4"
-                    />
-                  </SkeletonCustom>
-                </div>
-              ))}
-            </Slider>
+            <Skeleton active paragraph={{ rows: 4 }} />
           ) : (
-            <div className="grid grid-cols-4 grid-flow-row gap-4">
-              {categories?.map((category) => (
+            <div className="grid grid-flow-row grid-cols-4 gap-4">
+              {categories.map((category) => (
                 <Link
                   href={`/category/${convertSLugUrl(category.name)}-${
                     category.id
                   }.html`}
-                  className="slide-content py-2"
+                  className="py-2 slide-content"
                   key={category.id}
                 >
-                  <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="bg-orange-100 overflow-hidden group flex justify-center">
+                  <div className="w-full overflow-hidden bg-white rounded-lg shadow-md cursor-pointer card sm:w-58">
+                    <div className="flex justify-center overflow-hidden bg-orange-100 group">
                       <Image
                         src={category.image}
                         width={300}
                         height={200}
-                        className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className="object-contain h-48 transition-transform duration-300 ease-in-out w-96 group-hover:scale-110"
                         alt={category.name}
                       />
                     </div>
                     <div className="p-2">
-                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                      <h2 className="h-12 text-lg font-medium mobile:h-20">
                         <TruncatedText text={category.name} maxLength={33} />
                       </h2>
-                      <p className="text-gray-500 mt-2 text-sm">
+                      <p className="mt-2 text-sm text-gray-500">
                         Đã bán {category.sold}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 mr-2 font-bold text-lg">
+                        <span className="mr-2 text-lg font-bold text-red-500">
                           {category.sale_price === 0 ||
                           (dataInforUser?.member_pro === 1 &&
                             category?.free_pro)
@@ -177,7 +175,7 @@ export default function Page() {
                   </div>
                 </Link>
               ))}
-              <div id="load-more-ref" className="h-1 w-full"></div>
+              {hasMore && <div id="load-more-ref" className="w-full h-1"></div>}
             </div>
           )}
         </StyledSlider>
@@ -185,4 +183,3 @@ export default function Page() {
     </div>
   );
 }
-8;

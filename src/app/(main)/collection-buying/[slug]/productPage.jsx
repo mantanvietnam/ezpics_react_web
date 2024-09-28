@@ -252,7 +252,7 @@ const Product = (props) => {
         </div>
       ) : (
         <div className="xl:w-1/2 w-full flex flex-col justify-between">
-          <h2 className="xl:text-3xl text-xl font-bold pb-2">{data?.name}</h2>
+          <h1 className="xl:text-3xl text-xl font-bold pb-2">{data?.name}</h1>
           <div className="flex items-center gap-5 bg-slate-100 p-5">
             <div className="text-3xl text-red-500">
               {userLogin?.member_pro === 1

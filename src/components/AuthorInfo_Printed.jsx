@@ -14,7 +14,7 @@ export default function AuthorInfo(props) {
 
   return (
     <div className="flex flex-col gap-5 w-full px-4">
-      <h2 className="text-lg font-semibold">Chi tiết tác giả</h2>
+      <p className="text-lg font-semibold">Chi tiết tác giả</p>
       <div className="flex w-fit md:flex-row flex-col justify-between items-center w-full gap-8">
         <div className="flex justify-start">
           <div className="w-[65px] h-[65px] mr-5 flex items-center justify-center overflow-hidden rounded-full bg-gray-200">
