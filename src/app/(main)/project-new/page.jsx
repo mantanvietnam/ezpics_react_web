@@ -3,6 +3,7 @@
 import {
   SampleNextArrow,
   SamplePrevArrow,
+  SkeletonCustom,
   StyledSlider,
 } from "@/components/Slide/CustomSlide";
 import { getNewProducts } from "@/api/product";
