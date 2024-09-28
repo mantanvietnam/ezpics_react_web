@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, Popover, Select, Slider } from "antd";
 import {
@@ -29,11 +29,19 @@ const EditPrint = ({ stageRef, printedId }) => {
   const [fileType, setFileType] = useState("png");
   const [isProMember, setIsProMember] = useState(true);
 
+  const [selectedImageLayerId, setSelectedImageLayerId] = useState(null);
+
+  const handleImageLayerClick = useCallback((layerId) => {
+    setSelectedImageLayerId(layerId);
+  }, []);
+
+  console.log("selectedImageLayerId:", selectedImageLayerId);
+
   const [exportValue, setExportValue] = useState({
     valueText: "",
   });
 
-  const [imgSrc, setImgSrc] = useState("");
+  const [imgSrcs, setImgSrcs] = useState({});
   const fileInputRef = useRef(null);
 
   const downloadURI = (url, name) => {
@@ -66,39 +74,9 @@ const EditPrint = ({ stageRef, printedId }) => {
     return new Blob([u8arr], { type: mime });
   }
 
-  const handleDownloadPNG = () => {
-    const originalWidth = stageData.design.width;
-    const originalHeight = stageData.design.height;
-
-    const currentWidth = stageRef.current.width();
-    const currentHeight = stageRef.current.height();
-
-    const pixelRatioWidth = originalWidth / currentWidth;
-    const pixelRatioHeight = originalHeight / currentHeight;
-    const pixelRatio = Math.max(pixelRatioWidth, pixelRatioHeight);
-
-    const dataURL = stageRef.current.toDataURL({ pixelRatio }); // Sử dụng pixelRatio từ thanh trượt
-    downloadURI(dataURL, "download.png");
-    // Mở cửa sổ mới với ảnh
-
-    const img = new Image();
-    img.src = imageURL;
-
-    img.onload = () => {
-      const blob = dataURLToBlob(imageURL);
-      const newImgURL = URL.createObjectURL(blob);
-      window.open(newImgURL, "_blank");
-      URL.revokeObjectURL(newImgURL);
-    };
-
-    // console.log(img);
-
-    setIsPopoverOpen(false); // Đóng modal sau khi tải về
-  };
-
   const handleCancel = () => {
     setExportValue({ valueText: "" });
-    setImgSrc("");
+    setImgSrcs({});
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
     }
@@ -137,31 +115,34 @@ const EditPrint = ({ stageRef, printedId }) => {
     (layer) => layer.content.variable && layer.content.variable.trim() !== ""
   );
 
-  function onSelectFile(e) {
+  function onSelectFile(e, layerId) {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const reader = new FileReader();
 
       reader.onloadend = () => {
         const newImgSrc = reader.result?.toString() || "";
-        setImgSrc(newImgSrc);
 
         const img = new Image();
         img.src = newImgSrc;
         img.onload = () => {
-          filteredLayers.forEach((layer) => {
-            if (layer.content.type === "image") {
-              const data = {
-                ...layer.content,
-                banner: newImgSrc,
-                naturalWidth: img.width,
-                naturalHeight: img.height,
-                // width: "auto", // Bỏ kích thước cũ để giữ tỷ lệ
-                // height: "auto", // Bỏ kích thước cũ để giữ tỷ lệ
-              };
-              dispatch(updateLayer({ id: layer.id, data }));
-            }
-          });
+          const layer = filteredLayers.find((layer) => layer.id === layerId);
+
+          if (layer && layer.content.type === "image") {
+            const data = {
+              ...layer.content,
+              banner: newImgSrc,
+              naturalWidth: img.width,
+              naturalHeight: img.height,
+            };
+            dispatch(updateLayer({ id: layer.id, data }));
+
+            // Cập nhật imgSrc mới cho biến ảnh được chọn
+            setImgSrcs((prevImgSrcs) => ({
+              ...prevImgSrcs,
+              [layerId]: newImgSrc,
+            }));
+          }
         };
       };
 
@@ -290,14 +271,15 @@ const EditPrint = ({ stageRef, printedId }) => {
     <div className="mb-[100px] pb-[100px] mobile:pb-0">
       {filteredLayers.map((layer) => {
         if (layer.content?.type === "image") {
+          const imgSrc = imgSrcs[layer.id] || "";
           return (
             <div className="w-[300px] md:w-[400px] h-full" key={layer.id}>
-              <h4 className="text-lg font-bold py-2 text-white">
+              <h4 className="py-2 text-lg font-bold text-white">
                 {layer.content.variableLabel}
               </h4>
-              <div>
+              <div onClick={() => handleImageLayerClick(layer.id)}>
                 {imgSrc ? (
-                  <div className="flex flex-col justify-center items-center bg-gray-100">
+                  <div className="flex flex-col items-center justify-center bg-gray-100">
                     <div
                       ref={buttonEditRef}
                       style={{
@@ -324,27 +306,27 @@ const EditPrint = ({ stageRef, printedId }) => {
                         }}
                       />
                     </div>
-                    <div className="w-full flex justify-between items-center bg-gray-100 p-2 my-2 rounded-lg">
+                    <div className="flex items-center justify-between w-full p-2 my-2 bg-gray-100 rounded-lg">
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                        className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "left")}
                       >
                         <ArrowLeftIcon size={25} />
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                        className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "up")}
                       >
                         <ArrowTopIcon size={25} />
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                        className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "right")}
                       >
                         <ArrowRightIcon size={25} />
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                        className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                         onClick={() => moveLayer(layer.id, "down")}
                       >
                         <ArrowBottomIcon size={25} />
@@ -352,14 +334,14 @@ const EditPrint = ({ stageRef, printedId }) => {
                     </div>
                     <div className="w-[100%] mobile:w-[90%] lg:w-[70%] flex justify-around items-center mb-2">
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
+                        className="flex items-center justify-center p-2 bg-white rounded-lg shadow-lg cursor-pointer"
                         onClick={() => zoomLayer(layer.id, "zoomin")}
                       >
                         <ZoomInIcon size={25} />
                         <p className="pl-2">Phóng to</p>
                       </div>
                       <div
-                        className="flex justify-center items-center bg-white p-2 rounded-lg shadow-lg cursor-pointer"
+                        className="flex items-center justify-center p-2 bg-white rounded-lg shadow-lg cursor-pointer"
                         onClick={() => zoomLayer(layer.id, "zoomout")}
                       >
                         <ZoomOutIcon size={25} />
@@ -368,10 +350,10 @@ const EditPrint = ({ stageRef, printedId }) => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col relative mobile:pt-4">
+                  <div className="relative flex flex-col mobile:pt-4">
                     <form
                       id="file-upload-form"
-                      className="block clear-both mx-auto w-full max-w-600"
+                      className="block clear-both w-full mx-auto max-w-600"
                     >
                       <input
                         className="hidden"
@@ -379,11 +361,11 @@ const EditPrint = ({ stageRef, printedId }) => {
                         type="file"
                         name="fileUpload"
                         accept="image/*"
-                        onChange={onSelectFile}
+                        onChange={(e) => onSelectFile(e, layer.id)}
                       />
 
                       <label
-                        className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                        className="float-left clear-both w-full px-6 py-8 text-center transition-all bg-white border rounded-lg select-none"
                         htmlFor="file-upload"
                         id="file-drag"
                         style={{ cursor: "pointer" }}
@@ -423,7 +405,7 @@ const EditPrint = ({ stageRef, printedId }) => {
         } else if (layer.content?.type === "text") {
           return (
             <div key={layer.id}>
-              <h4 className="text-lg font-bold py-2 text-white">
+              <h4 className="py-2 text-lg font-bold text-white">
                 {layer.content.variableLabel}
               </h4>
               <Input
@@ -431,27 +413,27 @@ const EditPrint = ({ stageRef, printedId }) => {
                 onChange={handleTextChange}
               />
               {exportValue.valueText !== "" && (
-                <div className="flex justify-between items-center bg-gray-100 p-2 my-2 rounded-lg shadow-md">
+                <div className="flex items-center justify-between p-2 my-2 bg-gray-100 rounded-lg shadow-md">
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                    className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "left")}
                   >
                     <ArrowLeftIcon size={25} />
                   </div>
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                    className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "up")}
                   >
                     <ArrowTopIcon size={25} />
                   </div>
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                    className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "right")}
                   >
                     <ArrowRightIcon size={25} />
                   </div>
                   <div
-                    className="flex justify-center items-center bg-white p-2 rounded-full shadow-lg cursor-pointer"
+                    className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
                     onClick={() => moveLayer(layer.id, "down")}
                   >
                     <ArrowBottomIcon size={25} />
@@ -464,7 +446,7 @@ const EditPrint = ({ stageRef, printedId }) => {
       })}
       <div className="flex pb-[100px] mobile:pb-0">
         <button
-          className="flex items-center mt-4 mr-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+          className="flex items-center h-10 p-2 mt-4 mr-2 text-lg font-bold bg-yellow-400 rounded-lg hover:bg-yellow-500"
           onClick={handleNavigateDownload}
         >
           <PrintedIcon size={25} />
@@ -472,7 +454,7 @@ const EditPrint = ({ stageRef, printedId }) => {
         </button>
 
         <button
-          className="flex items-center mt-4 mx-2 p-2 text-lg font-bold h-10 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+          className="flex items-center h-10 p-2 mx-2 mt-4 text-lg font-bold bg-yellow-400 rounded-lg hover:bg-yellow-500"
           onClick={handleCancel}
         >
           <CancelIcon size={25} />

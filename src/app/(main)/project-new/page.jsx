@@ -41,31 +41,29 @@ export default function Page() {
     dataInforUser = null;
   }
 
-  
-   useEffect(() => {
-     const fetchData = async (currentPage) => {
-       if (loadingRef.current) return; 
-       loadingRef.current = true; 
-       setLoading(true);
-       try {
-         const response = await getNewProducts({ page: currentPage, limit });
-         if (response.listData.length > 0) {
-           setCategories((prev) => [...prev, ...response.listData]);
-         } else {
-           setHasMore(false);
-         }
-       } catch (error) {
-         console.error("Error fetching data:", error);
-         setHasMore(false);
-       } finally {
-         loadingRef.current = false; // Đánh dấu không còn loading
-         setLoading(false);
-       }
-     };
+  useEffect(() => {
+    const fetchData = async (currentPage) => {
+      if (loadingRef.current) return;
+      loadingRef.current = true;
+      setLoading(true);
+      try {
+        const response = await getNewProducts({ page: currentPage, limit });
+        if (response.listData.length > 0) {
+          setCategories((prev) => [...prev, ...response.listData]);
+        } else {
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setHasMore(false);
+      } finally {
+        loadingRef.current = false; // Đánh dấu không còn loading
+        setLoading(false);
+      }
+    };
 
-     fetchData(page);
-   }, [page]);
-
+    fetchData(page);
+  }, [page]);
 
   const handleObserver = (entities) => {
     const target = entities[0];
@@ -133,34 +131,34 @@ export default function Page() {
           {loading && page === 1 ? (
             <Skeleton active paragraph={{ rows: 4 }} />
           ) : (
-            <div className="grid grid-cols-4 grid-flow-row gap-4">
+            <div className="grid grid-flow-row grid-cols-4 gap-4">
               {categories.map((category) => (
                 <Link
                   href={`/category/${convertSLugUrl(category.name)}-${
                     category.id
                   }.html`}
-                  className="slide-content py-2"
+                  className="py-2 slide-content"
                   key={category.id}
                 >
-                  <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
-                    <div className="bg-orange-100 overflow-hidden group flex justify-center">
+                  <div className="w-full overflow-hidden bg-white rounded-lg shadow-md cursor-pointer card sm:w-58">
+                    <div className="flex justify-center overflow-hidden bg-orange-100 group">
                       <Image
                         src={category.image}
                         width={300}
                         height={200}
-                        className="object-contain h-48 w-96 transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        className="object-contain h-48 transition-transform duration-300 ease-in-out w-96 group-hover:scale-110"
                         alt={category.name}
                       />
                     </div>
                     <div className="p-2">
-                      <h2 className="text-lg font-medium h-12 mobile:h-20">
+                      <h2 className="h-12 text-lg font-medium mobile:h-20">
                         <TruncatedText text={category.name} maxLength={33} />
                       </h2>
-                      <p className="text-gray-500 mt-2 text-sm">
+                      <p className="mt-2 text-sm text-gray-500">
                         Đã bán {category.sold}
                       </p>
                       <div className="mt-2">
-                        <span className="text-red-500 mr-2 font-bold text-lg">
+                        <span className="mr-2 text-lg font-bold text-red-500">
                           {category.sale_price === 0 ||
                           (dataInforUser?.member_pro === 1 &&
                             category?.free_pro)
@@ -177,7 +175,7 @@ export default function Page() {
                   </div>
                 </Link>
               ))}
-              {hasMore && <div id="load-more-ref" className="h-1 w-full"></div>}
+              {hasMore && <div id="load-more-ref" className="w-full h-1"></div>}
             </div>
           )}
         </StyledSlider>
