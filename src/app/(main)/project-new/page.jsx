@@ -51,6 +51,8 @@ export default function Page() {
     fetchData(categories);
   }, []);
 
+  console.log("categories", categories);
+
   // IntersectionObserver callback
   const handleObserver = (entities) => {
     const target = entities[0];
