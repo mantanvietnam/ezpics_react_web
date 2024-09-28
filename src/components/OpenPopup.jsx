@@ -40,7 +40,7 @@ const OpenPopup = () => {
   return (
     <a
       href={linkPrint}
-      className="h-10 bg-slate-900 text-white flex items-center pl-3 text-sm font-montserrat">
+      className="h-10 bg-slate-900 text-white flex items-center pl-3 text-sm font-googleSans">
       Mở ứng dụng
     </a>
   );

@@ -1,12 +1,12 @@
 import DefaultSlide from "./DefaultSlide";
-import { getNewProducts } from "@/api/product";
+import { listProductRandomAPI } from "@/api/product";
 
 const NewProductsSlider = () => {
   return (
     <DefaultSlide
       apiAction={async () => {
         // "use server";
-        const products = await getNewProducts();
+        const products = await listProductRandomAPI();
         return products;
       }}
       title="Mẫu thiết kế mới nhất"
