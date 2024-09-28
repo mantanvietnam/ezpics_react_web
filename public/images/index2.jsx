@@ -17,6 +17,10 @@ const images = {
   transaction: require("./history.png"),
   renew: require("./repeater.png"),
   painter: require("./painter.png"),
+  tools: require("./tools.png"),
+  compression: require("./compression.png"),
+  changeSize: require("./change-size.png"),
+  frameAvatar: require("./frame-avatar.png"),
 };
 
 export const proImages = [
@@ -53,7 +57,6 @@ export const contactInfo = {
   phone: require("./phone-call.png"),
   bg: require("./bg-designer.png"),
   warning: require("./warning.png"),
-
 };
 
 export default images;

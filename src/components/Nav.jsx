@@ -60,16 +60,18 @@ const Nav = ({
 
   const navItems = useMemo(
     () => [
-      { href: "/", label: "Trang chủ", icon: images.home },
-      { href: "/collection-all", label: "Bộ sưu tập", icon: images.collection },
-      { href: "/remove", label: "Xóa nền Ezpics", icon: images.remove },
-      { href: "/project", label: "Danh mục", icon: images.category },
+      // { href: "/", label: "Trang chủ", icon: images.home },
+      { href: "/remove", label: "Xóa nền", icon: images.remove },
+      { href: "#", label: "Nén hình ảnh", icon: images.compression },
+      { href: "#", label: "Thay đổi kích thước", icon: images.changeSize },
+      { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
     ],
     []
   );
 
   const userFuncs = useMemo(
     () => [
+      { href: "/project", label: "Danh mục", icon: images.category },
       {
         href: "/your-design/purchase-form",
         label: "Thiết kế của bạn",
@@ -121,17 +123,18 @@ const Nav = ({
     <div
       className={`fixed left-0 top-[var(--header-height)] h-[calc(100%-64px)] bg-white border-r border-gray-300 w-[250px] p-5 box-border flex flex-col gap-2 z-50 transition-transform duration-300 overflow-y-auto ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      }`}>
+      }`}
+    >
       {isAuthenticated ? (
-        <div className="font-bold text-gray-800 no-underline py-2 border-b border-gray-300 cursor-pointer">
-          <div className="relative flex justify-around items-center">
-            <div className="w-10 h-10 rounded-full overflow-hidden m-2">
+        <div className="py-2 font-bold text-gray-800 no-underline border-b border-gray-300 cursor-pointer">
+          <div className="relative flex items-center justify-around">
+            <div className="w-10 h-10 m-2 overflow-hidden rounded-full">
               <Image
                 src={dataInforUser?.avatar}
                 alt=""
                 width={40}
                 height={40}
-                className="w-full h-full object-cover rounded-full"
+                className="object-cover w-full h-full rounded-full"
               />
             </div>
             {isProMember && (
@@ -151,7 +154,7 @@ const Nav = ({
                   alt=""
                   width={20}
                   height={20}
-                  className="rounded-full pr-1"
+                  className="pr-1 rounded-full"
                 />{" "}
                 <p>: {VND.format(dataInforUser?.account_balance)}</p>
               </div>
@@ -161,14 +164,14 @@ const Nav = ({
                   alt=""
                   width={20}
                   height={20}
-                  className="rounded-full pr-1"
+                  className="pr-1 rounded-full"
                 />{" "}
                 <p>: {dataInforUser?.ecoin} eCoin</p>
               </div>
             </div>
           </div>
           <div className="w-full mt-3" onClick={() => setOpenRecharge(true)}>
-            <button className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 flex h-12 items-center text-center justify-center text-sm text-white font-bold rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+            <button className="flex items-center justify-center w-full h-12 text-sm font-bold text-center text-white transition duration-300 ease-in-out transform rounded-lg shadow-lg bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105">
               <p className="flex items-center space-x-2">
                 <img src="/images/crown.png" alt="" className="w-5 h-5" />
                 <span className="text-lg">Nạp tiền</span>
@@ -180,19 +183,31 @@ const Nav = ({
         <div>
           <Link
             href={"/sign-in"}
-            className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
+            className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer"
+          >
             <UserOutlined className="text-2xl p-[10px] bg-gray-300 rounded-full" />
             <p>Đăng nhập</p>
           </Link>
         </div>
       )}
       <div className="flex flex-col gap-[15px]">
+        <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2">
+          <Image
+            src={images.tools}
+            alt=""
+            width={20}
+            height={20}
+            className="w-[20px] h-[20px]"
+          />
+          Công cụ
+        </div>
         {navItems.map((navItem, index) => (
           <Link
             key={index}
             href={navItem.href}
             className={`rounded-lg ${activeItem === index && "bg-gray-300"}`}
-            onClick={() => handleNavItem(index)}>
+            onClick={() => handleNavItem(index)}
+          >
             <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
               <Image
                 src={navItem.icon}
@@ -214,10 +229,12 @@ const Nav = ({
               key={index}
               href={userFunc.href}
               className={`rounded-lg ${activeFunc === index && "bg-gray-300"}`}
-              onClick={() => hanldeFuncItem(index)}>
+              onClick={() => hanldeFuncItem(index)}
+            >
               <div
                 className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer"
-                onClick={userFunc.onClick}>
+                onClick={userFunc.onClick}
+              >
                 <Image
                   src={userFunc.icon}
                   alt=""

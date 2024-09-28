@@ -476,19 +476,19 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
   const menuItems = [
     { href: "/", label: "Trang chủ", hiddenOn: "sm" },
     { href: "/new-product", label: "Thiết kế mới", hiddenOn: "lg" },
-    { href: "/pricing-compare", label: "Bảng giá", hiddenOn: "lg" },
+    { href: "/project", label: "Chủ đề", hiddenOn: "lg" },
+    { href: "/collection-all", label: "Bộ sưu tập", hiddenOn: "lg" },
     {
       label: "Hướng dẫn",
       hiddenOn: "xl",
-      subMenu: [
-        {
-          href: "https://www.youtube.com/watch?v=7zSlqhcsHLI&list=PLngg14zy8vvw-hSi3ly3ehls1RHTWgQdJ",
-          label: "Điện thoại",
-        },
-        { href: "/guide/desktop", label: "Máy tính" },
-      ],
+      href: "https://www.youtube.com/watch?v=7zSlqhcsHLI&list=PLngg14zy8vvw-hSi3ly3ehls1RHTWgQdJ",
     },
     { href: "/post", label: "Tin tức", hiddenOn: "xl" },
+    {
+      href: "https://www.facebook.com/ezpicsvn",
+      label: "Hỗ trợ",
+      hiddenOn: "xl",
+    },
   ];
 
   const actionIcons = [
@@ -516,16 +516,16 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
   const itemsDropdowUser = [
     {
       label: (
-        <div className="flex items-center space-x-4 p-5">
-          <div className="w-10 h-10 rounded-full overflow-hidden">
+        <div className="flex items-center p-5 space-x-4">
+          <div className="w-10 h-10 overflow-hidden rounded-full">
             <img
-              className="w-full h-full object-cover"
+              className="object-cover w-full h-full"
               alt="User Avatar"
               src={dataInforUser?.avatar}
             />
           </div>
           <div>
-            <p className="font-bold text-lg">{dataInforUser?.name}</p>
+            <p className="text-lg font-bold">{dataInforUser?.name}</p>
             <p>
               Tài khoản:{" "}
               <span className="text-green-500">{formattedBalance}₫</span>
@@ -665,16 +665,16 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
   return (
     <SessionProvider>
       <div className="fixed w-full z-50 flex justify-between h-[--header-height] px-1 mobile:px-6 shadow-xl bg-white">
-        <div className="flex justify-center items-center">
+        <div className="flex items-center justify-center">
           <div className="p-1 mr-4 icon-primary mobile:p-3">
             <button onClick={() => toggleNavbar()}>
               <BarsOutlined style={{ fontSize: "20px" }} />
             </button>
           </div>
-          <div className="logo flex items-center justify-center">
+          <div className="flex items-center justify-center logo">
             <Link href="/" className="flex flex-center">
               <Image
-                className="object-contain rounded_image inline"
+                className="inline object-contain rounded_image"
                 priority={true}
                 src={images.logo}
                 style={{ maxWidth: "40px", maxHeight: "40px" }}
@@ -704,14 +704,14 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                   ) : (
                     <div>
                       <button
-                        className="primary_btn pl-10 whitespace-nowrap flex items-center"
+                        className="flex items-center pl-10 primary_btn whitespace-nowrap"
                         onClick={() => toggleSubmenu()}
                       >
                         {menuItem.label}
                         <DownOutlined className="ml-2" />
                       </button>
                       {submenuVisible && (
-                        <div className="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                        <div className="absolute z-10 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg">
                           {menuItem.subMenu.map((subItem, subIndex) => (
                             <Link
                               key={subIndex}
@@ -730,7 +730,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             </div>
             <div className="relative">
               <button
-                className="text-xl pl-10 xl:hidden"
+                className="pl-10 text-xl xl:hidden"
                 onClick={() => toggleDropdown()}
               >
                 <EllipsisOutlined />
@@ -751,7 +751,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                       ) : (
                         <div key={index} className="relative">
                           <button
-                            className="block px-4 py-2 text-black hover:bg-gray-100 whitespace-nowrap items-center w-full text-left"
+                            className="items-center block w-full px-4 py-2 text-left text-black hover:bg-gray-100 whitespace-nowrap"
                             onClick={() => toggleSubmenu()}
                           >
                             {menuItem.label}
@@ -779,13 +779,13 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           </div>
         </div>
 
-        <div className="action flex justify-center items-center">
-          <button
+        <div className="flex items-center justify-center action">
+          {/* <button
             className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white p-[6px] mobile:px-[1.25rem] py-[0.5rem] rounded-[0.25rem] whitespace-nowrap text-xs mobile:text-base"
             onClick={() => handleAddNewInvitation()}
           >
             Tạo thiệp mời
-          </button>
+          </button> */}
 
           <button
             className="bg-red-700 text-white whitespace-nowrap text-xs mobile:text-base p-[6px] mobile:px-[1.25rem] rounded-[0.25rem] py-[0.5rem] ml-2 mobile:ml-6"
@@ -882,9 +882,9 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 }}
               >
                 <Space>
-                  <div className="w-10 h-10 rounded-full overflow-hidden m-5">
+                  <div className="w-10 h-10 m-5 overflow-hidden rounded-full">
                     <img
-                      className="w-full h-full object-cover rounded-full"
+                      className="object-cover w-full h-full rounded-full"
                       alt="User Avatar"
                       src={dataInforUser?.avatar}
                     />
@@ -895,7 +895,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
           ) : (
             <div>
               <button
-                className="flex items-center border-red-600 text-red-600 border-2 roundedp p-2 mobile:px-5 py-2 mx-2 mobile:mx-4 whitespace-nowrap text-xs mobile:text-base"
+                className="flex items-center p-2 py-2 mx-2 text-xs text-red-600 border-2 border-red-600 roundedp mobile:px-5 mobile:mx-4 whitespace-nowrap mobile:text-base"
                 onClick={() => {
                   // const path = window.location.pathname || '/';
                   // const redirectUrl = encodeURIComponent(path);
@@ -998,11 +998,11 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               />
             </div>
           ) : (
-            <div className="flex flex-col relative pt-4">
+            <div className="relative flex flex-col pt-4">
               <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
               <form
                 id="file-upload-form"
-                className="block clear-both mx-auto w-full max-w-600"
+                className="block clear-both w-full mx-auto max-w-600"
                 style={{ marginTop: 40 }}
               >
                 <input
@@ -1015,7 +1015,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 />
 
                 <label
-                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  className="float-left clear-both w-full px-6 py-8 text-center transition-all bg-white border rounded-lg select-none"
                   htmlFor="file-upload"
                   id="file-drag"
                   style={{ height: 200, cursor: "pointer" }}
@@ -1059,7 +1059,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             {selectedFile !== null ? (
               <div>
                 <button
-                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
                   style={{
                     cursor: "pointer",
                     display: "flex",
@@ -1090,7 +1090,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             ) : (
               <div>
                 <button
-                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
                   style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
                   disabled
                 >
@@ -1099,7 +1099,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               </div>
             )}
           </div>
-          <div className="px-4 text-center text-sm text-gray-500">
+          <div className="px-4 text-sm text-center text-gray-500">
             <p>
               Nếu bạn chưa có thông tin, hãy tham khảo
               <a href="#" className="block text-purple-600 no-underline">
@@ -1144,11 +1144,11 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               />
             </div>
           ) : (
-            <div className="flex flex-col relative pt-4">
+            <div className="relative flex flex-col pt-4">
               <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
               <form
                 id="file-upload-form"
-                className="block clear-both mx-auto w-full max-w-600"
+                className="block clear-both w-full mx-auto max-w-600"
                 style={{ marginTop: 40 }}
               >
                 <input
@@ -1161,7 +1161,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 />
 
                 <label
-                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  className="float-left clear-both w-full px-6 py-8 text-center transition-all bg-white border rounded-lg select-none"
                   htmlFor="file-upload"
                   id="file-drag"
                   style={{ height: 200, cursor: "pointer" }}
@@ -1205,7 +1205,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             {selectedFile !== null ? (
               <div>
                 <button
-                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
                   style={{
                     cursor: "pointer",
                     display: "flex",
@@ -1236,7 +1236,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             ) : (
               <div>
                 <button
-                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
                   style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
                   disabled
                 >
@@ -1245,7 +1245,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               </div>
             )}
           </div>
-          <div className="px-4 text-center text-sm text-gray-500">
+          <div className="px-4 text-sm text-center text-gray-500">
             <p>
               Nếu bạn chưa có thông tin, hãy tham khảo
               <a href="#" className="block text-purple-600 no-underline">
@@ -1290,11 +1290,11 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               />
             </div>
           ) : (
-            <div className="flex flex-col relative pt-4">
+            <div className="relative flex flex-col pt-4">
               <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
               <form
                 id="file-upload-form"
-                className="block clear-both mx-auto w-full max-w-600"
+                className="block clear-both w-full mx-auto max-w-600"
                 style={{ marginTop: 40 }}
               >
                 <input
@@ -1307,7 +1307,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 />
 
                 <label
-                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  className="float-left clear-both w-full px-6 py-8 text-center transition-all bg-white border rounded-lg select-none"
                   htmlFor="file-upload"
                   id="file-drag"
                   style={{ height: 200, cursor: "pointer" }}
@@ -1351,7 +1351,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             {selectedFile !== null ? (
               <div>
                 <button
-                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
                   style={{
                     cursor: "pointer",
                     display: "flex",
@@ -1382,7 +1382,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             ) : (
               <div>
                 <button
-                  className="font-inherit text-lg p-2 mt-3 w-full font-medium bg-red-500 rounded-md text-white border-0"
+                  className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
                   style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
                   disabled
                 >
@@ -1391,7 +1391,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               </div>
             )}
           </div>
-          <div className="px-4 text-center text-sm text-gray-500">
+          <div className="px-4 text-sm text-center text-gray-500">
             <p>
               Nếu bạn chưa có thông tin, hãy tham khảo
               <a href="#" className="block text-purple-600 no-underline">
