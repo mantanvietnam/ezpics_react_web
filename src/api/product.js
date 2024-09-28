@@ -8,6 +8,14 @@ export const getNewProducts = async (data) => {
   return response.data;
 };
 
+export const listProductRandomAPI = async (data) => {
+  const response = await axios.post(
+    "https://apis.ezpics.vn/apis/listProductRandomAPI",
+    data
+  );
+  return response.data;
+};
+
 export const getLogoProductApi = async (data) => {
   const response = await axios.post(
     "https://apis.ezpics.vn/apis/getProductByCategoryAPI",

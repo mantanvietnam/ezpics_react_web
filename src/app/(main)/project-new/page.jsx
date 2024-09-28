@@ -3,19 +3,17 @@
 import {
   SampleNextArrow,
   SamplePrevArrow,
-  SkeletonCustom,
   StyledSlider,
 } from "@/components/Slide/CustomSlide";
 import { getNewProducts } from "@/api/product";
 import { convertSLugUrl } from "@/utils/url";
 import TruncatedText from "@/components/TruncatedText";
 import { getCookie } from "@/utils";
-import { Skeleton } from "antd";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -24,12 +22,12 @@ const VND = new Intl.NumberFormat("vi-VN", {
 
 export default function Page() {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Đặt false ban đầu để không loading liên tục
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 12;
   const observer = useRef();
-  const loadingRef = useRef(false);
+  const loadingRef = useRef(false); // Để kiểm tra trạng thái tải
 
   const { data: session } = useSession();
   let dataInforUser;
@@ -41,39 +39,45 @@ export default function Page() {
     dataInforUser = null;
   }
 
-  useEffect(() => {
-    const fetchData = async (currentPage) => {
-      if (loadingRef.current) return;
-      loadingRef.current = true;
-      setLoading(true);
-      try {
-        const response = await getNewProducts({ page: currentPage, limit });
-        if (response.listData.length > 0) {
-          setCategories((prev) => [...prev, ...response.listData]);
-        } else {
-          setHasMore(false);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setHasMore(false);
-      } finally {
-        loadingRef.current = false; // Đánh dấu không còn loading
-        setLoading(false);
+  // API call khi lướt đến cuối trang
+  const fetchData = async (currentPage) => {
+    if (loadingRef.current || !hasMore) return; // Nếu đang loading hoặc không còn dữ liệu thì không gọi API
+    loadingRef.current = true;
+    setLoading(true);
+    try {
+      const response = await getNewProducts({ page: currentPage, limit });
+      if (response.listData.length > 0) {
+        setCategories((prev) => [...prev, ...response.listData]);
+      } else {
+        setHasMore(false); // Đánh dấu đã hết dữ liệu
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+      loadingRef.current = false;
+    }
+  };
 
-    fetchData(page);
-  }, [page]);
-
-  const handleObserver = (entities) => {
-    const target = entities[0];
-    if (target.isIntersecting && hasMore && !loading) {
+  // Observer callback, chỉ gọi API khi lướt đến cuối trang
+  const handleObserver = (entries) => {
+    const target = entries[0];
+    if (target.isIntersecting && hasMore && !loadingRef.current) {
       setPage((prevPage) => prevPage + 1);
     }
   };
 
   useEffect(() => {
-    observer.current = new IntersectionObserver(handleObserver);
+    if (page > 1) {
+      fetchData(page);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    observer.current = new IntersectionObserver(handleObserver, {
+      threshold: 1.0,
+    });
     const loadMoreRef = document.querySelector("#load-more-ref");
     if (loadMoreRef) {
       observer.current.observe(loadMoreRef);
@@ -83,7 +87,7 @@ export default function Page() {
         observer.current.unobserve(loadMoreRef);
       }
     };
-  }, [hasMore, loading]);
+  }, [hasMore]);
 
   const settings = {
     infinite: true,
@@ -129,7 +133,7 @@ export default function Page() {
       <div>
         <StyledSlider>
           {loading && page === 1 ? (
-            <Skeleton active paragraph={{ rows: 4 }} />
+            <SkeletonCustom />
           ) : (
             <div className="grid grid-flow-row grid-cols-4 gap-4">
               {categories.map((category) => (
@@ -175,7 +179,18 @@ export default function Page() {
                   </div>
                 </Link>
               ))}
-              {hasMore && <div id="load-more-ref" className="w-full h-1"></div>}
+              {hasMore && (
+                <div
+                  id="load-more-ref"
+                  className="w-full h-10 flex justify-center items-center"
+                >
+                  {loading && (
+                    <div className="fixed inset-0 flex justify-center items-center">
+                      <CircularProgress size={40} />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </StyledSlider>
