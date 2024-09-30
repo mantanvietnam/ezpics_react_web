@@ -475,12 +475,12 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
 
   const menuItems = [
     { href: "/", label: "Trang chủ", hiddenOn: "sm" },
-    { href: "/new-product", label: "Thiết kế mới", hiddenOn: "lg" },
+    { href: "/new-product", label: "Thiết kế mới", hiddenOn: "md" },
     { href: "/project", label: "Chủ đề", hiddenOn: "lg" },
     { href: "/collection-all", label: "Bộ sưu tập", hiddenOn: "lg" },
     {
       label: "Hướng dẫn",
-      hiddenOn: "xl",
+      hiddenOn: "lg",
       href: "https://www.youtube.com/watch?v=7zSlqhcsHLI&list=PLngg14zy8vvw-hSi3ly3ehls1RHTWgQdJ",
     },
     { href: "/post", label: "Tin tức", hiddenOn: "xl" },
@@ -683,8 +683,8 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             </Link>
           </div>
 
-          <div className="relative items-center hidden md:flex">
-            <div className="flex overflow-hidden">
+          <div className="relative items-center md:flex">
+            <div className="hidden overflow-hidden sm:flex">
               {menuItems.map((menuItem, index) => (
                 <div
                   key={index}
@@ -730,7 +730,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
             </div>
             <div className="relative">
               <button
-                className="pl-10 text-xl xl:hidden"
+                className="pl-4 text-xl mobile:pl-10 xl:hidden"
                 onClick={() => toggleDropdown()}
               >
                 <EllipsisOutlined />
