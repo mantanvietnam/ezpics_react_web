@@ -23,18 +23,22 @@ const ImageCompressorComparison = () => {
   const [beforeImage, setBeforeImage] = useState(null);
   const [afterImage, setAfterImage] = useState(null);
   const [compressedBlob, setCompressedBlob] = useState(null);
+  const [originalSize, setOriginalSize] = useState(null);
+  const [compressedSize, setCompressedSize] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       setBeforeImage(URL.createObjectURL(file));
+      setOriginalSize(file.size);
 
       new Compressor(file, {
-        quality: 0.6,
+        quality: 0.8,
         success: (compressedResult) => {
           setAfterImage(URL.createObjectURL(compressedResult));
           setCompressedBlob(compressedResult);
+          setCompressedSize(compressedResult.size);
         },
         error: (err) => {
           console.error("Compression failed:", err.message);
@@ -57,6 +61,26 @@ const ImageCompressorComparison = () => {
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
+
+  const formatFileSize = (bytes) => {
+    if (bytes < 1024) return bytes + " B";
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + " KB";
+    else return (bytes / 1048576).toFixed(2) + " MB";
+  };
+
+  const calculateReduction = () => {
+    if (originalSize && compressedSize) {
+      const reduction = originalSize - compressedSize;
+      const percentage = ((reduction / originalSize) * 100).toFixed(2);
+      return {
+        size: formatFileSize(reduction),
+        percentage: percentage,
+      };
+    }
+    return null;
+  };
+
+  const reduction = calculateReduction();
 
   return (
     <div className="w-[90%]">
@@ -113,6 +137,16 @@ const ImageCompressorComparison = () => {
               Download Compressed
             </button>
           </div>
+          {reduction && (
+            <div className="flex w-[50%] items-center mt-4 overflow-hidden text-white bg-teal-600 rounded-lg">
+              <div className="px-4 py-2 text-2xl font-bold bg-teal-700">
+                -{reduction.percentage}%
+              </div>
+              <div className="px-4 py-2">
+                Tổng dung lượng giảm -{reduction.size}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

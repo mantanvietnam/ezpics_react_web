@@ -35,8 +35,6 @@ const EditPrint = ({ stageRef, printedId }) => {
     setSelectedImageLayerId(layerId);
   }, []);
 
-  console.log("selectedImageLayerId:", selectedImageLayerId);
-
   const [exportValue, setExportValue] = useState({
     valueText: "",
   });
