@@ -5,6 +5,7 @@ import {
   SamplePrevArrow,
   StyledSlider,
 } from "@/components/Slide/CustomSlide";
+import { SkeletonCustom } from "@/components/Slide/CustomSlide";
 import { getNewProducts } from "@/api/product";
 import { convertSLugUrl } from "@/utils/url";
 import TruncatedText from "@/components/TruncatedText";
@@ -182,10 +183,10 @@ export default function Page() {
               {hasMore && (
                 <div
                   id="load-more-ref"
-                  className="w-full h-10 flex justify-center items-center"
+                  className="flex items-center justify-center w-full h-10"
                 >
                   {loading && (
-                    <div className="fixed inset-0 flex justify-center items-center">
+                    <div className="fixed inset-0 flex items-center justify-center">
                       <CircularProgress size={40} />
                     </div>
                   )}
