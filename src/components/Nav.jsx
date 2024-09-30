@@ -62,7 +62,11 @@ const Nav = ({
     () => [
       // { href: "/", label: "Trang chủ", icon: images.home },
       { href: "/remove", label: "Xóa nền", icon: images.remove },
-      { href: "#", label: "Nén hình ảnh", icon: images.compression },
+      {
+        href: "/image-compression",
+        label: "Nén hình ảnh",
+        icon: images.compression,
+      },
       { href: "#", label: "Thay đổi kích thước", icon: images.changeSize },
       { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
     ],
