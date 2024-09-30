@@ -82,7 +82,7 @@ export default function DefaultPage({ getData, searchValue }) {
   };
 
   const onPrintedPhoto = async (productId) => {
-    console.log(productId);
+    router.push(`/printed/${productId}`);
   };
 
   const onDownloadProduct = async (imageUrl) => {
