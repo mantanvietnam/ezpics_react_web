@@ -6,11 +6,16 @@ import Link from "next/link";
 import images from "../../public/images/index2";
 import ModalUpPro from "./ModalUpPro";
 import ModalUpDesigner from "./ModalUpDesigner";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import ModalRecharge from "./ModelRecharge";
-import { checkAvailableLogin, getCookie } from "@/utils";
+import { checkAvailableLogin, getCookie, checkTokenCookie } from "@/utils";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { Modal, Spin } from "antd";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
@@ -26,6 +31,7 @@ const Nav = ({
   setActiveFunc,
   hanldeFuncItem,
 }) => {
+  const router = useRouter();
   const [openPro, setOpenPro] = useState(false);
   const [openDesigner, setOpenDesigner] = useState(false);
   const [openRecharge, setOpenRecharge] = useState(false);
@@ -68,7 +74,7 @@ const Nav = ({
         icon: images.compression,
       },
       { href: "#", label: "Thay đổi kích thước", icon: images.changeSize },
-      { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
+      // { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
     ],
     []
   );
@@ -122,6 +128,92 @@ const Nav = ({
       setActiveItem(null);
     }
   }, [navItems, pathname, userFuncs]);
+
+  const [openModalCreatingInvitation, setOpenModalCreatingInvitation] =
+    useState(false);
+
+  const handleCanCelModalCreatingInvitation = () => {
+    setOpenModalCreatingInvitation(false);
+    setSelectedFile(false);
+    document.body.style.overflowY = "auto";
+  };
+
+  const handleAddNewInvitation = () => {
+    if (isAuthenticated) {
+      setOpenModalCreatingInvitation(!openModalCreatingInvitation);
+    } else {
+      router.push("/sign-in");
+    }
+  };
+
+  //Luu url file
+  const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
+    useState(false);
+
+  const [urlSelectedFile, setUrlSelectedFile] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleFileChange = (event) => {
+    const fileInput = event.target;
+    const files = fileInput.files;
+
+    if (files.length > 0) {
+      const file = files[0];
+
+      // Lưu trữ thông tin về tệp tin trong trạng thái của component
+      setSelectedFile(file);
+      setUrlSelectedFile(URL.createObjectURL(file));
+      // Bạn có thể thực hiện các xử lý khác tại đây
+    }
+  };
+
+  //Button tao khung
+  const handleCreateInvitation = async (e) => {
+    e.preventDefault();
+    setLoadingButtonModalCreate(true);
+
+    try {
+      if (selectedFile) {
+        const response = await axios.post(
+          `https://apis.ezpics.vn/apis/createProductAPI`,
+          {
+            token: checkTokenCookie(),
+            type: "user_series",
+            category_id: 0,
+            sale_price: 0,
+            name: `Mẫu thiệp mời ${Math.floor(Math.random() * 100001)}`,
+            background: selectedFile,
+            type_editor: 1,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response && response.data && response.data.code === 0) {
+          setLoadingButtonModalCreate(false);
+          document.body.style.overflowY = "auto";
+          toast.success("Tạo khung avatar thành công, xin chờ giây lát", {
+            autoClose: 500,
+          });
+
+          router.push(`/invitation/${response.data.product_id}`);
+        } else {
+          // Handle unexpected response structure or error code
+          console.error("Unexpected response:", response);
+          setLoadingButtonModalCreate(false);
+        }
+      } else {
+        console.log("Không thấy ảnh");
+        setLoadingButtonModalCreate(false);
+      }
+    } catch (error) {
+      console.error("Error creating custom product:", error);
+      // Handle error (e.g., show error message to the user)
+      setLoadingButtonModalCreate(false);
+    }
+  };
 
   return (
     <div
@@ -224,6 +316,18 @@ const Nav = ({
             </div>
           </Link>
         ))}
+        <div className={`rounded-lg`} onClick={() => handleAddNewInvitation()}>
+          <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
+            <Image
+              src={images.frameAvatar}
+              alt=""
+              width={20}
+              height={20}
+              className="w-[20px] h-[20px]"
+            />
+            Tạo khung avatar
+          </div>
+        </div>
       </div>
 
       {isAuthenticated ? (
@@ -263,6 +367,147 @@ const Nav = ({
         handleCancel={handleCancelDesigner}
       />
       <ModalRecharge open={openRecharge} handleCancel={handleCancelRecharge} />
+
+      <Modal
+        open={openModalCreatingInvitation}
+        onCancel={handleCanCelModalCreatingInvitation}
+        footer={null}
+        width={"30%"}
+      >
+        <div className="bg-modal-creating rounded-lg overflow-hidden bg-no-repeat bg-cover w-full h-[180px]">
+          <h1 className="text-2xl font-bold text-[#735400] ml-[14px] mt-10">
+            Bắt đầu tạo mẫu thiệp mời
+          </h1>
+          <br></br>
+          <h1 style={{ fontSize: 15 }} className="ml-[22px]">
+            Hãy điền đầy đủ thông tin trước khi tạo nhé
+          </h1>
+        </div>
+        {selectedFile ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "24px",
+            }}
+          >
+            <img
+              src={urlSelectedFile}
+              alt=""
+              style={{
+                width: 200,
+                height: "auto",
+                alignSelf: "center",
+              }}
+            />
+          </div>
+        ) : (
+          <div className="relative flex flex-col pt-4">
+            <h1 className="text-xl text-[#606365]">Ảnh nền</h1>
+            <form
+              id="file-upload-form"
+              className="block clear-both w-full mx-auto max-w-600"
+              style={{ marginTop: 40 }}
+            >
+              <input
+                className="hidden"
+                id="file-upload"
+                type="file"
+                name="fileUpload"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+
+              <label
+                className="float-left clear-both w-full px-6 py-8 text-center transition-all bg-white border rounded-lg select-none"
+                htmlFor="file-upload"
+                id="file-drag"
+                style={{ height: 200, cursor: "pointer" }}
+              >
+                <img id="file-image" src="#" alt="Preview" className="hidden" />
+                <div id="">
+                  <img
+                    src="/images/direct-download.png"
+                    alt=""
+                    style={{
+                      width: 30,
+                      height: 30,
+                      alignSelf: "center",
+                      margin: "0 auto",
+                      marginBottom: "2%",
+                    }}
+                  />
+                  <div id="notimage" className="hidden">
+                    Hãy chọn ảnh
+                  </div>
+                  <span id="file-upload-btn" className="">
+                    {selectedFile === null ? "Chọn ảnh" : "Chọn lại"}
+                  </span>
+                </div>
+                <div id="response" className="hidden">
+                  <div id="messages"></div>
+                  <progress className="progress" id="file-progress" value="0">
+                    <span>0</span>%
+                  </progress>
+                </div>
+              </label>
+            </form>
+          </div>
+        )}
+        <div>
+          {selectedFile !== null ? (
+            <div>
+              <button
+                className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onClick={(e) => handleCreateInvitation(e)}
+              >
+                {loadingButtonModalCreate ? (
+                  <span>
+                    <Spin
+                      indicator={
+                        <LoadingOutlined
+                          style={{
+                            fontSize: 24,
+                            color: "#fff",
+                          }}
+                          spin
+                        />
+                      }
+                    />
+                  </span>
+                ) : (
+                  "Bắt đầu tạo mẫu"
+                )}
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button
+                className="w-full p-2 mt-3 text-lg font-medium text-white bg-red-500 border-0 rounded-md font-inherit"
+                style={{ backgroundColor: "rgba(255, 66, 78,0.3)" }}
+                disabled
+              >
+                Bắt đầu tạo mẫu
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="px-4 text-sm text-center text-gray-500">
+          <p>
+            Nếu bạn chưa có thông tin, hãy tham khảo
+            <a href="#" className="block text-purple-600 no-underline">
+              Mẫu thiết kế có sẵn
+            </a>
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };
