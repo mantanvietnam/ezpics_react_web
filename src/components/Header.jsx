@@ -74,11 +74,8 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
         console.error("Error fetching user data:", error);
       }
     };
-    // Gọi hàm fetchDataUsercheck ngay lập tức
     fetchDataUsercheck();
-    // Thiết lập interval để gọi lại hàm fetchDataUser mỗi 30 giây
     const intervalId = setInterval(fetchDataUsercheck, 45000);
-    // Dọn dẹp interval khi component bị unmount hoặc khi effect bị gọi lại
     return () => clearInterval(intervalId);
   }, [token]);
 
@@ -481,7 +478,7 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
     {
       label: "Hướng dẫn",
       hiddenOn: "xl",
-      href: "https://www.youtube.com/watch?v=7zSlqhcsHLI&list=PLngg14zy8vvw-hSi3ly3ehls1RHTWgQdJ",
+      href: "https://www.youtube.com/playlist?list=PLngg14zy8vvwLxThvcL8g35G0F9VlNXUh",
     },
     { href: "/post", label: "Tin tức", hiddenOn: "xl" },
     {
@@ -559,14 +556,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
       ),
       key: "1",
     },
-    // {
-    //   label: (
-    //     <div className="list-item ">
-    //       <p className="item-text">Khiếu nại </p>
-    //     </div>
-    //   ),
-    //   key: "2",
-    // },
     {
       label: (
         <div className="list-item ">
@@ -689,18 +678,33 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
                 <div
                   key={index}
                   className={`${getHiddenClass(menuItem.hiddenOn)} `}
-                  onClick={() => handleHeaderItem(index)}
                 >
                   {!menuItem.subMenu ? (
-                    <Link
-                      href={menuItem.href}
-                      className={`primary_btn pl-10 whitespace-nowrap ${
-                        activeHeader === index &&
-                        "underline decoration-yellow-600 underline-offset-4"
-                      } rounded-lg`}
-                    >
-                      {menuItem.label}
-                    </Link>
+                    // Check if the current menu item is "Hướng dẫn"
+                    menuItem.label === "Hướng dẫn" ? (
+                      <a
+                        href={menuItem.href}
+                        target="_blank" // Open in new tab
+                        rel="noopener noreferrer" // Security best practice
+                        className={`primary_btn pl-10 whitespace-nowrap ${
+                          activeHeader === index &&
+                          "underline decoration-yellow-600 underline-offset-4"
+                        } rounded-lg`}
+                      >
+                        {menuItem.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={menuItem.href}
+                        className={`primary_btn pl-10 whitespace-nowrap ${
+                          activeHeader === index &&
+                          "underline decoration-yellow-600 underline-offset-4"
+                        } rounded-lg`}
+                        onClick={() => handleHeaderItem(index)} // Handle click for other items
+                      >
+                        {menuItem.label}
+                      </Link>
+                    )
                   ) : (
                     <div>
                       <button
@@ -780,13 +784,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
         </div>
 
         <div className="flex items-center justify-center action">
-          {/* <button
-            className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white p-[6px] mobile:px-[1.25rem] py-[0.5rem] rounded-[0.25rem] whitespace-nowrap text-xs mobile:text-base"
-            onClick={() => handleAddNewInvitation()}
-          >
-            Tạo thiệp mời
-          </button> */}
-
           <button
             className="bg-red-700 text-white whitespace-nowrap text-xs mobile:text-base p-[6px] mobile:px-[1.25rem] rounded-[0.25rem] py-[0.5rem] ml-2 mobile:ml-6"
             onClick={() => handleAddNewDesign()}
@@ -897,10 +894,6 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
               <button
                 className="flex items-center p-2 py-2 mx-2 text-xs text-red-600 border-2 border-red-600 roundedp mobile:px-5 mobile:mx-4 whitespace-nowrap mobile:text-base"
                 onClick={() => {
-                  // const path = window.location.pathname || '/';
-                  // const redirectUrl = encodeURIComponent(path);
-                  // router.push(`/sign-in?redirect=${redirectUrl}`);
-
                   router.push(`/sign-in`);
                 }}
               >
