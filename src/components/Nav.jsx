@@ -73,7 +73,7 @@ const Nav = ({
         label: "Nén hình ảnh",
         icon: images.compression,
       },
-      { href: "#", label: "Thay đổi kích thước", icon: images.changeSize },
+      // { href: "#", label: "Thay đổi kích thước", icon: images.changeSize },
       // { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
     ],
     []
@@ -286,17 +286,7 @@ const Nav = ({
           </Link>
         </div>
       )}
-      <div className="flex flex-col gap-[15px]">
-        <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2">
-          <Image
-            src={images.tools}
-            alt=""
-            width={20}
-            height={20}
-            className="w-[20px] h-[20px]"
-          />
-          Công cụ
-        </div>
+      <div className="flex flex-col gap-[15px]">        
         {navItems.map((navItem, index) => (
           <Link
             key={index}
