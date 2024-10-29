@@ -395,24 +395,6 @@ export default function Customize() {
                   />
                 </div>
 
-                {/* <div>
-                  <label className="block">Ảnh nền</label>
-                  <input
-                    onChange={handleChangeInputFile}
-                    type="file"
-                    ref={inputFileRef}
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block">Ảnh minh họa</label>
-                  <input
-                    onChange={handleChangeInputFileBackground}
-                    type="file"
-                    ref={inputFileRefThumn}
-                    className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  />
-                </div> */}
                 <div>
                   <label className="block">Bộ sưu tập</label>
                   {dataStorage?.map((item) => (
