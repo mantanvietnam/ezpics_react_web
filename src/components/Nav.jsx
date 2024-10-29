@@ -291,16 +291,6 @@ const Nav = ({
         </div>
       )}
       <div className="flex flex-col gap-[15px]">
-        <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2">
-          <Image
-            src={images.tools}
-            alt=""
-            width={20}
-            height={20}
-            className="w-[20px] h-[20px]"
-          />
-          Công cụ
-        </div>
         {navItems.map((navItem, index) => (
           <Link
             key={index}

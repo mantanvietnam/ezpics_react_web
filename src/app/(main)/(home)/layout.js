@@ -60,7 +60,7 @@ export default function HomeRoot(props) {
       </div>
       {props.children}
       <NewProductsSlider />
-      <SerisProductSlider />
+      {/* <SerisProductSlider /> */}
       <CollectionProductSlider />
       <EndowProduct />
       <EventProductSlider />
