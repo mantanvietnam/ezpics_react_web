@@ -476,6 +476,11 @@ const Header = ({ toggleNavbar, activeHeader, handleHeaderItem }) => {
     { href: "/project", label: "Chủ đề", hiddenOn: "lg" },
     { href: "/collection-all", label: "Bộ sưu tập", hiddenOn: "lg" },
     {
+      href: "/project-print",
+      label: "Thư mời - Avatar",
+      hiddenOn: "lg",
+    },
+    {
       label: "Hướng dẫn",
       hiddenOn: "lg",
       href: "https://www.youtube.com/playlist?list=PLngg14zy8vvwLxThvcL8g35G0F9VlNXUh",
