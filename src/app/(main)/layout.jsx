@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import "@/styles/globals.scss";
 import OpenPopup from "@/components/OpenPopup";
+import { Suspense } from "react";
 
 export default function CenteredLayouts(props) {
   const [isNavbarOpen, setIsNavbarOpen] = useState(true);
@@ -112,23 +113,27 @@ export default function CenteredLayouts(props) {
               ? "opacity-50 z-40 ml-[250px]"
               : "opacity-0 pointer-events-none"
           }`}
-          onClick={toggleNavbar}></div>
+          onClick={toggleNavbar}
+        ></div>
         <main className="flex pt-[var(--header-height)] font-googleSans">
-          <Nav
-            isOpen={isNavbarOpen}
-            closeNavbar={closeNavbar}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-            handleNavItem={handleNavItem}
-            activeFunc={activeFunc}
-            setActiveFunc={setActiveFunc}
-            hanldeFuncItem={hanldeFuncItem}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Nav
+              isOpen={isNavbarOpen}
+              closeNavbar={closeNavbar}
+              activeItem={activeItem}
+              setActiveItem={setActiveItem}
+              handleNavItem={handleNavItem}
+              activeFunc={activeFunc}
+              setActiveFunc={setActiveFunc}
+              hanldeFuncItem={hanldeFuncItem}
+            />
+          </Suspense>
           {isMobile ? (
-            <div className=" w-full flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center w-full ">
               {props.children}
               <div
-                className={`transition-all duration-300 w-[100%] flex justify-center`}>
+                className={`transition-all duration-300 w-[100%] flex justify-center`}
+              >
                 <Footer />
               </div>
             </div>
@@ -136,10 +141,12 @@ export default function CenteredLayouts(props) {
             <div
               className={`flex flex-col items-center justify-center transition-all duration-300 ${
                 isNavbarOpen ? "ml-[250px] w-[calc(100%-250px)]" : "ml-0 w-full"
-              } flex justify-center`}>
+              } flex justify-center`}
+            >
               {props.children}
               <div
-                className={`transition-all duration-300 w-[100%] flex justify-center`}>
+                className={`transition-all duration-300 w-[100%] flex justify-center`}
+              >
                 <Footer />
               </div>
             </div>
