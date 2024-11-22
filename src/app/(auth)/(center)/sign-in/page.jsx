@@ -116,41 +116,46 @@ export default function Login() {
   }
 
   const handleSubmitLogin = async (e) => {
-    if (e && e.preventDefault) {
-      e.preventDefault();
-    }
+    if (e?.preventDefault) e.preventDefault();
     setIsLoading(true);
     setLoginError("");
+    setErrors("");
 
     try {
+      // Xác thực dữ liệu
       const checkValidate = await schema.validate(
         { phone, password },
         { abortEarly: false }
       );
+
       if (checkValidate) {
-        setErrors("");
-        const repon = await loginByPhone({
-          phone: phone,
-          password: password,
+        const response = await loginByPhone({
+          phone,
+          password,
           token_device: deviceToken,
           type_device: "web",
         });
-        if (repon.code === 0) {
+
+        if (response?.code === 0) {
           dispatch(CHANGE_STATUS_AUTH(true));
-          dispatch(CHANGE_VALUE_TOKEN(repon?.info_member?.token_web));
-          setCookie("token", repon?.info_member?.token_web, expirationHours);
-          setCookie("user_login", repon?.info_member, expirationHours);
-          router.push("/");
+          dispatch(CHANGE_VALUE_TOKEN(response?.info_member?.token_web));
+          setCookie("token", response?.info_member?.token_web, expirationHours);
+          setCookie("user_login", response?.info_member, expirationHours);
+
+          // Điều hướng trở lại trang đích
+          const redirectTo = localStorage.getItem("redirectTo") || "/";
+          router.push(redirectTo);
         } else {
-          setLoginError(repon?.messages[0]?.text);
+          setLoginError(response?.messages?.[0]?.text || "Đăng nhập thất bại.");
         }
       }
     } catch (err) {
-      const errors = err?.inner?.reduce((acc, error) => {
+      // Xử lý lỗi xác thực
+      const validationErrors = err?.inner?.reduce((acc, error) => {
         acc[error.path] = error.message;
         return acc;
       }, {});
-      setErrors(errors);
+      setErrors(validationErrors || {});
     } finally {
       setIsLoading(false);
     }
@@ -234,7 +239,7 @@ export default function Login() {
       <div className={styles["login-bg"]}>
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40">
           <div className={styles.padding}>
-            <div className="w-full min-h-full flex justify-center items-center">
+            <div className="flex items-center justify-center w-full min-h-full">
               <div className={styles["login-main"]}>
                 <div className={styles.title}>Ezpics - Dùng là thích! 👋</div>
                 <p className={styles.description}>
@@ -263,7 +268,8 @@ export default function Login() {
                       <button
                         className={styles.confirm}
                         onClick={handleConfirmForgotPassword}
-                        disabled={isConfirming}>
+                        disabled={isConfirming}
+                      >
                         {isConfirming ? (
                           <Spin
                             indicator={
@@ -282,7 +288,8 @@ export default function Login() {
                       </button>
                       <button
                         className={styles.rollback}
-                        onClick={handleRollBack}>
+                        onClick={handleRollBack}
+                      >
                         <ArrowLeftOutlined className={styles.icon} />
                         <p>Quay lại</p>
                       </button>
@@ -307,14 +314,16 @@ export default function Login() {
                         <p className={styles.label_input}>Mật khẩu</p>
                         <p
                           className={styles.forgot_pass}
-                          onClick={handleCheckForgot}>
+                          onClick={handleCheckForgot}
+                        >
                           Quên mật khẩu ?
                         </p>
                       </div>
                       <div
                         style={{
                           position: "relative",
-                        }}>
+                        }}
+                      >
                         <input
                           type={isPasswordVisible ? "text" : "password"}
                           value={password}
@@ -333,7 +342,8 @@ export default function Login() {
                             top: "50%",
                             transform: "translateY(-50%)",
                             cursor: "pointer",
-                          }}>
+                          }}
+                        >
                           {isPasswordVisible ? (
                             <EyeOutlined />
                           ) : (
@@ -351,7 +361,8 @@ export default function Login() {
                         type="submit"
                         className={styles.login}
                         onClick={handleSubmitLogin}
-                        disabled={isLoading}>
+                        disabled={isLoading}
+                      >
                         {isLoading ? (
                           <Spin
                             indicator={
@@ -371,7 +382,8 @@ export default function Login() {
                       <p className={styles.or}>Hoặc</p>
                       <button
                         className={styles.register}
-                        onClick={handleLoginWithGoogle}>
+                        onClick={handleLoginWithGoogle}
+                      >
                         Đăng nhập bằng Google
                       </button>
                       <p className={styles.option_regis}>
@@ -387,7 +399,7 @@ export default function Login() {
                       type="text"
                       value={phoneConfirm}
                       onChange={(e) => setPhoneConfirm(e.target.value)}
-                      className="bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed"
+                      className="text-gray-500 bg-gray-200 border-gray-300 cursor-not-allowed"
                       disabled
                     />
                     <p className={styles.label_input}>Nhập mã xác thực</p>
@@ -414,7 +426,8 @@ export default function Login() {
                           top: "50%",
                           transform: "translateY(-50%)",
                           cursor: "pointer",
-                        }}>
+                        }}
+                      >
                         {isPasswordVisible ? (
                           <EyeOutlined />
                         ) : (
@@ -440,7 +453,8 @@ export default function Login() {
                           top: "50%",
                           transform: "translateY(-50%)",
                           cursor: "pointer",
-                        }}>
+                        }}
+                      >
                         {isPasswordVisible ? (
                           <EyeOutlined />
                         ) : (
@@ -459,7 +473,8 @@ export default function Login() {
                     <button
                       className={styles.confirm}
                       onClick={handleSubmitNewPassword}
-                      disabled={isSavingPassword}>
+                      disabled={isSavingPassword}
+                    >
                       {isSavingPassword ? (
                         <Spin
                           indicator={
@@ -478,7 +493,8 @@ export default function Login() {
                     </button>
                     <button
                       className={styles.rollback}
-                      onClick={handleRollBack}>
+                      onClick={handleRollBack}
+                    >
                       <ArrowLeftOutlined className={styles.icon} />
                       <p>Quay lại</p>
                     </button>
