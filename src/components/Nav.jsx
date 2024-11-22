@@ -15,6 +15,7 @@ import { Modal, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -78,7 +79,11 @@ const Nav = ({
         label: "Thay đổi kích thước",
         icon: images.changeSize,
       },
-      // { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
+      {
+        href: "?openModal=true",
+        label: "Tạo khung avatar",
+        icon: images.frameAvatar,
+      },
     ],
     []
   );
@@ -146,9 +151,33 @@ const Nav = ({
     if (isAuthenticated) {
       setOpenModalCreatingInvitation(!openModalCreatingInvitation);
     } else {
+      // Lưu trạng thái hoặc URL trước khi điều hướng
+      localStorage.setItem("redirectTo", router.asPath); // Lưu đường dẫn hiện tại
+      localStorage.setItem("openModal", "true"); // Lưu trạng thái modal cần mở
       router.push("/sign-in");
     }
   };
+
+  const searchParams = useSearchParams();
+  const openModal = searchParams.get("openModal");
+
+  useEffect(() => {
+    console.log("Query parameter:", openModal);
+  }, [openModal]);
+
+  useEffect(() => {
+    if (openModal === "true") {
+      console.log("open");
+      if (isAuthenticated) {
+        // Nếu đã đăng nhập và trạng thái cần mở modal được lưu, mở modal
+        setOpenModalCreatingInvitation(true); // Mở modal tự động
+      } else {
+        // Nếu chưa đăng nhập, lưu trạng thái và điều hướng đến đăng nhập
+        localStorage.setItem("redirectTo", "/?openModal=true"); // Lưu URL hiện tại
+        router.push("/sign-in");
+      }
+    }
+  }, [isAuthenticated, openModal]);
 
   //Luu url file
   const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
