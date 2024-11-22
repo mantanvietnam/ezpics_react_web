@@ -5,7 +5,7 @@ import { useClickAway } from "react-use";
 import PanelsCommon from "./PanelsCommon";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAvailableLogin, checkTokenCookie, getCookie } from "@/utils";
-import { updateLayer } from "@/redux/slices/editor/stageSlice";
+import { deselectLayer, updateLayer } from "@/redux/slices/editor/stageSlice";
 import axios from "axios";
 
 import ReactCrop, {
@@ -49,7 +49,7 @@ const SliderMenu = ({
   onChangeSaturate,
 }) => (
   <div className="w-[300px]">
-    <div className="p-2 flex items-center">
+    <div className="flex items-center p-2">
       <span className="w-[80px]">Độ sáng</span>
       <Slider
         onChange={onChangeBrightness}
@@ -67,7 +67,7 @@ const SliderMenu = ({
         max={100}
       />
     </div>
-    <div className="p-2 flex items-center">
+    <div className="flex items-center p-2">
       <span className="w-[80px]">Độ trong</span>
       <Slider
         onChange={onChangeOpacity}
@@ -85,7 +85,7 @@ const SliderMenu = ({
         max={100}
       />
     </div>
-    <div className="p-2 flex items-center">
+    <div className="flex items-center p-2">
       <span className="w-[80px]">Độ tương phản</span>
       <Slider
         onChange={onChangeContrast}
@@ -103,7 +103,7 @@ const SliderMenu = ({
         max={100}
       />
     </div>
-    <div className="p-2 flex items-center">
+    <div className="flex items-center p-2">
       <span className="w-[80px]">Độ bão hòa</span>
       <Slider
         onChange={onChangeSaturate}
@@ -129,13 +129,15 @@ const ButtonMenu = ({ onButtonChangeImageNew, onButtonChangeImage }) => (
     <Button
       type="text"
       className="text-lg font-bold"
-      onClick={() => onButtonChangeImageNew()}>
+      onClick={() => onButtonChangeImageNew()}
+    >
       Thay ảnh từ máy
     </Button>
     <Button
       type="text"
       className="text-lg font-bold"
-      onClick={() => onButtonChangeImage()}>
+      onClick={() => onButtonChangeImage()}
+    >
       Thay ảnh có sẵn
     </Button>
   </div>
@@ -164,11 +166,14 @@ export function PanelsImage({
   }
 
   useEffect(() => {
-    if (stageData && stageData.selectedLayer) {
-      const srcAttributeValue = stageData.selectedLayer.content.banner;
+    if (selectedLayer) {
+      console.log(selectedLayer);
+      const srcAttributeValue = selectedLayer.content.banner;
       setImgSrc(srcAttributeValue);
     }
-  }, [stageData]);
+  }, [selectedLayer]);
+
+  console.log(imgSrc);
 
   // States for sliders
   const [valueBrightness, setValueBrightness] = useState(
@@ -324,8 +329,10 @@ export function PanelsImage({
       };
 
       const formData = new FormData();
+      let responseRemoveBackground;
 
       try {
+        console.log(imgSrc);
         // Convert image URL to Blob
         const response = await fetch(imgSrc);
         const blob = await response.blob();
@@ -334,52 +341,53 @@ export function PanelsImage({
         formData.append("image", file);
         formData.append("token", checkTokenCookie());
 
-        const responseRemoveBackground = await axios.post(
+        // Thông báo cho người dùng là yêu cầu đã được gửi
+        toast.info("Đang xử lý xóa nền ảnh...", {
+          autoClose: false, // Không tự động đóng
+        });
+
+        // Gửi yêu cầu đến API xóa nền
+        responseRemoveBackground = await axios.post(
           `https://apis.ezpics.vn/apis/removeBackgroundImageAPI`,
           formData,
           config
         );
 
-        // Convert the response image URL to Blob
-        const response2 = await fetch(responseRemoveBackground.data.linkOnline);
-        const blob2 = await response2.blob();
-        const file2 = new File([blob2], "image2.jpg", { type: blob2.type });
+        console.log(responseRemoveBackground.data);
 
-        const formData2 = new FormData();
-        if (token) {
-          formData2.append("idproduct", stageData.design.id);
-          formData2.append("token", token);
-          formData2.append("idlayer", stageData.selectedLayer.id);
-          formData2.append("file", file2);
-        }
-
-        // const responseChangeImage = await axios.post(
-        //   "https://apis.ezpics.vn/apis/changeLayerImageNew",
-        //   formData2,
-        //   config
-        // );
-        // console.log("responseChangeImage", responseChangeImage);
-
-
+        // Kiểm tra kết quả trả về từ API
         if (responseRemoveBackground.data.code === 0) {
           const data = {
             banner: responseRemoveBackground.data.linkOnline,
           };
           dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
+
+          // Thông báo thành công
           toast.success("Xóa nền ảnh thành công", {
+            autoClose: 500,
+          });
+        } else {
+          // Thông báo nếu API trả về lỗi
+          toast.error("Không thể xóa nền ảnh, vui lòng thử lại!", {
             autoClose: 500,
           });
         }
       } catch (error) {
         console.error(error);
-        toast.error("Lỗi khi xóa nền ảnh");
+        // Thông báo lỗi khi có vấn đề trong quá trình gửi yêu cầu
+        toast.error("Lỗi khi xóa nền ảnh, vui lòng thử lại!", {
+          autoClose: 500,
+        });
+      } finally {
+        // Đóng thông báo khi xử lý hoàn tất
+        toast.dismiss(); // Tắt tất cả các thông báo
       }
     } else {
       toast.error(
         "Bạn chưa là tài khoản PRO nên không được truy cập, hãy nâng cấp để dùng nhé !",
         {
           position: "top-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -413,7 +421,6 @@ export function PanelsImage({
       image.src = imageSrc;
 
       image.onload = () => {
-
         const width = image.width;
         const height = image.height;
 
@@ -492,8 +499,9 @@ export function PanelsImage({
           <div className="px-1">
             <Button
               type="text"
-              className="text-lg font-bold gap-0"
-              onClick={HandleRemoveBackground}>
+              className="gap-0 text-lg font-bold"
+              onClick={HandleRemoveBackground}
+            >
               {" "}
               Xóa nền
               <NextImage
@@ -514,7 +522,8 @@ export function PanelsImage({
             <Button
               type="text"
               className="text-lg font-bold"
-              onClick={() => onFlipHorizontally()}>
+              onClick={() => onFlipHorizontally()}
+            >
               Lật ảnh ngang
             </Button>
           </div>
@@ -522,7 +531,8 @@ export function PanelsImage({
             <Button
               type="text"
               className="text-lg font-bold"
-              onClick={() => onFlipVertically()}>
+              onClick={() => onFlipVertically()}
+            >
               Lật ảnh dọc
             </Button>
           </div>
@@ -543,11 +553,13 @@ export function PanelsImage({
               }
               trigger="click"
               open={visibleEditImage}
-              onOpenChange={setVisibleEditImage}>
+              onOpenChange={setVisibleEditImage}
+            >
               <Button
                 type="text"
                 className="text-lg font-bold"
-                onClick={handleButtonEditImage}>
+                onClick={handleButtonEditImage}
+              >
                 Chỉnh sửa ảnh
               </Button>
             </Popover>
@@ -564,11 +576,13 @@ export function PanelsImage({
               trigger="click"
               open={visibleChangeImage}
               onOpenChange={setVisibleChangeImage}
-              placement="bottomLeft">
+              placement="bottomLeft"
+            >
               <Button
                 type="text"
                 className="text-lg font-bold"
-                onClick={handleButtonImage}>
+                onClick={handleButtonImage}
+              >
                 Thay ảnh
               </Button>
             </Popover>
@@ -588,7 +602,8 @@ export function PanelsImage({
             <Button
               type="text"
               className="text-lg font-bold"
-              onClick={() => openModalCrop()}>
+              onClick={() => openModalCrop()}
+            >
               Cắt ảnh
             </Button>
 
@@ -724,7 +739,6 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
 
       if (response && response?.data?.code === 1) {
         const data = {
-          ...stageData.selectedLayer.content,
           banner: response.data?.link,
         };
         dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
@@ -771,7 +785,8 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
           flexDirection: "column",
           backgroundColor: "#f0f0f0",
         }}
-        maskClosable={false}>
+        maskClosable={false}
+      >
         <div
           ref={modalRef}
           style={{
@@ -783,14 +798,16 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
             height: "100%",
             padding: "10px",
             backgroundColor: "#ccc",
-          }}>
+          }}
+        >
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(_)}
             onComplete={(c) => setCompletedCrop(c)}
             aspect={aspect}
             minHeight={50}
-            onMouseUp={(e) => e.stopPropagation()}>
+            onMouseUp={(e) => e.stopPropagation()}
+          >
             <img
               alt="Crop me"
               src={imgSrc}
@@ -808,7 +825,8 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
             ) : (
               <button
                 className="text-lg font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
-                onClick={cropCompleteImage}>
+                onClick={cropCompleteImage}
+              >
                 Cắt ảnh
               </button>
             )}
@@ -851,7 +869,10 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
       setLoading(false);
       return;
     }
-    const imageBlob = dataURLToBlob(imgSrc);
+    const res = await fetch(imgSrc);
+    const blob = await res.blob();
+    const file = new File([blob], "image.jpg", { type: blob.type });
+    // const imageBlob = dataURLToBlob(imgSrc);
     const token = checkTokenCookie();
     const formData = new FormData();
 
@@ -859,7 +880,7 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
       formData.append("idproduct", stageData.design.id);
       formData.append("token", token);
       formData.append("idlayer", stageData.selectedLayer.id);
-      formData.append("file", imageBlob);
+      formData.append("file", file);
     }
     //Chuyen thay doi anh api
     const headers = {
@@ -879,12 +900,15 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
       config
     );
 
+    console.log(response.data);
+
     if (response && response?.data?.code === 1) {
       const data = {
-        ...stageData.selectedLayer.content,
         banner: response.data?.link,
       };
+      console.log(data);
       dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
+      dispatch(deselectLayer());
       setLoading(false);
       handleCancel();
       toast.success("Thay ảnh thành công", {
@@ -899,7 +923,8 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
         title="Tải ảnh lên từ máy"
         open={isOpen}
         onCancel={() => handleCancel()}
-        footer={null}>
+        footer={null}
+      >
         <div>
           {imgSrc ? (
             <div
@@ -908,7 +933,8 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: "24px",
-              }}>
+              }}
+            >
               <img
                 src={imgSrc}
                 alt=""
@@ -919,10 +945,11 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
               />
             </div>
           ) : (
-            <div className="flex flex-col relative pt-4">
+            <div className="relative flex flex-col pt-4">
               <form
                 id="file-upload-form"
-                className="block clear-both mx-auto w-full max-w-600">
+                className="block clear-both w-full mx-auto max-w-600"
+              >
                 <input
                   className="hidden"
                   id="file-upload"
@@ -933,10 +960,11 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
                 />
 
                 <label
-                  className="float-left clear-both w-full py-8 px-6 text-center bg-white rounded-lg border transition-all select-none"
+                  className="float-left clear-both w-full px-6 py-8 text-center transition-all bg-white border rounded-lg select-none"
                   htmlFor="file-upload"
                   id="file-drag"
-                  style={{ cursor: "pointer" }}>
+                  style={{ cursor: "pointer" }}
+                >
                   <img
                     id="file-image"
                     src="#"
@@ -976,13 +1004,14 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
 
         <div className="flex justify-center">
           {loading ? (
-            <Button className="text-lg mt-2 p-2" type="primary" loading>
+            <Button className="p-2 mt-2 text-lg" type="primary" loading>
               Loading
             </Button>
           ) : (
             <button
               className="text-lg font-bold mt-2 bg-[#cbaa40] p-2 rounded-lg"
-              onClick={() => onChangeImageNew()}>
+              onClick={() => onChangeImageNew()}
+            >
               Thay ảnh
             </button>
           )}
@@ -994,7 +1023,7 @@ export function ModalChangeImageNew({ isOpen, onCancel }) {
 
 export function ModalChangeImage({ isOpen, onCancel }) {
   const [photos, setPhotos] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false); // Thêm trạng thái loading
   const stageData = useSelector((state) => state.stage.stageData);
   const dispatch = useDispatch();
 
@@ -1017,6 +1046,8 @@ export function ModalChangeImage({ isOpen, onCancel }) {
   }, []);
 
   const handleChangePhoto = async (item) => {
+    setIsLoading(true); // Bật trạng thái loading khi gọi API
+
     const token = checkTokenCookie();
     const formData = new FormData();
 
@@ -1027,63 +1058,77 @@ export function ModalChangeImage({ isOpen, onCancel }) {
       formData.append("idfile", item.id);
       formData.append("width", 1000);
     }
-    //Chuyen thay doi anh api
+
     const headers = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "*",
       "Content-Type": "multipart/form-data",
-      // Add any other headers if needed
     };
 
     const config = {
       headers: headers,
     };
 
-    const response = await axios.post(
-      "https://apis.ezpics.vn/apis/changeLayerImageApi",
-      formData,
-      config
-    );
+    try {
+      const response = await axios.post(
+        "https://apis.ezpics.vn/apis/changeLayerImageApi",
+        formData,
+        { headers }
+      );
 
-    if (response && response?.data?.code === 1) {
-      const data = {
-        ...stageData.selectedLayer.content,
-        banner: response.data?.link,
-      };
-      dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
-      onCancel();
-      toast.success("Thay ảnh thành công", {
+      if (response && response?.data?.code === 1) {
+        const data = {
+          banner: response.data?.link,
+        };
+        dispatch(updateLayer({ id: stageData.selectedLayer.id, data: data }));
+        dispatch(deselectLayer());
+        onCancel();
+        toast.success("Thay ảnh thành công", {
+          autoClose: 500,
+        });
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu thay đổi ảnh:", error);
+      toast.error("Lỗi khi thay đổi ảnh", {
         autoClose: 500,
       });
+    } finally {
+      setIsLoading(false); // Tắt trạng thái loading sau khi có phản hồi
     }
   };
 
   return (
-    <>
-      <Modal
-        title="Ảnh đã tải lên"
-        open={isOpen}
-        onCancel={onCancel}
-        footer={null}
-        width={1000}>
-        <div className="px-4 overflow-y-auto">
-          <div className="grid gap-4 grid-cols-4">
-            {photos?.map((item, index) => {
-              return (
-                <ImageItem
-                  key={index}
-                  preview={`${item.link}`}
-                  item={item}
-                  onClick={() => {
-                    handleChangePhoto(item);
-                  }}
-                />
-              );
-            })}
-          </div>
+    <Modal
+      title="Ảnh đã tải lên"
+      open={isOpen}
+      onCancel={onCancel}
+      footer={null}
+      width={1000}
+    >
+      <div className="px-4 overflow-y-auto">
+        <div className="grid grid-cols-4 gap-4">
+          {photos?.map((item, index) => {
+            return (
+              <ImageItem
+                key={index}
+                preview={`${item.link}`}
+                item={item}
+                onClick={() => {
+                  handleChangePhoto(item);
+                }}
+              />
+            );
+          })}
         </div>
-      </Modal>
-    </>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+            <div className="absolute text-lg text-white top-10">
+              Đang tải...
+            </div>
+          </div>
+        )}
+      </div>
+    </Modal>
   );
 }
 
@@ -1092,14 +1137,15 @@ function ImageItem({ preview, onClick, onContextMenu, item }) {
     <div
       onClick={onClick}
       onContextMenu={onContextMenu}
-      className="relative bg-[#f8f8fb] cursor-pointer rounded-lg overflow-hidden group">
-      <div className="absolute inset-0 h-full w-full"></div>
+      className="relative bg-[#f8f8fb] cursor-pointer rounded-lg overflow-hidden group"
+    >
+      <div className="absolute inset-0 w-full h-full"></div>
       <img
         src={preview}
         alt=""
-        className="w-full h-full object-contain pointer-events-none align-middle"
+        className="object-contain w-full h-full align-middle pointer-events-none"
       />
-      <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity"></div>
+      <div className="absolute inset-0 transition-opacity bg-black opacity-0 group-hover:opacity-50"></div>
     </div>
   );
 }

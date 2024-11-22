@@ -144,7 +144,12 @@ export default function Login() {
 
           // Điều hướng trở lại trang đích
           const redirectTo = localStorage.getItem("redirectTo") || "/";
-          router.push(redirectTo);
+          const openModal = localStorage.getItem("openModal") || "false";
+          if (openModal === "true") {
+            router.push(redirectTo);
+          } else {
+            router.push("/");
+          }
         } else {
           setLoginError(response?.messages?.[0]?.text || "Đăng nhập thất bại.");
         }

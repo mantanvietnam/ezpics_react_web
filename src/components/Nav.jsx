@@ -171,9 +171,12 @@ const Nav = ({
       if (isAuthenticated) {
         // Nếu đã đăng nhập và trạng thái cần mở modal được lưu, mở modal
         setOpenModalCreatingInvitation(true); // Mở modal tự động
+        localStorage.removeItem("redirectTo");
+        localStorage.removeItem("openModal");
       } else {
         // Nếu chưa đăng nhập, lưu trạng thái và điều hướng đến đăng nhập
-        localStorage.setItem("redirectTo", "/?openModal=true"); // Lưu URL hiện tại
+        localStorage.setItem("redirectTo", "/?openModal=true");
+        localStorage.setItem("openModal", "true"); // Lưu URL hiện tại
         router.push("/sign-in");
       }
     }
