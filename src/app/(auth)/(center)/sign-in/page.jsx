@@ -145,6 +145,7 @@ export default function Login() {
           // Điều hướng trở lại trang đích
           const redirectTo = localStorage.getItem("redirectTo") || "/";
           const openModal = localStorage.getItem("openModal") || "false";
+          console.log(openModal, redirectTo);
           if (openModal === "true") {
             router.push(redirectTo);
           } else {
