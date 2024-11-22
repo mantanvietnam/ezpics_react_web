@@ -152,18 +152,14 @@ const Nav = ({
       setOpenModalCreatingInvitation(!openModalCreatingInvitation);
     } else {
       // Lưu trạng thái hoặc URL trước khi điều hướng
-      localStorage.setItem("redirectTo", router.asPath); // Lưu đường dẫn hiện tại
-      localStorage.setItem("openModal", "true"); // Lưu trạng thái modal cần mở
+      localStorage.setItem("redirectTo", "/?openModal=true");
+      localStorage.setItem("openModal", "true"); // Lưu URL hiện tại
       router.push("/sign-in");
     }
   };
 
   const searchParams = useSearchParams();
   const openModal = searchParams.get("openModal");
-
-  useEffect(() => {
-    console.log("Query parameter:", openModal);
-  }, [openModal]);
 
   useEffect(() => {
     if (openModal === "true") {
@@ -327,7 +323,9 @@ const Nav = ({
           <Link
             key={index}
             href={navItem.href}
-            className={`rounded-lg ${activeItem === index && "bg-gray-300"}`}
+            className={`rounded-lg ${activeItem === index && "bg-gray-300"} ${
+              index === navItems.length - 1 ? "hidden" : ""
+            }`}
             onClick={() => handleNavItem(index)}
           >
             <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
