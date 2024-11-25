@@ -38,6 +38,8 @@ export default function ProductInfoPrinted(props) {
     }));
   };
 
+  console.log(data);
+
   const handleFileInputChange = (e, index) => {
     const variableLabel = dataFilter[index]?.content?.variableLabel;
     const file = e.target.files[0];
@@ -94,7 +96,7 @@ export default function ProductInfoPrinted(props) {
         Object.entries(inputValues).filter(([_, value]) => value !== "")
       );
       const response = await createImageSeriesAPI({
-        idProduct: id_param,
+        idProduct: data.id,
         full_name: filteredInputValues["Họ tên"],
         avatar: previews,
       });
@@ -188,7 +190,7 @@ export default function ProductInfoPrinted(props) {
             />
           </SkeletonCustomProduct>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="flex items-center justify-center w-full h-full">
             <img
               className="object-contain h-[100%]"
               src={data?.image}
@@ -201,7 +203,7 @@ export default function ProductInfoPrinted(props) {
             <Skeleton.Input active="true" />
           ) : (
             <Share_Social
-              id_param={id_param}
+              id_param={data.id}
               data_image={data?.image}
               data_name={data?.name}
             />
@@ -209,7 +211,7 @@ export default function ProductInfoPrinted(props) {
           {isLoading ? (
             <Skeleton.Input active="true" />
           ) : (
-            <div className="flex items-center justify-center gap-1 border-l-2 border-slate-300 pl-1">
+            <div className="flex items-center justify-center gap-1 pl-1 border-l-2 border-slate-300">
               <svg
                 width="32"
                 height="32"
@@ -222,12 +224,14 @@ export default function ProductInfoPrinted(props) {
                   height: 25,
                   borderRadius: "50%",
                   fill: "currentColor",
-                }}>
+                }}
+              >
                 <path
                   d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"
                   style={{
                     color: "rgb(255, 66, 78)",
-                  }}></path>
+                  }}
+                ></path>
               </svg>
               <span className="text-sm font-semibold">
                 Đã thích ({data?.favorites || 0})
@@ -249,19 +253,19 @@ export default function ProductInfoPrinted(props) {
           </div>
         </div>
       ) : (
-        <div className="flex xl:w-1/2 w-full h-full flex-col justify-between gap-3">
+        <div className="flex flex-col justify-between w-full h-full gap-3 xl:w-1/2">
           <div className="flex items-center gap-3">
             <img src="/images/crown.svg" alt="" />
             <h1 className="text-xl font-semibold">{data?.name}</h1>
           </div>
-          <div className="flex items-center gap-5 bg-slate-100 p-5">
+          <div className="flex items-center gap-5 p-5 bg-slate-100">
             <div className="text-3xl text-red-500">
               {data?.sale_price ? VND.format(data?.sale_price) : "Miễn Phí"}
             </div>
-            <div className="line-through text-slate-400 rounded-sm">
+            <div className="line-through rounded-sm text-slate-400">
               {data?.price ? VND.format(data?.sale_price) : ""}
             </div>
-            <div className="bg-red-500 text-white p-2 font-semibold rounded-sm">
+            <div className="p-2 font-semibold text-white bg-red-500 rounded-sm">
               {data?.sale_price
                 ? `Giảm ${100 - (data?.sale_price / data?.price) * 100}%`
                 : "Miễn Phí"}
@@ -269,9 +273,7 @@ export default function ProductInfoPrinted(props) {
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm product-details-e">Lượt Tạo :</div>
-            <div>
-              {data?.export_image}
-            </div>
+            <div>{data?.export_image}</div>
           </div>
           <div className="flex items-center gap-3">
             <div className="product-details-e">Tác giả</div>
@@ -294,7 +296,8 @@ export default function ProductInfoPrinted(props) {
                   width: "30px",
                   height: "30px",
                   backgroundColor: `${data?.color}`,
-                }}></div>
+                }}
+              ></div>
             </div>
           )}
           <div className="flex items-center gap-3">
@@ -315,7 +318,8 @@ export default function ProductInfoPrinted(props) {
                   "2s linear 0s infinite normal none running thumbs-up",
               }}
               className="flex items-center justify-center py-2"
-              onClick={handleFavorite}>
+              onClick={handleFavorite}
+            >
               {isFavorited === 1 ? (
                 <>
                   {loadingFavorite ? (
@@ -342,7 +346,8 @@ export default function ProductInfoPrinted(props) {
                           width: "30px",
                           height: "30px",
                           fill: "currentColor",
-                        }}>
+                        }}
+                      >
                         <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
                       </svg>
                       <div>Đã yêu thích</div>
@@ -375,7 +380,8 @@ export default function ProductInfoPrinted(props) {
                           width: "30px",
                           height: "30px",
                           fill: "currentColor",
-                        }}>
+                        }}
+                      >
                         <path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
                       </svg>
                       <div>Thêm vào yêu thích</div>
@@ -386,7 +392,7 @@ export default function ProductInfoPrinted(props) {
             </button>
             <button
               onClick={() => {
-                const url = `/printed/${id_param}`;
+                const url = `/printed/${data.id}`;
 
                 // Thay đổi link và mở trong tab mới
                 window.open(url, "_blank");
@@ -403,7 +409,8 @@ export default function ProductInfoPrinted(props) {
                 width: "200px",
                 paddingTop: "11.5px",
                 paddingBottom: "11.5px",
-              }}>
+              }}
+            >
               Tạo ảnh
             </button>
             <Modal open={isModalOpen} footer={false} closeIcon={false}>
@@ -416,7 +423,8 @@ export default function ProductInfoPrinted(props) {
                       fontWeight: "bold",
                       paddingBottom: "10px",
                       textAlign: "center",
-                    }}>
+                    }}
+                  >
                     Tạo ảnh hàng loạt
                   </p>
                   <div
@@ -427,7 +435,8 @@ export default function ProductInfoPrinted(props) {
                       alignItems: "stretch",
                       padding: "20px",
                       gap: "20px",
-                    }}>
+                    }}
+                  >
                     {dataFilter &&
                       dataFilter.map((data, index) => (
                         <div key={index} style={{ marginBottom: "20px" }}>
@@ -435,7 +444,8 @@ export default function ProductInfoPrinted(props) {
                             style={{
                               fontWeight: "bold",
                               marginBottom: "10px",
-                            }}>
+                            }}
+                          >
                             {capitalizeFirstLetter(data.content.variableLabel)}
                           </p>
                           {data.content.type === "text" ? (
@@ -482,7 +492,8 @@ export default function ProductInfoPrinted(props) {
                                     document
                                       .getElementById(`fileInput-${index}`)
                                       .click()
-                                  }>
+                                  }
+                                >
                                   Chọn ảnh
                                 </button>
                               </label>
@@ -498,7 +509,8 @@ export default function ProductInfoPrinted(props) {
                                   justifyContent: "center",
                                   alignItems: "center",
                                   position: "relative",
-                                }}>
+                                }}
+                              >
                                 {previews[data.content.variableLabel] ? (
                                   <>
                                     <img
@@ -529,13 +541,15 @@ export default function ProductInfoPrinted(props) {
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
-                                      }}>
+                                      }}
+                                    >
                                       ×
                                     </button>
                                   </>
                                 ) : (
                                   <p
-                                    style={{ color: "#888", fontSize: "14px" }}>
+                                    style={{ color: "#888", fontSize: "14px" }}
+                                  >
                                     Ảnh minh họa sẽ hiển thị ở đây
                                   </p>
                                 )}
@@ -559,7 +573,8 @@ export default function ProductInfoPrinted(props) {
                         width: "60%",
                         marginRight: 10,
                       }}
-                      onClick={() => handleCancel()}>
+                      onClick={() => handleCancel()}
+                    >
                       Hủy
                     </Button>
                     <Button
@@ -574,7 +589,8 @@ export default function ProductInfoPrinted(props) {
                         marginTop: "40px",
                         width: "100%",
                       }}
-                      onClick={() => handleClickNavigate()}>
+                      onClick={() => handleClickNavigate()}
+                    >
                       {" "}
                       {loadingCreateImg ? (
                         <Spin indicator={<LoadingOutlined spin />} />
@@ -601,7 +617,8 @@ export default function ProductInfoPrinted(props) {
                           width: "100%",
                           marginRight: 10,
                         }}
-                        onClick={() => handleCancel()}>
+                        onClick={() => handleCancel()}
+                      >
                         Tải ảnh
                       </Button>
                       <Button
@@ -616,7 +633,8 @@ export default function ProductInfoPrinted(props) {
                           marginTop: "40px",
                           width: "100%",
                         }}
-                        onClick={() => setCheckModalContent(false)}>
+                        onClick={() => setCheckModalContent(false)}
+                      >
                         {" "}
                         Nhập lại thông tin
                       </Button>
