@@ -3,7 +3,7 @@
 import { getInfoProductApi } from "@/api/product";
 import { getUserInfoApi } from "@/api/user";
 import AuthorInfo from "@/components/AuthorInfo";
-import ProductInfo from "@/components/ProductInfo";
+import ProductInfo_Printed from "@/components/ProductInfo_Printed";
 import DefaultSlideNoApi from "@/components/Slide/DefaultSliderNoApi";
 import { Skeleton } from "antd";
 import { useEffect, useState } from "react";
@@ -41,8 +41,8 @@ export default function ProductPageContent({ productId }) {
   }, [productId]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-8">
-      <ProductInfo data={data} user={user} isLoading={isLoading} />
+    <div className="flex flex-col items-center justify-center w-full gap-8">
+      <ProductInfo_Printed data={data} user={user} isLoading={isLoading} />
       {isLoading ? (
         <Skeleton
           avatar

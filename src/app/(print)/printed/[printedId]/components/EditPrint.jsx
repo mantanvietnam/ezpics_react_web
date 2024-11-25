@@ -30,6 +30,7 @@ const EditPrint = ({ stageRef, printedId }) => {
   const [isProMember, setIsProMember] = useState(true);
 
   const [selectedImageLayerId, setSelectedImageLayerId] = useState(null);
+  const [listLayer, setListLayer] = useState([]);
 
   const handleImageLayerClick = useCallback((layerId) => {
     setSelectedImageLayerId(layerId);
@@ -38,6 +39,34 @@ const EditPrint = ({ stageRef, printedId }) => {
   const [exportValue, setExportValue] = useState({
     valueText: "",
   });
+
+  useEffect(() => {
+    setListLayer((prevList) => {
+      // Tạo một bản sao của danh sách hiện tại để cập nhật
+      const updatedList = [...prevList];
+
+      // Lặp qua các phần tử mới trong designLayers
+      designLayers.forEach((newLayer) => {
+        // Tìm phần tử trong danh sách hiện tại
+        const existingLayerIndex = updatedList.findIndex(
+          (layer) => layer.id === newLayer.id
+        );
+
+        if (existingLayerIndex !== -1) {
+          // Nếu đã tồn tại, cập nhật thông tin
+          updatedList[existingLayerIndex] = {
+            ...updatedList[existingLayerIndex],
+            ...newLayer,
+          };
+        } else {
+          // Nếu chưa tồn tại, thêm vào danh sách
+          updatedList.push(newLayer);
+        }
+      });
+
+      return updatedList;
+    });
+  }, [designLayers]);
 
   const [imgSrcs, setImgSrcs] = useState({});
   const fileInputRef = useRef(null);
@@ -109,10 +138,9 @@ const EditPrint = ({ stageRef, printedId }) => {
   };
 
   // Lọc các layer có biến 'variable' không phải là chuỗi rỗng
-  const filteredLayers = designLayers.filter(
+  const filteredLayers = listLayer?.filter(
     (layer) => layer.content.variable && layer.content.variable.trim() !== ""
   );
-
   function onSelectFile(e, layerId) {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -124,7 +152,7 @@ const EditPrint = ({ stageRef, printedId }) => {
         const img = new Image();
         img.src = newImgSrc;
         img.onload = () => {
-          const layer = filteredLayers.find((layer) => layer.id === layerId);
+          const layer = filteredLayers?.find((layer) => layer.id === layerId);
 
           if (layer && layer.content.type === "image") {
             const data = {
@@ -152,7 +180,7 @@ const EditPrint = ({ stageRef, printedId }) => {
     const newTextValue = e.target.value;
     setExportValue({ ...exportValue, valueText: newTextValue });
 
-    filteredLayers.forEach((layer) => {
+    filteredLayers?.forEach((layer) => {
       if (layer.content.type === "text") {
         const data = {
           ...layer.content,
@@ -169,7 +197,7 @@ const EditPrint = ({ stageRef, printedId }) => {
   };
 
   const moveLayer = (layerId, direction) => {
-    filteredLayers.forEach((layer) => {
+    filteredLayers?.forEach((layer) => {
       if (layer.id === layerId) {
         const newContent = { ...layer.content };
         const moveAmount = 0.5; // Kích thước di chuyển, bạn có thể điều chỉnh giá trị này
@@ -203,7 +231,7 @@ const EditPrint = ({ stageRef, printedId }) => {
   };
 
   const zoomLayer = (layerId, direction) => {
-    filteredLayers.forEach((layer) => {
+    filteredLayers?.forEach((layer) => {
       if (layer.id === layerId) {
         const newContent = { ...layer.content };
         const zoomFactor = 0.1;
@@ -266,8 +294,8 @@ const EditPrint = ({ stageRef, printedId }) => {
   };
 
   return (
-    <div className="mb-[100px] pb-[100px] mobile:pb-0">
-      {filteredLayers.map((layer) => {
+    <div className="pb-[100px] mobile:pb-0">
+      {filteredLayers?.map((layer) => {
         if (layer.content?.type === "image") {
           const imgSrc = imgSrcs[layer.id] || "";
           return (
