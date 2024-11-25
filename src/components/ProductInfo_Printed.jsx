@@ -38,8 +38,6 @@ export default function ProductInfoPrinted(props) {
     }));
   };
 
-  console.log(data);
-
   const handleFileInputChange = (e, index) => {
     const variableLabel = dataFilter[index]?.content?.variableLabel;
     const file = e.target.files[0];
