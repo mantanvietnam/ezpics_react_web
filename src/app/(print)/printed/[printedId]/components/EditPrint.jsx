@@ -36,9 +36,7 @@ const EditPrint = ({ stageRef, printedId }) => {
     setSelectedImageLayerId(layerId);
   }, []);
 
-  const [exportValue, setExportValue] = useState({
-    valueText: "",
-  });
+  const [exportValues, setExportValues] = useState({});
 
   useEffect(() => {
     setListLayer((prevList) => {
@@ -102,7 +100,7 @@ const EditPrint = ({ stageRef, printedId }) => {
   }
 
   const handleCancel = () => {
-    setExportValue({ valueText: "" });
+    setExportValues({});
     setImgSrcs({});
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
@@ -176,15 +174,17 @@ const EditPrint = ({ stageRef, printedId }) => {
     }
   }
 
-  const handleTextChange = (e) => {
-    const newTextValue = e.target.value;
-    setExportValue({ ...exportValue, valueText: newTextValue });
+  const handleTextChange = (layerId, newValue) => {
+    setExportValues((prevValues) => ({
+      ...prevValues,
+      [layerId]: newValue, // Chỉ cập nhật giá trị của layer hiện tại
+    }));
 
     filteredLayers?.forEach((layer) => {
-      if (layer.content.type === "text") {
+      if (layer.id === layerId && layer.content?.type === "text") {
         const data = {
           ...layer.content,
-          text: newTextValue,
+          text: newValue,
         };
         dispatch(
           updateLayer({
@@ -435,10 +435,10 @@ const EditPrint = ({ stageRef, printedId }) => {
                 {layer.content.variableLabel}
               </h4>
               <Input
-                value={exportValue.valueText}
-                onChange={handleTextChange}
+                value={exportValues[layer.id] || ""} // Giá trị riêng cho từng layer
+                onChange={(e) => handleTextChange(layer.id, e.target.value)} // Xử lý thay đổi riêng
               />
-              {exportValue.valueText !== "" && (
+              {exportValues[layer.id] && (
                 <div className="flex items-center justify-between p-2 my-2 bg-gray-100 rounded-lg shadow-md">
                   <div
                     className="flex items-center justify-center p-2 bg-white rounded-full shadow-lg cursor-pointer"
