@@ -13,8 +13,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "img.vietqr.io", // Domain bổ sung
+      },
     ],
-    domains: ["img.vietqr.io"],
   },
 };
 

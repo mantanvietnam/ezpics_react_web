@@ -3,7 +3,7 @@
 import { getInfoProductApi } from "@/api/product";
 import { getUserInfoApi } from "@/api/user";
 import AuthorInfo from "@/components/AuthorInfo";
-import ProductInfo from "@/components/ProductInfo";
+import ProductInfo from "@/components/ProductInfo_Printed";
 import DefaultSlideNoApi from "@/components/Slide/DefaultSliderNoApi";
 import { Skeleton } from "antd";
 import { useEffect, useState } from "react";
