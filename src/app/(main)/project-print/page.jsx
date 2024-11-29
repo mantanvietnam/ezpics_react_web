@@ -124,12 +124,11 @@ export default function Page() {
             <div className="grid grid-cols-4 grid-flow-row gap-4">
               {categories?.map((category) => (
                 <Link
-                  href={`/category/${convertSLugUrl(category.name)}-${
+                  href={`/category-print/${convertSLugUrl(category.name)}-${
                     category.id
                   }.html`}
                   className="slide-content py-2"
-                  key={category.id}
-                >
+                  key={category.id}>
                   <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58">
                     <div className="bg-orange-100 overflow-hidden group flex justify-center">
                       <Image
@@ -149,7 +148,7 @@ export default function Page() {
                       </p>
                       <div className="mt-2">
                         <span className="text-red-500 mr-2 font-bold text-lg">
-                          {category.sale_price === 0 
+                          {category.sale_price === 0
                             ? "Miễn phí"
                             : VND.format(category.sale_price)}
                         </span>
