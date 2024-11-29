@@ -46,7 +46,7 @@ const DownLoadMenu = ({
   isProMember,
 }) => (
   <div className="w-[500px] h-fit p-3">
-    <div className="mt-4 flex flex-col">
+    <div className="flex flex-col mt-4">
       <label htmlFor="fileType" className="mb-2 text-lg">
         Chọn loại tệp:
       </label>
@@ -76,7 +76,7 @@ const DownLoadMenu = ({
                 fill="currentColor"
               ></path>
             </svg>
-            <p className="text-xl pl-3">PNG</p>
+            <p className="pl-3 text-xl">PNG</p>
           </div>
         </Select.Option>
         <Select.Option value="pdf">
@@ -95,7 +95,7 @@ const DownLoadMenu = ({
                 clipRule="evenodd"
               ></path>
             </svg>
-            <p className="text-xl pl-3">PDF</p>
+            <p className="pl-3 text-xl">PDF</p>
           </div>
         </Select.Option>
       </Select>
@@ -123,14 +123,14 @@ const DownLoadMenu = ({
               style={{ width: 400 }}
               // disabled={!isProMember}
             />
-            <p className="text-base font-bold border border-slate-300 rounded ml-3 py-2 px-3">
+            <p className="px-3 py-2 ml-3 text-base font-bold border rounded border-slate-300">
               {pixelRatio}
             </p>
           </div>
         </div>
       )}
       <button
-        className="mt-4 text-lg font-bold h-14 bg-yellow-400 hover:bg-yellow-500 rounded-lg"
+        className="mt-4 text-lg font-bold bg-yellow-400 rounded-lg h-14 hover:bg-yellow-500"
         onClick={handleDownload}
       >
         Tải xuống
@@ -340,7 +340,10 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
           }}
         >
           <div className="flex">
-            <Link href="/" className="flex flex-center">
+            <Link
+              href="/your-design/purchase-form"
+              className="flex flex-center"
+            >
               <NextImage
                 alt=""
                 src="/images/EZPICS.png"
@@ -368,7 +371,7 @@ const Navbar = ({ stageRef, setTransformerVisible }) => {
               onFocus={() => {
                 setNameDesign(nameDesign || stageData.design.name); // Đặt giá trị của nameDesign khi input được focus
               }}
-              className="custom-input text-white bg-transparent rounded-lg p-1 w-full ring-1 ring-zinc-100 focus:ring-1 focus:ring-zinc-100 focus:outline-none ml-10"
+              className="w-full p-1 ml-10 text-white bg-transparent rounded-lg custom-input ring-1 ring-zinc-100 focus:ring-1 focus:ring-zinc-100 focus:outline-none"
             />
           </div>
           <div

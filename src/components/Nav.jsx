@@ -15,6 +15,7 @@ import { Modal, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 const VND = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -78,7 +79,11 @@ const Nav = ({
         label: "Thay đổi kích thước",
         icon: images.changeSize,
       },
-      // { href: "#", label: "Tạo khung avatar", icon: images.frameAvatar },
+      {
+        href: "?openModal=true",
+        label: "Tạo khung avatar",
+        icon: images.frameAvatar,
+      },
     ],
     []
   );
@@ -146,9 +151,32 @@ const Nav = ({
     if (isAuthenticated) {
       setOpenModalCreatingInvitation(!openModalCreatingInvitation);
     } else {
+      // Lưu trạng thái hoặc URL trước khi điều hướng
+      localStorage.setItem("redirectTo", "/?openModal=true");
+      localStorage.setItem("openModal", "true"); // Lưu URL hiện tại
       router.push("/sign-in");
     }
   };
+
+  const searchParams = useSearchParams();
+  const openModal = searchParams.get("openModal");
+
+  useEffect(() => {
+    if (openModal === "true") {
+      console.log("open");
+      if (isAuthenticated) {
+        // Nếu đã đăng nhập và trạng thái cần mở modal được lưu, mở modal
+        setOpenModalCreatingInvitation(true); // Mở modal tự động
+        localStorage.removeItem("redirectTo");
+        localStorage.removeItem("openModal");
+      } else {
+        // Nếu chưa đăng nhập, lưu trạng thái và điều hướng đến đăng nhập
+        localStorage.setItem("redirectTo", "/?openModal=true");
+        localStorage.setItem("openModal", "true"); // Lưu URL hiện tại
+        router.push("/sign-in");
+      }
+    }
+  }, [isAuthenticated, openModal]);
 
   //Luu url file
   const [loadingButtonModalCreate, setLoadingButtonModalCreate] =
@@ -295,7 +323,9 @@ const Nav = ({
           <Link
             key={index}
             href={navItem.href}
-            className={`rounded-lg ${activeItem === index && "bg-gray-300"}`}
+            className={`rounded-lg ${activeItem === index && "bg-gray-300"} ${
+              index === navItems.length - 1 ? "hidden" : ""
+            }`}
             onClick={() => handleNavItem(index)}
           >
             <div className="flex items-center gap-[10px] no-underline text-gray-800 p-2 cursor-pointer">
