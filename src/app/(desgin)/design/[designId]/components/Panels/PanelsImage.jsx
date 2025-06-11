@@ -716,7 +716,7 @@ export function ModalImageCrop({ isOpen, onCancel, fetchData }) {
         formData.append("idproduct", stageData.design.id);
         formData.append("token", token);
         formData.append("idlayer", stageData.selectedLayer.id);
-        formData.append("file", imageBlob);
+        formData.append("file", imageBlob, "cropped_image.png");
       }
 
       //Chuyen thay doi anh api
