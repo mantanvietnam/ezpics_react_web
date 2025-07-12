@@ -7,9 +7,6 @@ import {
   Space,
   Input,
   Radio,
-  Menu,
-  Skeleton,
-  Pagination,
   Flex,
   Spin,
 } from "antd";
@@ -19,14 +16,16 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { getProductCategoryAPI, searchProductAPI } from "@/api/product";
-import ProductComponent from "@/components/ProductComponent";
+import SafeProductComponent from "@/components/SafeProductComponent";
+import { filterAndSanitizeProducts } from "@/utils/productValidation";
 import _ from "lodash";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { useParams } from "next/navigation";
 
-export default function Layout(props) {
+export default function Layout() {
   const params = useParams();
-  const searchItem = params.searchTerm || "";
+  // Fix URL parameter decoding for Vietnamese characters and special characters
+  const searchItem = params.searchTerm ? decodeURIComponent(params.searchTerm) : "";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -77,20 +76,38 @@ export default function Layout(props) {
     }
   }, [searchTerm]);
 
+  // Initial search when searchValue changes (but not for pagination)
   useEffect(() => {
-    setLoading(true);
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await searchProductAPI(searchValue);
-        setProducts(response.listData);
-        setLoading(false);
+        // Reset pagination for new searches
+        setPage(1);
+        setHasMoreData(true);
+
+        const response = await searchProductAPI({ ...searchValue, page: 1 });
+        const rawProducts = response?.listData || [];
+        const validProducts = filterAndSanitizeProducts(rawProducts);
+        setProducts(validProducts);
+
+        // Check if there might be more data
+        if (!response?.listData || response.listData.length < searchValue.limit) {
+          setHasMoreData(false);
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching products:", error);
+        setProducts([]);
+        setHasMoreData(false);
+      } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [searchValue]);
+
+    // Only fetch if we have search criteria
+    if (searchValue.name || searchValue.category_id || searchValue.price || searchValue.orderBy) {
+      fetchData();
+    }
+  }, [searchValue.name, searchValue.category_id, searchValue.price, searchValue.orderBy, searchValue.orderType]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -170,14 +187,14 @@ export default function Layout(props) {
     setSearchValue((prev) => ({ ...prev, category_id: e.key }));
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Fix infinite scroll with proper dependency management
   const handleScroll = useCallback(
     _.debounce(() => {
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-        !loading
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+        !loading &&
+        hasMoreData
       ) {
-        setLoading(true);
         setPage((prevPage) => prevPage + 1);
       }
     }, 200),
@@ -189,74 +206,75 @@ export default function Layout(props) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
+  // Fix infinite scroll data fetching with proper error handling
   useEffect(() => {
-    if (!hasMoreData) {
-      setLoading(false);
-      return;
-    } else {
-      const fetchData = async () => {
-        if (page > 1) {
-          try {
-            const response = await searchProductAPI({ ...searchValue, page });
-            if (response.listData.length > 0) {
-              setProducts((prevProducts) => [
-                ...prevProducts,
-                ...response.listData,
-              ]);
-              setHasMoreData(true);
-            } else {
-              setHasMoreData(false);
-            }
-          } catch (error) {
-            console.log(error);
-          } finally {
-            setLoading(false);
+    const fetchMoreData = async () => {
+      if (page > 1 && hasMoreData) {
+        try {
+          setLoading(true);
+          const response = await searchProductAPI({ ...searchValue, page });
+
+          if (response?.listData && response.listData.length > 0) {
+            const rawProducts = response.listData;
+            const validProducts = filterAndSanitizeProducts(rawProducts);
+            setProducts((prevProducts) => [
+              ...prevProducts,
+              ...validProducts,
+            ]);
+          } else {
+            setHasMoreData(false);
           }
+        } catch (error) {
+          console.error("Error fetching more products:", error);
+          setHasMoreData(false);
+        } finally {
+          setLoading(false);
         }
-      };
-      fetchData();
-    }
-  }, [hasMoreData, page, searchValue]);
+      }
+    };
+
+    fetchMoreData();
+  }, [page]); // Remove searchValue dependency to prevent infinite loops
 
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const response = await searchProductAPI(searchValue);
-      setHasMoreData(true);
+      // Reset pagination state
       setPage(1);
-      setProducts(response.listData);
-      setLoading(false);
+      setHasMoreData(true);
+
+      const response = await searchProductAPI({ ...searchValue, page: 1 });
+      const rawProducts = response?.listData || [];
+      const validProducts = filterAndSanitizeProducts(rawProducts);
+      setProducts(validProducts);
     } catch (error) {
-      console.log(error);
+      console.error("Error searching products:", error);
+      setProducts([]);
+      setHasMoreData(false);
+    } finally {
       setLoading(false);
     }
   };
 
   const handleKeyDown = async (event) => {
     if (event.key === "Enter") {
-      setLoading(true);
-      try {
-        setLoading(true);
-        const response = await searchProductAPI(searchValue);
-        setHasMoreData(true);
-        setPage(1);
-        setProducts(response.listData);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
+      event.preventDefault();
+      await handleSearch(); // Reuse the handleSearch function to avoid code duplication
     }
   };
 
-  const menuProps = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="">Tất cả</Menu.Item>
-      {categories.map((category) => (
-        <Menu.Item key={category.id}>{category.name}</Menu.Item>
-      ))}
-    </Menu>
-  );
+  const menuItems = [
+    {
+      key: "",
+      label: "Tất cả",
+      onClick: () => handleMenuClick({ key: "", domEvent: { target: { innerText: "Tất cả" } } })
+    },
+    ...categories.map((category) => ({
+      key: category.id,
+      label: category.name,
+      onClick: () => handleMenuClick({ key: category.id, domEvent: { target: { innerText: category.name } } })
+    }))
+  ];
 
   return (
     <div className="flex flex-col w-[90%] gap-5">
@@ -301,7 +319,7 @@ export default function Layout(props) {
           icon={<ControlOutlined />}>
           Nâng cao
         </Button>
-        <Dropdown overlay={menuProps}>
+        <Dropdown menu={{ items: menuItems }}>
           <Button className="h-[40px]">
             <Space>
               {selectedCategory.label}
@@ -359,22 +377,41 @@ export default function Layout(props) {
       </Modal>
       {products.length > 0 ? (
         <div className="grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-5">
-          {products?.map((product) => (
-            <div key={product.id} className="flex justify-center items-center">
-              <ProductComponent product={product} />
+          {products?.map((product, index) => (
+            <div key={product?.id || `product-${index}`} className="flex justify-center items-center">
+              <SafeProductComponent
+                product={product}
+                showError={true}
+                fallback={
+                  <div className="card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer w-full sm:w-58 p-4">
+                    <div className="text-center text-gray-500">
+                      <div className="text-sm">Không thể tải sản phẩm</div>
+                    </div>
+                  </div>
+                }
+              />
             </div>
           ))}
           {loading && (
-            <Flex
-              align="center"
-              gap="middle"
-              className="flex justify-center items-center">
-              <Spin size="large" />
-            </Flex>
+            <div className="col-span-full flex justify-center items-center py-8">
+              <Flex align="center" gap="middle">
+                <Spin size="large" />
+                <span className="text-gray-500">Đang tải thêm sản phẩm...</span>
+              </Flex>
+            </div>
           )}
         </div>
+      ) : loading ? (
+        <div className="mt-5 flex justify-center">
+          <Flex align="center" gap="middle">
+            <Spin size="large" />
+            <span className="text-gray-500">Đang tìm kiếm sản phẩm...</span>
+          </Flex>
+        </div>
       ) : (
-        <div className="mt-5 font-semibold text-lg">Không tìm thấy kết quả</div>
+        <div className="mt-5 font-semibold text-lg text-center text-gray-500">
+          Không tìm thấy kết quả nào
+        </div>
       )}
       <ScrollToTopButton />
     </div>

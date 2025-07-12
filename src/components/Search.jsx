@@ -1,8 +1,8 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
-import { ConfigProvider, Popover } from "antd";
+import { ConfigProvider, Popover, Spin } from "antd";
 import { useDebounce } from "@/hooks";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, LoadingOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ function Search({ searchAPI, searchParams, placeholder }) {
   const [searchResult, setSearchResult] = useState([]);
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [inputWidth, setInputWidth] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const debounced = useDebounce(searchValue, 500);
   const inputRef = useRef();
@@ -31,19 +32,24 @@ function Search({ searchAPI, searchParams, placeholder }) {
     if (!debounced) {
       setSearchResult([]);
       setPopoverVisible(false);
+      setIsLoading(false);
       return;
     }
+
     const fetchApi = async () => {
       try {
+        setIsLoading(true);
+        setPopoverVisible(true); // Hiển thị popover ngay khi bắt đầu loading
         const result = await searchAPI({
           name: debounced,
           ...searchParams,
         });
         setSearchResult(result.listData || result.data || []);
-        setPopoverVisible(true);
       } catch (error) {
         console.error("Failed to fetch search results", error);
         setPopoverVisible(false);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -63,26 +69,40 @@ function Search({ searchAPI, searchParams, placeholder }) {
         tabIndex="-1"
         {...attrs}
         style={{ width: inputWidth }}>
-        {searchResult.slice(0, 4).map((item, index) => (
-          <Link
-            key={index}
-            href={`/category/${convertSLugUrl(item.title)}-${item.id}.html`}
-            className="flex items-center w-full p-2 hover:bg-gray-200">
-            <Image
-              src={item.image || item.thumbnail}
-              alt={item.name}
-              width={50}
-              height={50}
-              className="mr-4 w-11 h-10"
+        {isLoading ? (
+          <div className="flex items-center justify-center p-4">
+            <Spin
+              indicator={<LoadingOutlined style={{ fontSize: 20 }} spin />}
+              className="mr-2"
             />
-            <span>{item.name}</span>
-          </Link>
-        ))}
-        <Link
-          href={`/dashboard-search/${debounced}`}
-          className="flex items-center justify-center text-red-500 cursor-pointer mt-2">
-          Xem thêm
-        </Link>
+            <span className="text-gray-500">Đang tìm kiếm...</span>
+          </div>
+        ) : (
+          <>
+            {searchResult.slice(0, 4).map((item, index) => (
+              <Link
+                key={index}
+                href={`/category/${convertSLugUrl(item.title)}-${item.id}.html`}
+                className="flex items-center w-full p-2 hover:bg-gray-200">
+                <Image
+                  src={item.image || item.thumbnail}
+                  alt={item.name}
+                  width={50}
+                  height={50}
+                  className="mr-4 w-11 h-10"
+                />
+                <span>{item.name}</span>
+              </Link>
+            ))}
+            {searchResult.length > 0 && (
+              <Link
+                href={`/dashboard-search/${debounced}`}
+                className="flex items-center justify-center text-red-500 cursor-pointer mt-2">
+                Xem thêm
+              </Link>
+            )}
+          </>
+        )}
       </div>
     );
   };
